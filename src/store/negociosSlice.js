@@ -16,8 +16,17 @@ const negociosSlice = createSlice({
     lista: [],
     loading: false,
     error: null,
+    busqueda: "",
+    categoria: "todas", // valor por defecto
   },
-  reducers: {},
+  reducers: {
+    setBusqueda: (state, action) => {
+      state.busqueda = action.payload
+    },
+    setCategoria: (state, action) => {
+      state.categoria = action.payload
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(obtenerNegocios.pending, (state) => {
@@ -34,5 +43,6 @@ const negociosSlice = createSlice({
       })
   },
 })
+export const { setBusqueda, setCategoria } = negociosSlice.actions
 
 export default negociosSlice.reducer
