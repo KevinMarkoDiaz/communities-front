@@ -12,7 +12,10 @@ import Perfil from "../pages/dashboard/Perfil"
 import MisNegocios from "../pages/dashboard/MisNegocios"
 import MisEventos from "../pages/dashboard/MisEventos"
 
+import CrearNegocio from "../pages/dashboard/CrearNegocio"
+
 import RutaPrivada from "../components/RutaPrivada"
+import EditarNegocio from "../pages/dashboard/EditarNegocio"
 
 
 const router = createBrowserRouter([
@@ -28,14 +31,21 @@ const router = createBrowserRouter([
   },
   {
     path: "/dashboard",
-    element: <RutaPrivada />, // 🔒 Protección
+    element: <RutaPrivada />,
     children: [
       {
         path: "",
         element: <DashboardLayout />,
         children: [
           { path: "perfil", element: <Perfil /> },
-          { path: "mis-negocios", element: <MisNegocios /> },
+          {
+            path: "mis-negocios",
+            children: [
+              { path: "", element: <MisNegocios /> },
+              { path: "crear", element: <CrearNegocio /> },
+              { path: ":id/editar", element: <EditarNegocio /> },
+            ],
+          },
           { path: "mis-eventos", element: <MisEventos /> },
         ],
       },
