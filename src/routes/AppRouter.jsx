@@ -1,22 +1,22 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom"
-import Layout from "../layout/Layout"
-import Home from "../pages/Home"
-import Negocios from "../pages/Negocios"
-import Eventos from "../pages/Eventos"
-import Login from "../pages/Login"
-import Registro from "../pages/Registro"
-import NegocioDetalle from "../pages/NegocioDetalle"
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Layout from "../layout/Layout";
+import Home from "../pages/Home";
+import Negocios from "../pages/Negocios";
+import Eventos from "../pages/Eventos";
+import Login from "../pages/Login";
+import Registro from "../pages/Registro";
+import NegocioDetalle from "../pages/NegocioDetalle";
 
-import DashboardLayout from "../pages/dashboard/DashboardLayout"
-import Perfil from "../pages/dashboard/Perfil"
-import MisNegocios from "../pages/dashboard/MisNegocios"
-import MisEventos from "../pages/dashboard/MisEventos"
+import DashboardLayout from "../pages/dashboard/DashboardLayout";
+import Perfil from "../pages/dashboard/Perfil";
+import MisNegocios from "../pages/dashboard/MisNegocios";
+import MisEventos from "../pages/dashboard/MisEventos";
 
-import CrearNegocio from "../pages/dashboard/CrearNegocio"
+import CrearNegocio from "../pages/dashboard/CrearNegocio";
 
-import RutaPrivada from "../components/RutaPrivada"
-import EditarNegocio from "../pages/dashboard/EditarNegocio"
-
+import RutaPrivada from "../components/RutaPrivada";
+import EditarNegocio from "../pages/dashboard/EditarNegocio";
+import EditarEvento from "../pages/dashboard/EditarEvento";
 
 const router = createBrowserRouter([
   {
@@ -46,15 +46,22 @@ const router = createBrowserRouter([
               { path: ":id/editar", element: <EditarNegocio /> },
             ],
           },
-          { path: "mis-eventos", element: <MisEventos /> },
+          {
+            path: "mis-eventos",
+            children: [
+              { path: "", element: <MisEventos /> },
+              { path: "crear", element: <CrearEvento /> },
+              { path: ":id/editar", element: <EditarEvento /> },
+            ],
+          },
         ],
       },
     ],
   },
   { path: "/login", element: <Login /> },
   { path: "/registro", element: <Registro /> },
-])
+]);
 
 export default function AppRouter() {
-  return <RouterProvider router={router} />
+  return <RouterProvider router={router} />;
 }
