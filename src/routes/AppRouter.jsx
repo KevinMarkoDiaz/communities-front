@@ -6,23 +6,24 @@ import Eventos from "../pages/Eventos";
 import Login from "../pages/Login";
 import Registro from "../pages/Registro";
 import NegocioDetalle from "../pages/NegocioDetalle";
+import EventoDetalle from "../pages/EventoDetalle";
 
 import DashboardLayout from "../pages/dashboard/DashboardLayout";
 import Perfil from "../pages/dashboard/Perfil";
 import MisNegocios from "../pages/dashboard/MisNegocios";
 import MisEventos from "../pages/dashboard/MisEventos";
-
 import CrearNegocio from "../pages/dashboard/CrearNegocio";
-
-import RutaPrivada from "../components/RutaPrivada";
 import EditarNegocio from "../pages/dashboard/EditarNegocio";
+import CrearEvento from "../pages/dashboard/CrearEvento";
 import EditarEvento from "../pages/dashboard/EditarEvento";
-import EditarCategoria from "../pages/dashboard/EditarCategoria";
 import Categorias from "../pages/dashboard/Categorias";
 import CrearCategoria from "../pages/dashboard/CrearCategoria";
+import EditarCategoria from "../pages/dashboard/EditarCategoria";
 import Comunidades from "../pages/dashboard/Comunidades";
 import CrearComunidad from "../pages/dashboard/CrearComunidad";
 import EditarComunidad from "../pages/dashboard/EditarComunidad";
+
+import RutaPrivada from "../components/RutaPrivada";
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,7 @@ const router = createBrowserRouter([
       { path: "/negocios", element: <Negocios /> },
       { path: "/negocios/:id", element: <NegocioDetalle /> },
       { path: "/eventos", element: <Eventos /> },
+      { path: "/eventos/:id", element: <EventoDetalle /> },
     ],
   },
   {

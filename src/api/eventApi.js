@@ -1,62 +1,46 @@
 // src/api/eventApi.js
-import axiosInstance from "./axiosInstance"
+
+import eventos from "../data/eventosData" // mock de eventos
 
 /**
- * Crear un evento nuevo
- * @param {Object} data - Datos del evento
- * @param {string} token - JWT del usuario autenticado
+ * Crear un evento nuevo (no funcional en mock)
+ * @param {Object} data
+ * @param {string} token
  */
 export async function createEvent(data, token) {
-  const res = await axiosInstance.post("/events", data, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  })
-  return res.data
+  console.warn("createEvent() solo está disponible con la API real.");
+  return Promise.reject("No disponible en mock");
 }
 
 /**
- * Obtener todos los eventos
+ * Obtener todos los eventos desde el mock
  */
 export async function getAllEvents() {
-  const res = await axiosInstance.get("/events")
-  return res.data
+  return eventos
 }
 
 /**
- * Obtener un evento por su ID
- * @param {string} id - ID del evento
+ * Obtener un evento por ID desde el mock
+ * @param {string} id
  */
 export async function getEventById(id) {
-  const res = await axiosInstance.get(`/events/${id}`)
-  return res.data
+  const evento = eventos.find((e) => String(e.id) === String(id))
+  if (!evento) throw new Error("Mock: evento no encontrado")
+  return evento
 }
 
 /**
- * Actualizar un evento
- * @param {string} id - ID del evento
- * @param {Object} data - Datos actualizados
- * @param {string} token - JWT del usuario autenticado
+ * Actualizar evento (no funcional en mock)
  */
 export async function updateEvent(id, data, token) {
-  const res = await axiosInstance.put(`/events/${id}`, data, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  })
-  return res.data
+  console.warn("updateEvent() solo está disponible con la API real.");
+  return Promise.reject("No disponible en mock");
 }
 
 /**
- * Eliminar un evento
- * @param {string} id - ID del evento
- * @param {string} token - JWT del usuario autenticado
+ * Eliminar evento (no funcional en mock)
  */
 export async function deleteEvent(id, token) {
-  const res = await axiosInstance.delete(`/events/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  })
-  return res.data
+  console.warn("deleteEvent() solo está disponible con la API real.");
+  return Promise.reject("No disponible en mock");
 }
