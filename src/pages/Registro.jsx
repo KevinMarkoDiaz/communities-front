@@ -6,9 +6,12 @@ import { login } from "../store/authSlice"
 import { useNavigate } from "react-router-dom"
 
 const esquemaRegistro = Yup.object().shape({
-  nombre: Yup.string().min(2, "Muy corto").required("Campo obligatorio"),
+  name: Yup.string().min(2, "Muy corto").required("Campo obligatorio"),
   email: Yup.string().email("Correo inválido").required("Campo obligatorio"),
   password: Yup.string().min(6, "Mínimo 6 caracteres").required("Campo obligatorio"),
+  role: Yup.string().required("Selecciona un rol"),
+  profileImage: Yup.string().url("Debe ser una URL válida").required("Campo obligatorio"),
+  community: Yup.string(), // opcional
 })
 
 export default function Registro() {
@@ -16,10 +19,12 @@ export default function Registro() {
   const navigate = useNavigate()
 
   const handleSubmit = (valores) => {
-    // Simulación de registro exitoso
+    // Simulación de usuario creado
     const usuarioMock = {
-      nombre: valores.nombre,
-      email: valores.email,
+      ...valores,
+      isVerified: false,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     }
 
     dispatch(login(usuarioMock))
@@ -38,46 +43,46 @@ export default function Registro() {
           <h2 className="text-2xl font-bold text-center text-blue-600 mb-4">Crear cuenta</h2>
 
           <Formik
-            initialValues={{ nombre: "", email: "", password: "" }}
+            initialValues={{
+              name: "",
+              email: "",
+              password: "",
+              role: "user",
+              profileImage: "",
+              community: "",
+            }}
             validationSchema={esquemaRegistro}
             onSubmit={handleSubmit}
           >
             {() => (
               <Form className="space-y-4">
-                <div>
-                  <Field
-                    name="nombre"
-                    type="text"
-                    placeholder="Nombre completo"
-                    className="w-full border px-4 py-2 rounded"
-                  />
-                  <ErrorMessage name="nombre" component="div" className="text-red-600 text-sm mt-1" />
-                </div>
+
+                <Field name="name" placeholder="Nombre completo" className="w-full border px-4 py-2 rounded" />
+                <ErrorMessage name="name" component="div" className="text-red-600 text-sm" />
+
+                <Field name="email" type="email" placeholder="Correo electrónico" className="w-full border px-4 py-2 rounded" />
+                <ErrorMessage name="email" component="div" className="text-red-600 text-sm" />
+
+                <Field name="password" type="password" placeholder="Contraseña" className="w-full border px-4 py-2 rounded" />
+                <ErrorMessage name="password" component="div" className="text-red-600 text-sm" />
 
                 <div>
-                  <Field
-                    name="email"
-                    type="email"
-                    placeholder="Correo electrónico"
-                    className="w-full border px-4 py-2 rounded"
-                  />
-                  <ErrorMessage name="email" component="div" className="text-red-600 text-sm mt-1" />
+                  <label className="block mb-1 font-medium text-sm">Rol</label>
+                  <Field as="select" name="role" className="w-full border px-4 py-2 rounded">
+                    <option value="user">Usuario</option>
+                    <option value="admin">Administrador</option>
+                    <option value="business_owner">Dueño de negocio</option>
+                  </Field>
+                  <ErrorMessage name="role" component="div" className="text-red-600 text-sm" />
                 </div>
 
-                <div>
-                  <Field
-                    name="password"
-                    type="password"
-                    placeholder="Contraseña"
-                    className="w-full border px-4 py-2 rounded"
-                  />
-                  <ErrorMessage name="password" component="div" className="text-red-600 text-sm mt-1" />
-                </div>
+                <Field name="profileImage" placeholder="URL de imagen de perfil" className="w-full border px-4 py-2 rounded" />
+                <ErrorMessage name="profileImage" component="div" className="text-red-600 text-sm" />
 
-                <button
-                  type="submit"
-                  className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
-                >
+                <Field name="community" placeholder="ID de comunidad (opcional)" className="w-full border px-4 py-2 rounded" />
+                <ErrorMessage name="community" component="div" className="text-red-600 text-sm" />
+
+                <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition">
                   Registrarse
                 </button>
 
