@@ -5,6 +5,7 @@ import Negocios from "../pages/Negocios"
 import Eventos from "../pages/Eventos"
 import Login from "../pages/Login"
 import Registro from "../pages/Registro"
+import NegocioDetalle from "../pages/NegocioDetalle"
 
 const router = createBrowserRouter([
   {
@@ -13,6 +14,7 @@ const router = createBrowserRouter([
     children: [
       { path: "/", element: <Home /> },
       { path: "/negocios", element: <Negocios /> },
+      { path: "/negocios/:id", element: <NegocioDetalle /> },
       { path: "/eventos", element: <Eventos /> },
     ],
   },

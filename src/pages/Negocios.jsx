@@ -1,6 +1,7 @@
 import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { obtenerNegocios } from "../store/negociosSlice"
+import { Link } from "react-router-dom"
 import Card from "../components/Card"
 import SearchBar from "../components/SearchBar"
 import CategoryFilter from "../components/CategoryFilter"
@@ -31,11 +32,13 @@ export default function Negocios() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {negociosFiltrados.map((negocio) => (
+          <Link to={`/negocios/${negocio.id}`}>
           <Card
             key={negocio.id}
             title={negocio.nombre}
             description={negocio.descripcion}
           />
+        </Link>
         ))}
         {negociosFiltrados.length === 0 && (
           <p className="text-gray-500 col-span-full text-center">No se encontraron resultados.</p>
