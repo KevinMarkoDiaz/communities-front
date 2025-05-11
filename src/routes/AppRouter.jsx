@@ -20,6 +20,9 @@ import EditarEvento from "../pages/dashboard/EditarEvento";
 import EditarCategoria from "../pages/dashboard/EditarCategoria";
 import Categorias from "../pages/dashboard/Categorias";
 import CrearCategoria from "../pages/dashboard/CrearCategoria";
+import Comunidades from "../pages/dashboard/Comunidades";
+import CrearComunidad from "../pages/dashboard/CrearComunidad";
+import EditarComunidad from "../pages/dashboard/EditarComunidad";
 
 const router = createBrowserRouter([
   {
@@ -63,6 +66,14 @@ const router = createBrowserRouter([
               { path: "", element: <Categorias /> },
               { path: "crear", element: <CrearCategoria /> },
               { path: ":id/editar", element: <EditarCategoria /> },
+            ],
+          },
+          {
+            path: "comunidades",
+            children: [
+              { path: "", element: <Comunidades /> },
+              { path: "crear", element: <CrearComunidad /> },
+              { path: ":id/editar", element: <EditarComunidad /> },
             ],
           },
         ],
