@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet-async"
 import { useDispatch } from "react-redux"
 import { login } from "../store/authSlice"
 import { useNavigate } from "react-router-dom"
+import { registerUser } from "../api/authApi"
 
 const esquemaRegistro = Yup.object().shape({
   name: Yup.string().min(2, "Muy corto").required("Campo obligatorio"),
@@ -18,22 +19,22 @@ export default function Registro() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const handleSubmit = (valores) => {
-    // Simulación de usuario creado
-    const usuarioMock = {
-      ...valores,
-      isVerified: false,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+  const handleSubmit = async (valores, { setSubmitting, setErrors }) => {
+    try {
+      const nuevoUsuario = await registerUser(valores) // 🔁 Axios (simulado o real)
+      dispatch(login(nuevoUsuario))
+      navigate("/dashboard/perfil")
+    } catch (error) {
+      console.error("Error al registrar:", error)
+      setErrors({ email: "No se pudo registrar el usuario. Intenta más tarde." })
+    } finally {
+      setSubmitting(false)
     }
-
-    dispatch(login(usuarioMock))
-    navigate("/dashboard/perfil")
   }
 
   return (
     <>
-      <Helmet>
+     <Helmet>
         <title>Communities | Registro</title>
         <meta name="description" content="Crea tu cuenta para publicar negocios, ver eventos y conectar con tu comunidad migrante." />
       </Helmet>

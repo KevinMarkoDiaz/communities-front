@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet-async'
 import { useDispatch } from "react-redux"
 import { login } from "../store/authSlice"
 import { useNavigate } from "react-router-dom"
+import { loginUser } from "../api/authApi"
 
 const esquemaValidacion = Yup.object().shape({
   email: Yup.string().email("Correo inválido").required("Campo obligatorio"),
@@ -14,15 +15,17 @@ export default function Login() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const handleSubmit = (valores) => {
-    // Simulamos autenticación con un objeto de usuario
-    const usuarioMock = {
-      nombre: "Usuario Demo",
-      email: valores.email,
+  const handleSubmit = async (valores, { setSubmitting, setErrors }) => {
+    try {
+      const usuario = await loginUser(valores) // 🔁 Axios simulation (luego será real)
+      dispatch(login(usuario))
+      navigate("/dashboard/perfil")
+    } catch (error) {
+      console.error("Error en login:", error)
+      setErrors({ email: "Correo o contraseña incorrectos" })
+    } finally {
+      setSubmitting(false)
     }
-
-    dispatch(login(usuarioMock))
-    navigate("/dashboard/perfil")
   }
 
   return (
