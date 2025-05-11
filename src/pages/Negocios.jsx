@@ -5,6 +5,7 @@ import { Link } from "react-router-dom"
 import Card from "../components/Card"
 import SearchBar from "../components/SearchBar"
 import CategoryFilter from "../components/CategoryFilter"
+import Loading from "../components/Loading"
 
 export default function Negocios() {
   const dispatch = useDispatch()
@@ -25,8 +26,7 @@ export default function Negocios() {
 
   return (
     <div className="p-4 space-y-4">
-      <h2 className="text-2xl font-bold">Negocios</h2>
-
+if (loading) return <Loading mensaje="Cargando negocios..." />
       <SearchBar />
       <CategoryFilter />
 

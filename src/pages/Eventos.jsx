@@ -2,6 +2,7 @@ import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { obtenerEventos } from "../store/eventosSlice"
 import Card from "../components/Card"
+import Loading from "../components/Loading"
 
 export default function Eventos() {
   const dispatch = useDispatch()
@@ -11,7 +12,7 @@ export default function Eventos() {
     dispatch(obtenerEventos())
   }, [dispatch])
 
-  if (loading) return <div className="p-4">Cargando eventos...</div>
+  if (loading) return <Loading mensaje="Cargando eventos..." />
   if (error) return <div className="p-4 text-red-600">Error: {error}</div>
 
   return (
