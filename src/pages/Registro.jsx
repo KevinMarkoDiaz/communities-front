@@ -1,6 +1,9 @@
 import { Formik, Form, Field, ErrorMessage } from "formik"
 import * as Yup from "yup"
 import { Helmet } from "react-helmet-async"
+import { useDispatch } from "react-redux"
+import { login } from "../store/authSlice"
+import { useNavigate } from "react-router-dom"
 
 const esquemaRegistro = Yup.object().shape({
   nombre: Yup.string().min(2, "Muy corto").required("Campo obligatorio"),
@@ -9,9 +12,18 @@ const esquemaRegistro = Yup.object().shape({
 })
 
 export default function Registro() {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
   const handleSubmit = (valores) => {
-    console.log("Registro con Formik:", valores)
-    // Aquí iría la llamada a tu API de registro
+    // Simulación de registro exitoso
+    const usuarioMock = {
+      nombre: valores.nombre,
+      email: valores.email,
+    }
+
+    dispatch(login(usuarioMock))
+    navigate("/dashboard/perfil")
   }
 
   return (

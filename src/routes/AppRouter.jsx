@@ -12,6 +12,9 @@ import Perfil from "../pages/dashboard/Perfil"
 import MisNegocios from "../pages/dashboard/MisNegocios"
 import MisEventos from "../pages/dashboard/MisEventos"
 
+import RutaPrivada from "../components/RutaPrivada"
+
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -25,11 +28,17 @@ const router = createBrowserRouter([
   },
   {
     path: "/dashboard",
-    element: <DashboardLayout />,
+    element: <RutaPrivada />, // 🔒 Protección
     children: [
-      { path: "perfil", element: <Perfil /> },
-      { path: "mis-negocios", element: <MisNegocios /> },
-      { path: "mis-eventos", element: <MisEventos /> },
+      {
+        path: "",
+        element: <DashboardLayout />,
+        children: [
+          { path: "perfil", element: <Perfil /> },
+          { path: "mis-negocios", element: <MisNegocios /> },
+          { path: "mis-eventos", element: <MisEventos /> },
+        ],
+      },
     ],
   },
   { path: "/login", element: <Login /> },

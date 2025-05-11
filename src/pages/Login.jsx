@@ -1,6 +1,9 @@
 import { Formik, Form, Field, ErrorMessage } from "formik"
 import * as Yup from "yup"
 import { Helmet } from 'react-helmet-async'
+import { useDispatch } from "react-redux"
+import { login } from "../store/authSlice"
+import { useNavigate } from "react-router-dom"
 
 const esquemaValidacion = Yup.object().shape({
   email: Yup.string().email("Correo inválido").required("Campo obligatorio"),
@@ -8,9 +11,18 @@ const esquemaValidacion = Yup.object().shape({
 })
 
 export default function Login() {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
   const handleSubmit = (valores) => {
-    console.log("Login con Formik:", valores)
-    // Aquí conectarías con tu API
+    // Simulamos autenticación con un objeto de usuario
+    const usuarioMock = {
+      nombre: "Usuario Demo",
+      email: valores.email,
+    }
+
+    dispatch(login(usuarioMock))
+    navigate("/dashboard/perfil")
   }
 
   return (
