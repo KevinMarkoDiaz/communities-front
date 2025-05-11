@@ -9,7 +9,7 @@ import { store } from "./store/store";
 import { HelmetProvider } from "react-helmet-async";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode className="font-sans">
+  <React.StrictMode>
     <Provider store={store}>
       <HelmetProvider>
         <AppRouter />
