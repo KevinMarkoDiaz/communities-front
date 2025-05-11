@@ -17,6 +17,9 @@ import CrearNegocio from "../pages/dashboard/CrearNegocio";
 import RutaPrivada from "../components/RutaPrivada";
 import EditarNegocio from "../pages/dashboard/EditarNegocio";
 import EditarEvento from "../pages/dashboard/EditarEvento";
+import EditarCategoria from "../pages/dashboard/EditarCategoria";
+import Categorias from "../pages/dashboard/Categorias";
+import CrearCategoria from "../pages/dashboard/CrearCategoria";
 
 const router = createBrowserRouter([
   {
@@ -52,6 +55,14 @@ const router = createBrowserRouter([
               { path: "", element: <MisEventos /> },
               { path: "crear", element: <CrearEvento /> },
               { path: ":id/editar", element: <EditarEvento /> },
+            ],
+          },
+          {
+            path: "categorias",
+            children: [
+              { path: "", element: <Categorias /> },
+              { path: "crear", element: <CrearCategoria /> },
+              { path: ":id/editar", element: <EditarCategoria /> },
             ],
           },
         ],
