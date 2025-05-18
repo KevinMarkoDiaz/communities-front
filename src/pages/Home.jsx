@@ -3,6 +3,7 @@ import NegociosSugeridos from "../components/home/NegociosSugeridos";
 import EventosProximos from "../components/home/EventosProximos";
 import ComunidadesDestacadas from "../components/home/ComunidadesDestacadas";
 import BusquedaList from "../components/home/BusquedaList ";
+import HeroBannerLatino from "../components/home/HeroBannerLatino";
 
 export default function Home() {
   return (
@@ -19,15 +20,30 @@ export default function Home() {
       <BusquedaList />
 
       {/* Contenido adicional sugerido */}
-      <div className="px-4 sm:px-6 lg:px-8 py-10 space-y-12 max-w-6xl mx-auto">
-        <h2 className="text-2xl font-bold text-[#141C24]">
-          Bienvenido a Communities
-        </h2>
-        <p className="text-[#3F5374] text-base leading-relaxed">
-          Descubre negocios, eventos y comunidades de tu país en tu nueva
-          ciudad. Apoyá lo local, conectá con tu cultura y encontrá servicios
-          pensados para vos.
-        </p>
+      <div className="px-4 sm:px-6 lg:px-8 py-10 space-y-12 max-w-6xl mx-auto flex flex-col gap-32">
+        <div className="px-4 sm:px-6 lg:px-8 py-10 space-y-12 max-w-6xl mx-auto">
+          <div className="flex flex-col lg:flex-row gap-8 lg:items-center">
+            {/* Texto (40%) */}
+            <div className="w-full lg:w-2/5 space-y-4 flex flex-col justify-center h-full">
+              <h2 className="text-3xl font-extrabold text-[#F45525] tracking-tight">
+                ¡Bienvenido a Communities!
+              </h2>
+              <p className="text-[#141C24] text-lg leading-relaxed">
+                Conectá con lo mejor de tu cultura en EE.UU. <br />
+                Descubrí <span className=" font-bold">negocios latinos</span>,
+                participá en <span className="font-bold">eventos locales</span>,
+                y encontrá tu
+                <span className="font-bold"> comunidad</span> donde quiera que
+                estés.
+              </p>
+            </div>
+
+            {/* HeroBannerLatino (60%) */}
+            <div className="w-full lg:w-3/5">
+              <HeroBannerLatino />
+            </div>
+          </div>
+        </div>
 
         <NegociosSugeridos />
         <EventosProximos />

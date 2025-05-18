@@ -1,17 +1,17 @@
-export default function Card({ title, description, image }) {
+export default function CardDestacado({ title, image, description }) {
   const hasImage = Boolean(image);
 
   return (
-    <div className="flex flex-col gap-2 bg-white rounded-xl shadow-sm hover:shadow-md transition duration-300 overflow-hidden pb-2 w-full max-w-[200px] md:min-w-[180px] lg:min-w-[200px]">
+    <div className="flex flex-col gap-2 pb-3 w-full max-w-[200px] min-w-[160px]">
       <div
-        className={`w-full aspect-square rounded-xl flex items-center justify-center ${
-          hasImage ? "bg-cover bg-center bg-no-repeat" : "bg-gray-100"
-        }`}
+        className={`w-full aspect-video rounded-xl bg-center bg-cover bg-no-repeat ${
+          hasImage ? "" : "bg-gray-100 flex items-center justify-center"
+        } min-h-[100px] max-h-[120px]`}
         style={hasImage ? { backgroundImage: `url("${image}")` } : {}}
       >
         {!hasImage && (
           <svg
-            className="w-8 h-8 text-gray-400"
+            className="w-6 h-6 text-gray-400"
             fill="none"
             stroke="currentColor"
             strokeWidth={1.5}
@@ -28,14 +28,12 @@ export default function Card({ title, description, image }) {
         )}
       </div>
 
-      <div className="px-2">
-        <p className="text-[#141C24] text-sm font-semibold leading-tight line-clamp-1">
-          {title}
-        </p>
-        <p className="text-[#3F5374] text-xs font-normal leading-snug line-clamp-2">
-          {description}
-        </p>
-      </div>
+      <p className="text-[#181411] text-sm font-semibold leading-snug line-clamp-1">
+        {title}
+      </p>
+      <p className="text-[#3F5374] text-xs font-normal leading-snug line-clamp-2">
+        {description}
+      </p>
     </div>
   );
 }

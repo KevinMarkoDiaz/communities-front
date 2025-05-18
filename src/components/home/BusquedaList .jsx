@@ -51,7 +51,7 @@ export default function BusquedaList() {
 
       <div
         ref={resultadosRef} // 👈 marcamos la sección a la que hacer scroll
-        className="layout-content-container flex flex-col max-w-[960px] mx-auto space-y-4"
+        className="layout-content-container flex flex-col max-w-[960px] mx-auto space-y-8"
       >
         {loading && <p className="text-gray-500 px-4">Buscando...</p>}
         {error && <p className="text-red-500 px-4">Error: {error}</p>}

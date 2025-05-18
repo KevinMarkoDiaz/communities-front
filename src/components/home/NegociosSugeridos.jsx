@@ -6,17 +6,15 @@ import { useNegocios } from "../../hooks/useNegocios";
 export default function NegociosSugeridos() {
   const { lista: negocios } = useNegocios();
   return (
-    <section className="space-y-4">
-      <div className="flex justify-between items-center px-1">
-        <h2 className="text-xl font-bold text-[#141C24]">
-          <Link to="/negocios" className="hover:underline text-blue-700">
-            Recomendados para vos
-          </Link>
-        </h2>
-      </div>
+    <section className="space-y-16">
+      <h2 className="text-2xl font-extrabold text-[#FB8500] flex items-center gap-2">
+        <Link to="/negocios" className="hover:underline hover:text-[#E63946]">
+          Destacados de tu comunidad
+        </Link>
+      </h2>
 
       <GridWrapper>
-        {negocios.map((negocio) => (
+        {negocios.slice(0, 4).map((negocio) => (
           <Link
             to={`/negocios/${negocio.id || negocio._id}`}
             key={negocio.id || negocio._id}

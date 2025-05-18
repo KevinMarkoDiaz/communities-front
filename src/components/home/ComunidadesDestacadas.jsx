@@ -6,16 +6,19 @@ import { useComunidades } from "../../hooks/useComunidades";
 export default function ComunidadesDestacadas() {
   const { lista: comunidades } = useComunidades();
 
-  const destacadas = comunidades.slice(0, 12);
+  const destacadas = comunidades.slice(0, 4);
 
   if (destacadas.length === 0) return null;
 
   return (
-    <section className="space-y-4">
+    <section className="space-y-16">
       <div className="flex justify-between items-center px-1">
-        <h2 className="text-xl font-bold text-[#141C24]">
-          <Link to="/comunidades" className="hover:underline text-blue-700">
-            Comunidades cerca de ti
+        <h2 className="text-2xl font-extrabold text-[#FB8500] tracking-tight leading-snug">
+          <Link
+            to="/comunidades"
+            className="hover:underline hover:text-[#D7263D] transition-colors duration-200"
+          >
+            Encontrá tu comunidad y sentite en casa
           </Link>
         </h2>
       </div>
