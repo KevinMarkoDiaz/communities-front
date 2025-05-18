@@ -1,18 +1,12 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { obtenerEventos } from "../store/eventosSlice";
 import { Helmet } from "react-helmet-async";
 import Card from "../components/Card";
 import Loading from "../components/Loading";
 import { Link } from "react-router-dom";
+import GridWrapper from "../components/GridWrapper";
+import { useEventos } from "../hooks/useEventos";
 
 export default function Eventos() {
-  const dispatch = useDispatch();
-  const { lista, loading, error } = useSelector((state) => state.eventos);
-  console.log("Eventos:", lista);
-  useEffect(() => {
-    dispatch(obtenerEventos());
-  }, [dispatch]);
+  const { lista, loading, error } = useEventos();
 
   if (loading) return <Loading mensaje="Cargando eventos..." />;
   if (error) return <div className="p-4 text-red-600">Error: {error}</div>;
@@ -27,21 +21,32 @@ export default function Eventos() {
         />
       </Helmet>
 
-      <div className="p-4 space-y-6">
-        <h2 className="text-2xl font-bold">Eventos</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {lista.map((evento) => (
-            <Link to={`/eventos/${evento.id}`} key={evento._id}>
-              <Card
-                title={evento.title}
-                description={`${evento.description} (📅 ${new Date(
-                  evento.date
-                ).toLocaleDateString()})`}
-              />
-            </Link>
-          ))}
-        </div>
-      </div>
+      <GridWrapper>
+        {lista.map((evento) => (
+          <Link
+            to={`/eventos/${evento.id || evento._id}`}
+            key={evento._id}
+            className="flex-shrink-0"
+          >
+            <Card
+              title={evento.title}
+              description={`${evento.description} 📅 ${new Date(
+                evento.date
+              ).toLocaleDateString("es-ES", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+              })}`}
+              image={evento.imagenDestacada} // opcional si tenés imagen en eventos
+            />
+          </Link>
+        ))}
+        {lista.length === 0 && (
+          <p className="text-gray-500 w-full text-center">
+            No hay eventos disponibles.
+          </p>
+        )}
+      </GridWrapper>
     </>
   );
 }

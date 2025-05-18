@@ -35,7 +35,7 @@ export default function Header() {
             Events
           </Link>
           <Link
-            to="/dashboard/comunidades"
+            to="/comunidades"
             className="text-sm font-medium text-[#141C24]"
           >
             Communities

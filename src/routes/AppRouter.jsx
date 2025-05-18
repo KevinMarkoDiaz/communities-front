@@ -3,6 +3,8 @@ import Layout from "../layout/Layout";
 import Home from "../pages/Home";
 import Negocios from "../pages/Negocios";
 import Eventos from "../pages/Eventos";
+import Comunidadeshome from "../pages/Comunidades";
+
 import Login from "../pages/Login";
 import Registro from "../pages/Registro";
 import NegocioDetalle from "../pages/NegocioDetalle";
@@ -24,6 +26,7 @@ import CrearComunidad from "../pages/dashboard/CrearComunidad";
 import EditarComunidad from "../pages/dashboard/EditarComunidad";
 
 import RutaPrivada from "../components/RutaPrivada";
+import ComunidadDetalle from "../pages/ComunidadDetalle";
 
 const router = createBrowserRouter([
   {
@@ -35,6 +38,9 @@ const router = createBrowserRouter([
       { path: "/negocios/:id", element: <NegocioDetalle /> },
       { path: "/eventos", element: <Eventos /> },
       { path: "/eventos/:id", element: <EventoDetalle /> },
+      { path: "/eventos/:id", element: <EventoDetalle /> },
+      { path: "/comunidades", element: <Comunidadeshome /> },
+      { path: "/comunidades/:id", element: <ComunidadDetalle /> },
     ],
   },
   {
