@@ -1,6 +1,9 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { obtenerComunidades } from "../store/comunidadesSlice";
+import {
+  obtenerComunidades,
+  setBusqueda as setBusquedaComunidades
+} from "../store/comunidadesSlice";
 
 export function useComunidades() {
   const dispatch = useDispatch();
@@ -22,5 +25,6 @@ export function useComunidades() {
     loading,
     error,
     busqueda,
+    setBusqueda: (text) => dispatch(setBusquedaComunidades(text))
   };
 }

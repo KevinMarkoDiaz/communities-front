@@ -6,9 +6,13 @@ import Loading from "../components/Loading";
 import GridWrapper from "../components/GridWrapper";
 import CategoryCarousel from "../components/CategoryCarousel";
 import { useNegocios } from "../hooks/useNegocios";
-
+import SearchBar from "../components/SearchBar";
+import { setBusqueda } from "../store/negociosSlice";
+import { useDispatch, useSelector } from "react-redux";
 export default function Negocios() {
   const { negociosFiltrados, loading, error } = useNegocios();
+  const dispatch = useDispatch();
+  const busqueda = useSelector((state) => state.negocios.busqueda);
 
   if (loading) return <Loading mensaje="Cargando negocios..." />;
   if (error) return <div className="p-4 text-red-600">Error: {error}</div>;
@@ -22,6 +26,11 @@ export default function Negocios() {
           content="Explora negocios y servicios dentro de tu comunidad migrante."
         />
       </Helmet>
+      <SearchBar
+        value={busqueda}
+        onChange={(text) => dispatch(setBusqueda(text))}
+        placeholder="Buscar negocios..."
+      />
       <CategoryCarousel />
       <GridWrapper>
         {negociosFiltrados.map((negocio) => (

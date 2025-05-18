@@ -4,9 +4,11 @@ import GridWrapper from "../components/GridWrapper";
 import Card from "../components/Card";
 import Loading from "../components/Loading";
 import { useComunidades } from "../hooks/useComunidades";
+import SearchBar from "../components/SearchBar";
 
 export default function Comunidades() {
-  const { comunidadesFiltradas, loading, error } = useComunidades();
+  const { comunidadesFiltradas, busqueda, setBusqueda, error, loading } =
+    useComunidades();
 
   if (loading) return <Loading mensaje="Cargando comunidades..." />;
   if (error) return <div className="p-4 text-red-600">Error: {error}</div>;
@@ -20,7 +22,11 @@ export default function Comunidades() {
           content="Explora comunidades migrantes con negocios, eventos y servicios propios."
         />
       </Helmet>
-
+      <SearchBar
+        value={busqueda}
+        onChange={setBusqueda}
+        placeholder="Buscar comunidades..."
+      />
       <GridWrapper>
         {comunidadesFiltradas.map((comunidad) => (
           <Link

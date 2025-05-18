@@ -4,10 +4,10 @@ import Loading from "../components/Loading";
 import { Link } from "react-router-dom";
 import GridWrapper from "../components/GridWrapper";
 import { useEventos } from "../hooks/useEventos";
+import SearchBar from "../components/SearchBar";
 
 export default function Eventos() {
-  const { lista, loading, error } = useEventos();
-
+  const { lista, loading, error, busqueda, setBusqueda } = useEventos();
   if (loading) return <Loading mensaje="Cargando eventos..." />;
   if (error) return <div className="p-4 text-red-600">Error: {error}</div>;
 
@@ -20,7 +20,11 @@ export default function Eventos() {
           content="Consulta eventos culturales y comunitarios relevantes para migrantes."
         />
       </Helmet>
-
+      <SearchBar
+        value={busqueda}
+        onChange={setBusqueda}
+        placeholder="Buscar eventos..."
+      />
       <GridWrapper>
         {lista.map((evento) => (
           <Link

@@ -1,10 +1,8 @@
-import { useDispatch, useSelector } from "react-redux";
-import { setBusqueda } from "../store/negociosSlice";
-
-export default function SearchBar() {
-  const dispatch = useDispatch();
-  const busqueda = useSelector((state) => state.negocios.busqueda);
-
+export default function SearchBar({
+  value,
+  onChange,
+  placeholder = "Buscar...",
+}) {
   return (
     <div className="px-4 py-3">
       <label className="flex flex-col min-w-40 h-12 w-full">
@@ -23,9 +21,9 @@ export default function SearchBar() {
 
           <input
             type="text"
-            placeholder="Search for a business or event"
-            value={busqueda}
-            onChange={(e) => dispatch(setBusqueda(e.target.value))}
+            placeholder={placeholder}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
             className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#181411] focus:outline-0 focus:ring-0 border-none bg-[#f5f2f0] focus:border-none h-full placeholder:text-[#8a7560] px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal"
           />
         </div>
