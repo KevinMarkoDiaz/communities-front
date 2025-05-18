@@ -25,3 +25,30 @@ export function fetchComunidades() {
     }, 1000)
   })
 }
+
+export function fetchBusquedaGlobal(termino) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const texto = termino.toLowerCase();
+
+      const filtrar = (item, campos) =>
+        campos.some((campo) =>
+          item[campo]?.toLowerCase().includes(texto)
+        );
+
+      const negocios = negociosData
+        .filter((n) => filtrar(n, ["nombre", "descripcion", "categoria"]))
+        .map((n) => ({ ...n, tipo: "negocio" }));
+
+      const eventos = eventosData
+        .filter((e) => filtrar(e, ["title", "description"]))
+        .map((e) => ({ ...e, tipo: "evento" }));
+
+      const comunidades = comunidadesData
+        .filter((c) => filtrar(c, ["name", "description", "language"]))
+        .map((c) => ({ ...c, tipo: "comunidad" }));
+
+      resolve([...negocios, ...eventos, ...comunidades]);
+    }, 500);
+  });
+}
