@@ -4,9 +4,9 @@ export default function SearchBar({
   placeholder = "Buscar...",
 }) {
   return (
-    <div className="px-4 py-3">
-      <label className="flex flex-col min-w-40 h-12 w-full">
-        <div className="flex w-full flex-1 items-stretch rounded-xl h-full">
+    <div className="px-4 py-3 w-full flex">
+      <label className="flex flex-col w-full max-w-xl h-12">
+        <div className="flex w-full items-stretch rounded-xl h-full">
           <div className="text-[#8a7560] flex border-none bg-[#f5f2f0] items-center justify-center pl-4 rounded-l-xl border-r-0">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -24,7 +24,7 @@ export default function SearchBar({
             placeholder={placeholder}
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#181411] focus:outline-0 focus:ring-0 border-none bg-[#f5f2f0] focus:border-none h-full placeholder:text-[#8a7560] px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal"
+            className="form-input w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#181411] focus:outline-0 focus:ring-0 border-none bg-[#f5f2f0] focus:border-none h-full placeholder:text-[#8a7560] px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal"
           />
         </div>
       </label>

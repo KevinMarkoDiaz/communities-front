@@ -8,10 +8,8 @@ export default function Layout() {
       <Navbar />
 
       <main className="flex flex-grow overflow-hidden">
-        <div className="flex-grow p-4">
-          <div className="w-full max-w-[95%] lg:max-w-[80%] xl:max-w-[70%] mx-auto">
-            <Outlet />
-          </div>
+        <div className="w-full max-w-[95%] lg:max-w-[80%] mx-auto flex flex-col gap-20">
+          <Outlet />
         </div>
       </main>
 

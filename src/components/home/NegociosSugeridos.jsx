@@ -8,9 +8,7 @@ export default function NegociosSugeridos() {
   return (
     <section className="space-y-16">
       <h2 className="text-2xl font-extrabold text-[#FB8500] flex items-center gap-2">
-        <Link to="/negocios" className="hover:underline hover:text-[#E63946]">
-          Destacados de tu comunidad
-        </Link>
+        <Link to="/negocios">Destacados de tu comunidad</Link>
       </h2>
 
       <GridWrapper>

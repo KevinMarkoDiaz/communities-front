@@ -30,7 +30,7 @@ export default function Negocios() {
           content="Explora negocios y servicios dentro de tu comunidad migrante."
         />
       </Helmet>
-      <div className="w-full max-w-[95%] lg:max-w-[80%] xl:max-w-[70%] flex flex-col gap-32">
+      <div className="w-full max-w-[95%] lg:max-w-[80%] xl:max-w-[70%] flex flex-col gap-32 mx-auto">
         <BannerNegocios scrollToRef={gridRef} />
 
         <div>
