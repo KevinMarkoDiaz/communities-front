@@ -7,13 +7,11 @@ export default function Layout() {
     <div className="flex flex-col min-h-screen">
       <Navbar />
 
-      <main className="flex flex-grow">
-        {/* Sidebar izquierda */}
-        <aside className="hidden lg:block w-72 p-4 border-r border-gray-200 bg-[#F8F9FB]"></aside>
-
-        {/* Contenido principal */}
+      <main className="flex flex-grow overflow-hidden">
         <div className="flex-grow p-4">
-          <Outlet />
+          <div className="w-full max-w-[95%] lg:max-w-[80%] xl:max-w-[70%] mx-auto">
+            <Outlet />
+          </div>
         </div>
       </main>
 

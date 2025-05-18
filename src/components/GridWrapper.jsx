@@ -1,4 +1,14 @@
-// src/components/GridWrapper.jsx
-export default function GridWrapper({ children }) {
-  return <div className="flex flex-wrap gap-12 justify-start">{children}</div>;
-}
+import React, { forwardRef } from "react";
+
+const GridWrapper = forwardRef(({ children }, ref) => {
+  return (
+    <div
+      ref={ref}
+      className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"
+    >
+      {children}
+    </div>
+  );
+});
+
+export default GridWrapper;
