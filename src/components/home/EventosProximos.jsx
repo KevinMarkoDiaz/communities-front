@@ -40,7 +40,7 @@ export default function EventosProximos() {
                   year: "numeric",
                 }
               )}`}
-              image={evento.imagenDestacada}
+              image={evento.image}
             />
           </Link>
         ))}

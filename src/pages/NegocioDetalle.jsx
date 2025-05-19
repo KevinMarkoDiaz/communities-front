@@ -1,64 +1,61 @@
-// src/pages/BusinessDetail.jsx
 import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { Helmet } from "react-helmet-async";
-import { OwnerCard } from "../components/OwnerCard";
-import { OpeningHoursList } from "../components/OpeningHoursList";
-import { ContactCard } from "../components/ContactCard";
-import BusinessHero from "../components/bussines/BusinessHero";
-import { CommunityTags } from "../components/CommunityTags";
+import { useEffect, useState } from "react";
+import { getEventById } from "../api/eventApi";
+import EventHero from "../components/eventos/EventHero";
+import EventInfo from "../components/eventos/EventInfo";
+import EventDescription from "../components/eventos/EventDescription";
+import EventOrganizerCard from "../components/eventos/EventOrganizerCard";
+import EventCTAButton from "../components/eventos/EventCTAButton";
 
-export default function BusinessDetail() {
+export default function EventoDetalle() {
   const { id } = useParams();
-  const { lista } = useSelector((state) => state.negocios);
-  const negocio = lista.find(
-    (n) => String(n.id) === id || String(n._id) === id
-  );
+  const [evento, setEvento] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  if (!negocio) {
-    return (
-      <div className="p-4 text-center text-gray-600">
-        <Helmet>
-          <title>Communities | Negocio no encontrado</title>
-        </Helmet>
-        Negocio no encontrado.
-      </div>
-    );
-  }
+  useEffect(() => {
+    const cargarEvento = async () => {
+      try {
+        const data = await getEventById(id);
+        setEvento(data);
+      } catch (err) {
+        console.error("Error al cargar evento:", err);
+        setError("No se pudo cargar el evento");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    cargarEvento();
+  }, [id]);
+
+  if (loading) return <div className="p-4">Cargando evento...</div>;
+  if (error) return <div className="p-4 text-red-600">{error}</div>;
+  if (!evento) return <div className="p-4">Evento no encontrado.</div>;
 
   return (
-    <>
-      <Helmet>
-        <title>Communities | {negocio.nombre}</title>
-        <meta
-          name="description"
-          content={`Información sobre ${negocio.nombre}: ${negocio.descripcion}`}
-        />
-      </Helmet>
-
-      <main className="flex-grow px-4 sm:px-8 lg:px-40 py-5 flex justify-center">
-        <div className="w-full max-w-[960px] flex flex-col gap-8">
-          <BusinessHero
-            title={negocio.nombre}
-            imageUrl={
-              negocio.imagenDestacada || "https://via.placeholder.com/960x400"
-            }
-          />
-
-          <section className="space-y-2">
-            <h2 className="text-2xl font-bold">{negocio.nombre}</h2>
-            <p className="text-gray-700">{negocio.descripcion}</p>
-            <p className="text-sm text-gray-500">
-              Categoría: {negocio.categoria || "N/A"}
-            </p>
-          </section>
-
-          <ContactCard contact={negocio.contacto} />
-          <OpeningHoursList hours={negocio.horarios} />
-          <OwnerCard owner={negocio.propietario} />
-          <CommunityTags tags={[negocio.comunidad, ...negocio.etiquetas]} />
+    <div className="flex flex-col gap-6 px-4 sm:px-8 lg:px-40 py-5">
+      <EventHero image={evento.image} title={evento.title} />
+      <EventInfo
+        date={evento.date}
+        time={evento.time}
+        location={evento.location}
+      />
+      <EventDescription description={evento.description} />
+      <EventOrganizerCard organizer={evento.organizer} />
+      {evento.tags && evento.tags.length > 0 && (
+        <div className="flex flex-wrap gap-2 pt-2">
+          {evento.tags.map((tag, index) => (
+            <span
+              key={index}
+              className="bg-[#f0f2f4] text-[#111418] text-sm px-3 py-1 rounded-full"
+            >
+              {tag}
+            </span>
+          ))}
         </div>
-      </main>
-    </>
+      )}
+      <EventCTAButton />
+    </div>
   );
 }

@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import GridWrapper from "../components/GridWrapper";
 import { useEventos } from "../hooks/useEventos";
 import SearchBar from "../components/SearchBar";
-import BannerEvento from "../components/eventsHome/BannerEvento"; // ⬅️ asegurate de tener este componente
+import BannerEvento from "../components/eventos/BannerEvento"; // ⬅️ asegurate de tener este componente
 
 import { useRef } from "react";
 
@@ -39,7 +39,7 @@ export default function Eventos() {
           {lista.map((evento) => (
             <Link
               to={`/eventos/${evento.id || evento._id}`}
-              key={evento._id}
+              key={evento._id || evento.id}
               className="flex-shrink-0"
             >
               <Card
@@ -51,10 +51,11 @@ export default function Eventos() {
                   month: "short",
                   year: "numeric",
                 })}`}
-                image={evento.imagenDestacada}
+                image={evento.image}
               />
             </Link>
           ))}
+
           {lista.length === 0 && (
             <p className="text-gray-500 w-full text-center">
               No hay eventos disponibles.
