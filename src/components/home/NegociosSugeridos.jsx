@@ -7,7 +7,7 @@ export default function NegociosSugeridos() {
   const { lista: negocios } = useNegocios();
   return (
     <section className="space-y-16">
-      <h2 className="text-2xl font-extrabold text-[#FB8500] flex items-center gap-2">
+      <h2 className="text-2xl font-extrabold text-[#4B5563] flex items-center gap-2">
         <Link to="/negocios">Destacados de tu comunidad</Link>
       </h2>
 

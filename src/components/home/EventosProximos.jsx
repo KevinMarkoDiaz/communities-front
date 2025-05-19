@@ -14,7 +14,7 @@ export default function EventosProximos() {
 
   return (
     <section className="space-y-16">
-      <h2 className="text-2xl font-extrabold text-[#FB8500] tracking-tight leading-snug">
+      <h2 className="text-2xl font-extrabold text-[#4B5563] tracking-tight leading-snug">
         <Link to="/eventos">
           <span className="block">Viví tu cultura.</span>
           <span className="block">

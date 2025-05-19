@@ -1,61 +1,50 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getEventById } from "../api/eventApi";
-import EventHero from "../components/eventos/EventHero";
-import EventInfo from "../components/eventos/EventInfo";
-import EventDescription from "../components/eventos/EventDescription";
-import EventOrganizerCard from "../components/eventos/EventOrganizerCard";
-import EventCTAButton from "../components/eventos/EventCTAButton";
 
-export default function EventoDetalle() {
+// Mock local temporal (reemplazar por API real si usás backend)
+import negocios from "../data/negociosData";
+
+// Componentes reutilizables
+import BusinessHero from "../components/bussines/BusinessHero";
+import { CommunityTags } from "../components/bussines/CommunityTags";
+import { ContactCard } from "../components/bussines/ContactCard";
+import { OpeningHoursList } from "../components/bussines/OpeningHoursList";
+import { OwnerCard } from "../components/bussines/OwnerCard";
+
+export default function NegocioDetalle() {
   const { id } = useParams();
-  const [evento, setEvento] = useState(null);
+  const [negocio, setNegocio] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const cargarEvento = async () => {
-      try {
-        const data = await getEventById(id);
-        setEvento(data);
-      } catch (err) {
-        console.error("Error al cargar evento:", err);
-        setError("No se pudo cargar el evento");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    cargarEvento();
+    // Simular fetch con mock local
+    const data = negocios.find((n) => n.id === Number(id));
+    setNegocio(data);
+    setLoading(false);
   }, [id]);
 
-  if (loading) return <div className="p-4">Cargando evento...</div>;
-  if (error) return <div className="p-4 text-red-600">{error}</div>;
-  if (!evento) return <div className="p-4">Evento no encontrado.</div>;
+  if (loading) return <div className="p-4">Cargando negocio...</div>;
+  if (!negocio)
+    return <div className="p-4 text-red-600">Negocio no encontrado.</div>;
 
   return (
     <div className="flex flex-col gap-6 px-4 sm:px-8 lg:px-40 py-5">
-      <EventHero image={evento.image} title={evento.title} />
-      <EventInfo
-        date={evento.date}
-        time={evento.time}
-        location={evento.location}
+      {/* Imagen principal */}
+      <BusinessHero title={negocio.nombre} imageUrl={negocio.imagenDestacada} />
+
+      {/* Descripción */}
+      <p className="text-lg text-[#181411]">{negocio.descripcion}</p>
+
+      {/* Info extra */}
+      <ContactCard contact={negocio.contacto} />
+      <OpeningHoursList hours={negocio.horarios} />
+      <OwnerCard
+        owner={{
+          name: negocio.propietario.nombre,
+          profileImage: negocio.propietario.imagen,
+        }}
       />
-      <EventDescription description={evento.description} />
-      <EventOrganizerCard organizer={evento.organizer} />
-      {evento.tags && evento.tags.length > 0 && (
-        <div className="flex flex-wrap gap-2 pt-2">
-          {evento.tags.map((tag, index) => (
-            <span
-              key={index}
-              className="bg-[#f0f2f4] text-[#111418] text-sm px-3 py-1 rounded-full"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-      )}
-      <EventCTAButton />
+      <CommunityTags tags={negocio.etiquetas} />
     </div>
   );
 }

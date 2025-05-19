@@ -2,11 +2,11 @@ export default function CardDestacado({ title, image, description }) {
   const hasImage = Boolean(image);
 
   return (
-    <div className="flex flex-col gap-2 pb-3 w-full max-w-[200px] min-w-[160px]">
+    <div className="w-full max-w-[400px] min-w-[160px] aspect-[6/3] border border-gray-300 rounded-xl transition hover:border-black hover:scale-[1.02] hover:shadow-sm transform overflow-hidden flex flex-col">
       <div
-        className={`w-full aspect-video rounded-xl bg-center bg-cover bg-no-repeat ${
+        className={`w-full h-[60%] bg-center bg-cover bg-no-repeat ${
           hasImage ? "" : "bg-gray-100 flex items-center justify-center"
-        } min-h-[100px] max-h-[120px]`}
+        }`}
         style={hasImage ? { backgroundImage: `url("${image}")` } : {}}
       >
         {!hasImage && (
@@ -28,12 +28,14 @@ export default function CardDestacado({ title, image, description }) {
         )}
       </div>
 
-      <p className="text-[#181411] text-sm font-semibold leading-snug line-clamp-1">
-        {title}
-      </p>
-      <p className="text-[#3F5374] text-xs font-normal leading-snug line-clamp-2">
-        {description}
-      </p>
+      <div className="flex flex-col justify-between h-[40%] px-2 py-1">
+        <p className="text-[#181411] text-sm font-semibold leading-snug line-clamp-1">
+          {title}
+        </p>
+        <p className="text-[#3F5374] text-xs font-normal leading-snug line-clamp-2">
+          {description}
+        </p>
+      </div>
     </div>
   );
 }
