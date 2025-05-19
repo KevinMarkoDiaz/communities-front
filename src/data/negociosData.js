@@ -1,4 +1,8 @@
 import a from "../assets/a.jpg";
+import b from "../assets/b.jpg";
+import c from "../assets/c.png";
+import d from "../assets/d.jpg";
+
 
 const negocios = [
   {
@@ -105,7 +109,7 @@ const negocios = [
         "lng": -96.79100000000001
       }
     },
-    imagenDestacada: a,
+    imagenDestacada: b,
     "propietario": {
       "nombre": "Propietario 2",
       "imagen": "https://randomuser.me/api/portraits/men/1.jpg"
@@ -182,7 +186,7 @@ const negocios = [
         "lng": -96.792
       }
     },
-    imagenDestacada: a,
+    imagenDestacada: b,
     "propietario": {
       "nombre": "Propietario 3",
       "imagen": "https://randomuser.me/api/portraits/men/2.jpg"
@@ -259,7 +263,7 @@ const negocios = [
         "lng": -96.793
       }
     },
-    imagenDestacada: a,
+    imagenDestacada: b,
     "propietario": {
       "nombre": "Propietario 4",
       "imagen": "https://randomuser.me/api/portraits/men/3.jpg"
@@ -336,7 +340,7 @@ const negocios = [
         "lng": -96.79400000000001
       }
     },
-    imagenDestacada: a,
+    imagenDestacada: b,
     "propietario": {
       "nombre": "Propietario 5",
       "imagen": "https://randomuser.me/api/portraits/men/4.jpg"
@@ -413,7 +417,7 @@ const negocios = [
         "lng": -96.795
       }
     },
-    imagenDestacada: a,
+    imagenDestacada: b,
     "propietario": {
       "nombre": "Propietario 6",
       "imagen": "https://randomuser.me/api/portraits/men/5.jpg"
@@ -490,7 +494,7 @@ const negocios = [
         "lng": -96.796
       }
     },
-    imagenDestacada: a,
+    imagenDestacada: b,
     "propietario": {
       "nombre": "Propietario 7",
       "imagen": "https://randomuser.me/api/portraits/men/6.jpg"
@@ -567,7 +571,7 @@ const negocios = [
         "lng": -96.79700000000001
       }
     },
-    imagenDestacada: a,
+    imagenDestacada: b,
     "propietario": {
       "nombre": "Propietario 8",
       "imagen": "https://randomuser.me/api/portraits/men/7.jpg"
@@ -644,7 +648,7 @@ const negocios = [
         "lng": -96.798
       }
     },
-    imagenDestacada: a,
+    imagenDestacada: b,
     "propietario": {
       "nombre": "Propietario 9",
       "imagen": "https://randomuser.me/api/portraits/men/8.jpg"
@@ -721,7 +725,7 @@ const negocios = [
         "lng": -96.799
       }
     },
-    imagenDestacada: a,
+    imagenDestacada: b,
     "propietario": {
       "nombre": "Propietario 10",
       "imagen": "https://randomuser.me/api/portraits/men/9.jpg"
@@ -798,7 +802,7 @@ const negocios = [
         "lng": -96.80000000000001
       }
     },
-    imagenDestacada: a,
+    imagenDestacada: c,
     "propietario": {
       "nombre": "Propietario 11",
       "imagen": "https://randomuser.me/api/portraits/men/10.jpg"
@@ -875,7 +879,7 @@ const negocios = [
         "lng": -96.801
       }
     },
-    imagenDestacada: a,
+    imagenDestacada: c,
     "propietario": {
       "nombre": "Propietario 12",
       "imagen": "https://randomuser.me/api/portraits/men/11.jpg"
@@ -952,7 +956,7 @@ const negocios = [
         "lng": -96.802
       }
     },
-    imagenDestacada: a,
+    imagenDestacada: c,
     "propietario": {
       "nombre": "Propietario 13",
       "imagen": "https://randomuser.me/api/portraits/men/12.jpg"
@@ -1029,7 +1033,7 @@ const negocios = [
         "lng": -96.80300000000001
       }
     },
-    imagenDestacada: a,
+    imagenDestacada: c,
     "propietario": {
       "nombre": "Propietario 14",
       "imagen": "https://randomuser.me/api/portraits/men/13.jpg"
@@ -1106,7 +1110,7 @@ const negocios = [
         "lng": -96.804
       }
     },
-    imagenDestacada: a,
+    imagenDestacada: c,
     "propietario": {
       "nombre": "Propietario 15",
       "imagen": "https://randomuser.me/api/portraits/men/14.jpg"
@@ -1183,7 +1187,7 @@ const negocios = [
         "lng": -96.805
       }
     },
-    imagenDestacada: a,
+    imagenDestacada: c,
     "propietario": {
       "nombre": "Propietario 16",
       "imagen": "https://randomuser.me/api/portraits/men/15.jpg"
@@ -1260,7 +1264,7 @@ const negocios = [
         "lng": -96.80600000000001
       }
     },
-    imagenDestacada: a,
+    imagenDestacada: c,
     "propietario": {
       "nombre": "Propietario 17",
       "imagen": "https://randomuser.me/api/portraits/men/16.jpg"
@@ -1337,7 +1341,7 @@ const negocios = [
         "lng": -96.807
       }
     },
-    imagenDestacada: a,
+    imagenDestacada: d,
     "propietario": {
       "nombre": "Propietario 18",
       "imagen": "https://randomuser.me/api/portraits/men/17.jpg"
@@ -1414,7 +1418,7 @@ const negocios = [
         "lng": -96.808
       }
     },
-    imagenDestacada: a,
+    imagenDestacada: d,
     "propietario": {
       "nombre": "Propietario 19",
       "imagen": "https://randomuser.me/api/portraits/men/18.jpg"
@@ -1491,7 +1495,7 @@ const negocios = [
         "lng": -96.80900000000001
       }
     },
-    imagenDestacada: a,
+    imagenDestacada: d,
     "propietario": {
       "nombre": "Propietario 20",
       "imagen": "https://randomuser.me/api/portraits/men/19.jpg"
@@ -1568,7 +1572,7 @@ const negocios = [
         "lng": -96.81
       }
     },
-    imagenDestacada: a,
+    imagenDestacada: d,
     "propietario": {
       "nombre": "Propietario 21",
       "imagen": "https://randomuser.me/api/portraits/men/20.jpg"
@@ -1645,7 +1649,7 @@ const negocios = [
         "lng": -96.811
       }
     },
-    imagenDestacada: a,
+    imagenDestacada: d,
     "propietario": {
       "nombre": "Propietario 22",
       "imagen": "https://randomuser.me/api/portraits/men/21.jpg"
@@ -1722,7 +1726,7 @@ const negocios = [
         "lng": -96.81200000000001
       }
     },
-    imagenDestacada: a,
+    imagenDestacada: d,
     "propietario": {
       "nombre": "Propietario 23",
       "imagen": "https://randomuser.me/api/portraits/men/22.jpg"
@@ -1799,7 +1803,7 @@ const negocios = [
         "lng": -96.813
       }
     },
-    imagenDestacada: a,
+    imagenDestacada: d,
     "propietario": {
       "nombre": "Propietario 24",
       "imagen": "https://randomuser.me/api/portraits/men/23.jpg"
@@ -1876,7 +1880,7 @@ const negocios = [
         "lng": -96.81400000000001
       }
     },
-    imagenDestacada: a,
+    imagenDestacada: d,
     "propietario": {
       "nombre": "Propietario 25",
       "imagen": "https://randomuser.me/api/portraits/men/24.jpg"
