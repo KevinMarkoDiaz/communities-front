@@ -4,6 +4,7 @@ import EventosProximos from "../components/home/EventosProximos";
 import ComunidadesDestacadas from "../components/home/ComunidadesDestacadas";
 import BusquedaList from "../components/home/BusquedaList ";
 import HeroBannerLatino from "../components/home/HeroBannerLatino";
+import VistaComunidad from "../components/VistaComunidad";
 
 export default function Home() {
   return (
@@ -17,7 +18,7 @@ export default function Home() {
       </Helmet>
 
       {/* Hero con buscador y resultados */}
-
+      <VistaComunidad />
       {/* Contenido adicional sugerido */}
       <div className="px-4 sm:px-6 lg:px-8 py-10 space-y-12 max-w-6xl mx-auto">
         <BusquedaList />

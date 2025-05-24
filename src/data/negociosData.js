@@ -2,1935 +2,1052 @@ import b from "../assets/b.jpg";
 import c from "../assets/c.png";
 import d from "../assets/d.jpg";
 
-
 const negocios = [
   {
-    "id": 1,
-    "nombre": "Tienda El Cafetal",
-    "descripcion": "Tienda El Cafetal ofrece productos y servicios auténticos.",
-    "categoria": "educación",
-    "comunidad": "venezolana",
-    "contacto": {
-      "telefono": "555-1000",
-      "email": "tiendaelcafetal@ejemplo.com",
-      "website": "https://tiendaelcafetal.com",
-      "redes": {
-        "facebook": "TiendaElCafetal",
-        "instagram": "@tiendaelcafetal",
-        "whatsapp": "1234567800"
-      }
-    },
-    "ubicacion": {
-      "direccion": "100 Calle Principal",
-      "ciudad": "Dallas",
-      "estado": "TX",
-      "codigoPostal": "75200",
-      "pais": "USA",
-      "coordenadas": {
-        "lat": 32.77,
-        "lng": -96.79
-      }
-    },
-    "imagenDestacada": ".",
-    "propietario": {
-      "nombre": "Propietario 1",
-      "imagen": "https://randomuser.me/api/portraits/men/0.jpg"
-    },
-    "horarios": [
-      {
-        "dia": "lunes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "martes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "miércoles",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "jueves",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "viernes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "sábado",
-        "apertura": "09:00",
-        "cierre": "15:00"
-      },
-      {
-        "dia": "domingo",
-        "apertura": "Cerrado",
-        "cierre": "Cerrado"
-      }
-    ],
-    "etiquetas": [
-      "Latinx",
-      "Negocio Local",
-      "Comunidad",
-      "Educación"
-    ],
-    "isNew": true,
-    "hasDiscount": true,
-  },
-  
-  {
-    "id": 2,
-    "nombre": "Arepas & Más",
-    "descripcion": "Arepas & Más ofrece productos y servicios auténticos.",
-    "categoria": "salud",
-    "comunidad": "guatemalteca",
-    "contacto": {
-      "telefono": "555-1001",
-      "email": "arepas&más@ejemplo.com",
-      "website": "https://arepas&más.com",
-      "redes": {
-        "facebook": "Arepas&Más",
-        "instagram": "@arepas&más",
-        "whatsapp": "1234567801"
-      }
-    },
-    "ubicacion": {
-      "direccion": "101 Calle Principal",
-      "ciudad": "Dallas",
-      "estado": "TX",
-      "codigoPostal": "75201",
-      "pais": "USA",
-      "coordenadas": {
-        "lat": 32.771,
-        "lng": -96.79100000000001
-      }
-    },
-    imagenDestacada: b,
-    "propietario": {
-      "nombre": "Propietario 2",
-      "imagen": "https://randomuser.me/api/portraits/men/1.jpg"
-    },
-    "horarios": [
-      {
-        "dia": "lunes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "martes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "miércoles",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "jueves",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "viernes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "sábado",
-        "apertura": "09:00",
-        "cierre": "15:00"
-      },
-      {
-        "dia": "domingo",
-        "apertura": "Cerrado",
-        "cierre": "Cerrado"
-      }
-    ],
-    "verificado": true,
-    "etiquetas": [
-      "Latinx",
-      "Negocio Local",
-      "Comunidad",
-      "Salud"
-    ]
-  },
-  {
-    "id": 3,
-    "nombre": "Pupusería La Familia",
-    "descripcion": "Pupusería La Familia ofrece productos y servicios auténticos.",
-    "categoria": "automotriz",
-    "comunidad": "venezolana",
-    "contacto": {
-      "telefono": "555-1002",
-      "email": "pupuseríalafamilia@ejemplo.com",
-      "website": "https://pupuseríalafamilia.com",
-      "redes": {
-        "facebook": "PupuseríaLaFamilia",
-        "instagram": "@pupuseríalafamilia",
-        "whatsapp": "1234567802"
-      }
-    },
-    "ubicacion": {
-      "direccion": "102 Calle Principal",
-      "ciudad": "Dallas",
-      "estado": "TX",
-      "codigoPostal": "75202",
-      "pais": "USA",
-      "coordenadas": {
-        "lat": 32.772000000000006,
-        "lng": -96.792
-      }
-    },
-    imagenDestacada: b,
-    "propietario": {
-      "nombre": "Propietario 3",
-      "imagen": "https://randomuser.me/api/portraits/men/2.jpg"
-    },
-    "horarios": [
-      {
-        "dia": "lunes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "martes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "miércoles",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "jueves",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "viernes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "sábado",
-        "apertura": "09:00",
-        "cierre": "15:00"
-      },
-      {
-        "dia": "domingo",
-        "apertura": "Cerrado",
-        "cierre": "Cerrado"
-      }
-    ],
-    "verificado": true,
-    "etiquetas": [
-      "Latinx",
-      "Negocio Local",
-      "Comunidad",
-      "Automotriz"
-    ]
-  },
-  {
-    "id": 4,
-    "nombre": "Salón Karina",
-    "descripcion": "Salón Karina ofrece productos y servicios auténticos.",
-    "categoria": "belleza",
-    "comunidad": "venezolana",
-    "contacto": {
-      "telefono": "555-1003",
-      "email": "salónkarina@ejemplo.com",
-      "website": "https://salónkarina.com",
-      "redes": {
-        "facebook": "SalónKarina",
-        "instagram": "@salónkarina",
-        "whatsapp": "1234567803"
-      }
-    },
-    "ubicacion": {
-      "direccion": "103 Calle Principal",
-      "ciudad": "Dallas",
-      "estado": "TX",
-      "codigoPostal": "75203",
-      "pais": "USA",
-      "coordenadas": {
-        "lat": 32.773,
-        "lng": -96.793
-      }
-    },
-    imagenDestacada: b,
-    "propietario": {
-      "nombre": "Propietario 4",
-      "imagen": "https://randomuser.me/api/portraits/men/3.jpg"
-    },
-    "horarios": [
-      {
-        "dia": "lunes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "martes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "miércoles",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "jueves",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "viernes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "sábado",
-        "apertura": "09:00",
-        "cierre": "15:00"
-      },
-      {
-        "dia": "domingo",
-        "apertura": "Cerrado",
-        "cierre": "Cerrado"
-      }
-    ],
-    "verificado": true,
-    "etiquetas": [
-      "Latinx",
-      "Negocio Local",
-      "Comunidad",
-      "Belleza"
-    ]
-  },
-  {
-    "id": 5,
-    "nombre": "Ropa Latina DFW",
-    "descripcion": "Ropa Latina DFW ofrece productos y servicios auténticos.",
-    "categoria": "comida",
-    "comunidad": "colombiana",
-    "contacto": {
-      "telefono": "555-1004",
-      "email": "ropalatinadfw@ejemplo.com",
-      "website": "https://ropalatinadfw.com",
-      "redes": {
-        "facebook": "RopaLatinaDFW",
-        "instagram": "@ropalatinadfw",
-        "whatsapp": "1234567804"
-      }
-    },
-    "ubicacion": {
-      "direccion": "104 Calle Principal",
-      "ciudad": "Dallas",
-      "estado": "TX",
-      "codigoPostal": "75204",
-      "pais": "USA",
-      "coordenadas": {
-        "lat": 32.774,
-        "lng": -96.79400000000001
-      }
-    },
-    imagenDestacada: b,
-    "propietario": {
-      "nombre": "Propietario 5",
-      "imagen": "https://randomuser.me/api/portraits/men/4.jpg"
-    },
-    "horarios": [
-      {
-        "dia": "lunes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "martes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "miércoles",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "jueves",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "viernes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "sábado",
-        "apertura": "09:00",
-        "cierre": "15:00"
-      },
-      {
-        "dia": "domingo",
-        "apertura": "Cerrado",
-        "cierre": "Cerrado"
-      }
-    ],
-    "verificado": true,
-    "etiquetas": [
-      "Latinx",
-      "Negocio Local",
-      "Comunidad",
-      "Comida"
-    ]
-  },
-  {
-    "id": 6,
-    "nombre": "Mercado El Sabor",
-    "descripcion": "Mercado El Sabor ofrece productos y servicios auténticos.",
-    "categoria": "ropa",
-    "comunidad": "venezolana",
-    "contacto": {
-      "telefono": "555-1005",
-      "email": "mercadoelsabor@ejemplo.com",
-      "website": "https://mercadoelsabor.com",
-      "redes": {
-        "facebook": "MercadoElSabor",
-        "instagram": "@mercadoelsabor",
-        "whatsapp": "1234567805"
-      }
-    },
-    "ubicacion": {
-      "direccion": "105 Calle Principal",
-      "ciudad": "Dallas",
-      "estado": "TX",
-      "codigoPostal": "75205",
-      "pais": "USA",
-      "coordenadas": {
-        "lat": 32.775000000000006,
-        "lng": -96.795
-      }
-    },
-    imagenDestacada: b,
-    "propietario": {
-      "nombre": "Propietario 6",
-      "imagen": "https://randomuser.me/api/portraits/men/5.jpg"
-    },
-    "horarios": [
-      {
-        "dia": "lunes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "martes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "miércoles",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "jueves",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "viernes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "sábado",
-        "apertura": "09:00",
-        "cierre": "15:00"
-      },
-      {
-        "dia": "domingo",
-        "apertura": "Cerrado",
-        "cierre": "Cerrado"
-      }
-    ],
-    "verificado": true,
-    "etiquetas": [
-      "Latinx",
-      "Negocio Local",
-      "Comunidad",
-      "Ropa"
-    ]
-  },
-  {
-    "id": 7,
-    "nombre": "Tortillería Mi Pueblo",
-    "descripcion": "Tortillería Mi Pueblo ofrece productos y servicios auténticos.",
-    "categoria": "mercado",
-    "comunidad": "hondureña",
-    "contacto": {
-      "telefono": "555-1006",
-      "email": "tortilleríamipueblo@ejemplo.com",
-      "website": "https://tortilleríamipueblo.com",
-      "redes": {
-        "facebook": "TortilleríaMiPueblo",
-        "instagram": "@tortilleríamipueblo",
-        "whatsapp": "1234567806"
-      }
-    },
-    "ubicacion": {
-      "direccion": "106 Calle Principal",
-      "ciudad": "Dallas",
-      "estado": "TX",
-      "codigoPostal": "75206",
-      "pais": "USA",
-      "coordenadas": {
-        "lat": 32.776,
-        "lng": -96.796
-      }
-    },
-    imagenDestacada: b,
-    "propietario": {
-      "nombre": "Propietario 7",
-      "imagen": "https://randomuser.me/api/portraits/men/6.jpg"
-    },
-    "horarios": [
-      {
-        "dia": "lunes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "martes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "miércoles",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "jueves",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "viernes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "sábado",
-        "apertura": "09:00",
-        "cierre": "15:00"
-      },
-      {
-        "dia": "domingo",
-        "apertura": "Cerrado",
-        "cierre": "Cerrado"
-      }
-    ],
-    "verificado": true,
-    "etiquetas": [
-      "Latinx",
-      "Negocio Local",
-      "Comunidad",
-      "Mercado"
-    ]
-  },
-  {
-    "id": 8,
-    "nombre": "Carnicería Hernández",
-    "descripcion": "Carnicería Hernández ofrece productos y servicios auténticos.",
-    "categoria": "servicios",
-    "comunidad": "mexicana",
-    "contacto": {
-      "telefono": "555-1007",
-      "email": "carniceríahernández@ejemplo.com",
-      "website": "https://carniceríahernández.com",
-      "redes": {
-        "facebook": "CarniceríaHernández",
-        "instagram": "@carniceríahernández",
-        "whatsapp": "1234567807"
-      }
-    },
-    "ubicacion": {
-      "direccion": "107 Calle Principal",
-      "ciudad": "Dallas",
-      "estado": "TX",
-      "codigoPostal": "75207",
-      "pais": "USA",
-      "coordenadas": {
-        "lat": 32.777,
-        "lng": -96.79700000000001
-      }
-    },
-    imagenDestacada: b,
-    "propietario": {
-      "nombre": "Propietario 8",
-      "imagen": "https://randomuser.me/api/portraits/men/7.jpg"
-    },
-    "horarios": [
-      {
-        "dia": "lunes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "martes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "miércoles",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "jueves",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "viernes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "sábado",
-        "apertura": "09:00",
-        "cierre": "15:00"
-      },
-      {
-        "dia": "domingo",
-        "apertura": "Cerrado",
-        "cierre": "Cerrado"
-      }
-    ],
-    "verificado": true,
-    "etiquetas": [
-      "Latinx",
-      "Negocio Local",
-      "Comunidad",
-      "Servicios"
-    ]
-  },
-  {
-    "id": 9,
-    "nombre": "Estética Gladys",
-    "descripcion": "Estética Gladys ofrece productos y servicios auténticos.",
-    "categoria": "educación",
-    "comunidad": "salvadoreña",
-    "contacto": {
-      "telefono": "555-1008",
-      "email": "estéticagladys@ejemplo.com",
-      "website": "https://estéticagladys.com",
-      "redes": {
-        "facebook": "EstéticaGladys",
-        "instagram": "@estéticagladys",
-        "whatsapp": "1234567808"
-      }
-    },
-    "ubicacion": {
-      "direccion": "108 Calle Principal",
-      "ciudad": "Dallas",
-      "estado": "TX",
-      "codigoPostal": "75208",
-      "pais": "USA",
-      "coordenadas": {
-        "lat": 32.778000000000006,
-        "lng": -96.798
-      }
-    },
-    imagenDestacada: b,
-    "propietario": {
-      "nombre": "Propietario 9",
-      "imagen": "https://randomuser.me/api/portraits/men/8.jpg"
-    },
-    "horarios": [
-      {
-        "dia": "lunes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "martes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "miércoles",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "jueves",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "viernes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "sábado",
-        "apertura": "09:00",
-        "cierre": "15:00"
-      },
-      {
-        "dia": "domingo",
-        "apertura": "Cerrado",
-        "cierre": "Cerrado"
-      }
-    ],
-    "verificado": true,
-    "etiquetas": [
-      "Latinx",
-      "Negocio Local",
-      "Comunidad",
-      "Educación"
-    ]
-  },
-  {
-    "id": 10,
-    "nombre": "Empanadas del Valle",
-    "descripcion": "Empanadas del Valle ofrece productos y servicios auténticos.",
-    "categoria": "ropa",
-    "comunidad": "venezolana",
-    "contacto": {
-      "telefono": "555-1009",
-      "email": "empanadasdelvalle@ejemplo.com",
-      "website": "https://empanadasdelvalle.com",
-      "redes": {
-        "facebook": "EmpanadasdelValle",
-        "instagram": "@empanadasdelvalle",
-        "whatsapp": "1234567809"
-      }
-    },
-    "ubicacion": {
-      "direccion": "109 Calle Principal",
-      "ciudad": "Dallas",
-      "estado": "TX",
-      "codigoPostal": "75209",
-      "pais": "USA",
-      "coordenadas": {
-        "lat": 32.779,
-        "lng": -96.799
-      }
-    },
-    imagenDestacada: b,
-    "propietario": {
-      "nombre": "Propietario 10",
-      "imagen": "https://randomuser.me/api/portraits/men/9.jpg"
-    },
-    "horarios": [
-      {
-        "dia": "lunes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "martes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "miércoles",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "jueves",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "viernes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "sábado",
-        "apertura": "09:00",
-        "cierre": "15:00"
-      },
-      {
-        "dia": "domingo",
-        "apertura": "Cerrado",
-        "cierre": "Cerrado"
-      }
-    ],
-    "verificado": true,
-    "etiquetas": [
-      "Latinx",
-      "Negocio Local",
-      "Comunidad",
-      "Ropa"
-    ]
-  },
-  {
-    "id": 11,
-    "nombre": "Sazón Venezolano",
-    "descripcion": "Sazón Venezolano ofrece productos y servicios auténticos.",
-    "categoria": "salud",
-    "comunidad": "salvadoreña",
-    "contacto": {
-      "telefono": "555-1010",
-      "email": "sazónvenezolano@ejemplo.com",
-      "website": "https://sazónvenezolano.com",
-      "redes": {
-        "facebook": "SazónVenezolano",
-        "instagram": "@sazónvenezolano",
-        "whatsapp": "1234567810"
-      }
-    },
-    "ubicacion": {
-      "direccion": "110 Calle Principal",
-      "ciudad": "Dallas",
-      "estado": "TX",
-      "codigoPostal": "75210",
-      "pais": "USA",
-      "coordenadas": {
-        "lat": 32.78,
-        "lng": -96.80000000000001
-      }
-    },
-    imagenDestacada: c,
-    "propietario": {
-      "nombre": "Propietario 11",
-      "imagen": "https://randomuser.me/api/portraits/men/10.jpg"
-    },
-    "horarios": [
-      {
-        "dia": "lunes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "martes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "miércoles",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "jueves",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "viernes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "sábado",
-        "apertura": "09:00",
-        "cierre": "15:00"
-      },
-      {
-        "dia": "domingo",
-        "apertura": "Cerrado",
-        "cierre": "Cerrado"
-      }
-    ],
-    "verificado": true,
-    "etiquetas": [
-      "Latinx",
-      "Negocio Local",
-      "Comunidad",
-      "Salud"
-    ]
-  },
-  {
-    "id": 12,
-    "nombre": "Pollos al Carbón",
-    "descripcion": "Pollos al Carbón ofrece productos y servicios auténticos.",
-    "categoria": "comida",
-    "comunidad": "venezolana",
-    "contacto": {
-      "telefono": "555-1011",
-      "email": "pollosalcarbón@ejemplo.com",
-      "website": "https://pollosalcarbón.com",
-      "redes": {
-        "facebook": "PollosalCarbón",
-        "instagram": "@pollosalcarbón",
-        "whatsapp": "1234567811"
-      }
-    },
-    "ubicacion": {
-      "direccion": "111 Calle Principal",
-      "ciudad": "Dallas",
-      "estado": "TX",
-      "codigoPostal": "75211",
-      "pais": "USA",
-      "coordenadas": {
-        "lat": 32.781000000000006,
-        "lng": -96.801
-      }
-    },
-    imagenDestacada: c,
-    "propietario": {
-      "nombre": "Propietario 12",
-      "imagen": "https://randomuser.me/api/portraits/men/11.jpg"
-    },
-    "horarios": [
-      {
-        "dia": "lunes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "martes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "miércoles",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "jueves",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "viernes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "sábado",
-        "apertura": "09:00",
-        "cierre": "15:00"
-      },
-      {
-        "dia": "domingo",
-        "apertura": "Cerrado",
-        "cierre": "Cerrado"
-      }
-    ],
-    "verificado": true,
-    "etiquetas": [
-      "Latinx",
-      "Negocio Local",
-      "Comunidad",
-      "Comida"
-    ]
-  },
-  {
-    "id": 13,
-    "nombre": "Súper Latino",
-    "descripcion": "Súper Latino ofrece productos y servicios auténticos.",
+    "id": 118,
+    "nombre": "Pupusería La Bendición",
+    "descripcion": "Auténticas pupusas salvadoreñas y platos tradicionales.",
     "categoria": "comida",
     "comunidad": "salvadoreña",
-    "contacto": {
-      "telefono": "555-1012",
-      "email": "súperlatino@ejemplo.com",
-      "website": "https://súperlatino.com",
-      "redes": {
-        "facebook": "SúperLatino",
-        "instagram": "@súperlatino",
-        "whatsapp": "1234567812"
-      }
-    },
-    "ubicacion": {
-      "direccion": "112 Calle Principal",
-      "ciudad": "Dallas",
-      "estado": "TX",
-      "codigoPostal": "75212",
-      "pais": "USA",
-      "coordenadas": {
-        "lat": 32.782000000000004,
-        "lng": -96.802
-      }
-    },
-    imagenDestacada: c,
-    "propietario": {
-      "nombre": "Propietario 13",
-      "imagen": "https://randomuser.me/api/portraits/men/12.jpg"
-    },
-    "horarios": [
-      {
-        "dia": "lunes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "martes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "miércoles",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "jueves",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "viernes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "sábado",
-        "apertura": "09:00",
-        "cierre": "15:00"
-      },
-      {
-        "dia": "domingo",
-        "apertura": "Cerrado",
-        "cierre": "Cerrado"
-      }
-    ],
-    "verificado": true,
-    "etiquetas": [
-      "Latinx",
-      "Negocio Local",
-      "Comunidad",
-      "Comida"
-    ]
-  },
-  {
-    "id": 14,
-    "nombre": "Dulcería Mexicana",
-    "descripcion": "Dulcería Mexicana ofrece productos y servicios auténticos.",
-    "categoria": "servicios",
-    "comunidad": "guatemalteca",
-    "contacto": {
-      "telefono": "555-1013",
-      "email": "dulceríamexicana@ejemplo.com",
-      "website": "https://dulceríamexicana.com",
-      "redes": {
-        "facebook": "DulceríaMexicana",
-        "instagram": "@dulceríamexicana",
-        "whatsapp": "1234567813"
-      }
-    },
-    "ubicacion": {
-      "direccion": "113 Calle Principal",
-      "ciudad": "Dallas",
-      "estado": "TX",
-      "codigoPostal": "75213",
-      "pais": "USA",
-      "coordenadas": {
-        "lat": 32.783,
-        "lng": -96.80300000000001
-      }
-    },
-    imagenDestacada: c,
-    "propietario": {
-      "nombre": "Propietario 14",
-      "imagen": "https://randomuser.me/api/portraits/men/13.jpg"
-    },
-    "horarios": [
-      {
-        "dia": "lunes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "martes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "miércoles",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "jueves",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "viernes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "sábado",
-        "apertura": "09:00",
-        "cierre": "15:00"
-      },
-      {
-        "dia": "domingo",
-        "apertura": "Cerrado",
-        "cierre": "Cerrado"
-      }
-    ],
-    "verificado": true,
-    "etiquetas": [
-      "Latinx",
-      "Negocio Local",
-      "Comunidad",
-      "Servicios"
-    ]
-  },
-  {
-    "id": 15,
-    "nombre": "Lavandería Tropical",
-    "descripcion": "Lavandería Tropical ofrece productos y servicios auténticos.",
-    "categoria": "comida",
-    "comunidad": "salvadoreña",
-    "contacto": {
-      "telefono": "555-1014",
-      "email": "lavanderíatropical@ejemplo.com",
-      "website": "https://lavanderíatropical.com",
-      "redes": {
-        "facebook": "LavanderíaTropical",
-        "instagram": "@lavanderíatropical",
-        "whatsapp": "1234567814"
-      }
-    },
-    "ubicacion": {
-      "direccion": "114 Calle Principal",
-      "ciudad": "Dallas",
-      "estado": "TX",
-      "codigoPostal": "75214",
-      "pais": "USA",
-      "coordenadas": {
-        "lat": 32.784000000000006,
-        "lng": -96.804
-      }
-    },
-    imagenDestacada: c,
-    "propietario": {
-      "nombre": "Propietario 15",
-      "imagen": "https://randomuser.me/api/portraits/men/14.jpg"
-    },
-    "horarios": [
-      {
-        "dia": "lunes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "martes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "miércoles",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "jueves",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "viernes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "sábado",
-        "apertura": "09:00",
-        "cierre": "15:00"
-      },
-      {
-        "dia": "domingo",
-        "apertura": "Cerrado",
-        "cierre": "Cerrado"
-      }
-    ],
-    "verificado": true,
-    "etiquetas": [
-      "Latinx",
-      "Negocio Local",
-      "Comunidad",
-      "Comida"
-    ]
-  },
-  {
-    "id": 16,
-    "nombre": "Dentista Hispano",
-    "descripcion": "Dentista Hispano ofrece productos y servicios auténticos.",
-    "categoria": "mercado",
-    "comunidad": "guatemalteca",
-    "contacto": {
-      "telefono": "555-1015",
-      "email": "dentistahispano@ejemplo.com",
-      "website": "https://dentistahispano.com",
-      "redes": {
-        "facebook": "DentistaHispano",
-        "instagram": "@dentistahispano",
-        "whatsapp": "1234567815"
-      }
-    },
-    "ubicacion": {
-      "direccion": "115 Calle Principal",
-      "ciudad": "Dallas",
-      "estado": "TX",
-      "codigoPostal": "75215",
-      "pais": "USA",
-      "coordenadas": {
-        "lat": 32.785000000000004,
-        "lng": -96.805
-      }
-    },
-    imagenDestacada: c,
-    "propietario": {
-      "nombre": "Propietario 16",
-      "imagen": "https://randomuser.me/api/portraits/men/15.jpg"
-    },
-    "horarios": [
-      {
-        "dia": "lunes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "martes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "miércoles",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "jueves",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "viernes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "sábado",
-        "apertura": "09:00",
-        "cierre": "15:00"
-      },
-      {
-        "dia": "domingo",
-        "apertura": "Cerrado",
-        "cierre": "Cerrado"
-      }
-    ],
-    "verificado": true,
-    "etiquetas": [
-      "Latinx",
-      "Negocio Local",
-      "Comunidad",
-      "Mercado"
-    ]
-  },
-  {
-    "id": 17,
-    "nombre": "Consultorio Vida",
-    "descripcion": "Consultorio Vida ofrece productos y servicios auténticos.",
-    "categoria": "salud",
-    "comunidad": "guatemalteca",
-    "contacto": {
-      "telefono": "555-1016",
-      "email": "consultoriovida@ejemplo.com",
-      "website": "https://consultoriovida.com",
-      "redes": {
-        "facebook": "ConsultorioVida",
-        "instagram": "@consultoriovida",
-        "whatsapp": "1234567816"
-      }
-    },
-    "ubicacion": {
-      "direccion": "116 Calle Principal",
-      "ciudad": "Dallas",
-      "estado": "TX",
-      "codigoPostal": "75216",
-      "pais": "USA",
-      "coordenadas": {
-        "lat": 32.786,
-        "lng": -96.80600000000001
-      }
-    },
-    imagenDestacada: c,
-    "propietario": {
-      "nombre": "Propietario 17",
-      "imagen": "https://randomuser.me/api/portraits/men/16.jpg"
-    },
-    "horarios": [
-      {
-        "dia": "lunes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "martes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "miércoles",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "jueves",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "viernes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "sábado",
-        "apertura": "09:00",
-        "cierre": "15:00"
-      },
-      {
-        "dia": "domingo",
-        "apertura": "Cerrado",
-        "cierre": "Cerrado"
-      }
-    ],
-    "verificado": true,
-    "etiquetas": [
-      "Latinx",
-      "Negocio Local",
-      "Comunidad",
-      "Salud"
-    ]
-  },
-  {
-    "id": 18,
-    "nombre": "Auto Taller El Rayo",
-    "descripcion": "Auto Taller El Rayo ofrece productos y servicios auténticos.",
-    "categoria": "belleza",
-    "comunidad": "salvadoreña",
-    "contacto": {
-      "telefono": "555-1017",
-      "email": "autotallerelrayo@ejemplo.com",
-      "website": "https://autotallerelrayo.com",
-      "redes": {
-        "facebook": "AutoTallerElRayo",
-        "instagram": "@autotallerelrayo",
-        "whatsapp": "1234567817"
-      }
-    },
-    "ubicacion": {
-      "direccion": "117 Calle Principal",
-      "ciudad": "Dallas",
-      "estado": "TX",
-      "codigoPostal": "75217",
-      "pais": "USA",
-      "coordenadas": {
-        "lat": 32.787000000000006,
-        "lng": -96.807
-      }
-    },
-    imagenDestacada: d,
-    "propietario": {
-      "nombre": "Propietario 18",
-      "imagen": "https://randomuser.me/api/portraits/men/17.jpg"
-    },
-    "horarios": [
-      {
-        "dia": "lunes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "martes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "miércoles",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "jueves",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "viernes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "sábado",
-        "apertura": "09:00",
-        "cierre": "15:00"
-      },
-      {
-        "dia": "domingo",
-        "apertura": "Cerrado",
-        "cierre": "Cerrado"
-      }
-    ],
-    "verificado": true,
-    "etiquetas": [
-      "Latinx",
-      "Negocio Local",
-      "Comunidad",
-      "Belleza"
-    ]
-  },
-  {
-    "id": 19,
-    "nombre": "Restaurante El Encuentro",
-    "descripcion": "Restaurante El Encuentro ofrece productos y servicios auténticos.",
-    "categoria": "comida",
-    "comunidad": "colombiana",
     "contacto": {
       "telefono": "555-1018",
-      "email": "restauranteelencuentro@ejemplo.com",
-      "website": "https://restauranteelencuentro.com",
+      "email": "pupuseria@ejemplo.com",
+      "website": "https://pupuserialabendicion.com",
       "redes": {
-        "facebook": "RestauranteElEncuentro",
-        "instagram": "@restauranteelencuentro",
+        "facebook": "PupuseriaLaBendicion",
+        "instagram": "@pupuseria.bendicion",
         "whatsapp": "1234567818"
       }
     },
     "ubicacion": {
-      "direccion": "118 Calle Principal",
-      "ciudad": "Dallas",
+      "direccion": "300 Calle del Sabor",
+      "ciudad": "Lewisville",
       "estado": "TX",
-      "codigoPostal": "75218",
+      "codigoPostal": "75067",
       "pais": "USA",
       "coordenadas": {
-        "lat": 32.788000000000004,
-        "lng": -96.808
+        "lat": 33.041203,
+        "lng": -96.990573
       }
     },
-    imagenDestacada: d,
+    imagenDestacada: c,
     "propietario": {
-      "nombre": "Propietario 19",
-      "imagen": "https://randomuser.me/api/portraits/men/18.jpg"
+      "nombre": "Ana Martínez",
+      "imagen": "https://randomuser.me/api/portraits/women/45.jpg"
     },
     "horarios": [
-      {
-        "dia": "lunes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "martes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "miércoles",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "jueves",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "viernes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "sábado",
-        "apertura": "09:00",
-        "cierre": "15:00"
-      },
-      {
-        "dia": "domingo",
-        "apertura": "Cerrado",
-        "cierre": "Cerrado"
-      }
+      { "dia": "lunes", "apertura": "09:00", "cierre": "20:00" },
+      { "dia": "martes", "apertura": "09:00", "cierre": "20:00" },
+      { "dia": "miércoles", "apertura": "09:00", "cierre": "20:00" },
+      { "dia": "jueves", "apertura": "09:00", "cierre": "20:00" },
+      { "dia": "viernes", "apertura": "09:00", "cierre": "22:00" },
+      { "dia": "sábado", "apertura": "10:00", "cierre": "22:00" },
+      { "dia": "domingo", "apertura": "10:00", "cierre": "18:00" }
     ],
     "verificado": true,
-    "etiquetas": [
-      "Latinx",
-      "Negocio Local",
-      "Comunidad",
-      "Comida"
-    ]
+    "etiquetas": ["Latinx", "Comida Tradicional", "Restaurante", "Salvadoreño"]
   },
   {
-    "id": 20,
-    "nombre": "Café Aroma",
-    "descripcion": "Café Aroma ofrece productos y servicios auténticos.",
-    "categoria": "automotriz",
-    "comunidad": "salvadoreña",
+    "id": 119,
+    "nombre": "Estética Belleza Total",
+    "descripcion": "Servicios de estética, cortes, color y spa facial.",
+    "categoria": "belleza",
+    "comunidad": "mexicana",
     "contacto": {
       "telefono": "555-1019",
-      "email": "caféaroma@ejemplo.com",
-      "website": "https://caféaroma.com",
+      "email": "bellezatotal@ejemplo.com",
+      "website": "https://bellezatotal.com",
       "redes": {
-        "facebook": "CaféAroma",
-        "instagram": "@caféaroma",
+        "facebook": "BellezaTotal",
+        "instagram": "@esteticabelleza",
         "whatsapp": "1234567819"
       }
     },
     "ubicacion": {
-      "direccion": "119 Calle Principal",
-      "ciudad": "Dallas",
+      "direccion": "301 Calle del Estilo",
+      "ciudad": "Lewisville",
       "estado": "TX",
-      "codigoPostal": "75219",
+      "codigoPostal": "75067",
       "pais": "USA",
       "coordenadas": {
-        "lat": 32.789,
-        "lng": -96.80900000000001
+        "lat": 33.043412,
+        "lng": -96.991602
       }
     },
     imagenDestacada: d,
     "propietario": {
-      "nombre": "Propietario 20",
-      "imagen": "https://randomuser.me/api/portraits/men/19.jpg"
+      "nombre": "Lucía Gómez",
+      "imagen": "https://randomuser.me/api/portraits/women/46.jpg"
     },
     "horarios": [
-      {
-        "dia": "lunes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "martes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "miércoles",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "jueves",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "viernes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "sábado",
-        "apertura": "09:00",
-        "cierre": "15:00"
-      },
-      {
-        "dia": "domingo",
-        "apertura": "Cerrado",
-        "cierre": "Cerrado"
-      }
+      { "dia": "lunes", "apertura": "10:00", "cierre": "18:00" },
+      { "dia": "martes", "apertura": "10:00", "cierre": "18:00" },
+      { "dia": "miércoles", "apertura": "10:00", "cierre": "18:00" },
+      { "dia": "jueves", "apertura": "10:00", "cierre": "18:00" },
+      { "dia": "viernes", "apertura": "10:00", "cierre": "19:00" },
+      { "dia": "sábado", "apertura": "09:00", "cierre": "17:00" },
+      { "dia": "domingo", "apertura": "Cerrado", "cierre": "Cerrado" }
     ],
     "verificado": true,
-    "etiquetas": [
-      "Latinx",
-      "Negocio Local",
-      "Comunidad",
-      "Automotriz"
-    ]
-  },
-  {
-    "id": 21,
-    "nombre": "Barbería Don Pedro",
-    "descripcion": "Barbería Don Pedro ofrece productos y servicios auténticos.",
-    "categoria": "mercado",
-    "comunidad": "salvadoreña",
+    "etiquetas": ["Estética", "Belleza", "Cortes", "Spa"]
+  },{
+    "id": 120,
+    "nombre": "Carnicería El Buen Corte",
+    "descripcion": "Cortes frescos y productos típicos de la cocina latina.",
+    "categoria": "comida",
+    "comunidad": "colombiana",
     "contacto": {
       "telefono": "555-1020",
-      "email": "barberíadonpedro@ejemplo.com",
-      "website": "https://barberíadonpedro.com",
+      "email": "elbuen.corte@ejemplo.com",
+      "website": "https://elbuen-corte.com",
       "redes": {
-        "facebook": "BarberíaDonPedro",
-        "instagram": "@barberíadonpedro",
+        "facebook": "CarniceriaElBuenCorte",
+        "instagram": "@elbuen.corte",
         "whatsapp": "1234567820"
       }
     },
     "ubicacion": {
-      "direccion": "120 Calle Principal",
-      "ciudad": "Dallas",
+      "direccion": "302 Calle de la Carne",
+      "ciudad": "Lewisville",
       "estado": "TX",
-      "codigoPostal": "75220",
+      "codigoPostal": "75067",
       "pais": "USA",
       "coordenadas": {
-        "lat": 32.790000000000006,
-        "lng": -96.81
+        "lat": 33.042350,
+        "lng": -96.995210
       }
     },
-    imagenDestacada: d,
+    imagenDestacada: b,
     "propietario": {
-      "nombre": "Propietario 21",
-      "imagen": "https://randomuser.me/api/portraits/men/20.jpg"
+      "nombre": "Carlos Ramírez",
+      "imagen": "https://randomuser.me/api/portraits/men/40.jpg"
     },
     "horarios": [
-      {
-        "dia": "lunes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "martes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "miércoles",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "jueves",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "viernes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "sábado",
-        "apertura": "09:00",
-        "cierre": "15:00"
-      },
-      {
-        "dia": "domingo",
-        "apertura": "Cerrado",
-        "cierre": "Cerrado"
-      }
+      { "dia": "lunes", "apertura": "08:00", "cierre": "18:00" },
+      { "dia": "martes", "apertura": "08:00", "cierre": "18:00" },
+      { "dia": "miércoles", "apertura": "08:00", "cierre": "18:00" },
+      { "dia": "jueves", "apertura": "08:00", "cierre": "18:00" },
+      { "dia": "viernes", "apertura": "08:00", "cierre": "18:00" },
+      { "dia": "sábado", "apertura": "08:00", "cierre": "16:00" },
+      { "dia": "domingo", "apertura": "Cerrado", "cierre": "Cerrado" }
     ],
     "verificado": true,
-    "etiquetas": [
-      "Latinx",
-      "Negocio Local",
-      "Comunidad",
-      "Mercado"
-    ]
+    "etiquetas": ["Carne", "Colombiano", "Comida Latina", "Negocio Local"]
   },
   {
-    "id": 22,
-    "nombre": "Clínica San José",
-    "descripcion": "Clínica San José ofrece productos y servicios auténticos.",
-    "categoria": "ropa",
-    "comunidad": "colombiana",
+    "id": 121,
+    "nombre": "Papelería Latina Express",
+    "descripcion": "Todo lo que necesitas para oficina, escuela y más.",
+    "categoria": "servicios",
+    "comunidad": "hondureña",
     "contacto": {
       "telefono": "555-1021",
-      "email": "clínicasanjosé@ejemplo.com",
-      "website": "https://clínicasanjosé.com",
+      "email": "latinaexpress@ejemplo.com",
+      "website": "https://papelerialatina.com",
       "redes": {
-        "facebook": "ClínicaSanJosé",
-        "instagram": "@clínicasanjosé",
+        "facebook": "PapeleriaLatinaExpress",
+        "instagram": "@latina.express",
         "whatsapp": "1234567821"
       }
     },
     "ubicacion": {
-      "direccion": "121 Calle Principal",
-      "ciudad": "Dallas",
+      "direccion": "303 Calle del Papel",
+      "ciudad": "Lewisville",
       "estado": "TX",
-      "codigoPostal": "75221",
+      "codigoPostal": "75067",
       "pais": "USA",
       "coordenadas": {
-        "lat": 32.791000000000004,
-        "lng": -96.811
+        "lat": 33.046980,
+        "lng": -96.993120
       }
     },
-    imagenDestacada: d,
+    imagenDestacada: c,
     "propietario": {
-      "nombre": "Propietario 22",
-      "imagen": "https://randomuser.me/api/portraits/men/21.jpg"
+      "nombre": "Jessica López",
+      "imagen": "https://randomuser.me/api/portraits/women/47.jpg"
     },
     "horarios": [
-      {
-        "dia": "lunes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "martes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "miércoles",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "jueves",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "viernes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "sábado",
-        "apertura": "09:00",
-        "cierre": "15:00"
-      },
-      {
-        "dia": "domingo",
-        "apertura": "Cerrado",
-        "cierre": "Cerrado"
-      }
+      { "dia": "lunes", "apertura": "09:00", "cierre": "19:00" },
+      { "dia": "martes", "apertura": "09:00", "cierre": "19:00" },
+      { "dia": "miércoles", "apertura": "09:00", "cierre": "19:00" },
+      { "dia": "jueves", "apertura": "09:00", "cierre": "19:00" },
+      { "dia": "viernes", "apertura": "09:00", "cierre": "19:00" },
+      { "dia": "sábado", "apertura": "10:00", "cierre": "15:00" },
+      { "dia": "domingo", "apertura": "Cerrado", "cierre": "Cerrado" }
     ],
     "verificado": true,
-    "etiquetas": [
-      "Latinx",
-      "Negocio Local",
-      "Comunidad",
-      "Ropa"
-    ]
-  },
-  {
-    "id": 23,
-    "nombre": "Abogados Unidos",
-    "descripcion": "Abogados Unidos ofrece productos y servicios auténticos.",
-    "categoria": "belleza",
-    "comunidad": "salvadoreña",
+    "etiquetas": ["Papelería", "Hondureño", "Servicios", "Tienda Latina"]
+  }, {
+    "id": 122,
+    "nombre": "Mini Market El Punto",
+    "descripcion": "Tu tienda latina con productos típicos, abarrotes y más.",
+    "categoria": "comida",
+    "comunidad": "ecuatoriana",
     "contacto": {
       "telefono": "555-1022",
-      "email": "abogadosunidos@ejemplo.com",
-      "website": "https://abogadosunidos.com",
+      "email": "elpunto@ejemplo.com",
+      "website": "https://minimarketelpunto.com",
       "redes": {
-        "facebook": "AbogadosUnidos",
-        "instagram": "@abogadosunidos",
+        "facebook": "MiniMarketElPunto",
+        "instagram": "@elpuntolatino",
         "whatsapp": "1234567822"
       }
     },
     "ubicacion": {
-      "direccion": "122 Calle Principal",
-      "ciudad": "Dallas",
+      "direccion": "304 Calle Ecuador",
+      "ciudad": "Lewisville",
       "estado": "TX",
-      "codigoPostal": "75222",
+      "codigoPostal": "75067",
       "pais": "USA",
       "coordenadas": {
-        "lat": 32.792,
-        "lng": -96.81200000000001
+        "lat": 33.045151,
+        "lng": -96.997319
       }
     },
     imagenDestacada: d,
     "propietario": {
-      "nombre": "Propietario 23",
-      "imagen": "https://randomuser.me/api/portraits/men/22.jpg"
+      "nombre": "Marco Rivas",
+      "imagen": "https://randomuser.me/api/portraits/men/41.jpg"
     },
     "horarios": [
-      {
-        "dia": "lunes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "martes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "miércoles",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "jueves",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "viernes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "sábado",
-        "apertura": "09:00",
-        "cierre": "15:00"
-      },
-      {
-        "dia": "domingo",
-        "apertura": "Cerrado",
-        "cierre": "Cerrado"
-      }
+      { "dia": "lunes", "apertura": "08:30", "cierre": "20:00" },
+      { "dia": "martes", "apertura": "08:30", "cierre": "20:00" },
+      { "dia": "miércoles", "apertura": "08:30", "cierre": "20:00" },
+      { "dia": "jueves", "apertura": "08:30", "cierre": "20:00" },
+      { "dia": "viernes", "apertura": "08:30", "cierre": "21:00" },
+      { "dia": "sábado", "apertura": "09:00", "cierre": "21:00" },
+      { "dia": "domingo", "apertura": "09:00", "cierre": "18:00" }
     ],
     "verificado": true,
-    "etiquetas": [
-      "Latinx",
-      "Negocio Local",
-      "Comunidad",
-      "Belleza"
-    ]
+    "etiquetas": ["Abarrotes", "Latinoamérica", "Ecuatoriano", "Comunidad"]
   },
   {
-    "id": 24,
-    "nombre": "Academia de Baile Latina",
-    "descripcion": "Academia de Baile Latina ofrece productos y servicios auténticos.",
-    "categoria": "mercado",
-    "comunidad": "venezolana",
+    "id": 123,
+    "nombre": "Centro Cultural Raíces",
+    "descripcion": "Clases de danza, música y talleres culturales para la comunidad.",
+    "categoria": "servicios",
+    "comunidad": "latinoamericana",
     "contacto": {
       "telefono": "555-1023",
-      "email": "academiadebailelatina@ejemplo.com",
-      "website": "https://academiadebailelatina.com",
+      "email": "raicescultural@ejemplo.com",
+      "website": "https://centroculturalraices.org",
       "redes": {
-        "facebook": "AcademiadeBaileLatina",
-        "instagram": "@academiadebailelatina",
+        "facebook": "CentroCulturalRaices",
+        "instagram": "@cc.raices",
         "whatsapp": "1234567823"
       }
     },
     "ubicacion": {
-      "direccion": "123 Calle Principal",
-      "ciudad": "Dallas",
+      "direccion": "305 Calle Cultura",
+      "ciudad": "Lewisville",
       "estado": "TX",
-      "codigoPostal": "75223",
+      "codigoPostal": "75067",
       "pais": "USA",
       "coordenadas": {
-        "lat": 32.793000000000006,
-        "lng": -96.813
+        "lat": 33.043700,
+        "lng": -96.992300
       }
     },
-    imagenDestacada: d,
+    imagenDestacada: c,
     "propietario": {
-      "nombre": "Propietario 24",
-      "imagen": "https://randomuser.me/api/portraits/men/23.jpg"
+      "nombre": "Patricia Díaz",
+      "imagen": "https://randomuser.me/api/portraits/women/48.jpg"
     },
     "horarios": [
-      {
-        "dia": "lunes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "martes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "miércoles",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "jueves",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "viernes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "sábado",
-        "apertura": "09:00",
-        "cierre": "15:00"
-      },
-      {
-        "dia": "domingo",
-        "apertura": "Cerrado",
-        "cierre": "Cerrado"
-      }
+      { "dia": "lunes", "apertura": "10:00", "cierre": "20:00" },
+      { "dia": "martes", "apertura": "10:00", "cierre": "20:00" },
+      { "dia": "miércoles", "apertura": "10:00", "cierre": "20:00" },
+      { "dia": "jueves", "apertura": "10:00", "cierre": "20:00" },
+      { "dia": "viernes", "apertura": "10:00", "cierre": "20:00" },
+      { "dia": "sábado", "apertura": "09:00", "cierre": "17:00" },
+      { "dia": "domingo", "apertura": "Cerrado", "cierre": "Cerrado" }
     ],
     "verificado": true,
-    "etiquetas": [
-      "Latinx",
-      "Negocio Local",
-      "Comunidad",
-      "Mercado"
-    ]
-  },
-  {
-    "id": 25,
-    "nombre": "Distribuidora Latina",
-    "descripcion": "Distribuidora Latina ofrece productos y servicios auténticos.",
-    "categoria": "servicios",
-    "comunidad": "venezolana",
+    "etiquetas": ["Cultura", "Danza", "Educación", "Talleres"]
+  }, {
+    "id": 124,
+    "nombre": "Panadería La Abuela",
+    "descripcion": "Pan fresco, empanadas, y postres típicos latinos.",
+    "categoria": "comida",
+    "comunidad": "dominicana",
     "contacto": {
       "telefono": "555-1024",
-      "email": "distribuidoralatina@ejemplo.com",
-      "website": "https://distribuidoralatina.com",
+      "email": "panaderialaabuela@ejemplo.com",
+      "website": "https://panaderialaabuela.com",
       "redes": {
-        "facebook": "DistribuidoraLatina",
-        "instagram": "@distribuidoralatina",
+        "facebook": "PanaderiaLaAbuela",
+        "instagram": "@panaderia.laabuela",
         "whatsapp": "1234567824"
       }
     },
     "ubicacion": {
-      "direccion": "124 Calle Principal",
-      "ciudad": "Dallas",
+      "direccion": "306 Calle Dulce",
+      "ciudad": "Lewisville",
       "estado": "TX",
-      "codigoPostal": "75224",
+      "codigoPostal": "75067",
       "pais": "USA",
       "coordenadas": {
-        "lat": 32.794000000000004,
-        "lng": -96.81400000000001
+        "lat": 33.042680,
+        "lng": -96.990150
+      }
+    },
+    imagenDestacada: b,
+    "propietario": {
+      "nombre": "María Herrera",
+      "imagen": "https://randomuser.me/api/portraits/women/49.jpg"
+    },
+    "horarios": [
+      { "dia": "lunes", "apertura": "07:00", "cierre": "19:00" },
+      { "dia": "martes", "apertura": "07:00", "cierre": "19:00" },
+      { "dia": "miércoles", "apertura": "07:00", "cierre": "19:00" },
+      { "dia": "jueves", "apertura": "07:00", "cierre": "19:00" },
+      { "dia": "viernes", "apertura": "07:00", "cierre": "20:00" },
+      { "dia": "sábado", "apertura": "08:00", "cierre": "20:00" },
+      { "dia": "domingo", "apertura": "08:00", "cierre": "17:00" }
+    ],
+    "verificado": true,
+    "etiquetas": ["Panadería", "Dulces", "Dominicano", "Comida"]
+  },
+  {
+    "id": 125,
+    "nombre": "Auto Detailing El Rayo",
+    "descripcion": "Lavado y detallado profesional de autos con servicio a domicilio.",
+    "categoria": "automotriz",
+    "comunidad": "mexicana",
+    "contacto": {
+      "telefono": "555-1025",
+      "email": "elrayo@ejemplo.com",
+      "website": "https://elrayodetailing.com",
+      "redes": {
+        "facebook": "AutoElRayo",
+        "instagram": "@elrayo.autos",
+        "whatsapp": "1234567825"
+      }
+    },
+    "ubicacion": {
+      "direccion": "307 Calle del Motor",
+      "ciudad": "Lewisville",
+      "estado": "TX",
+      "codigoPostal": "75067",
+      "pais": "USA",
+      "coordenadas": {
+        "lat": 33.046120,
+        "lng": -96.989450
       }
     },
     imagenDestacada: d,
     "propietario": {
-      "nombre": "Propietario 25",
-      "imagen": "https://randomuser.me/api/portraits/men/24.jpg"
+      "nombre": "Luis Fernando",
+      "imagen": "https://randomuser.me/api/portraits/men/42.jpg"
     },
     "horarios": [
-      {
-        "dia": "lunes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "martes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "miércoles",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "jueves",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "viernes",
-        "apertura": "08:00",
-        "cierre": "18:00"
-      },
-      {
-        "dia": "sábado",
-        "apertura": "09:00",
-        "cierre": "15:00"
-      },
-      {
-        "dia": "domingo",
-        "apertura": "Cerrado",
-        "cierre": "Cerrado"
-      }
+      { "dia": "lunes", "apertura": "09:00", "cierre": "18:00" },
+      { "dia": "martes", "apertura": "09:00", "cierre": "18:00" },
+      { "dia": "miércoles", "apertura": "09:00", "cierre": "18:00" },
+      { "dia": "jueves", "apertura": "09:00", "cierre": "18:00" },
+      { "dia": "viernes", "apertura": "09:00", "cierre": "18:00" },
+      { "dia": "sábado", "apertura": "10:00", "cierre": "16:00" },
+      { "dia": "domingo", "apertura": "Cerrado", "cierre": "Cerrado" }
     ],
     "verificado": true,
-    "etiquetas": [
-      "Latinx",
-      "Negocio Local",
-      "Comunidad",
-      "Servicios"
-    ]
+    "etiquetas": ["Autos", "Lavado", "Mexicano", "Servicio a domicilio"]
+  }, {
+    "id": 126,
+    "nombre": "Tacos El Patrón",
+    "descripcion": "Los mejores tacos callejeros con sabor auténtico mexicano.",
+    "categoria": "comida",
+    "comunidad": "mexicana",
+    "contacto": {
+      "telefono": "555-1026",
+      "email": "tacospatron@ejemplo.com",
+      "website": "https://tacospatron.com",
+      "redes": {
+        "facebook": "TacosElPatronLewisville",
+        "instagram": "@tacospatron",
+        "whatsapp": "1234567826"
+      }
+    },
+    "ubicacion": {
+      "direccion": "308 Calle del Sabor",
+      "ciudad": "Lewisville",
+      "estado": "TX",
+      "codigoPostal": "75067",
+      "pais": "USA",
+      "coordenadas": {
+        "lat": 33.040310,
+        "lng": -96.996700
+      }
+    },
+    imagenDestacada: b,
+    "propietario": {
+      "nombre": "José Hernández",
+      "imagen": "https://randomuser.me/api/portraits/men/43.jpg"
+    },
+    "horarios": [
+      { "dia": "lunes", "apertura": "10:00", "cierre": "22:00" },
+      { "dia": "martes", "apertura": "10:00", "cierre": "22:00" },
+      { "dia": "miércoles", "apertura": "10:00", "cierre": "22:00" },
+      { "dia": "jueves", "apertura": "10:00", "cierre": "22:00" },
+      { "dia": "viernes", "apertura": "10:00", "cierre": "23:00" },
+      { "dia": "sábado", "apertura": "11:00", "cierre": "23:00" },
+      { "dia": "domingo", "apertura": "11:00", "cierre": "21:00" }
+    ],
+    "verificado": true,
+    "etiquetas": ["Tacos", "Comida Callejera", "Mexicano", "Restaurante"]
+  },
+  {
+    "id": 127,
+    "nombre": "Boutique La Esquina",
+    "descripcion": "Ropa moderna, accesorios y moda latina para todas las edades.",
+    "categoria": "ropa",
+    "comunidad": "cubana",
+    "contacto": {
+      "telefono": "555-1027",
+      "email": "boutiquelaesquina@ejemplo.com",
+      "website": "https://laesquina.boutique",
+      "redes": {
+        "facebook": "LaEsquinaModa",
+        "instagram": "@laesquinaboutique",
+        "whatsapp": "1234567827"
+      }
+    },
+    "ubicacion": {
+      "direccion": "309 Calle Estilo",
+      "ciudad": "Lewisville",
+      "estado": "TX",
+      "codigoPostal": "75067",
+      "pais": "USA",
+      "coordenadas": {
+        "lat": 33.046750,
+        "lng": -96.994550
+      }
+    },
+    imagenDestacada: c,
+    "propietario": {
+      "nombre": "Camila Torres",
+      "imagen": "https://randomuser.me/api/portraits/women/50.jpg"
+    },
+    "horarios": [
+      { "dia": "lunes", "apertura": "10:00", "cierre": "18:00" },
+      { "dia": "martes", "apertura": "10:00", "cierre": "18:00" },
+      { "dia": "miércoles", "apertura": "10:00", "cierre": "18:00" },
+      { "dia": "jueves", "apertura": "10:00", "cierre": "18:00" },
+      { "dia": "viernes", "apertura": "10:00", "cierre": "18:00" },
+      { "dia": "sábado", "apertura": "11:00", "cierre": "16:00" },
+      { "dia": "domingo", "apertura": "Cerrado", "cierre": "Cerrado" }
+    ],
+    "verificado": true,
+    "etiquetas": ["Moda", "Cuba", "Ropa Latina", "Boutique"]
+  },
+  {
+    "id": 128,
+    "nombre": "Consultorio Hispano Dental",
+    "descripcion": "Atención dental bilingüe para toda la familia.",
+    "categoria": "servicios",
+    "comunidad": "latinoamericana",
+    "contacto": {
+      "telefono": "555-1028",
+      "email": "dentistalatino@ejemplo.com",
+      "website": "https://consultoriohispano.com",
+      "redes": {
+        "facebook": "ConsultorioDentalLatino",
+        "instagram": "@hispano.dental",
+        "whatsapp": "1234567828"
+      }
+    },
+    "ubicacion": {
+      "direccion": "310 Calle Salud",
+      "ciudad": "Lewisville",
+      "estado": "TX",
+      "codigoPostal": "75067",
+      "pais": "USA",
+      "coordenadas": {
+        "lat": 33.041999,
+        "lng": -96.991820
+      }
+    },
+    imagenDestacada: d,
+    "propietario": {
+      "nombre": "Dr. Pablo Álvarez",
+      "imagen": "https://randomuser.me/api/portraits/men/44.jpg"
+    },
+    "horarios": [
+      { "dia": "lunes", "apertura": "08:30", "cierre": "17:00" },
+      { "dia": "martes", "apertura": "08:30", "cierre": "17:00" },
+      { "dia": "miércoles", "apertura": "08:30", "cierre": "17:00" },
+      { "dia": "jueves", "apertura": "08:30", "cierre": "17:00" },
+      { "dia": "viernes", "apertura": "08:30", "cierre": "17:00" },
+      { "dia": "sábado", "apertura": "09:00", "cierre": "13:00" },
+      { "dia": "domingo", "apertura": "Cerrado", "cierre": "Cerrado" }
+    ],
+    "verificado": true,
+    "etiquetas": ["Salud", "Dental", "Hispano", "Servicios"]
+  },
+  {
+    "id": 129,
+    "nombre": "Estudio Creativo Ñ",
+    "descripcion": "Diseño gráfico, fotografía y branding para negocios latinos.",
+    "categoria": "tecnología",
+    "comunidad": "chilena",
+    "contacto": {
+      "telefono": "555-1029",
+      "email": "estudion@ejemplo.com",
+      "website": "https://estudion.cl",
+      "redes": {
+        "facebook": "EstudioCreativoÑ",
+        "instagram": "@estudion.creativo",
+        "whatsapp": "1234567829"
+      }
+    },
+    "ubicacion": {
+      "direccion": "311 Calle Diseño",
+      "ciudad": "Lewisville",
+      "estado": "TX",
+      "codigoPostal": "75067",
+      "pais": "USA",
+      "coordenadas": {
+        "lat": 33.043580,
+        "lng": -96.998170
+      }
+    },
+    imagenDestacada: b,
+    "propietario": {
+      "nombre": "Nicolás Fuentes",
+      "imagen": "https://randomuser.me/api/portraits/men/45.jpg"
+    },
+    "horarios": [
+      { "dia": "lunes", "apertura": "09:00", "cierre": "18:00" },
+      { "dia": "martes", "apertura": "09:00", "cierre": "18:00" },
+      { "dia": "miércoles", "apertura": "09:00", "cierre": "18:00" },
+      { "dia": "jueves", "apertura": "09:00", "cierre": "18:00" },
+      { "dia": "viernes", "apertura": "09:00", "cierre": "17:00" },
+      { "dia": "sábado", "apertura": "Cerrado", "cierre": "Cerrado" },
+      { "dia": "domingo", "apertura": "Cerrado", "cierre": "Cerrado" }
+    ],
+    "verificado": true,
+    "etiquetas": ["Diseño", "Fotografía", "Marketing", "Chileno"]
+  }, {
+    "id": 130,
+    "nombre": "Arepas & Más",
+    "descripcion": "Arepas venezolanas, tequeños y jugos naturales.",
+    "categoria": "comida",
+    "comunidad": "venezolana",
+    "contacto": {
+      "telefono": "555-1030",
+      "email": "arepasymas@ejemplo.com",
+      "website": "https://arepasymas.com",
+      "redes": {
+        "facebook": "ArepasyMasTX",
+        "instagram": "@arepasy.mas",
+        "whatsapp": "1234567830"
+      }
+    },
+    "ubicacion": {
+      "direccion": "312 Calle Caribe",
+      "ciudad": "Lewisville",
+      "estado": "TX",
+      "codigoPostal": "75067",
+      "pais": "USA",
+      "coordenadas": {
+        "lat": 33.042900,
+        "lng": -96.991100
+      }
+    },
+    imagenDestacada: c,
+    "propietario": {
+      "nombre": "Gabriela Pérez",
+      "imagen": "https://randomuser.me/api/portraits/women/51.jpg"
+    },
+    "horarios": [
+      { "dia": "lunes", "apertura": "10:00", "cierre": "21:00" },
+      { "dia": "martes", "apertura": "10:00", "cierre": "21:00" },
+      { "dia": "miércoles", "apertura": "10:00", "cierre": "21:00" },
+      { "dia": "jueves", "apertura": "10:00", "cierre": "21:00" },
+      { "dia": "viernes", "apertura": "10:00", "cierre": "22:00" },
+      { "dia": "sábado", "apertura": "11:00", "cierre": "22:00" },
+      { "dia": "domingo", "apertura": "11:00", "cierre": "18:00" }
+    ],
+    "verificado": true,
+    "etiquetas": ["Comida", "Venezolano", "Arepas", "Latino"]
+  },
+  {
+    "id": 131,
+    "nombre": "Academia de Ritmo Latino",
+    "descripcion": "Clases de salsa, bachata y cumbia para todas las edades.",
+    "categoria": "servicios",
+    "comunidad": "latinoamericana",
+    "contacto": {
+      "telefono": "555-1031",
+      "email": "ritmolatino@ejemplo.com",
+      "website": "https://academiaderitmo.com",
+      "redes": {
+        "facebook": "AcademiaRitmoLatino",
+        "instagram": "@ritmolatino.dfw",
+        "whatsapp": "1234567831"
+      }
+    },
+    "ubicacion": {
+      "direccion": "313 Calle Ritmo",
+      "ciudad": "Lewisville",
+      "estado": "TX",
+      "codigoPostal": "75067",
+      "pais": "USA",
+      "coordenadas": {
+        "lat": 33.046870,
+        "lng": -96.990240
+      }
+    },
+    imagenDestacada: d,
+    "propietario": {
+      "nombre": "Carlos Medina",
+      "imagen": "https://randomuser.me/api/portraits/men/46.jpg"
+    },
+    "horarios": [
+      { "dia": "lunes", "apertura": "16:00", "cierre": "22:00" },
+      { "dia": "martes", "apertura": "16:00", "cierre": "22:00" },
+      { "dia": "miércoles", "apertura": "16:00", "cierre": "22:00" },
+      { "dia": "jueves", "apertura": "16:00", "cierre": "22:00" },
+      { "dia": "viernes", "apertura": "16:00", "cierre": "23:00" },
+      { "dia": "sábado", "apertura": "10:00", "cierre": "14:00" },
+      { "dia": "domingo", "apertura": "Cerrado", "cierre": "Cerrado" }
+    ],
+    "verificado": true,
+    "etiquetas": ["Baile", "Cultura", "Salsa", "Bachata"]
+  },
+  {
+    "id": 132,
+    "nombre": "Peluquería Estilo Latino",
+    "descripcion": "Cortes modernos, barbería y alisados latinos.",
+    "categoria": "belleza",
+    "comunidad": "dominicana",
+    "contacto": {
+      "telefono": "555-1032",
+      "email": "estilolatino@ejemplo.com",
+      "website": "https://estilolatino.com",
+      "redes": {
+        "facebook": "PeluqueriaEstiloLatino",
+        "instagram": "@estilo.latino",
+        "whatsapp": "1234567832"
+      }
+    },
+    "ubicacion": {
+      "direccion": "314 Calle Estilo",
+      "ciudad": "Lewisville",
+      "estado": "TX",
+      "codigoPostal": "75067",
+      "pais": "USA",
+      "coordenadas": {
+        "lat": 33.045420,
+        "lng": -96.990820
+      }
+    },
+    imagenDestacada: b,
+    "propietario": {
+      "nombre": "Roberto Peña",
+      "imagen": "https://randomuser.me/api/portraits/men/47.jpg"
+    },
+    "horarios": [
+      { "dia": "lunes", "apertura": "09:00", "cierre": "18:00" },
+      { "dia": "martes", "apertura": "09:00", "cierre": "18:00" },
+      { "dia": "miércoles", "apertura": "09:00", "cierre": "18:00" },
+      { "dia": "jueves", "apertura": "09:00", "cierre": "18:00" },
+      { "dia": "viernes", "apertura": "09:00", "cierre": "19:00" },
+      { "dia": "sábado", "apertura": "10:00", "cierre": "17:00" },
+      { "dia": "domingo", "apertura": "Cerrado", "cierre": "Cerrado" }
+    ],
+    "verificado": true,
+    "etiquetas": ["Peluquería", "Corte Latino", "Barbería", "Dominicano"]
+  },
+  {
+    "id": 133,
+    "nombre": "Tienda Natural Vida Sana",
+    "descripcion": "Suplementos, productos naturales y bienestar integral.",
+    "categoria": "salud",
+    "comunidad": "colombiana",
+    "contacto": {
+      "telefono": "555-1033",
+      "email": "vidasana@ejemplo.com",
+      "website": "https://tiendavidasana.com",
+      "redes": {
+        "facebook": "NaturalVidaSana",
+        "instagram": "@natural.vida",
+        "whatsapp": "1234567833"
+      }
+    },
+    "ubicacion": {
+      "direccion": "315 Calle Salud",
+      "ciudad": "Lewisville",
+      "estado": "TX",
+      "codigoPostal": "75067",
+      "pais": "USA",
+      "coordenadas": {
+        "lat": 33.043020,
+        "lng": -96.989300
+      }
+    },
+    imagenDestacada: c,
+    "propietario": {
+      "nombre": "Sandra León",
+      "imagen": "https://randomuser.me/api/portraits/women/52.jpg"
+    },
+    "horarios": [
+      { "dia": "lunes", "apertura": "10:00", "cierre": "18:00" },
+      { "dia": "martes", "apertura": "10:00", "cierre": "18:00" },
+      { "dia": "miércoles", "apertura": "10:00", "cierre": "18:00" },
+      { "dia": "jueves", "apertura": "10:00", "cierre": "18:00" },
+      { "dia": "viernes", "apertura": "10:00", "cierre": "18:00" },
+      { "dia": "sábado", "apertura": "10:00", "cierre": "16:00" },
+      { "dia": "domingo", "apertura": "Cerrado", "cierre": "Cerrado" }
+    ],
+    "verificado": true,
+    "etiquetas": ["Salud", "Natural", "Suplementos", "Colombiano"]
+  }, {
+    "id": 130,
+    "nombre": "Arepas & Más",
+    "descripcion": "Arepas venezolanas, tequeños y jugos naturales.",
+    "categoria": "comida",
+    "comunidad": "venezolana",
+    "contacto": {
+      "telefono": "555-1030",
+      "email": "arepasymas@ejemplo.com",
+      "website": "https://arepasymas.com",
+      "redes": {
+        "facebook": "ArepasyMasTX",
+        "instagram": "@arepasy.mas",
+        "whatsapp": "1234567830"
+      }
+    },
+    "ubicacion": {
+      "direccion": "312 Calle Caribe",
+      "ciudad": "Lewisville",
+      "estado": "TX",
+      "codigoPostal": "75067",
+      "pais": "USA",
+      "coordenadas": {
+        "lat": 33.042900,
+        "lng": -96.991100
+      }
+    },
+    imagenDestacada: c,
+    "propietario": {
+      "nombre": "Gabriela Pérez",
+      "imagen": "https://randomuser.me/api/portraits/women/51.jpg"
+    },
+    "horarios": [
+      { "dia": "lunes", "apertura": "10:00", "cierre": "21:00" },
+      { "dia": "martes", "apertura": "10:00", "cierre": "21:00" },
+      { "dia": "miércoles", "apertura": "10:00", "cierre": "21:00" },
+      { "dia": "jueves", "apertura": "10:00", "cierre": "21:00" },
+      { "dia": "viernes", "apertura": "10:00", "cierre": "22:00" },
+      { "dia": "sábado", "apertura": "11:00", "cierre": "22:00" },
+      { "dia": "domingo", "apertura": "11:00", "cierre": "18:00" }
+    ],
+    "verificado": true,
+    "etiquetas": ["Comida", "Venezolano", "Arepas", "Latino"]
+  },
+  {
+    "id": 131,
+    "nombre": "Academia de Ritmo Latino",
+    "descripcion": "Clases de salsa, bachata y cumbia para todas las edades.",
+    "categoria": "servicios",
+    "comunidad": "latinoamericana",
+    "contacto": {
+      "telefono": "555-1031",
+      "email": "ritmolatino@ejemplo.com",
+      "website": "https://academiaderitmo.com",
+      "redes": {
+        "facebook": "AcademiaRitmoLatino",
+        "instagram": "@ritmolatino.dfw",
+        "whatsapp": "1234567831"
+      }
+    },
+    "ubicacion": {
+      "direccion": "313 Calle Ritmo",
+      "ciudad": "Lewisville",
+      "estado": "TX",
+      "codigoPostal": "75067",
+      "pais": "USA",
+      "coordenadas": {
+        "lat": 33.046870,
+        "lng": -96.990240
+      }
+    },
+    imagenDestacada: d,
+    "propietario": {
+      "nombre": "Carlos Medina",
+      "imagen": "https://randomuser.me/api/portraits/men/46.jpg"
+    },
+    "horarios": [
+      { "dia": "lunes", "apertura": "16:00", "cierre": "22:00" },
+      { "dia": "martes", "apertura": "16:00", "cierre": "22:00" },
+      { "dia": "miércoles", "apertura": "16:00", "cierre": "22:00" },
+      { "dia": "jueves", "apertura": "16:00", "cierre": "22:00" },
+      { "dia": "viernes", "apertura": "16:00", "cierre": "23:00" },
+      { "dia": "sábado", "apertura": "10:00", "cierre": "14:00" },
+      { "dia": "domingo", "apertura": "Cerrado", "cierre": "Cerrado" }
+    ],
+    "verificado": true,
+    "etiquetas": ["Baile", "Cultura", "Salsa", "Bachata"]
+  },
+  {
+    "id": 132,
+    "nombre": "Peluquería Estilo Latino",
+    "descripcion": "Cortes modernos, barbería y alisados latinos.",
+    "categoria": "belleza",
+    "comunidad": "dominicana",
+    "contacto": {
+      "telefono": "555-1032",
+      "email": "estilolatino@ejemplo.com",
+      "website": "https://estilolatino.com",
+      "redes": {
+        "facebook": "PeluqueriaEstiloLatino",
+        "instagram": "@estilo.latino",
+        "whatsapp": "1234567832"
+      }
+    },
+    "ubicacion": {
+      "direccion": "314 Calle Estilo",
+      "ciudad": "Lewisville",
+      "estado": "TX",
+      "codigoPostal": "75067",
+      "pais": "USA",
+      "coordenadas": {
+        "lat": 33.045420,
+        "lng": -96.990820
+      }
+    },
+    imagenDestacada: b,
+    "propietario": {
+      "nombre": "Roberto Peña",
+      "imagen": "https://randomuser.me/api/portraits/men/47.jpg"
+    },
+    "horarios": [
+      { "dia": "lunes", "apertura": "09:00", "cierre": "18:00" },
+      { "dia": "martes", "apertura": "09:00", "cierre": "18:00" },
+      { "dia": "miércoles", "apertura": "09:00", "cierre": "18:00" },
+      { "dia": "jueves", "apertura": "09:00", "cierre": "18:00" },
+      { "dia": "viernes", "apertura": "09:00", "cierre": "19:00" },
+      { "dia": "sábado", "apertura": "10:00", "cierre": "17:00" },
+      { "dia": "domingo", "apertura": "Cerrado", "cierre": "Cerrado" }
+    ],
+    "verificado": true,
+    "etiquetas": ["Peluquería", "Corte Latino", "Barbería", "Dominicano"]
+  },
+  {
+    "id": 133,
+    "nombre": "Tienda Natural Vida Sana",
+    "descripcion": "Suplementos, productos naturales y bienestar integral.",
+    "categoria": "salud",
+    "comunidad": "colombiana",
+    "contacto": {
+      "telefono": "555-1033",
+      "email": "vidasana@ejemplo.com",
+      "website": "https://tiendavidasana.com",
+      "redes": {
+        "facebook": "NaturalVidaSana",
+        "instagram": "@natural.vida",
+        "whatsapp": "1234567833"
+      }
+    },
+    "ubicacion": {
+      "direccion": "315 Calle Salud",
+      "ciudad": "Lewisville",
+      "estado": "TX",
+      "codigoPostal": "75067",
+      "pais": "USA",
+      "coordenadas": {
+        "lat": 33.043020,
+        "lng": -96.989300
+      }
+    },
+    imagenDestacada: c,
+    "propietario": {
+      "nombre": "Sandra León",
+      "imagen": "https://randomuser.me/api/portraits/women/52.jpg"
+    },
+    "horarios": [
+      { "dia": "lunes", "apertura": "10:00", "cierre": "18:00" },
+      { "dia": "martes", "apertura": "10:00", "cierre": "18:00" },
+      { "dia": "miércoles", "apertura": "10:00", "cierre": "18:00" },
+      { "dia": "jueves", "apertura": "10:00", "cierre": "18:00" },
+      { "dia": "viernes", "apertura": "10:00", "cierre": "18:00" },
+      { "dia": "sábado", "apertura": "10:00", "cierre": "16:00" },
+      { "dia": "domingo", "apertura": "Cerrado", "cierre": "Cerrado" }
+    ],
+    "verificado": true,
+    "etiquetas": ["Salud", "Natural", "Suplementos", "Colombiano"]
+  },{
+    "id": 138,
+    "nombre": "Taquería El Buen Gusto",
+    "descripcion": "Tacos, burritos y salsas caseras en un ambiente familiar.",
+    "categoria": "comida",
+    "comunidad": "mexicana",
+    "contacto": {
+      "telefono": "555-1038",
+      "email": "elbuen.gusto@ejemplo.com",
+      "website": "https://elbuen-gusto.com",
+      "redes": {
+        "facebook": "TaqueriaElBuenGusto",
+        "instagram": "@buen.gusto",
+        "whatsapp": "1234567838"
+      }
+    },
+    "ubicacion": {
+      "direccion": "320 Calle del Sabor",
+      "ciudad": "Lewisville",
+      "estado": "TX",
+      "codigoPostal": "75067",
+      "pais": "USA",
+      "coordenadas": { "lat": 33.044000, "lng": -96.993000 }
+    },
+    imagenDestacada: c,
+    "propietario": {
+      "nombre": "Tomás Aguilar",
+      "imagen": "https://randomuser.me/api/portraits/men/50.jpg"
+    },
+    "horarios": [
+      { "dia": "lunes", "apertura": "10:00", "cierre": "22:00" },
+      { "dia": "martes", "apertura": "10:00", "cierre": "22:00" },
+      { "dia": "miércoles", "apertura": "10:00", "cierre": "22:00" },
+      { "dia": "jueves", "apertura": "10:00", "cierre": "22:00" },
+      { "dia": "viernes", "apertura": "10:00", "cierre": "23:00" },
+      { "dia": "sábado", "apertura": "11:00", "cierre": "23:00" },
+      { "dia": "domingo", "apertura": "11:00", "cierre": "21:00" }
+    ],
+    "verificado": true,
+    "etiquetas": ["Tacos", "Burritos", "Mexicano", "Comida"]
+  },
+  {
+    "id": 139,
+    "nombre": "Barbería El Corte Real",
+    "descripcion": "Cortes clásicos y modernos para hombres y niños.",
+    "categoria": "belleza",
+    "comunidad": "hondureña",
+    "contacto": {
+      "telefono": "555-1039",
+      "email": "elcortereal@ejemplo.com",
+      "website": "https://barberiaelcortereal.com",
+      "redes": {
+        "facebook": "BarberiaElCorteReal",
+        "instagram": "@elcortereal",
+        "whatsapp": "1234567839"
+      }
+    },
+    "ubicacion": {
+      "direccion": "321 Calle del Estilo",
+      "ciudad": "Lewisville",
+      "estado": "TX",
+      "codigoPostal": "75067",
+      "pais": "USA",
+      "coordenadas": { "lat": 33.041600, "lng": -96.996100 }
+    },
+    imagenDestacada: d,
+    "propietario": {
+      "nombre": "Emanuel Gómez",
+      "imagen": "https://randomuser.me/api/portraits/men/51.jpg"
+    },
+    "horarios": [
+      { "dia": "lunes", "apertura": "09:00", "cierre": "19:00" },
+      { "dia": "martes", "apertura": "09:00", "cierre": "19:00" },
+      { "dia": "miércoles", "apertura": "09:00", "cierre": "19:00" },
+      { "dia": "jueves", "apertura": "09:00", "cierre": "19:00" },
+      { "dia": "viernes", "apertura": "09:00", "cierre": "20:00" },
+      { "dia": "sábado", "apertura": "09:00", "cierre": "18:00" },
+      { "dia": "domingo", "apertura": "Cerrado", "cierre": "Cerrado" }
+    ],
+    "verificado": true,
+    "etiquetas": ["Barbería", "Cortes", "Hondureño", "Belleza"]
+  },
+  {
+    "id": 140,
+    "nombre": "Estudio de Yoga Tierra y Alma",
+    "descripcion": "Clases de yoga, meditación y bienestar holístico.",
+    "categoria": "salud",
+    "comunidad": "latinoamericana",
+    "contacto": {
+      "telefono": "555-1040",
+      "email": "yogatierrayalma@ejemplo.com",
+      "website": "https://yogatierrayalma.com",
+      "redes": {
+        "facebook": "YogaTierraYAlma",
+        "instagram": "@tierrayalma.yoga",
+        "whatsapp": "1234567840"
+      }
+    },
+    "ubicacion": {
+      "direccion": "322 Calle Paz",
+      "ciudad": "Lewisville",
+      "estado": "TX",
+      "codigoPostal": "75067",
+      "pais": "USA",
+      "coordenadas": { "lat": 33.042222, "lng": -96.994222 }
+    },
+    imagenDestacada: b,
+    "propietario": {
+      "nombre": "Luciana Ortega",
+      "imagen": "https://randomuser.me/api/portraits/women/55.jpg"
+    },
+    "horarios": [
+      { "dia": "lunes", "apertura": "07:00", "cierre": "20:00" },
+      { "dia": "martes", "apertura": "07:00", "cierre": "20:00" },
+      { "dia": "miércoles", "apertura": "07:00", "cierre": "20:00" },
+      { "dia": "jueves", "apertura": "07:00", "cierre": "20:00" },
+      { "dia": "viernes", "apertura": "07:00", "cierre": "20:00" },
+      { "dia": "sábado", "apertura": "09:00", "cierre": "13:00" },
+      { "dia": "domingo", "apertura": "Cerrado", "cierre": "Cerrado" }
+    ],
+    "verificado": true,
+    "etiquetas": ["Yoga", "Bienestar", "Meditación", "Salud"]
+  },
+  {
+    "id": 141,
+    "nombre": "Impresiones Latinas",
+    "descripcion": "Impresión digital, banners, tarjetas y personalización.",
+    "categoria": "tecnología",
+    "comunidad": "venezolana",
+    "contacto": {
+      "telefono": "555-1041",
+      "email": "impresioneslatinas@ejemplo.com",
+      "website": "https://impresioneslatinas.com",
+      "redes": {
+        "facebook": "ImpresionesLatinasDFW",
+        "instagram": "@impresiones.latinas",
+        "whatsapp": "1234567841"
+      }
+    },
+    "ubicacion": {
+      "direccion": "323 Calle Diseño",
+      "ciudad": "Lewisville",
+      "estado": "TX",
+      "codigoPostal": "75067",
+      "pais": "USA",
+      "coordenadas": { "lat": 33.043333, "lng": -96.991111 }
+    },
+    imagenDestacada: c,
+    "propietario": {
+      "nombre": "Yulimar Rojas",
+      "imagen": "https://randomuser.me/api/portraits/women/56.jpg"
+    },
+    "horarios": [
+      { "dia": "lunes", "apertura": "09:00", "cierre": "18:00" },
+      { "dia": "martes", "apertura": "09:00", "cierre": "18:00" },
+      { "dia": "miércoles", "apertura": "09:00", "cierre": "18:00" },
+      { "dia": "jueves", "apertura": "09:00", "cierre": "18:00" },
+      { "dia": "viernes", "apertura": "09:00", "cierre": "18:00" },
+      { "dia": "sábado", "apertura": "10:00", "cierre": "14:00" },
+      { "dia": "domingo", "apertura": "Cerrado", "cierre": "Cerrado" }
+    ],
+    "verificado": true,
+    "etiquetas": ["Diseño", "Impresión", "Venezolano", "Servicios"]
   }
+  
+  
+  
+  
+  
+  
+  
+  
 ];
 
 export default negocios;

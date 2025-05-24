@@ -1,36 +1,68 @@
+import { FaEnvelope, FaPhone, FaGlobe } from "react-icons/fa";
+
 export function ContactCard({ contact }) {
   if (!contact) return null;
 
   const { phone, email, website } = contact;
 
-  return (
-    <div className="bg-white rounded-xl p-4 shadow">
-      <h3 className="text-lg font-bold mb-2">Contacto</h3>
-      <ul className="text-sm text-[#181411] space-y-1">
-        {email && (
-          <li>
-            <strong>Email:</strong> {email}
-          </li>
-        )}
-        {phone && (
-          <li>
-            <strong>Teléfono:</strong> {phone}
-          </li>
-        )}
-        {website && (
-          <li>
-            <strong>Sitio web:</strong>{" "}
+  const InfoItem = ({ Icon, label, value, href }) => (
+    <div className="flex items-center gap-4 bg-white px-4 min-h-[72px] py-2">
+      <div className="text-[#181411] flex items-center justify-center rounded-lg bg-[#f5f2f0] shrink-0 size-12">
+        <Icon size={20} />
+      </div>
+      <div className="flex flex-col justify-center">
+        <p className="text-[#181411] text-base font-medium leading-normal line-clamp-1">
+          {href ? (
             <a
-              href={website}
+              href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-600 underline"
+              className="hover:underline"
             >
-              {website}
+              {value}
             </a>
-          </li>
+          ) : (
+            value
+          )}
+        </p>
+        <p className="text-[#8a7460] text-sm font-normal leading-normal line-clamp-1">
+          {label}
+        </p>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="bg-white rounded-xl shadow-sm">
+      <h2 className="text-[#181411] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">
+        Contacto
+      </h2>
+      <div className="flex flex-col">
+        {email && (
+          <InfoItem
+            Icon={FaEnvelope}
+            label="Correo electrónico"
+            value={email}
+            href={`mailto:${email}`}
+          />
         )}
-      </ul>
+        {phone && (
+          <InfoItem
+            Icon={FaPhone}
+            label="Teléfono"
+            value={phone}
+            href={`tel:${phone}`}
+          />
+        )}
+        {website && (
+          <InfoItem
+            Icon={FaGlobe}
+            label="Sitio web"
+            value={website}
+            href={website}
+          />
+        )}
+      </div>
     </div>
   );
 }
