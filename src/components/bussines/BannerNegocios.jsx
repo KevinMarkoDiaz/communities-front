@@ -1,3 +1,5 @@
+import bannerBSS from "../../assets/bannerBSS.mp4";
+
 export default function BannerNegocios({ scrollToRef }) {
   const handleScroll = () => {
     scrollToRef?.current?.scrollIntoView({ behavior: "smooth" });
@@ -5,14 +7,22 @@ export default function BannerNegocios({ scrollToRef }) {
 
   return (
     <div className="px-4 sm:px-8 lg:px-16 py-10 flex justify-center">
-      <div className="w-full max-w-5xl rounded-xl overflow-hidden">
-        <div
-          className="flex flex-col gap-6 sm:gap-8 min-h-[420px] bg-cover bg-center bg-no-repeat items-start justify-end p-6 sm:p-10 rounded-xl"
-          style={{
-            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.4)), url("https://cdn.usegalileo.ai/sdxl10/0f80bf0e-864e-4352-ac7e-5f6c83987b80.png")`,
-          }}
-        >
-          <div className="flex flex-col gap-2 text-left text-white">
+      <div className="w-full max-w-5xl rounded-xl overflow-hidden relative">
+        {/* 🎥 Fondo de video */}
+        <video
+          className="absolute inset-0 w-full h-full object-cover"
+          src={bannerBSS}
+          autoPlay
+          muted
+          playsInline
+        />
+
+        {/* 🔲 Capa oscura para mejorar contraste */}
+        <div className="absolute inset-0 bg-black/20" />
+
+        {/* 🧾 Contenido */}
+        <div className="relative z-10 flex flex-col gap-6 sm:gap-8 min-h-[420px] items-start justify-end p-6 sm:p-10 text-white">
+          <div className="flex flex-col gap-2 text-left">
             <h1 className="text-3xl sm:text-5xl font-black leading-tight tracking-[-0.02em]">
               Apoyá lo nuestro. Descubrí negocios que llevan tu cultura en el
               corazón.

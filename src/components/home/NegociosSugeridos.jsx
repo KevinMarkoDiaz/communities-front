@@ -1,8 +1,7 @@
-import { Link } from "react-router-dom";
 import Card from "../Card";
-import GridWrapper from "../GridWrapper";
+import ScrollCarousel from "../ScrollCarousel"; // nuevo carrusel horizontal
 import { useNegocios } from "../../hooks/useNegocios";
-import hb from "../../assets/hb.png"; // asegúrate que exista esa imagen
+import hb from "../../assets/hb.png";
 import BannerTituloSugeridos from "../BannerTituloSugeridos";
 
 export default function NegociosSugeridos() {
@@ -16,24 +15,24 @@ export default function NegociosSugeridos() {
         link="/negocios"
       />
 
-      <GridWrapper>
-        {negocios.slice(0, 4).map((negocio) => (
-          <Link
-            to={`/negocios/${negocio.id || negocio._id}`}
-            key={negocio.id || negocio._id}
-            className="flex-shrink-0"
+      <ScrollCarousel>
+        {negocios.map((n) => (
+          <div
+            key={n.id}
+            className="flex-shrink-0 snap-start min-w-[340px] sm:min-w-[360px] md:min-w-[400px]"
           >
             <Card
-              title={negocio.nombre}
-              description={negocio.descripcion}
-              image={negocio.imagenDestacada}
-              isNew={negocio.isNew}
-              hasDiscount={negocio.hasDiscount}
-              isVerified={negocio.verificado}
+              title={n.nombre}
+              image={n.imagenDestacada}
+              description={n.descripcion}
+              isNew={n.isNew}
+              hasDiscount={n.hasDiscount}
+              isVerified={n.verificado}
+              modo="vertical"
             />
-          </Link>
+          </div>
         ))}
-      </GridWrapper>
+      </ScrollCarousel>
     </section>
   );
 }

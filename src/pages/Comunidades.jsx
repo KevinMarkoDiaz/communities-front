@@ -65,20 +65,18 @@ export default function Comunidades() {
         />
       </Helmet>
 
-      <div className="w-full max-w-[95%] lg:max-w-[80%] xl:max-w-[70%] mx-auto flex flex-col gap-20">
+      <div className="px-4 sm:px-6 lg:px-8 py-10 max-w-6xl mx-auto flex flex-col gap-20">
+        {" "}
         <BannerComunidades scrollToRef={gridRef} />
-
         <SearchBar
           value={busqueda}
           onChange={setBusqueda}
           placeholder="Buscar comunidades..."
         />
-
         <ComunidadesDestacadas />
-
         {/* ✅ Grid de resultados paginados */}
         <div ref={gridRef}>
-          <GridWrapper>
+          <GridWrapper className="min-h-[70vh]">
             {comunidadesPaginadas.map((comunidad) => (
               <Link
                 key={comunidad.id || comunidad._id}
@@ -100,7 +98,6 @@ export default function Comunidades() {
             )}
           </GridWrapper>
         </div>
-
         {/* ✅ Paginador */}
         <Pagination
           totalPages={totalPaginas}

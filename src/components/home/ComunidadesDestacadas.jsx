@@ -1,14 +1,14 @@
 import { Link } from "react-router-dom";
 import Card from "../Card";
-import GridWrapper from "../GridWrapper";
+import ScrollCarousel from "../ScrollCarousel";
 import { useComunidades } from "../../hooks/useComunidades";
-import hb from "../../assets/hb.png"; // asegúrate que exista esa imagen
+import hb from "../../assets/hb.png";
 import BannerTituloSugeridos from "../BannerTituloSugeridos";
 
 export default function ComunidadesDestacadas() {
   const { lista: comunidades } = useComunidades();
 
-  const destacadas = comunidades.slice(0, 4);
+  const destacadas = comunidades.slice(0, 6); // más para scroll si hay
 
   if (destacadas.length === 0) return null;
 
@@ -20,21 +20,22 @@ export default function ComunidadesDestacadas() {
         link="/comunidades"
       />
 
-      <GridWrapper>
+      <ScrollCarousel>
         {destacadas.map((comunidad) => (
           <Link
             to={`/comunidades/${comunidad.id || comunidad._id}`}
             key={comunidad.id || comunidad._id}
-            className="flex-shrink-0"
+            className="flex-shrink-0 snap-start min-w-[340px] sm:min-w-[360px] md:min-w-[400px]"
           >
             <Card
               title={comunidad.name}
               description={comunidad.description}
               image={comunidad.flagImage}
+              modo="vertical"
             />
           </Link>
         ))}
-      </GridWrapper>
+      </ScrollCarousel>
     </section>
   );
 }

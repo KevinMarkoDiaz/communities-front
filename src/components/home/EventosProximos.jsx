@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import Card from "../Card";
-import GridWrapper from "../GridWrapper";
+import ScrollCarousel from "../ScrollCarousel";
 import { useEventos } from "../../hooks/useEventos";
-import hb from "../../assets/hb.png"; // asegúrate que exista esa imagen
+import hb from "../../assets/hb.png";
 import BannerTituloSugeridos from "../BannerTituloSugeridos";
 
 export default function EventosProximos() {
@@ -10,7 +10,7 @@ export default function EventosProximos() {
 
   const eventosProximos = eventos
     .filter((e) => new Date(e.date) > new Date())
-    .slice(0, 4);
+    .slice(0, 6); // más eventos para scroll
 
   if (eventosProximos.length === 0) return null;
 
@@ -22,12 +22,12 @@ export default function EventosProximos() {
         link="/eventos"
       />
 
-      <GridWrapper>
+      <ScrollCarousel>
         {eventosProximos.map((evento) => (
           <Link
             to={`/eventos/${evento.id || evento._id}`}
             key={evento.id || evento._id}
-            className="flex-shrink-0"
+            className="flex-shrink-0 snap-start min-w-[340px] sm:min-w-[360px] md:min-w-[400px]"
           >
             <Card
               title={evento.title}
@@ -40,10 +40,11 @@ export default function EventosProximos() {
                 }
               )}`}
               image={evento.image}
+              modo="vertical"
             />
           </Link>
         ))}
-      </GridWrapper>
+      </ScrollCarousel>
     </section>
   );
 }

@@ -1,10 +1,10 @@
 import React, { forwardRef } from "react";
 
-const GridWrapper = forwardRef(({ children }, ref) => {
+const GridWrapper = forwardRef(({ children, className = "" }, ref) => {
   return (
     <div
       ref={ref}
-      className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-12 min-h-[70vh]"
+      className={`grid justify-center  grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6 ${className}`}
     >
       {children}
     </div>

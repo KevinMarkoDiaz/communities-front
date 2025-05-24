@@ -58,7 +58,7 @@ export default function Eventos() {
         />
       </Helmet>
 
-      <div className="w-full  2xl:max-w-[70%] mx-auto flex flex-col gap-20">
+      <div className="px-4 sm:px-6 lg:px-8 py-10 max-w-6xl mx-auto flex flex-col gap-20">
         <BannerEvento scrollToRef={gridRef} />
 
         <SearchBar
@@ -70,7 +70,7 @@ export default function Eventos() {
         <EventosProximos />
 
         {/* ✅ Grid paginado */}
-        <GridWrapper ref={gridRef}>
+        <GridWrapper ref={gridRef} className="min-h-[70vh]">
           {eventosPaginados.map((evento) => (
             <Link
               to={`/eventos/${evento.id || evento._id}`}

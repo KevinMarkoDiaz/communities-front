@@ -12,6 +12,7 @@ import { OpeningHoursList } from "../components/bussines/OpeningHoursList";
 import { OwnerCard } from "../components/bussines/OwnerCard";
 import { BusinessCard } from "../components/bussines/BusinessCard";
 import { PhotoGallery } from "../components/bussines/PhotoGallery";
+import MapaNegocioDetalle from "../components/bussines/MapaNegocioDetalle";
 
 export default function NegocioDetalle() {
   const { id } = useParams();
@@ -69,7 +70,13 @@ export default function NegocioDetalle() {
           profileImage: negocio.propietario.imagen,
         }}
       />
-
+      {negocio?.ubicacion?.coordenadas && (
+        <MapaNegocioDetalle
+          lat={negocio.ubicacion.coordenadas.lat}
+          lng={negocio.ubicacion.coordenadas.lng}
+          nombre={negocio.nombre}
+        />
+      )}
       <CommunityTags tags={negocio.etiquetas} />
     </div>
   );

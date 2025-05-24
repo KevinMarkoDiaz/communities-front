@@ -10,12 +10,6 @@ export default function BannerTituloSugeridos({ titulo, imagen, link }) {
           {titulo}
         </h2>
       </Link>
-
-      {/* Banner */}
-      <div
-        className="w-full h-[3rem] md:h-[4rem] rounded-sm bg-cover bg-center"
-        style={{ backgroundImage: `url(${imagen})` }}
-      />
     </div>
   );
 }
