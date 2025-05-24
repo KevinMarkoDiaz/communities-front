@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import Card from "../Card";
 import GridWrapper from "../GridWrapper";
 import { useComunidades } from "../../hooks/useComunidades";
+import hb from "../../assets/hb.png"; // asegúrate que exista esa imagen
+import BannerTituloSugeridos from "../BannerTituloSugeridos";
 
 export default function ComunidadesDestacadas() {
   const { lista: comunidades } = useComunidades();
@@ -12,11 +14,11 @@ export default function ComunidadesDestacadas() {
 
   return (
     <section className="space-y-16">
-      <div className="flex justify-between items-center px-1">
-        <h2 className="text-2xl font-extrabold text-[#4B5563] tracking-tight leading-snug">
-          <Link to="/comunidades">Encontrá tu comunidad y sentite en casa</Link>
-        </h2>
-      </div>
+      <BannerTituloSugeridos
+        titulo="Encontrá tu comunidad y sentite en casa"
+        imagen={hb}
+        link="/comunidades"
+      />
 
       <GridWrapper>
         {destacadas.map((comunidad) => (

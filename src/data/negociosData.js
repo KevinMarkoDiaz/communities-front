@@ -73,14 +73,16 @@ const negocios = [
         "cierre": "Cerrado"
       }
     ],
-    "verificado": true,
     "etiquetas": [
       "Latinx",
       "Negocio Local",
       "Comunidad",
       "Educación"
-    ]
+    ],
+    "isNew": true,
+    "hasDiscount": true,
   },
+  
   {
     "id": 2,
     "nombre": "Arepas & Más",

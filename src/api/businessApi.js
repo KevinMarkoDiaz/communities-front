@@ -60,3 +60,19 @@ export async function deleteBusiness(id, token) {
   })
   return response.data
 }
+
+/**
+ * Obtener negocios con paginación y búsqueda opcional.
+ * @param {Object} params - Parámetros de consulta (page, limit, search)
+ * @returns {Promise<Object>} - { data: [], total, page, pages }
+ */
+export async function getBusinessesPaginated({ page = 1, limit = 6, search = "" }) {
+  const response = await axiosInstance.get("/businesses", {
+    params: {
+      page,
+      limit,
+      search, // o "query", según cómo lo llames en tu backend
+    },
+  })
+  return response.data
+}

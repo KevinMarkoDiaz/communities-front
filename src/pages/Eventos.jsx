@@ -5,13 +5,45 @@ import { Link } from "react-router-dom";
 import GridWrapper from "../components/GridWrapper";
 import { useEventos } from "../hooks/useEventos";
 import SearchBar from "../components/SearchBar";
-import BannerEvento from "../components/eventos/BannerEvento"; // ⬅️ asegurate de tener este componente
-
-import { useRef } from "react";
+import BannerEvento from "../components/eventos/BannerEvento";
+import { useRef, useEffect, useState } from "react";
+import EventosProximos from "../components/home/EventosProximos";
+import Pagination from "../components/Pagination";
 
 export default function Eventos() {
-  const { lista, loading, error, busqueda, setBusqueda } = useEventos();
-  const gridRef = useRef(null); // ⬅️ para hacer scroll al grid
+  const { lista, loading, error, busqueda, setBusqueda } = useEventos(); // 🗒️ usar API más adelante
+  const gridRef = useRef(null);
+
+  // ✅ Estados para paginación local
+  const [paginaActual, setPaginaActual] = useState(1);
+  const eventosPorPagina = 12;
+
+  // 🟩 Cuando tengas API, reemplazá por useState() + fetch
+  /*
+  const [eventos, setEventos] = useState([]);
+  const [totalPaginas, setTotalPaginas] = useState(1);
+  
+  useEffect(() => {
+    const fetchEventos = async () => {
+      const res = await fetch(`/api/eventos?page=${paginaActual}&limit=${eventosPorPagina}&busqueda=${busqueda}`);
+      const data = await res.json();
+      setEventos(data.data);
+      setTotalPaginas(data.pages);
+    };
+    fetchEventos();
+  }, [paginaActual, busqueda]);
+  */
+
+  // ✅ Calcular paginación con los eventos actuales (mock)
+  const totalPaginas = Math.ceil(lista.length / eventosPorPagina);
+  const indexInicio = (paginaActual - 1) * eventosPorPagina;
+  const indexFin = indexInicio + eventosPorPagina;
+  const eventosPaginados = lista.slice(indexInicio, indexFin);
+
+  // ✅ Reiniciar página cuando se cambia la búsqueda
+  useEffect(() => {
+    setPaginaActual(1);
+  }, [busqueda]);
 
   if (loading) return <Loading mensaje="Cargando eventos..." />;
   if (error) return <div className="p-4 text-red-600">Error: {error}</div>;
@@ -26,7 +58,7 @@ export default function Eventos() {
         />
       </Helmet>
 
-      <div className="w-full max-w-[95%] lg:max-w-[80%] xl:max-w-[70%] mx-auto flex flex-col gap-20">
+      <div className="w-full  2xl:max-w-[70%] mx-auto flex flex-col gap-20">
         <BannerEvento scrollToRef={gridRef} />
 
         <SearchBar
@@ -35,8 +67,11 @@ export default function Eventos() {
           placeholder="Buscar eventos..."
         />
 
+        <EventosProximos />
+
+        {/* ✅ Grid paginado */}
         <GridWrapper ref={gridRef}>
-          {lista.map((evento) => (
+          {eventosPaginados.map((evento) => (
             <Link
               to={`/eventos/${evento.id || evento._id}`}
               key={evento._id || evento.id}
@@ -62,6 +97,13 @@ export default function Eventos() {
             </p>
           )}
         </GridWrapper>
+
+        {/* ✅ Paginador visible solo si hay más de una página */}
+        <Pagination
+          totalPages={totalPaginas}
+          currentPage={paginaActual}
+          onPageChange={setPaginaActual}
+        />
       </div>
     </>
   );

@@ -23,12 +23,12 @@ export default function CategoryCarousel() {
   };
 
   return (
-    <div className="relative mt-4 w-full ">
-      <h3 className="text-[#181411] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">
+    <div className="max-w-full relative mt-4 overflow-hidden">
+      <h3 className="text-[#181411] text-lg font-bold px-4 pb-2 pt-4">
         Categorías
       </h3>
 
-      {/* Botones visibles solo en tablet/desktop */}
+      {/* Botones navegación */}
       <button
         onClick={() => scroll("left")}
         className="hidden md:flex absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow"
@@ -43,18 +43,19 @@ export default function CategoryCarousel() {
         <FiChevronRight size={20} />
       </button>
 
-      {/* Contenedor del carrusel con overflow oculto externo */}
-      <div className="relative overflow-hidden px-4">
+      {/* Contenedor carrusel scrollable */}
+      <div className="w-full overflow-hidden px-4">
         <div
           ref={scrollRef}
-          className="flex gap-3 overflow-x-auto scroll-smooth touch-pan-x 
+          className="flex gap-3 overflow-x-auto scroll-smooth touch-pan-x whitespace-nowrap w-full
           [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           {categoriasMock.map((cat) => (
             <button
               key={cat.valor}
               onClick={() => dispatch(setCategoria(cat.valor))}
-              className={`flex flex-col gap-4 rounded-lg min-w-40 text-left flex-shrink-0 ${
+              className={`flex flex-col gap-2 flex-shrink-0 w-[120px] sm:w-[140px] md:w-[160px]
+              rounded-lg text-left transition ring-offset-1 ${
                 categoriaSeleccionada === cat.valor
                   ? "ring-2 ring-[#f4c753]"
                   : ""
@@ -86,8 +87,7 @@ export default function CategoryCarousel() {
                   </svg>
                 )}
               </div>
-
-              <p className="text-[#181411] text-base font-medium leading-normal">
+              <p className="text-[#181411] text-sm font-medium leading-tight truncate">
                 {cat.nombre}
               </p>
             </button>

@@ -9,8 +9,11 @@ export function useNegocios() {
   );
 
   useEffect(() => {
-    dispatch(obtenerNegocios());
-  }, [dispatch]);
+    if (!lista || lista.length === 0) {
+      dispatch(obtenerNegocios());
+    }
+  }, [dispatch, lista]);
+  
 
   const negociosFiltrados = lista.filter((negocio) => {
     const coincideBusqueda = negocio.nombre

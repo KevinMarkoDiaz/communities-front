@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import Card from "../Card";
 import GridWrapper from "../GridWrapper";
 import { useEventos } from "../../hooks/useEventos";
+import hb from "../../assets/hb.png"; // asegúrate que exista esa imagen
+import BannerTituloSugeridos from "../BannerTituloSugeridos";
 
 export default function EventosProximos() {
   const { lista: eventos } = useEventos();
@@ -14,14 +16,11 @@ export default function EventosProximos() {
 
   return (
     <section className="space-y-16">
-      <h2 className="text-2xl font-extrabold text-[#4B5563] tracking-tight leading-snug">
-        <Link to="/eventos">
-          <span className="block">Viví tu cultura.</span>
-          <span className="block">
-            Sumate a los eventos que hacen vibrar tu comunidad.
-          </span>
-        </Link>
-      </h2>
+      <BannerTituloSugeridos
+        titulo="Viví tu cultura. Sumate a los eventos que hacen vibrar tu comunidad."
+        imagen={hb}
+        link="/eventos"
+      />
 
       <GridWrapper>
         {eventosProximos.map((evento) => (

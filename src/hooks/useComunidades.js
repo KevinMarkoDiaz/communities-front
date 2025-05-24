@@ -12,8 +12,11 @@ export function useComunidades() {
   );
 
   useEffect(() => {
-    dispatch(obtenerComunidades());
-  }, [dispatch]);
+    if (!lista || lista.length === 0) {
+      dispatch(obtenerComunidades());
+    }
+  }, [dispatch, lista]);
+  
 
   const comunidadesFiltradas = lista.filter((comunidad) =>
     comunidad.name.toLowerCase().includes(busqueda.toLowerCase())

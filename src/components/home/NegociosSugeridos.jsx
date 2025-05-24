@@ -2,14 +2,19 @@ import { Link } from "react-router-dom";
 import Card from "../Card";
 import GridWrapper from "../GridWrapper";
 import { useNegocios } from "../../hooks/useNegocios";
+import hb from "../../assets/hb.png"; // asegúrate que exista esa imagen
+import BannerTituloSugeridos from "../BannerTituloSugeridos";
 
 export default function NegociosSugeridos() {
   const { lista: negocios } = useNegocios();
+
   return (
     <section className="space-y-16">
-      <h2 className="text-2xl font-extrabold text-[#4B5563] flex items-center gap-2">
-        <Link to="/negocios">Destacados de tu comunidad</Link>
-      </h2>
+      <BannerTituloSugeridos
+        titulo="Destacados de tu comunidad"
+        imagen={hb}
+        link="/negocios"
+      />
 
       <GridWrapper>
         {negocios.slice(0, 4).map((negocio) => (
@@ -22,6 +27,9 @@ export default function NegociosSugeridos() {
               title={negocio.nombre}
               description={negocio.descripcion}
               image={negocio.imagenDestacada}
+              isNew={negocio.isNew}
+              hasDiscount={negocio.hasDiscount}
+              isVerified={negocio.verificado}
             />
           </Link>
         ))}

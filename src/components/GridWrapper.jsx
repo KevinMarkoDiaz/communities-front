@@ -4,7 +4,7 @@ const GridWrapper = forwardRef(({ children }, ref) => {
   return (
     <div
       ref={ref}
-      className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-12"
+      className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-12 min-h-[70vh]"
     >
       {children}
     </div>

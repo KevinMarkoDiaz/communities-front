@@ -7,12 +7,50 @@ import { useComunidades } from "../hooks/useComunidades";
 import SearchBar from "../components/SearchBar";
 import BannerComunidades from "../components/communities/BannerComunidades";
 
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
+import ComunidadesDestacadas from "../components/home/ComunidadesDestacadas";
+import Pagination from "../components/Pagination";
 
 export default function Comunidades() {
   const { comunidadesFiltradas, busqueda, setBusqueda, error, loading } =
-    useComunidades();
-  const gridRef = useRef(null); // Ref para scroll
+    useComunidades(); // 🗒️ Reemplazar más adelante con fetch paginado
+
+  const gridRef = useRef(null);
+
+  // ✅ Estados de paginación local
+  const [paginaActual, setPaginaActual] = useState(1);
+  const comunidadesPorPagina = 12;
+
+  // 🟩 Cuando uses API, reemplazá por estos estados y un fetch
+  /*
+  const [comunidades, setComunidades] = useState([]);
+  const [totalPaginas, setTotalPaginas] = useState(1);
+  useEffect(() => {
+    const fetchComunidades = async () => {
+      const res = await fetch(`/api/comunidades?page=${paginaActual}&limit=${comunidadesPorPagina}&busqueda=${busqueda}`);
+      const data = await res.json();
+      setComunidades(data.data);
+      setTotalPaginas(data.pages);
+    };
+    fetchComunidades();
+  }, [paginaActual, busqueda]);
+  */
+
+  // ✅ Paginar desde el frontend (mock o lista completa)
+  const totalPaginas = Math.ceil(
+    comunidadesFiltradas.length / comunidadesPorPagina
+  );
+  const indexInicio = (paginaActual - 1) * comunidadesPorPagina;
+  const indexFin = indexInicio + comunidadesPorPagina;
+  const comunidadesPaginadas = comunidadesFiltradas.slice(
+    indexInicio,
+    indexFin
+  );
+
+  // ✅ Volver a página 1 cuando se cambia la búsqueda
+  useEffect(() => {
+    setPaginaActual(1);
+  }, [busqueda]);
 
   if (loading) return <Loading mensaje="Cargando comunidades..." />;
   if (error) return <div className="p-4 text-red-600">Error: {error}</div>;
@@ -36,9 +74,12 @@ export default function Comunidades() {
           placeholder="Buscar comunidades..."
         />
 
+        <ComunidadesDestacadas />
+
+        {/* ✅ Grid de resultados paginados */}
         <div ref={gridRef}>
           <GridWrapper>
-            {comunidadesFiltradas.map((comunidad) => (
+            {comunidadesPaginadas.map((comunidad) => (
               <Link
                 key={comunidad.id || comunidad._id}
                 to={`/comunidades/${comunidad.id || comunidad._id}`}
@@ -59,6 +100,13 @@ export default function Comunidades() {
             )}
           </GridWrapper>
         </div>
+
+        {/* ✅ Paginador */}
+        <Pagination
+          totalPages={totalPaginas}
+          currentPage={paginaActual}
+          onPageChange={setPaginaActual}
+        />
       </div>
     </>
   );

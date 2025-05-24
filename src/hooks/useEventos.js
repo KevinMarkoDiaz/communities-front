@@ -7,11 +7,12 @@ export function useEventos() {
   const { lista, loading, error, busqueda } = useSelector((state) => state.eventos);
 
   useEffect(() => {
-    dispatch(obtenerEventos());
-  }, [dispatch]);
+    if (!lista || lista.length === 0) {
+      dispatch(obtenerEventos());
+    }
+  }, [dispatch, lista]);
 
-  // Filtrar resultados por búsqueda
-  const eventosFiltrados = lista.filter((evento) =>
+  const eventosFiltrados = (lista || []).filter((evento) =>
     evento.title.toLowerCase().includes(busqueda.toLowerCase())
   );
 

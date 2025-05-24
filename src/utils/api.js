@@ -5,10 +5,12 @@ import comunidadesData from "../data/comunidadesData" // ✅ asegurate de tener 
 export function fetchNegocios() {
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve(negociosData)
-    }, 1000)
-  })
+      console.log("⚠️ negociosData:", negociosData); // 👈 probalo
+      resolve(negociosData);
+    }, 1000);
+  });
 }
+
 
 export function fetchEventos() {
   return new Promise((resolve) => {
