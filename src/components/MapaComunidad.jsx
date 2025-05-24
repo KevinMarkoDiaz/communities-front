@@ -103,15 +103,15 @@ export default function MapaComunidad({ negocios, coords }) {
   }, [userCoords]);
 
   return (
-    <div className="relative">
+    <div className="relative overflow-hidden rounded-xl shadow">
       {!isLoaded && (
-        <div className="w-full h-[400px] flex items-center justify-center">
+        <div className="w-full h-[400px] flex items-center justify-center bg-gray-100">
           <Loading />
         </div>
       )}
       <div
         ref={mapRef}
-        className={`w-full h-[400px] rounded-xl shadow transition-opacity duration-300 ${
+        className={`w-full h-[400px] transition-opacity duration-300 ${
           isLoaded ? "opacity-100" : "opacity-0"
         }`}
       />
