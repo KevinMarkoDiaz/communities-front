@@ -4,6 +4,7 @@ import Home from "../pages/Home";
 import Negocios from "../pages/Negocios";
 import Eventos from "../pages/Eventos";
 import Comunidadeshome from "../pages/Comunidades";
+import ComunidadDetalle from "../pages/ComunidadDetalle";
 
 import Login from "../pages/Login";
 import Registro from "../pages/Registro";
@@ -26,7 +27,11 @@ import CrearComunidad from "../pages/dashboard/CrearComunidad";
 import EditarComunidad from "../pages/dashboard/EditarComunidad";
 
 import RutaPrivada from "../components/RutaPrivada";
-import ComunidadDetalle from "../pages/ComunidadDetalle";
+
+import Promociones from "../pages/Promociones/Promociones";
+import PromoFinDeSemana from "../pages/Promociones/PromoFinDeSemana";
+import DescuentosImperdibles from "../pages/Promociones/DescuentosImperdibles";
+import NuevosLanzamientos from "../pages/Promociones/NuevosLanzamientos";
 
 const router = createBrowserRouter([
   {
@@ -38,11 +43,24 @@ const router = createBrowserRouter([
       { path: "/negocios/:id", element: <NegocioDetalle /> },
       { path: "/eventos", element: <Eventos /> },
       { path: "/eventos/:id", element: <EventoDetalle /> },
-      { path: "/eventos/:id", element: <EventoDetalle /> },
       { path: "/comunidades", element: <Comunidadeshome /> },
       { path: "/comunidades/:id", element: <ComunidadDetalle /> },
+
+      {
+        path: "/promociones",
+        children: [
+          { path: "", element: <Promociones /> },
+          { path: "promo-fin-de-semana", element: <PromoFinDeSemana /> },
+          {
+            path: "descuentos-imperdibles",
+            element: <DescuentosImperdibles />,
+          },
+          { path: "nuevos-lanzamientos", element: <NuevosLanzamientos /> },
+        ],
+      },
     ],
   },
+
   {
     path: "/dashboard",
     element: <RutaPrivada />,
@@ -88,8 +106,15 @@ const router = createBrowserRouter([
       },
     ],
   },
+
   { path: "/login", element: <Login /> },
   { path: "/registro", element: <Registro /> },
+
+  // Ruta 404 (opcional)
+  {
+    path: "*",
+    element: <div className="p-10 text-center">404 - Página no encontrada</div>,
+  },
 ]);
 
 export default function AppRouter() {

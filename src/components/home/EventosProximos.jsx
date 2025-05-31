@@ -1,21 +1,21 @@
 import { Link } from "react-router-dom";
-import Card from "../Card";
 import ScrollCarousel from "../ScrollCarousel";
 import { useEventos } from "../../hooks/useEventos";
 import hb from "../../assets/hb.png";
 import BannerTituloSugeridos from "../BannerTituloSugeridos";
+import CardDestacado from "../Card";
 
 export default function EventosProximos() {
   const { lista: eventos } = useEventos();
 
   const eventosProximos = eventos
     .filter((e) => new Date(e.date) > new Date())
-    .slice(0, 6); // más eventos para scroll
+    .slice(0, 6);
 
   if (eventosProximos.length === 0) return null;
 
   return (
-    <section className="space-y-16">
+    <section className="space-y-4">
       <BannerTituloSugeridos
         titulo="Viví tu cultura. Sumate a los eventos que hacen vibrar tu comunidad."
         imagen={hb}
@@ -27,9 +27,9 @@ export default function EventosProximos() {
           <Link
             to={`/eventos/${evento.id || evento._id}`}
             key={evento.id || evento._id}
-            className="flex-shrink-0 snap-start min-w-[340px] sm:min-w-[360px] md:min-w-[400px]"
+            className="flex-shrink-0 snap-start w-full max-w-[320px]"
           >
-            <Card
+            <CardDestacado
               title={evento.title}
               description={`📅 ${new Date(evento.date).toLocaleDateString(
                 "es-ES",

@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet-async";
 import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import Card from "../components/Card";
+import CardLista from "../components/CardLista";
 import Loading from "../components/Loading";
 import GridWrapper from "../components/GridWrapper";
 import CategoryCarousel from "../components/CategoryCarousel";
@@ -79,14 +79,14 @@ export default function Negocios() {
         <NegociosSugeridos />
         {/* ✅ Grid de negocios: usar negociosPaginados ahora */}
         {/* 🗒️ Cambiar a negocios.map cuando conectes a API */}
-        <GridWrapper ref={gridRef} className="min-h-[70vh]">
+        <GridWrapper ref={gridRef} tipo="lista" className="min-h-[70vh]">
           {negociosPaginados.map((negocio) => (
             <Link
               key={negocio.id || negocio._id}
               to={`/negocios/${negocio.id || negocio._id}`}
               className="flex-shrink-0"
             >
-              <Card
+              <CardLista
                 title={negocio.nombre}
                 description={negocio.descripcion}
                 image={negocio.imagenDestacada}

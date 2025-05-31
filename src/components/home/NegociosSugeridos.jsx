@@ -1,5 +1,5 @@
-import Card from "../Card";
-import ScrollCarousel from "../ScrollCarousel"; // nuevo carrusel horizontal
+import CardDestacado from "../Card";
+import ScrollCarousel from "../ScrollCarousel";
 import { useNegocios } from "../../hooks/useNegocios";
 import hb from "../../assets/hb.png";
 import BannerTituloSugeridos from "../BannerTituloSugeridos";
@@ -7,8 +7,12 @@ import BannerTituloSugeridos from "../BannerTituloSugeridos";
 export default function NegociosSugeridos() {
   const { lista: negocios } = useNegocios();
 
+  const destacados = negocios.slice(0, 6); // Opcional: limitar para scroll más limpio
+
+  if (destacados.length === 0) return null;
+
   return (
-    <section className="space-y-16">
+    <section className="space-y-4">
       <BannerTituloSugeridos
         titulo="Destacados de tu comunidad"
         imagen={hb}
@@ -16,12 +20,12 @@ export default function NegociosSugeridos() {
       />
 
       <ScrollCarousel>
-        {negocios.map((n) => (
+        {destacados.map((n) => (
           <div
-            key={n.id}
-            className="flex-shrink-0 snap-start min-w-[340px] sm:min-w-[360px] md:min-w-[400px]"
+            key={n.id || n._id}
+            className="flex-shrink-0 snap-start min-w-[280px] sm:min-w-[320px] md:min-w-[320px]"
           >
-            <Card
+            <CardDestacado
               title={n.nombre}
               image={n.imagenDestacada}
               description={n.descripcion}

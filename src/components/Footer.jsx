@@ -20,6 +20,9 @@ export default function Footer() {
           <Link to="/comunidades" className="block text-sm hover:underline">
             Comunidades
           </Link>
+          <Link to="/promociones" className="block text-sm hover:underline">
+            Promociones
+          </Link>
         </div>
 
         {/* Columna: Acerca de */}
