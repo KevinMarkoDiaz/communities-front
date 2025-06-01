@@ -1,51 +1,69 @@
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { useSelector } from "react-redux";
-import { createCategory } from "../../api/categoryApi";
-import { useNavigate } from "react-router-dom";
+import { getCategoryById, updateCategory } from "../../api/categoryApi";
+import { Helmet } from "react-helmet-async";
 
 const esquemaCategoria = Yup.object().shape({
   name: Yup.string().required("Nombre obligatorio"),
   description: Yup.string().required("Descripción obligatoria"),
-  icon: Yup.string().optional(),
+  icon: Yup.string(),
 });
 
-export default function CrearCategoria() {
-  const token = useSelector((state) => state.auth.token);
-  const usuario = useSelector((state) => state.auth.usuario);
+export default function EditarCategoriaView() {
+  const { id } = useParams();
   const navigate = useNavigate();
+  const token = useSelector((state) => state.auth.token);
+  const [categoria, setCategoria] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  if (usuario.role !== "admin") {
-    return <div className="p-4 text-red-600">Acceso no autorizado</div>;
-  }
+  useEffect(() => {
+    const cargarCategoria = async () => {
+      try {
+        const res = await getCategoryById(id);
+        setCategoria(res.category);
+      } catch (err) {
+        console.error("Error al cargar categoría:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    cargarCategoria();
+  }, [id]);
+
+  if (loading) return <div className="p-4">Cargando categoría...</div>;
+  if (!categoria)
+    return <div className="p-4 text-red-600">No se encontró la categoría.</div>;
 
   const handleSubmit = async (valores, { setSubmitting }) => {
     try {
-      const data = {
-        ...valores,
-        createdBy: usuario._id,
-      };
-
-      await createCategory(data, token);
+      await updateCategory(id, valores, token);
       navigate("/dashboard/categorias");
     } catch (err) {
-      console.error("Error al crear categoría:", err);
+      console.error("Error al actualizar categoría:", err);
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <div className="max-w-xl mx-auto p-4 bg-white ">
+    <div className="max-w-xl mx-auto p-4 bg-white shadow rounded-xl">
+      <Helmet>
+        <title>Editar Categoría | Dashboard</title>
+      </Helmet>
+
       <h2 className="text-2xl font-bold mb-6 text-[#141C24]">
-        Nueva categoría
+        Editar categoría
       </h2>
 
       <Formik
         initialValues={{
-          name: "",
-          description: "",
-          icon: "",
+          name: categoria.name,
+          description: categoria.description || "",
+          icon: categoria.icon || "",
         }}
         validationSchema={esquemaCategoria}
         onSubmit={handleSubmit}
@@ -56,8 +74,8 @@ export default function CrearCategoria() {
               <label className="block text-sm font-medium mb-1">Nombre</label>
               <Field
                 name="name"
-                placeholder="Nombre de la categoría"
                 className="form-input w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl h-12 px-4"
+                placeholder="Nombre de la categoría"
               />
               <ErrorMessage
                 name="name"
@@ -73,8 +91,8 @@ export default function CrearCategoria() {
               <Field
                 as="textarea"
                 name="description"
-                placeholder="Descripción breve"
                 className="form-textarea w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl px-4 py-3"
+                placeholder="Descripción breve"
               />
               <ErrorMessage
                 name="description"
@@ -87,8 +105,8 @@ export default function CrearCategoria() {
               <label className="block text-sm font-medium mb-1">Icono</label>
               <Field
                 name="icon"
-                placeholder="URL del icono (opcional)"
                 className="form-input w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl h-12 px-4"
+                placeholder="URL del icono (opcional)"
               />
               <ErrorMessage
                 name="icon"
@@ -101,7 +119,7 @@ export default function CrearCategoria() {
               type="submit"
               className="w-full bg-[#141C24] text-white py-3 rounded-xl font-semibold hover:bg-[#1c2430] transition"
             >
-              Crear Categoría
+              Guardar cambios
             </button>
           </Form>
         )}

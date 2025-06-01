@@ -120,6 +120,20 @@ export default function DashboardLayout() {
                     My Events
                   </p>
                 </NavLink>
+                {usuario?.role === "admin" && (
+                  <NavLink
+                    to="categorias/crear"
+                    className={({ isActive }) =>
+                      `flex items-center gap-3 px-3 py-2 ${
+                        isActive ? "bg-[#E4E9F1] rounded-full" : ""
+                      }`
+                    }
+                  >
+                    <p className="text-[#141C24] text-sm font-medium leading-normal">
+                      Crear Categoría
+                    </p>
+                  </NavLink>
+                )}
               </div>
             </div>
 

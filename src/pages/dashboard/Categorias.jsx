@@ -20,8 +20,8 @@ export default function Categorias() {
 
     const cargar = async () => {
       try {
-        const data = await getAllCategories();
-        setCategorias(data);
+        const res = await getAllCategories();
+        setCategorias(res.categories);
       } catch (err) {
         setError("No se pudieron cargar las categorías");
         console.error(err);
@@ -50,12 +50,12 @@ export default function Categorias() {
   if (error) return <div className="p-4 text-red-600">{error}</div>;
 
   return (
-    <div className="p-4 space-y-6">
+    <div className="p-6 space-y-6 max-w-6xl mx-auto">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Categorías</h2>
+        <h2 className="text-2xl font-bold text-[#141C24]">Categorías</h2>
         <Link
           to="crear"
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+          className="bg-[#141C24] text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-[#1e2733] transition"
         >
           + Nueva categoría
         </Link>
@@ -64,22 +64,31 @@ export default function Categorias() {
       {categorias.length === 0 ? (
         <p className="text-gray-600">No hay categorías registradas.</p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {categorias.map((cat) => (
-            <div key={cat._id} className="border p-4 rounded shadow bg-white">
-              <h3 className="text-lg font-semibold">{cat.name}</h3>
-              {cat.icon && <p className="text-sm">🔸 {cat.icon}</p>}
+            <div
+              key={cat._id}
+              className="rounded-xl border border-[#E4E9F1] bg-white p-5 shadow-sm"
+            >
+              <h3 className="text-lg font-semibold text-[#141C24] mb-1">
+                {cat.name}
+              </h3>
+              {cat.icon && (
+                <p className="text-sm text-gray-500 mb-1">
+                  Icono: <code>{cat.icon}</code>
+                </p>
+              )}
               <p className="text-sm text-gray-600">{cat.description}</p>
-              <div className="mt-2 flex gap-2">
+              <div className="mt-4 flex gap-4">
                 <Link
                   to={`/dashboard/categorias/${cat._id}/editar`}
-                  className="text-blue-600 text-sm"
+                  className="text-sm text-blue-600 hover:underline"
                 >
                   Editar
                 </Link>
                 <button
                   onClick={() => handleDelete(cat._id)}
-                  className="text-red-600 text-sm hover:underline"
+                  className="text-sm text-red-500 hover:underline"
                 >
                   Eliminar
                 </button>

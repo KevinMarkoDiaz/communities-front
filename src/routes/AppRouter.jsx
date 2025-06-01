@@ -18,8 +18,6 @@ import MisEventos from "../pages/dashboard/MisEventos";
 import CrearEvento from "../pages/dashboard/CrearEvento";
 import EditarEvento from "../pages/dashboard/EditarEvento";
 import Categorias from "../pages/dashboard/Categorias";
-import CrearCategoria from "../pages/dashboard/CrearCategoria";
-import EditarCategoria from "../pages/dashboard/EditarCategoria";
 import Comunidades from "../pages/dashboard/Comunidades";
 import CrearComunidad from "../pages/dashboard/CrearComunidad";
 import EditarComunidad from "../pages/dashboard/EditarComunidad";
@@ -32,6 +30,8 @@ import DescuentosImperdibles from "../pages/Promociones/DescuentosImperdibles";
 import NuevosLanzamientos from "../pages/Promociones/NuevosLanzamientos";
 import EditarPerfil from "../pages/dashboard/EditarPerfil";
 import NegocioForm from "../pages/dashboard/NegocioForm";
+import CrearCategoriaView from "../pages/dashboard/CrearCategoriaView";
+import EditarCategoriaView from "../pages/dashboard/EditarCategoriaView";
 
 const router = createBrowserRouter([
   {
@@ -91,8 +91,8 @@ const router = createBrowserRouter([
             path: "categorias",
             children: [
               { path: "", element: <Categorias /> },
-              { path: "crear", element: <CrearCategoria /> },
-              { path: ":id/editar", element: <EditarCategoria /> },
+              { path: "crear", element: <CrearCategoriaView /> },
+              { path: ":id/editar", element: <EditarCategoriaView /> },
             ],
           },
           {
