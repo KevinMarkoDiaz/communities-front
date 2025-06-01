@@ -1,141 +1,58 @@
-import { useEffect, useState } from "react";
+// src/pages/dashboard/EditarEvento.jsx
 import { useParams, useNavigate } from "react-router-dom";
-import { getEventById, updateEvent } from "../../api/eventApi";
-import { useSelector } from "react-redux";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
+import { Helmet } from "react-helmet-async";
+import { useEffect, useState } from "react";
+import CrearEditarEventoForm from "../../components/dashboard/formularios/evento/CrearEditarEventoForm";
 
-const esquemaEvento = Yup.object().shape({
-  title: Yup.string().required("Título obligatorio"),
-  description: Yup.string().required("Descripción obligatoria"),
-  date: Yup.date().required("Fecha obligatoria"),
-  location: Yup.string().required("Ubicación obligatoria"),
-  image: Yup.string().url("Debe ser una URL válida").optional(),
-});
+const mockEventos = [
+  {
+    _id: "1",
+    title: "Feria Cultural",
+    description: "Evento para compartir nuestras raíces.",
+    date: "2025-06-15",
+    location: "Dallas, TX",
+    image: "https://via.placeholder.com/300x200",
+  },
+  {
+    _id: "2",
+    title: "Taller de emprendimiento",
+    description: "Aprende a lanzar tu negocio.",
+    date: "2025-06-20",
+    location: "Fort Worth, TX",
+    image: "https://via.placeholder.com/300x200",
+  },
+];
 
 export default function EditarEvento() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const token = useSelector((state) => state.auth.token);
-
   const [evento, setEvento] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const cargar = async () => {
-      try {
-        const data = await getEventById(id);
-        setEvento(data);
-      } catch (err) {
-        console.error(err);
-        setError("No se pudo cargar el evento");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    cargar();
+    const encontrado = mockEventos.find((e) => e._id === id);
+    setEvento(encontrado);
   }, [id]);
 
-  const handleSubmit = async (valores, { setSubmitting }) => {
-    try {
-      await updateEvent(id, valores, token);
-      navigate("/dashboard/mis-eventos");
-    } catch (err) {
-      console.error("Error al actualizar evento:", err);
-    } finally {
-      setSubmitting(false);
-    }
+  if (!evento) {
+    return <div className="p-6 text-gray-500">Cargando evento...</div>;
+  }
+
+  const handleEditar = (valores) => {
+    console.log("🛠️ Evento actualizado:", valores);
+    alert("Evento actualizado (mock)");
+    navigate("/dashboard/mis-eventos");
   };
 
-  if (loading) return <div className="p-4">Cargando datos...</div>;
-  if (error) return <div className="p-4 text-red-600">{error}</div>;
-  if (!evento) return <div className="p-4">Evento no encontrado.</div>;
-
   return (
-    <div className="max-w-2xl mx-auto p-4 bg-white shadow rounded">
-      <h2 className="text-2xl font-bold mb-4 text-blue-700">Editar evento</h2>
+    <>
+      <Helmet>
+        <title>Editar Evento | Communities</title>
+      </Helmet>
 
-      <Formik
-        initialValues={{
-          title: evento.title || "",
-          description: evento.description || "",
-          date: evento.date ? evento.date.slice(0, 10) : "",
-          location: evento.location || "",
-          image: evento.image || "",
-        }}
-        enableReinitialize
-        validationSchema={esquemaEvento}
-        onSubmit={handleSubmit}
-      >
-        {() => (
-          <Form className="space-y-4">
-            <Field
-              name="title"
-              placeholder="Título"
-              className="w-full border px-4 py-2 rounded"
-            />
-            <ErrorMessage
-              name="title"
-              component="div"
-              className="text-red-600 text-sm"
-            />
-
-            <Field
-              name="description"
-              as="textarea"
-              placeholder="Descripción"
-              className="w-full border px-4 py-2 rounded"
-            />
-            <ErrorMessage
-              name="description"
-              component="div"
-              className="text-red-600 text-sm"
-            />
-
-            <Field
-              name="date"
-              type="date"
-              className="w-full border px-4 py-2 rounded"
-            />
-            <ErrorMessage
-              name="date"
-              component="div"
-              className="text-red-600 text-sm"
-            />
-
-            <Field
-              name="location"
-              placeholder="Ubicación"
-              className="w-full border px-4 py-2 rounded"
-            />
-            <ErrorMessage
-              name="location"
-              component="div"
-              className="text-red-600 text-sm"
-            />
-
-            <Field
-              name="image"
-              placeholder="URL de imagen (opcional)"
-              className="w-full border px-4 py-2 rounded"
-            />
-            <ErrorMessage
-              name="image"
-              component="div"
-              className="text-red-600 text-sm"
-            />
-
-            <button
-              type="submit"
-              className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
-            >
-              Guardar cambios
-            </button>
-          </Form>
-        )}
-      </Formik>
-    </div>
+      <section className="max-w-3xl mx-auto bg-white shadow rounded-2xl p-6 sm:p-10 space-y-6">
+        <h1 className="text-2xl font-bold text-[#141C24]">Editar Evento</h1>
+        <CrearEditarEventoForm onSubmit={handleEditar} initialValues={evento} />
+      </section>
+    </>
   );
 }

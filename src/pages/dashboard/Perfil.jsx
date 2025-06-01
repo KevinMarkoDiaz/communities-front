@@ -1,34 +1,18 @@
-import { useSelector } from "react-redux"
+import HeaderPerfil from "../../components/dashboard/perfilUsuario/HeaderPerfil";
+import Resumen from "../../components/dashboard/perfilUsuario/Resumen";
+import AccesoRapido from "../../components/dashboard/perfilUsuario/AccesoRapido";
+import { useUsuarioMock } from "../../data/useUsuarioMock";
 
-export default function Perfil() {
-  const usuario = useSelector((state) => state.auth.usuario)
+export default function PerfilPage() {
+  const { usuario, loading } = useUsuarioMock(); // ✅ usar el mock completo
 
-  if (!usuario) return <p>No estás logueado.</p>
+  if (loading) return <p className="p-6 text-gray-500">Cargando usuario...</p>;
 
   return (
-    <div className="space-y-4">
-      <h2 className="text-2xl font-bold">Mi perfil</h2>
-
-      <div className="flex items-center gap-4">
-        {usuario.profileImage && (
-          <img
-            src={usuario.profileImage}
-            alt={usuario.name}
-            className="w-20 h-20 rounded-full object-cover border"
-          />
-        )}
-        <div>
-          <p className="text-lg font-semibold">{usuario.name}</p>
-          <p className="text-sm text-gray-600">{usuario.email}</p>
-        </div>
-      </div>
-
-      <div className="text-sm space-y-1">
-        <p><strong>Rol:</strong> {usuario.role}</p>
-        <p><strong>Verificado:</strong> {usuario.isVerified ? "Sí" : "No"}</p>
-        <p><strong>Comunidad:</strong> {usuario.community?.name || "Sin asignar"}</p>
-        <p><strong>Registrado desde:</strong> {new Date(usuario.createdAt).toLocaleDateString()}</p>
-      </div>
+    <div className="max-w-[960px] w-full mx-auto flex flex-col">
+      <HeaderPerfil usuario={usuario} />
+      <Resumen />
+      <AccesoRapido />
     </div>
-  )
+  );
 }

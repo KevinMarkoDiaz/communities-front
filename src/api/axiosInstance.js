@@ -1,15 +1,13 @@
-// src/api/axiosInstance.js
+import axios from "axios";
+import { API_BASE_URL } from "../config";
 
-import axios from "axios"
-
-// ⚠️ Cambiá esto por la URL real de tu backend cuando esté listo
-const BASE_URL = "https://api.communities.com"
 
 const axiosInstance = axios.create({
-  baseURL: BASE_URL,
+  baseURL: API_BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },
-})
+  withCredentials: true,  // Si usás cookies o autenticación que lo requiera
+});
 
-export default axiosInstance
+export default axiosInstance;

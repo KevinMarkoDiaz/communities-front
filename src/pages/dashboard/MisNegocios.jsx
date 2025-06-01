@@ -1,26 +1,63 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { getAllBusinesses } from "../../api/businessApi";
 import { Link } from "react-router-dom";
-import { deleteBusiness } from "../../api/businessApi";
+import CardNegocio from "../../components/dashboard/negocios/CardNegocio"; // ✅ Nuevo componente estilizado
 
 export default function MisNegocios() {
   const [negocios, setNegocios] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const token = useSelector((state) => state.auth.token);
   const usuario = useSelector((state) => state.auth.usuario);
 
   useEffect(() => {
     const cargarNegocios = async () => {
       try {
-        const todos = await getAllBusinesses();
-        const propios = todos.filter((n) => n.owner === usuario._id);
+        const mockOwner = usuario?._id || "123";
+
+        // const todos = await getAllBusinesses(); // ❌ API real
+        // const propios = todos.filter((n) => n.owner === usuario._id);
+
+        // ✅ Mock temporal
+        const propios = [
+          {
+            _id: "140",
+            name: "Estudio de Yoga Tierra y Alma",
+            description: "Clases de yoga, meditación y bienestar holístico.",
+            category: "Salud",
+            owner: mockOwner,
+            community: "Latinoamericana",
+            location: {
+              address: "322 Calle Paz",
+              city: "Lewisville",
+              state: "TX",
+              country: "USA",
+              zipCode: "75067",
+              coordinates: { lat: 33.042222, lng: -96.994222 },
+            },
+            contact: {
+              telefono: "555-1040",
+              email: "yogatierrayalma@ejemplo.com",
+              website: "https://yogatierrayalma.com",
+              redes: {
+                facebook: "YogaTierraYAlma",
+                instagram: "@tierrayalma.yoga",
+                whatsapp: "1234567840",
+              },
+            },
+            imagenDestacada: "https://cdn.usegalileo.ai/sdxl10/140.png",
+            ownerName: "Luciana Ortega",
+            ownerImage: "https://randomuser.me/api/portraits/women/55.jpg",
+            horarios: [],
+            verificado: true,
+            etiquetas: ["Yoga", "Bienestar", "Meditación", "Salud"],
+          },
+        ];
+
         setNegocios(propios);
       } catch (err) {
-        setError("No se pudieron cargar los negocios");
         console.error(err);
+        setError("No se pudieron cargar los negocios");
       } finally {
         setLoading(false);
       }
@@ -36,8 +73,8 @@ export default function MisNegocios() {
     if (!confirmar) return;
 
     try {
-      await deleteBusiness(id, token);
-      setNegocios((prev) => prev.filter((n) => n._id !== id));
+      // await deleteBusiness(id, token); // ❌ API real
+      setNegocios((prev) => prev.filter((n) => n._id !== id)); // ✅ Mock
     } catch (error) {
       console.error("Error al eliminar negocio:", error);
       alert("No se pudo eliminar el negocio. Intenta más tarde.");
@@ -62,32 +99,13 @@ export default function MisNegocios() {
       {negocios.length === 0 ? (
         <p className="text-gray-600">No has creado negocios todavía.</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="space-y-3">
           {negocios.map((negocio) => (
-            <div
+            <CardNegocio
               key={negocio._id}
-              className="border p-4 rounded shadow bg-white"
-            >
-              <h3 className="text-lg font-semibold">{negocio.name}</h3>
-              <p className="text-sm text-gray-600">{negocio.description}</p>
-              <p className="text-xs text-gray-500">
-                Categoría: {negocio.category}
-              </p>
-              <div className="mt-2 flex gap-2">
-                <Link
-                  to={`/dashboard/mis-negocios/${negocio._id}/editar`}
-                  className="text-blue-600 text-sm"
-                >
-                  Editar
-                </Link>
-                <button
-                  onClick={() => handleDelete(negocio._id)}
-                  className="text-red-600 text-sm hover:underline"
-                >
-                  Eliminar
-                </button>
-              </div>
-            </div>
+              negocio={negocio}
+              onDelete={() => handleDelete(negocio._id)}
+            />
           ))}
         </div>
       )}

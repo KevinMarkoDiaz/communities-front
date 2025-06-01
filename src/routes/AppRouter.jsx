@@ -15,8 +15,6 @@ import DashboardLayout from "../pages/dashboard/DashboardLayout";
 import Perfil from "../pages/dashboard/Perfil";
 import MisNegocios from "../pages/dashboard/MisNegocios";
 import MisEventos from "../pages/dashboard/MisEventos";
-import CrearNegocio from "../pages/dashboard/CrearNegocio";
-import EditarNegocio from "../pages/dashboard/EditarNegocio";
 import CrearEvento from "../pages/dashboard/CrearEvento";
 import EditarEvento from "../pages/dashboard/EditarEvento";
 import Categorias from "../pages/dashboard/Categorias";
@@ -32,6 +30,8 @@ import Promociones from "../pages/Promociones/Promociones";
 import PromoFinDeSemana from "../pages/Promociones/PromoFinDeSemana";
 import DescuentosImperdibles from "../pages/Promociones/DescuentosImperdibles";
 import NuevosLanzamientos from "../pages/Promociones/NuevosLanzamientos";
+import EditarPerfil from "../pages/dashboard/EditarPerfil";
+import NegocioForm from "../pages/dashboard/NegocioForm";
 
 const router = createBrowserRouter([
   {
@@ -70,12 +70,13 @@ const router = createBrowserRouter([
         element: <DashboardLayout />,
         children: [
           { path: "perfil", element: <Perfil /> },
+          { path: "perfil/editar", element: <EditarPerfil /> },
           {
             path: "mis-negocios",
             children: [
               { path: "", element: <MisNegocios /> },
-              { path: "crear", element: <CrearNegocio /> },
-              { path: ":id/editar", element: <EditarNegocio /> },
+              { path: "crear", element: <NegocioForm /> },
+              { path: ":id/editar", element: <NegocioForm /> },
             ],
           },
           {
