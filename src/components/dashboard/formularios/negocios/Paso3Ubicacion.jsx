@@ -4,21 +4,19 @@ import { Field, ErrorMessage } from "formik";
 export default function Paso3Ubicacion() {
   return (
     <div className="space-y-5">
-      <h3 className="text-[#141C24] text-lg font-semibold">
-        Dirección del negocio
-      </h3>
+      <h3 className="text-[#141C24] text-lg font-semibold">Business Address</h3>
 
       <div>
         <label className="block text-sm font-medium text-[#141C24] mb-1">
-          Dirección
+          Address
         </label>
         <Field
-          name="ubicacion.direccion"
-          placeholder="322 Calle Paz"
+          name="location.address"
+          placeholder="322 Peace St"
           className="form-input w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl h-14 px-4 placeholder:text-[#3F5374]"
         />
         <ErrorMessage
-          name="ubicacion.direccion"
+          name="location.address"
           component="div"
           className="text-red-500 text-sm mt-1"
         />
@@ -26,15 +24,15 @@ export default function Paso3Ubicacion() {
 
       <div>
         <label className="block text-sm font-medium text-[#141C24] mb-1">
-          Ciudad
+          City
         </label>
         <Field
-          name="ubicacion.ciudad"
+          name="location.city"
           placeholder="Lewisville"
           className="form-input w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl h-14 px-4 placeholder:text-[#3F5374]"
         />
         <ErrorMessage
-          name="ubicacion.ciudad"
+          name="location.city"
           component="div"
           className="text-red-500 text-sm mt-1"
         />
@@ -42,15 +40,15 @@ export default function Paso3Ubicacion() {
 
       <div>
         <label className="block text-sm font-medium text-[#141C24] mb-1">
-          Estado
+          State
         </label>
         <Field
-          name="ubicacion.estado"
+          name="location.state"
           placeholder="TX"
           className="form-input w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl h-14 px-4 placeholder:text-[#3F5374]"
         />
         <ErrorMessage
-          name="ubicacion.estado"
+          name="location.state"
           component="div"
           className="text-red-500 text-sm mt-1"
         />
@@ -58,15 +56,15 @@ export default function Paso3Ubicacion() {
 
       <div>
         <label className="block text-sm font-medium text-[#141C24] mb-1">
-          Código postal
+          Zip Code
         </label>
         <Field
-          name="ubicacion.codigoPostal"
+          name="location.zipCode"
           placeholder="75067"
           className="form-input w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl h-14 px-4 placeholder:text-[#3F5374]"
         />
         <ErrorMessage
-          name="ubicacion.codigoPostal"
+          name="location.zipCode"
           component="div"
           className="text-red-500 text-sm mt-1"
         />
@@ -74,36 +72,38 @@ export default function Paso3Ubicacion() {
 
       <div>
         <label className="block text-sm font-medium text-[#141C24] mb-1">
-          País
+          Country
         </label>
         <Field
-          name="ubicacion.pais"
+          name="location.country"
           placeholder="USA"
           className="form-input w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl h-14 px-4 placeholder:text-[#3F5374]"
         />
         <ErrorMessage
-          name="ubicacion.pais"
+          name="location.country"
           component="div"
           className="text-red-500 text-sm mt-1"
         />
       </div>
 
       <h3 className="text-[#141C24] text-lg font-semibold">
-        Coordenadas (opcional)
+        Coordinates (optional)
       </h3>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-[#141C24] mb-1">
-            Latitud
+            Latitude
           </label>
           <Field
-            name="ubicacion.coordenadas.lat"
+            name="location.coordinates.lat"
             placeholder="33.042222"
             className="form-input w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl h-14 px-4 placeholder:text-[#3F5374]"
+            type="number"
+            step="any"
           />
           <ErrorMessage
-            name="ubicacion.coordenadas.lat"
+            name="location.coordinates.lat"
             component="div"
             className="text-red-500 text-sm mt-1"
           />
@@ -111,15 +111,17 @@ export default function Paso3Ubicacion() {
 
         <div>
           <label className="block text-sm font-medium text-[#141C24] mb-1">
-            Longitud
+            Longitude
           </label>
           <Field
-            name="ubicacion.coordenadas.lng"
+            name="location.coordinates.lng"
             placeholder="-96.994222"
             className="form-input w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl h-14 px-4 placeholder:text-[#3F5374]"
+            type="number"
+            step="any"
           />
           <ErrorMessage
-            name="ubicacion.coordenadas.lng"
+            name="location.coordinates.lng"
             component="div"
             className="text-red-500 text-sm mt-1"
           />

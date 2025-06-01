@@ -1,12 +1,20 @@
-import { Outlet, NavLink, Link } from "react-router-dom";
+import { Outlet, NavLink, Link, useNavigate } from "react-router-dom"; // <-- importá useNavigate
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Icon from "../../assets/logo.png";
 import HeaderDashboard from "../../components/dashboard/HeaderDashboard";
+import { logout } from "../../store/authSlice";
 
 export default function DashboardLayout() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate(); // <-- hook para navegar
   const usuario = useSelector((state) => state.auth.usuario);
   const [showSticky, setShowSticky] = useState(false);
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/"); // <-- Usá la función navigate para redirigir
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -71,7 +79,7 @@ export default function DashboardLayout() {
                   Dashboard
                 </h1>
                 <p className="text-[#3F5374] text-sm font-normal leading-normal">
-                  Juan Sánchez • Empresario
+                  {usuario?.name} • {usuario?.title || "Usuario"}
                 </p>
               </div>
 
@@ -116,7 +124,10 @@ export default function DashboardLayout() {
             </div>
 
             {/* Log Out abajo pegado */}
-            <button className="flex items-center gap-3 px-3 py-2">
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-gray-200 rounded"
+            >
               <p className="text-[#141C24] text-sm font-medium leading-normal">
                 Log Out
               </p>

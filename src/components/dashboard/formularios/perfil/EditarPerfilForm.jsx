@@ -1,4 +1,3 @@
-// src/components/dashboard/formularios/perfil/EditarPerfilForm.jsx
 import { useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
@@ -8,7 +7,6 @@ import Paso2Descripcion from "./Paso2Descripcion";
 import Paso3Ubicacion from "./Paso3Ubicacion";
 
 const pasos = [Paso1Datos, Paso2Descripcion, Paso3Ubicacion];
-
 const esquemaValidacion = [
   Yup.object({
     name: Yup.string().min(2).required("Nombre requerido"),
@@ -27,32 +25,33 @@ const esquemaValidacion = [
   }),
 ];
 
-const valoresIniciales = {
-  name: "",
-  lastName: "",
-  title: "",
-  description: "",
-  profileImage: "",
-  location: "",
-  country: "",
-};
-
-export default function EditarPerfilForm({ onSubmit }) {
+export default function EditarPerfilForm({ initialValues, onSubmit }) {
   const [paso, setPaso] = useState(0);
   const PasoActual = pasos[paso];
 
-  const avanzar = () => setPaso((prev) => Math.min(prev + 1, pasos.length - 1));
-  const retroceder = () => setPaso((prev) => Math.max(prev - 1, 0));
+  // Inicializa con los valores completos o con default
+  const valoresIniciales = {
+    name: initialValues?.name || "",
+    lastName: initialValues?.lastName || "",
+    title: initialValues?.title || "",
+    description: initialValues?.description || "",
+    profileImage: initialValues?.profileImage || "",
+    location: initialValues?.location || "",
+    country: initialValues?.country || "",
+  };
 
   return (
     <Formik
       initialValues={valoresIniciales}
       validationSchema={esquemaValidacion[paso]}
-      onSubmit={(values) => {
+      onSubmit={(values, actions) => {
         if (paso === pasos.length - 1) {
           onSubmit(values);
+          actions.setSubmitting(false);
         } else {
-          avanzar();
+          setPaso(paso + 1);
+          actions.setTouched({});
+          actions.setSubmitting(false);
         }
       }}
       validateOnBlur={false}
@@ -76,7 +75,7 @@ export default function EditarPerfilForm({ onSubmit }) {
             {paso > 0 && (
               <button
                 type="button"
-                onClick={retroceder}
+                onClick={() => setPaso(paso - 1)}
                 className="btn btn-secondary"
               >
                 Atrás

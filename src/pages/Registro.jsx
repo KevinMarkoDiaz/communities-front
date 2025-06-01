@@ -1,3 +1,4 @@
+// src/pages/Registro.jsx
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { Helmet } from "react-helmet-async";
@@ -8,15 +9,22 @@ import { registerUser } from "../api/authApi";
 
 const esquemaRegistro = Yup.object().shape({
   name: Yup.string().min(2, "Muy corto").required("Campo obligatorio"),
+  lastName: Yup.string().max(100, "Máximo 100 caracteres").optional(),
   email: Yup.string().email("Correo inválido").required("Campo obligatorio"),
   password: Yup.string()
-    .min(6, "Mínimo 6 caracteres")
+    .min(8, "Mínimo 8 caracteres")
     .required("Campo obligatorio"),
-  role: Yup.string().required("Selecciona un rol"),
-  profileImage: Yup.string()
-    .url("Debe ser una URL válida")
-    .required("Campo obligatorio"),
-  community: Yup.string(),
+  role: Yup.string()
+    .oneOf(["user", "admin", "business_owner"], "Rol inválido")
+    .required("Selecciona un rol"),
+  profileImage: Yup.string().url("Debe ser una URL válida").optional(),
+  title: Yup.string().max(100, "Máximo 100 caracteres").optional(),
+  description: Yup.string().max(1000, "Máximo 1000 caracteres").optional(),
+  location: Yup.string().max(100, "Máximo 100 caracteres").optional(),
+  country: Yup.string().max(100, "Máximo 100 caracteres").optional(),
+  community: Yup.string()
+    .matches(/^[0-9a-fA-F]{24}$/, "ID de comunidad inválido")
+    .optional(),
 });
 
 export default function Registro() {
@@ -70,10 +78,15 @@ export default function Registro() {
             <Formik
               initialValues={{
                 name: "",
+                lastName: "",
                 email: "",
                 password: "",
                 role: "user",
                 profileImage: "",
+                title: "",
+                description: "",
+                location: "",
+                country: "",
                 community: "",
               }}
               validationSchema={esquemaRegistro}
@@ -83,15 +96,31 @@ export default function Registro() {
                 <Form className="space-y-5">
                   <div>
                     <label className="block text-sm font-medium text-[#0e141b] mb-1">
-                      Nombre completo
+                      Nombre
                     </label>
                     <Field
                       name="name"
-                      placeholder="Kevin Díaz"
+                      placeholder="Kevin"
                       className="w-full px-4 py-3 border border-[#d0dbe7] bg-[#f8fafc] rounded-xl placeholder:text-[#4e7397] focus:outline-none"
                     />
                     <ErrorMessage
                       name="name"
+                      component="div"
+                      className="text-red-600 text-sm mt-1"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-[#0e141b] mb-1">
+                      Apellido
+                    </label>
+                    <Field
+                      name="lastName"
+                      placeholder="Díaz"
+                      className="w-full px-4 py-3 border border-[#d0dbe7] bg-[#f8fafc] rounded-xl placeholder:text-[#4e7397] focus:outline-none"
+                    />
+                    <ErrorMessage
+                      name="lastName"
                       component="div"
                       className="text-red-600 text-sm mt-1"
                     />
@@ -169,11 +198,57 @@ export default function Registro() {
 
                   <div>
                     <label className="block text-sm font-medium text-[#0e141b] mb-1">
+                      Título (opcional)
+                    </label>
+                    <Field
+                      name="title"
+                      placeholder="Chef venezolano"
+                      className="w-full px-4 py-3 border border-[#d0dbe7] bg-[#f8fafc] rounded-xl placeholder:text-[#4e7397] focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-[#0e141b] mb-1">
+                      Descripción (opcional)
+                    </label>
+                    <Field
+                      as="textarea"
+                      name="description"
+                      placeholder="Breve descripción personal"
+                      className="w-full px-4 py-3 border border-[#d0dbe7] bg-[#f8fafc] rounded-xl placeholder:text-[#4e7397] focus:outline-none"
+                      rows={4}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-[#0e141b] mb-1">
+                      Ubicación (opcional)
+                    </label>
+                    <Field
+                      name="location"
+                      placeholder="Dallas, TX"
+                      className="w-full px-4 py-3 border border-[#d0dbe7] bg-[#f8fafc] rounded-xl placeholder:text-[#4e7397] focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-[#0e141b] mb-1">
+                      País (opcional)
+                    </label>
+                    <Field
+                      name="country"
+                      placeholder="Estados Unidos"
+                      className="w-full px-4 py-3 border border-[#d0dbe7] bg-[#f8fafc] rounded-xl placeholder:text-[#4e7397] focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-[#0e141b] mb-1">
                       ID de comunidad (opcional)
                     </label>
                     <Field
                       name="community"
-                      placeholder="ej. 665e30bd11cbfd23e9853c3c"
+                      placeholder="665e30bd11cbfd23e9853c3c"
                       className="w-full px-4 py-3 border border-[#d0dbe7] bg-[#f8fafc] rounded-xl placeholder:text-[#4e7397] focus:outline-none"
                     />
                     <ErrorMessage

@@ -1,13 +1,12 @@
 import axios from "axios";
-import { API_BASE_URL } from "../config";
 
 
 const axiosInstance = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: "https://communities-01.onrender.com/api",
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },
-  withCredentials: true,  // Si usás cookies o autenticación que lo requiera
 });
 
 export default axiosInstance;

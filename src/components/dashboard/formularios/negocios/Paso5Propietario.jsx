@@ -13,12 +13,12 @@ export default function Paso5Propietario() {
           Nombre del propietario
         </label>
         <Field
-          name="propietario.nombre"
+          name="owner.name"
           placeholder="Luciana Ortega"
           className="form-input w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl h-14 px-4 placeholder:text-[#3F5374]"
         />
         <ErrorMessage
-          name="propietario.nombre"
+          name="owner.name"
           component="div"
           className="text-red-500 text-sm mt-1"
         />
@@ -29,12 +29,12 @@ export default function Paso5Propietario() {
           Foto (URL)
         </label>
         <Field
-          name="propietario.imagen"
+          name="owner.image"
           placeholder="https://..."
           className="form-input w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl h-14 px-4 placeholder:text-[#3F5374]"
         />
         <ErrorMessage
-          name="propietario.imagen"
+          name="owner.image"
           component="div"
           className="text-red-500 text-sm mt-1"
         />

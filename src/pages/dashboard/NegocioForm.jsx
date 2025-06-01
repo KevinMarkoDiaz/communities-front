@@ -1,7 +1,11 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { AnimatePresence, motion } from "framer-motion";
+
+import { createBusiness } from "../../api/businessApi";
 
 import Paso1General from "../../components/dashboard/formularios/negocios/Paso1General";
 import Paso2Contacto from "../../components/dashboard/formularios/negocios/Paso2Contacto";
@@ -10,7 +14,7 @@ import Paso4Horarios from "../../components/dashboard/formularios/negocios/Paso4
 import Paso5Propietario from "../../components/dashboard/formularios/negocios/Paso5Propietario";
 import Paso6Extras from "../../components/dashboard/formularios/negocios/Paso6Extras";
 
-const pasos = [
+const steps = [
   Paso1General,
   Paso2Contacto,
   Paso3Ubicacion,
@@ -18,128 +22,138 @@ const pasos = [
   Paso5Propietario,
   Paso6Extras,
 ];
-const esquemaValidacion = [
+
+const validationSchema = [
   Yup.object({
-    nombre: Yup.string().required("Nombre obligatorio"),
-    descripcion: Yup.string().required("Descripción requerida"),
-    categoria: Yup.string().required("Categoría requerida"),
-    comunidad: Yup.string().required("Comunidad requerida"),
+    name: Yup.string().required("Name is required"),
+    description: Yup.string().required("Description is required"),
+    category: Yup.string().required("Category is required"),
+    community: Yup.string().required("Community is required"),
   }),
   Yup.object({
-    contacto: Yup.object({
-      telefono: Yup.string().required("Teléfono requerido"),
-      email: Yup.string().email("Email inválido").required("Email requerido"),
-      website: Yup.string().url("URL inválida"),
-      redes: Yup.object({
-        facebook: Yup.string(),
-        instagram: Yup.string(),
-        whatsapp: Yup.string(),
-      }),
-    }),
+    contact: Yup.object({
+      phone: Yup.string().required("Phone is required"),
+      email: Yup.string().email("Invalid email").required("Email is required"),
+      website: Yup.string().url("Invalid URL").nullable(),
+      socialMedia: Yup.object({
+        facebook: Yup.string().nullable(),
+        instagram: Yup.string().nullable(),
+        whatsapp: Yup.string().nullable(),
+      }).nullable(),
+    }).required(),
   }),
   Yup.object({
-    ubicacion: Yup.object({
-      direccion: Yup.string().required("Dirección requerida"),
-      ciudad: Yup.string().required("Ciudad requerida"),
-      estado: Yup.string().required("Estado requerido"),
-      codigoPostal: Yup.string().required("Código postal requerido"),
-      pais: Yup.string().required("País requerido"),
-    }),
+    location: Yup.object({
+      address: Yup.string().required("Address is required"),
+      city: Yup.string().required("City is required"),
+      state: Yup.string().required("State is required"),
+      zipCode: Yup.string().required("Zip code is required"),
+      country: Yup.string().required("Country is required"),
+      coordinates: Yup.object({
+        lat: Yup.number().nullable(),
+        lng: Yup.number().nullable(),
+      }).nullable(),
+    }).required(),
   }),
   Yup.object({
-    horarios: Yup.array().of(
-      Yup.object({
-        dia: Yup.string().required(),
-        cerrado: Yup.boolean(),
-        apertura: Yup.string().when("cerrado", {
-          is: false,
-          then: (schema) => schema.required("Campo requerido"),
-          otherwise: (schema) => schema.notRequired(),
-        }),
-        cierre: Yup.string().when("cerrado", {
-          is: false,
-          then: (schema) => schema.required("Campo requerido"),
-          otherwise: (schema) => schema.notRequired(),
-        }),
-      })
-    ),
+    openingHours: Yup.array()
+      .of(
+        Yup.object({
+          day: Yup.string().required(),
+          closed: Yup.boolean(),
+          open: Yup.string().when("closed", {
+            is: false,
+            then: (schema) => schema.required("Required"),
+            otherwise: (schema) => schema.notRequired(),
+          }),
+          close: Yup.string().when("closed", {
+            is: false,
+            then: (schema) => schema.required("Required"),
+            otherwise: (schema) => schema.notRequired(),
+          }),
+        })
+      )
+      .required(),
   }),
   Yup.object({
-    propietario: Yup.object({
-      nombre: Yup.string().required("Nombre del propietario requerido"),
-      imagen: Yup.string().url("Debe ser una URL válida"),
-    }),
+    owner: Yup.object({
+      name: Yup.string().required("Owner name is required"),
+      image: Yup.string().url("Must be a valid URL").nullable(),
+    }).required(),
   }),
   Yup.object({
-    imagenDestacada: Yup.string().url("Debe ser una URL válida"),
-    etiquetas: Yup.array().of(Yup.string()),
+    featuredImage: Yup.string().url("Must be a valid URL").nullable(),
+    tags: Yup.array().of(Yup.string()).nullable(),
+    isVerified: Yup.boolean().nullable(),
   }),
 ];
 
-const diasSemana = [
-  "lunes",
-  "martes",
-  "miércoles",
-  "jueves",
-  "viernes",
-  "sábado",
-  "domingo",
-];
-
-const valoresIniciales = {
-  nombre: "",
-  descripcion: "",
-  categoria: "",
-  comunidad: "",
-  contacto: {
-    telefono: "",
+const initialValues = {
+  name: "",
+  description: "",
+  category: "",
+  community: "",
+  contact: {
+    phone: "",
     email: "",
     website: "",
-    redes: {
+    socialMedia: {
       facebook: "",
       instagram: "",
       whatsapp: "",
     },
   },
-  ubicacion: {
-    direccion: "",
-    ciudad: "",
-    estado: "",
-    codigoPostal: "",
-    pais: "",
-    coordenadas: { lat: "", lng: "" },
+  location: {
+    address: "",
+    city: "",
+    state: "",
+    zipCode: "",
+    country: "",
+    coordinates: { lat: "", lng: "" },
   },
-  horarios: diasSemana.map((dia) => ({
-    dia,
-    apertura: "",
-    cierre: "",
-    cerrado: false,
-  })),
-  propietario: {
-    nombre: "",
-    imagen: "",
+  openingHours: [
+    { day: "Monday", open: "", close: "", closed: false },
+    { day: "Tuesday", open: "", close: "", closed: false },
+    { day: "Wednesday", open: "", close: "", closed: false },
+    { day: "Thursday", open: "", close: "", closed: false },
+    { day: "Friday", open: "", close: "", closed: false },
+    { day: "Saturday", open: "", close: "", closed: false },
+    { day: "Sunday", open: "", close: "", closed: false },
+  ],
+  owner: {
+    name: "",
+    image: "",
   },
-  imagenDestacada: "",
-  etiquetas: [],
-  verificado: false,
+  featuredImage: "",
+  tags: [],
+  isVerified: false,
 };
 
-// ✂️ esquemaValidacion y valoresIniciales como ya los tenés
-
-export default function NegocioForm({ onSubmit }) {
+export default function NegocioForm() {
   const [paso, setPaso] = useState(0);
-  const PasoActual = pasos[paso];
+  const PasoActual = steps[paso];
+  const { token } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
 
-  const avanzar = () => setPaso((prev) => Math.min(prev + 1, pasos.length - 1));
+  const avanzar = () => setPaso((prev) => Math.min(prev + 1, steps.length - 1));
   const retroceder = () => setPaso((prev) => Math.max(prev - 1, 0));
 
   return (
     <Formik
-      initialValues={valoresIniciales}
-      validationSchema={esquemaValidacion[paso]}
-      onSubmit={(values) => {
-        if (paso === pasos.length - 1) {
-          onSubmit(values);
+      initialValues={initialValues}
+      validationSchema={validationSchema[paso]}
+      onSubmit={async (values, { setSubmitting }) => {
+        if (paso === steps.length - 1) {
+          try {
+            const response = await createBusiness(values, token);
+            console.log("Negocio creado:", response);
+            navigate("/dashboard/negocios"); // redirige al listado
+          } catch (error) {
+            console.error("Error al crear el negocio:", error);
+            alert("Hubo un error al guardar el negocio.");
+          } finally {
+            setSubmitting(false);
+          }
         } else {
           avanzar();
         }
@@ -172,7 +186,7 @@ export default function NegocioForm({ onSubmit }) {
               </button>
             )}
             <button type="submit" className="btn btn-primary">
-              {paso === pasos.length - 1 ? "Guardar" : "Siguiente"}
+              {paso === steps.length - 1 ? "Guardar" : "Siguiente"}
             </button>
           </div>
         </Form>

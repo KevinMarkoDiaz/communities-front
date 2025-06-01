@@ -8,12 +8,12 @@ export default function Paso1General() {
           Nombre
         </label>
         <Field
-          name="nombre"
+          name="name"
           placeholder="Estudio de Yoga Tierra y Alma"
           className="form-input w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl h-14 px-4 placeholder:text-[#3F5374]"
         />
         <ErrorMessage
-          name="nombre"
+          name="name"
           component="div"
           className="text-red-500 text-sm mt-1"
         />
@@ -24,13 +24,13 @@ export default function Paso1General() {
           Descripción
         </label>
         <Field
-          name="descripcion"
+          name="description"
           as="textarea"
           placeholder="Describe tu negocio"
           className="form-input w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl px-4 py-3 placeholder:text-[#3F5374]"
         />
         <ErrorMessage
-          name="descripcion"
+          name="description"
           component="div"
           className="text-red-500 text-sm mt-1"
         />
@@ -41,7 +41,7 @@ export default function Paso1General() {
           Categoría
         </label>
         <Field
-          name="categoria"
+          name="category"
           as="select"
           className="form-input w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl h-14 px-4 text-[#3F5374]"
         >
@@ -52,7 +52,7 @@ export default function Paso1General() {
           <option value="servicios">Servicios</option>
         </Field>
         <ErrorMessage
-          name="categoria"
+          name="category"
           component="div"
           className="text-red-500 text-sm mt-1"
         />
@@ -63,12 +63,12 @@ export default function Paso1General() {
           Comunidad
         </label>
         <Field
-          name="comunidad"
+          name="community"
           placeholder="Latinoamericana"
           className="form-input w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl h-14 px-4 placeholder:text-[#3F5374]"
         />
         <ErrorMessage
-          name="comunidad"
+          name="community"
           component="div"
           className="text-red-500 text-sm mt-1"
         />

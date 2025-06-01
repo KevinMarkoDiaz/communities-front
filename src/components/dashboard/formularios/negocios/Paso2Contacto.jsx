@@ -4,18 +4,18 @@ import { Field, ErrorMessage } from "formik";
 export default function Paso2Contacto() {
   return (
     <div className="space-y-5">
-      {/* Teléfono */}
+      {/* Phone */}
       <div>
         <label className="block text-sm font-medium text-[#141C24] mb-1">
-          Teléfono
+          Phone
         </label>
         <Field
-          name="contacto.telefono"
+          name="contact.phone"
           placeholder="555-1040"
           className="form-input w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl h-14 px-4 placeholder:text-[#3F5374]"
         />
         <ErrorMessage
-          name="contacto.telefono"
+          name="contact.phone"
           component="div"
           className="text-red-500 text-sm mt-1"
         />
@@ -27,13 +27,13 @@ export default function Paso2Contacto() {
           Email
         </label>
         <Field
-          name="contacto.email"
+          name="contact.email"
           type="email"
-          placeholder="ejemplo@correo.com"
+          placeholder="example@email.com"
           className="form-input w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl h-14 px-4 placeholder:text-[#3F5374]"
         />
         <ErrorMessage
-          name="contacto.email"
+          name="contact.email"
           component="div"
           className="text-red-500 text-sm mt-1"
         />
@@ -42,21 +42,21 @@ export default function Paso2Contacto() {
       {/* Website */}
       <div>
         <label className="block text-sm font-medium text-[#141C24] mb-1">
-          Sitio Web
+          Website
         </label>
         <Field
-          name="contacto.website"
-          placeholder="https://tu-negocio.com"
+          name="contact.website"
+          placeholder="https://your-business.com"
           className="form-input w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl h-14 px-4 placeholder:text-[#3F5374]"
         />
         <ErrorMessage
-          name="contacto.website"
+          name="contact.website"
           component="div"
           className="text-red-500 text-sm mt-1"
         />
       </div>
 
-      <h3 className="text-[#141C24] text-lg font-semibold">Redes Sociales</h3>
+      <h3 className="text-[#141C24] text-lg font-semibold">Social Media</h3>
 
       {/* Facebook */}
       <div>
@@ -64,12 +64,12 @@ export default function Paso2Contacto() {
           Facebook
         </label>
         <Field
-          name="contacto.redes.facebook"
-          placeholder="Facebook ID o enlace"
+          name="contact.socialMedia.facebook"
+          placeholder="Facebook ID or link"
           className="form-input w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl h-14 px-4 placeholder:text-[#3F5374]"
         />
         <ErrorMessage
-          name="contacto.redes.facebook"
+          name="contact.socialMedia.facebook"
           component="div"
           className="text-red-500 text-sm mt-1"
         />
@@ -81,12 +81,12 @@ export default function Paso2Contacto() {
           Instagram
         </label>
         <Field
-          name="contacto.redes.instagram"
-          placeholder="@nombreusuario"
+          name="contact.socialMedia.instagram"
+          placeholder="@username"
           className="form-input w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl h-14 px-4 placeholder:text-[#3F5374]"
         />
         <ErrorMessage
-          name="contacto.redes.instagram"
+          name="contact.socialMedia.instagram"
           component="div"
           className="text-red-500 text-sm mt-1"
         />
@@ -98,12 +98,12 @@ export default function Paso2Contacto() {
           WhatsApp
         </label>
         <Field
-          name="contacto.redes.whatsapp"
+          name="contact.socialMedia.whatsapp"
           placeholder="1234567890"
           className="form-input w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl h-14 px-4 placeholder:text-[#3F5374]"
         />
         <ErrorMessage
-          name="contacto.redes.whatsapp"
+          name="contact.socialMedia.whatsapp"
           component="div"
           className="text-red-500 text-sm mt-1"
         />

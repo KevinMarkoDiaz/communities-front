@@ -7,6 +7,8 @@ import axiosInstance from "./axiosInstance"
  * @param {string} token - JWT del usuario autenticado
  */
 export async function createBusiness(data, token) {
+  console.log("Valores a enviar al backend:", data);
+
   const response = await axiosInstance.post("/businesses", data, {
     headers: {
       Authorization: `Bearer ${token}`,
