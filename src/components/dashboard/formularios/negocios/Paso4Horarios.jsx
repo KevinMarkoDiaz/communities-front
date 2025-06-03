@@ -1,88 +1,85 @@
-// src/components/formularios/pasos/Paso4Horarios.jsx
-import { Field, ErrorMessage, useFormikContext } from "formik";
+import { Field, FieldArray, ErrorMessage, useFormikContext } from "formik";
+
+const diasSemana = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];
 
 export default function Paso4Horarios() {
   const { values, setFieldValue } = useFormikContext();
 
-  const horarios = Array.isArray(values.openingHours)
-    ? values.openingHours
-    : [];
-
   return (
     <div className="space-y-6">
-      <h3 className="text-[#141C24] text-lg font-semibold">
+      <h3 className="text-lg font-semibold text-[#141C24]">
         Horarios de atención
       </h3>
 
-      <div className="space-y-4">
-        {horarios.length > 0 ? (
-          horarios.map((horario, index) => {
-            const cerrado = horario?.closed ?? false;
+      <FieldArray
+        name="openingHours"
+        render={() => (
+          <div className="space-y-4">
+            {diasSemana.map((dia, index) => (
+              <div key={index} className="flex flex-col gap-2 border-b pb-4">
+                <label className="font-medium">{dia}</label>
 
-            return (
-              <div
-                key={horario.day || index}
-                className="grid grid-cols-1 sm:grid-cols-5 gap-4 items-center"
-              >
-                <div className="font-medium text-[#141C24] capitalize">
-                  {horario.day}
-                </div>
-
-                <div>
+                <label className="flex items-center gap-2 text-sm">
                   <Field
-                    type="time"
-                    name={`openingHours[${index}].open`}
-                    disabled={cerrado}
-                    className={`form-input w-full h-12 px-4 text-[#3F5374] ${
-                      cerrado
-                        ? "bg-gray-200 cursor-not-allowed"
-                        : "bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl"
-                    }`}
-                  />
-                  <ErrorMessage
-                    name={`openingHours[${index}].open`}
-                    component="div"
-                    className="text-red-500 text-sm"
-                  />
-                </div>
-
-                <div>
-                  <Field
-                    type="time"
-                    name={`openingHours[${index}].close`}
-                    disabled={cerrado}
-                    className={`form-input w-full h-12 px-4 text-[#3F5374] ${
-                      cerrado
-                        ? "bg-gray-200 cursor-not-allowed"
-                        : "bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl"
-                    }`}
-                  />
-                  <ErrorMessage
-                    name={`openingHours[${index}].close`}
-                    component="div"
-                    className="text-red-500 text-sm"
-                  />
-                </div>
-
-                <div className="flex gap-2 items-center">
-                  <input
                     type="checkbox"
-                    checked={cerrado}
-                    onChange={() =>
-                      setFieldValue(`openingHours[${index}].closed`, !cerrado)
-                    }
-                  />
-                  <label className="text-sm text-[#141C24]">Cerrado</label>
-                </div>
+                    name={`openingHours[${index}].closed`}
+                    onChange={(e) => {
+                      const isChecked = e.target.checked;
+                      setFieldValue(`openingHours[${index}].closed`, isChecked);
 
-                <Field type="hidden" name={`openingHours[${index}].day`} />
+                      if (isChecked) {
+                        // Usamos string vacío en vez de null para evitar error de validación
+                        setFieldValue(`openingHours[${index}].open`, "");
+                        setFieldValue(`openingHours[${index}].close`, "");
+                      }
+                    }}
+                  />
+                  Cerrado
+                </label>
+
+                {!values.openingHours[index].closed && (
+                  <div className="flex gap-4">
+                    <div>
+                      <label className="block text-xs">Abre</label>
+                      <Field
+                        type="time"
+                        name={`openingHours[${index}].open`}
+                        className="form-input"
+                      />
+                      <ErrorMessage
+                        name={`openingHours[${index}].open`}
+                        component="div"
+                        className="text-red-500 text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs">Cierra</label>
+                      <Field
+                        type="time"
+                        name={`openingHours[${index}].close`}
+                        className="form-input"
+                      />
+                      <ErrorMessage
+                        name={`openingHours[${index}].close`}
+                        component="div"
+                        className="text-red-500 text-xs"
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
-            );
-          })
-        ) : (
-          <p>No hay horarios definidos</p>
+            ))}
+          </div>
         )}
-      </div>
+      />
     </div>
   );
 }

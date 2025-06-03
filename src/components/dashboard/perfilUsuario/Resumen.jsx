@@ -1,33 +1,64 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { contarCategorias } from "../../../api/categoryApi";
+import { contarNegocios } from "../../../api/businessApi";
+import { contarEventos } from "../../../api/eventApi";
+import { contarComunidades } from "../../../api/communityApi";
 
 export default function Resumen() {
   const navigate = useNavigate();
-  const [conteoCategorias, setConteoCategorias] = useState(0);
+  const [resumenData, setResumenData] = useState({
+    categorias: 0,
+    negocios: 0,
+    eventos: 0,
+    comunidades: 0,
+  });
 
   useEffect(() => {
-    const cargarConteo = async () => {
+    const cargarDatos = async () => {
       try {
-        const total = await contarCategorias();
-        setConteoCategorias(total);
+        const [categorias, negocios, eventos, comunidades] = await Promise.all([
+          contarCategorias(),
+          contarNegocios(),
+          contarEventos(),
+          contarComunidades(),
+        ]);
+
+        setResumenData({
+          categorias,
+          negocios,
+          eventos,
+          comunidades,
+        });
       } catch (err) {
-        console.error("Error al contar categorías", err);
+        console.error("Error al cargar resumen", err);
       }
     };
 
-    cargarConteo();
+    cargarDatos();
   }, []);
 
   const resumen = [
-    { label: "Comunidades", value: 3, path: "/dashboard/comunidades" },
+    {
+      label: "Comunidades",
+      value: resumenData.comunidades,
+      path: "/dashboard/comunidades",
+    },
     {
       label: "Categorías Creadas",
-      value: conteoCategorias,
+      value: resumenData.categorias,
       path: "/dashboard/categorias",
     },
-    { label: "Negocios", value: 1, path: "/dashboard/mis-negocios" },
-    { label: "Eventos Creados", value: 2, path: "/dashboard/mis-eventos" },
+    {
+      label: "Negocios",
+      value: resumenData.negocios,
+      path: "/dashboard/mis-negocios",
+    },
+    {
+      label: "Eventos Creados",
+      value: resumenData.eventos,
+      path: "/dashboard/mis-eventos",
+    },
   ];
 
   return (

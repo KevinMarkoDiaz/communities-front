@@ -1,11 +1,14 @@
-import { useState } from "react";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { AnimatePresence, motion } from "framer-motion";
 
-import { createBusiness } from "../../api/businessApi";
+import {
+  createBusiness,
+  getBusinessById,
+  updateBusiness,
+} from "../../api/businessApi";
 
 import Paso1General from "../../components/dashboard/formularios/negocios/Paso1General";
 import Paso2Contacto from "../../components/dashboard/formularios/negocios/Paso2Contacto";
@@ -13,6 +16,8 @@ import Paso3Ubicacion from "../../components/dashboard/formularios/negocios/Paso
 import Paso4Horarios from "../../components/dashboard/formularios/negocios/Paso4Horarios";
 import Paso5Propietario from "../../components/dashboard/formularios/negocios/Paso5Propietario";
 import Paso6Extras from "../../components/dashboard/formularios/negocios/Paso6Extras";
+import { getAllCategories } from "../../api/categoryApi";
+import { getAllCommunities } from "../../api/communityApi";
 
 const steps = [
   Paso1General,
@@ -61,25 +66,36 @@ const validationSchema = [
         Yup.object({
           day: Yup.string().required(),
           closed: Yup.boolean(),
-          open: Yup.string().when("closed", {
-            is: false,
-            then: (schema) => schema.required("Required"),
-            otherwise: (schema) => schema.notRequired(),
-          }),
-          close: Yup.string().when("closed", {
-            is: false,
-            then: (schema) => schema.required("Required"),
-            otherwise: (schema) => schema.notRequired(),
-          }),
+          open: Yup.string()
+            .nullable()
+            .when("closed", {
+              is: false,
+              then: (schema) =>
+                schema
+                  .required("Hora de apertura requerida")
+                  .matches(/^\d{2}:\d{2}$/, "Formato HH:MM inválido"),
+              otherwise: (schema) => schema.oneOf(["", null]),
+            }),
+          close: Yup.string()
+            .nullable()
+            .when("closed", {
+              is: false,
+              then: (schema) =>
+                schema
+                  .required("Hora de cierre requerida")
+                  .matches(/^\d{2}:\d{2}$/, "Formato HH:MM inválido"),
+              otherwise: (schema) => schema.oneOf(["", null]),
+            }),
         })
       )
       .required(),
   }),
   Yup.object({
-    owner: Yup.object({
-      name: Yup.string().required("Owner name is required"),
-      image: Yup.string().url("Must be a valid URL").nullable(),
-    }).required(),
+    ownerId: Yup.string().required("Se requiere un propietario"),
+    ownerDisplay: Yup.object({
+      name: Yup.string().nullable(),
+      image: Yup.string().url("Debe ser una URL válida").nullable(),
+    }).nullable(),
   }),
   Yup.object({
     featuredImage: Yup.string().url("Must be a valid URL").nullable(),
@@ -88,7 +104,7 @@ const validationSchema = [
   }),
 ];
 
-const initialValues = {
+const defaultInitialValues = {
   name: "",
   description: "",
   category: "",
@@ -120,7 +136,8 @@ const initialValues = {
     { day: "Saturday", open: "", close: "", closed: false },
     { day: "Sunday", open: "", close: "", closed: false },
   ],
-  owner: {
+  ownerId: "",
+  ownerDisplay: {
     name: "",
     image: "",
   },
@@ -130,27 +147,110 @@ const initialValues = {
 };
 
 export default function NegocioForm() {
+  const [categorias, setCategorias] = useState([]);
+  const [comunidades, setComunidades] = useState([]);
   const [paso, setPaso] = useState(0);
-  const PasoActual = steps[paso];
-  const { token } = useSelector((state) => state.auth);
+  const [initialValues, setInitialValues] = useState(defaultInitialValues);
+  const [cargando, setCargando] = useState(false);
+  const { id } = useParams();
   const navigate = useNavigate();
+  const PasoActual = steps[paso];
+
+  useEffect(() => {
+    const cargarOpciones = async () => {
+      try {
+        const [cats, comms] = await Promise.all([
+          getAllCategories(),
+          getAllCommunities(),
+        ]);
+        setCategorias(cats.categories);
+        setComunidades(comms.communities);
+      } catch (err) {
+        console.error("Error cargando categorías o comunidades:", err);
+      }
+    };
+    cargarOpciones();
+  }, []);
+
+  useEffect(() => {
+    if (id) {
+      setCargando(true);
+      getBusinessById(id)
+        .then((res) => {
+          const negocio = res.business;
+          setInitialValues({
+            ...negocio,
+            featuredImage: negocio.featuredImage || "",
+            tags: negocio.tags || [],
+            isVerified: negocio.isVerified || false,
+          });
+        })
+        .catch((err) => {
+          console.error("Error cargando negocio:", err);
+          alert("Error al cargar los datos del negocio.");
+        })
+        .finally(() => setCargando(false));
+    }
+  }, [id]);
 
   const avanzar = () => setPaso((prev) => Math.min(prev + 1, steps.length - 1));
   const retroceder = () => setPaso((prev) => Math.max(prev - 1, 0));
 
+  if (cargando) return <p className="p-4">Cargando datos...</p>;
+
   return (
     <Formik
+      enableReinitialize
       initialValues={initialValues}
       validationSchema={validationSchema[paso]}
       onSubmit={async (values, { setSubmitting }) => {
+        console.log("🧪 Datos originales:", values);
+
         if (paso === steps.length - 1) {
           try {
-            const response = await createBusiness(values, token);
-            console.log("Negocio creado:", response);
-            navigate("/dashboard/negocios"); // redirige al listado
+            // ✅ Sanitizar horarios correctamente
+            const valuesSanitizados = {
+              ...values,
+              openingHours: values.openingHours.map((hora) =>
+                hora.closed
+                  ? { day: hora.day, closed: true } // ✅ nada de open/close
+                  : {
+                      day: hora.day,
+                      closed: false,
+                      open: hora.open,
+                      close: hora.close,
+                    }
+              ),
+            };
+
+            console.log("🧪 Enviando datos sanitizados:", valuesSanitizados);
+
+            if (id) {
+              await updateBusiness(id, valuesSanitizados);
+              alert("Negocio actualizado exitosamente.");
+            } else {
+              await createBusiness(valuesSanitizados);
+              alert("Negocio creado exitosamente.");
+            }
+
+            navigate("/dashboard/mis-negocios");
           } catch (error) {
-            console.error("Error al crear el negocio:", error);
-            alert("Hubo un error al guardar el negocio.");
+            const errores = error.response?.data?.errors;
+
+            if (Array.isArray(errores)) {
+              const mensaje = errores
+                .map((err) => {
+                  const campo = err?.path?.join(" > ") || "campo desconocido";
+                  return `• Error en ${campo}: ${
+                    err.message || "Error desconocido"
+                  }`;
+                })
+                .join("\n");
+
+              alert(`❌ Errores de validación:\n\n${mensaje}`);
+            } else {
+              alert("❌ Ocurrió un error al guardar el negocio.");
+            }
           } finally {
             setSubmitting(false);
           }
@@ -171,7 +271,9 @@ export default function NegocioForm() {
               exit={{ opacity: 0, x: -40 }}
               transition={{ duration: 0.3, ease: "easeOut" }}
             >
-              <PasoActual />
+              <PasoActual
+                {...(paso === 0 ? { categorias, comunidades } : {})}
+              />
             </motion.div>
           </AnimatePresence>
 
@@ -186,7 +288,11 @@ export default function NegocioForm() {
               </button>
             )}
             <button type="submit" className="btn btn-primary">
-              {paso === steps.length - 1 ? "Guardar" : "Siguiente"}
+              {paso === steps.length - 1
+                ? id
+                  ? "Actualizar"
+                  : "Guardar"
+                : "Siguiente"}
             </button>
           </div>
         </Form>

@@ -1,60 +1,18 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import CardNegocio from "../../components/dashboard/negocios/CardNegocio"; // ✅ Nuevo componente estilizado
+import CardNegocio from "../../components/dashboard/negocios/CardNegocio";
+import { deleteBusiness, getMyBusinesses } from "../../api/businessApi";
 
 export default function MisNegocios() {
   const [negocios, setNegocios] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const usuario = useSelector((state) => state.auth.usuario);
-
   useEffect(() => {
     const cargarNegocios = async () => {
       try {
-        const mockOwner = usuario?._id || "123";
-
-        // const todos = await getAllBusinesses(); // ❌ API real
-        // const propios = todos.filter((n) => n.owner === usuario._id);
-
-        // ✅ Mock temporal
-        const propios = [
-          {
-            _id: "140",
-            name: "Estudio de Yoga Tierra y Alma",
-            description: "Clases de yoga, meditación y bienestar holístico.",
-            category: "Salud",
-            owner: mockOwner,
-            community: "Latinoamericana",
-            location: {
-              address: "322 Calle Paz",
-              city: "Lewisville",
-              state: "TX",
-              country: "USA",
-              zipCode: "75067",
-              coordinates: { lat: 33.042222, lng: -96.994222 },
-            },
-            contact: {
-              telefono: "555-1040",
-              email: "yogatierrayalma@ejemplo.com",
-              website: "https://yogatierrayalma.com",
-              redes: {
-                facebook: "YogaTierraYAlma",
-                instagram: "@tierrayalma.yoga",
-                whatsapp: "1234567840",
-              },
-            },
-            imagenDestacada: "https://cdn.usegalileo.ai/sdxl10/140.png",
-            ownerName: "Luciana Ortega",
-            ownerImage: "https://randomuser.me/api/portraits/women/55.jpg",
-            horarios: [],
-            verificado: true,
-            etiquetas: ["Yoga", "Bienestar", "Meditación", "Salud"],
-          },
-        ];
-
-        setNegocios(propios);
+        const data = await getMyBusinesses(); // 👈 sin token
+        setNegocios(data.businesses);
       } catch (err) {
         console.error(err);
         setError("No se pudieron cargar los negocios");
@@ -64,7 +22,7 @@ export default function MisNegocios() {
     };
 
     cargarNegocios();
-  }, [usuario]);
+  }, []);
 
   const handleDelete = async (id) => {
     const confirmar = window.confirm(
@@ -73,8 +31,8 @@ export default function MisNegocios() {
     if (!confirmar) return;
 
     try {
-      // await deleteBusiness(id, token); // ❌ API real
-      setNegocios((prev) => prev.filter((n) => n._id !== id)); // ✅ Mock
+      await deleteBusiness(id); // 👈 sin token
+      setNegocios((prev) => prev.filter((n) => n._id !== id));
     } catch (error) {
       console.error("Error al eliminar negocio:", error);
       alert("No se pudo eliminar el negocio. Intenta más tarde.");

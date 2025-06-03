@@ -60,3 +60,7 @@ export async function deleteCommunity(id, token) {
   })
   return res.data
 }
+export async function contarComunidades() {
+  const res = await axiosInstance.get("/communities");
+  return res.data.communities.length;
+}

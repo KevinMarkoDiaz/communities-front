@@ -1,6 +1,10 @@
 import { Field, ErrorMessage } from "formik";
 
-export default function Paso1General() {
+/**
+ * Paso 1: Información general del negocio
+ * @param {{ categorias: Array<{ _id: string, name: string }>, comunidades: Array<{ _id: string, name: string }> }} props
+ */
+export default function Paso1General({ categorias = [], comunidades = [] }) {
   return (
     <div className="space-y-5">
       <div>
@@ -46,10 +50,12 @@ export default function Paso1General() {
           className="form-input w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl h-14 px-4 text-[#3F5374]"
         >
           <option value="">Seleccionar...</option>
-          <option value="comida">Comida</option>
-          <option value="salud">Salud</option>
-          <option value="ropa">Ropa</option>
-          <option value="servicios">Servicios</option>
+          {Array.isArray(categorias) &&
+            categorias.map((cat) => (
+              <option key={cat._id} value={cat._id}>
+                {cat.name}
+              </option>
+            ))}
         </Field>
         <ErrorMessage
           name="category"
@@ -64,9 +70,17 @@ export default function Paso1General() {
         </label>
         <Field
           name="community"
-          placeholder="Latinoamericana"
-          className="form-input w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl h-14 px-4 placeholder:text-[#3F5374]"
-        />
+          as="select"
+          className="form-input w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl h-14 px-4 text-[#3F5374]"
+        >
+          <option value="">Seleccionar...</option>
+          {Array.isArray(comunidades) &&
+            comunidades.map((com) => (
+              <option key={com._id} value={com._id}>
+                {com.name}
+              </option>
+            ))}
+        </Field>
         <ErrorMessage
           name="community"
           component="div"

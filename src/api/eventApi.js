@@ -65,3 +65,7 @@ export async function getMyEvents() {
   });
   return res.data.events;
 }
+export async function contarEventos() {
+  const res = await axiosInstance.get("/events/mine"); // si es por usuario
+  return res.data.events.length;
+}

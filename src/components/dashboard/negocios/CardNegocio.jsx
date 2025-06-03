@@ -21,7 +21,7 @@ export default function CardNegocio({ negocio, onDelete }) {
             {negocio.description}
           </p>
           <p className="text-[#6B7280] text-xs font-normal leading-normal">
-            {negocio.category} · {negocio.location?.city},{" "}
+            {negocio.category?.name} · {negocio.location?.city},{" "}
             {negocio.location?.state}
           </p>
         </div>
