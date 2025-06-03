@@ -37,8 +37,10 @@ export default function CrearComunidad() {
   };
 
   return (
-    <div className="max-w-xl mx-auto p-4 bg-white shadow rounded">
-      <h2 className="text-2xl font-bold mb-4 text-blue-700">Crear comunidad</h2>
+    <div className="max-w-2xl mx-auto px-6 py-8 bg-white rounded-2xl shadow-sm border border-[#E4E9F1]">
+      <h2 className="text-[#141C24] text-2xl font-bold tracking-tight pb-4">
+        Crear comunidad
+      </h2>
 
       <Formik
         initialValues={{
@@ -52,53 +54,62 @@ export default function CrearComunidad() {
       >
         {() => (
           <Form className="space-y-4">
-            <Field
-              name="name"
-              placeholder="Nombre"
-              className="w-full border px-4 py-2 rounded"
-            />
-            <ErrorMessage
-              name="name"
-              component="div"
-              className="text-red-600 text-sm"
-            />
+            <div>
+              <Field
+                name="name"
+                placeholder="Nombre de la comunidad"
+                className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+              <ErrorMessage
+                name="name"
+                component="div"
+                className="text-red-600 text-sm mt-1"
+              />
+            </div>
 
-            <Field
-              name="description"
-              placeholder="Descripción"
-              className="w-full border px-4 py-2 rounded"
-            />
-            <ErrorMessage
-              name="description"
-              component="div"
-              className="text-red-600 text-sm"
-            />
+            <div>
+              <Field
+                name="description"
+                as="textarea"
+                placeholder="Descripción"
+                className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none min-h-[100px]"
+              />
+              <ErrorMessage
+                name="description"
+                component="div"
+                className="text-red-600 text-sm mt-1"
+              />
+            </div>
 
-            <Field
-              name="language"
-              placeholder="Idioma (es, en...)"
-              className="w-full border px-4 py-2 rounded"
-            />
-            <ErrorMessage
-              name="language"
-              component="div"
-              className="text-red-600 text-sm"
-            />
+            <div>
+              <Field
+                name="language"
+                placeholder="Idioma (es, en, pt...)"
+                className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+              <ErrorMessage
+                name="language"
+                component="div"
+                className="text-red-600 text-sm mt-1"
+              />
+            </div>
 
-            <Field
-              name="flagImage"
-              placeholder="URL de bandera (opcional)"
-              className="w-full border px-4 py-2 rounded"
-            />
-            <ErrorMessage
-              name="flagImage"
-              component="div"
-              className="text-red-600 text-sm"
-            />
+            <div>
+              <Field
+                name="flagImage"
+                placeholder="URL de la bandera (opcional)"
+                className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+              <ErrorMessage
+                name="flagImage"
+                component="div"
+                className="text-red-600 text-sm mt-1"
+              />
+            </div>
 
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+              className="w-full bg-blue-600 text-white font-medium py-2 rounded-xl hover:bg-blue-700 transition-all"
             >
               Crear comunidad
             </button>

@@ -120,9 +120,21 @@ export default function DashboardLayout() {
                     My Events
                   </p>
                 </NavLink>
+                <NavLink
+                  to="comunidades"
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 px-3 py-2 ${
+                      isActive ? "bg-[#E4E9F1] rounded-full" : ""
+                    }`
+                  }
+                >
+                  <p className="text-[#141C24] text-sm font-medium leading-normal">
+                    My Communities
+                  </p>
+                </NavLink>
                 {usuario?.role === "admin" && (
                   <NavLink
-                    to="categorias/crear"
+                    to="categorias"
                     className={({ isActive }) =>
                       `flex items-center gap-3 px-3 py-2 ${
                         isActive ? "bg-[#E4E9F1] rounded-full" : ""
@@ -130,7 +142,7 @@ export default function DashboardLayout() {
                     }
                   >
                     <p className="text-[#141C24] text-sm font-medium leading-normal">
-                      Crear Categoría
+                      Categorías
                     </p>
                   </NavLink>
                 )}

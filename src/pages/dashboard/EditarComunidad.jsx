@@ -27,13 +27,12 @@ export default function EditarComunidad() {
       try {
         const data = await getCommunityById(id);
 
-        // Validar permisos
-        if (usuario.role !== "admin" && usuario._id !== data.owner) {
+        if (usuario.role !== "admin" && usuario._id !== data.community.owner) {
           setError("Acceso no autorizado");
           return;
         }
 
-        setComunidad(data);
+        setComunidad(data.community);
       } catch (err) {
         console.error(err);
         setError("Error al cargar comunidad");
@@ -61,10 +60,8 @@ export default function EditarComunidad() {
   if (!comunidad) return <div className="p-4">Comunidad no encontrada.</div>;
 
   return (
-    <div className="max-w-xl mx-auto p-4 bg-white shadow rounded">
-      <h2 className="text-2xl font-bold mb-4 text-blue-700">
-        Editar comunidad
-      </h2>
+    <div className="max-w-2xl mx-auto p-6 bg-white rounded-2xl shadow space-y-6">
+      <h2 className="text-2xl font-bold text-[#141C24]">Editar comunidad</h2>
 
       <Formik
         initialValues={{
@@ -79,53 +76,62 @@ export default function EditarComunidad() {
       >
         {() => (
           <Form className="space-y-4">
-            <Field
-              name="name"
-              placeholder="Nombre"
-              className="w-full border px-4 py-2 rounded"
-            />
-            <ErrorMessage
-              name="name"
-              component="div"
-              className="text-red-600 text-sm"
-            />
+            <div>
+              <Field
+                name="name"
+                placeholder="Nombre de la comunidad"
+                className="w-full px-4 py-2 rounded-xl border border-[#E4E9F1] focus:outline-none focus:ring-2 focus:ring-[#F4C753]"
+              />
+              <ErrorMessage
+                name="name"
+                component="div"
+                className="text-sm text-red-600 mt-1"
+              />
+            </div>
 
-            <Field
-              name="description"
-              placeholder="Descripción"
-              className="w-full border px-4 py-2 rounded"
-            />
-            <ErrorMessage
-              name="description"
-              component="div"
-              className="text-red-600 text-sm"
-            />
+            <div>
+              <Field
+                name="description"
+                placeholder="Descripción"
+                as="textarea"
+                className="w-full px-4 py-2 rounded-xl border border-[#E4E9F1] resize-none h-24 focus:outline-none focus:ring-2 focus:ring-[#F4C753]"
+              />
+              <ErrorMessage
+                name="description"
+                component="div"
+                className="text-sm text-red-600 mt-1"
+              />
+            </div>
 
-            <Field
-              name="language"
-              placeholder="Idioma"
-              className="w-full border px-4 py-2 rounded"
-            />
-            <ErrorMessage
-              name="language"
-              component="div"
-              className="text-red-600 text-sm"
-            />
+            <div>
+              <Field
+                name="language"
+                placeholder="Idioma (es, en...)"
+                className="w-full px-4 py-2 rounded-xl border border-[#E4E9F1] focus:outline-none focus:ring-2 focus:ring-[#F4C753]"
+              />
+              <ErrorMessage
+                name="language"
+                component="div"
+                className="text-sm text-red-600 mt-1"
+              />
+            </div>
 
-            <Field
-              name="flagImage"
-              placeholder="URL de bandera"
-              className="w-full border px-4 py-2 rounded"
-            />
-            <ErrorMessage
-              name="flagImage"
-              component="div"
-              className="text-red-600 text-sm"
-            />
+            <div>
+              <Field
+                name="flagImage"
+                placeholder="URL de la bandera"
+                className="w-full px-4 py-2 rounded-xl border border-[#E4E9F1] focus:outline-none focus:ring-2 focus:ring-[#F4C753]"
+              />
+              <ErrorMessage
+                name="flagImage"
+                component="div"
+                className="text-sm text-red-600 mt-1"
+              />
+            </div>
 
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+              className="w-full bg-[#F4C753] text-[#141C24] py-2 rounded-xl font-semibold hover:bg-[#e7b93e] transition"
             >
               Guardar cambios
             </button>

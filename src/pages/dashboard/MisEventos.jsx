@@ -1,34 +1,21 @@
+// src/pages/dashboard/MisEventos.jsx
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { getMyEvents, deleteEvent } from "../../api/eventApi";
 import CardEvento from "../../components/dashboard/evento/CardEvento";
 
 export default function MisEventos() {
   const [eventos, setEventos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const usuario = useSelector((state) => state.auth.usuario);
+  const token = useSelector((state) => state.auth.token);
 
   useEffect(() => {
     const cargar = async () => {
       try {
-        const propios = [
-          {
-            _id: "1",
-            title: "Festival Colombiano",
-            description: "Música, comida y cultura",
-            date: "2025-07-20",
-            location: "Dallas, TX",
-          },
-          {
-            _id: "2",
-            title: "Taller de Migración",
-            description: "Asesoría legal gratuita",
-            date: "2025-08-05",
-            location: "Houston, TX",
-          },
-        ];
-        setEventos(propios);
+        const eventosUsuario = await getMyEvents();
+        setEventos(eventosUsuario);
       } catch (err) {
         console.error(err);
         setError("No se pudieron cargar los eventos");
@@ -37,12 +24,14 @@ export default function MisEventos() {
       }
     };
     cargar();
-  }, [usuario]);
+  }, []);
 
   const handleDelete = async (id) => {
     const confirmar = window.confirm("¿Eliminar este evento?");
     if (!confirmar) return;
+
     try {
+      await deleteEvent(id, token);
       setEventos((prev) => prev.filter((e) => e._id !== id));
     } catch (err) {
       console.error("Error al eliminar evento:", err);
@@ -73,7 +62,7 @@ export default function MisEventos() {
             <CardEvento
               key={evento._id}
               evento={evento}
-              onDelete={handleDelete}
+              onDelete={() => handleDelete(evento._id)}
             />
           ))}
         </div>

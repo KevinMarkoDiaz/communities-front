@@ -8,11 +8,10 @@ export default function Categorias() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const token = useSelector((state) => state.auth.token);
   const usuario = useSelector((state) => state.auth.usuario);
 
   useEffect(() => {
-    if (usuario.role !== "admin") {
+    if (!usuario || usuario.role !== "admin") {
       setError("Acceso no autorizado");
       setLoading(false);
       return;
@@ -21,7 +20,7 @@ export default function Categorias() {
     const cargar = async () => {
       try {
         const res = await getAllCategories();
-        setCategorias(res.categories);
+        setCategorias(res.categories || res); // Ajustable si cambia backend
       } catch (err) {
         setError("No se pudieron cargar las categorías");
         console.error(err);
@@ -38,7 +37,7 @@ export default function Categorias() {
     if (!confirmar) return;
 
     try {
-      await deleteCategory(id, token);
+      await deleteCategory(id);
       setCategorias((prev) => prev.filter((c) => c._id !== id));
     } catch (err) {
       console.error("Error al eliminar categoría:", err);
@@ -46,16 +45,19 @@ export default function Categorias() {
     }
   };
 
-  if (loading) return <div className="p-4">Cargando categorías...</div>;
+  if (loading)
+    return <div className="p-4 text-gray-700">Cargando categorías...</div>;
   if (error) return <div className="p-4 text-red-600">{error}</div>;
 
   return (
-    <div className="p-6 space-y-6 max-w-6xl mx-auto">
+    <section className="p-6 max-w-7xl mx-auto space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-[#141C24]">Categorías</h2>
+        <h2 className="text-2xl font-bold text-gray-900 tracking-tight">
+          Categorías
+        </h2>
         <Link
           to="crear"
-          className="bg-[#141C24] text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-[#1e2733] transition"
+          className="bg-gray-900 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-gray-800 transition"
         >
           + Nueva categoría
         </Link>
@@ -68,27 +70,29 @@ export default function Categorias() {
           {categorias.map((cat) => (
             <div
               key={cat._id}
-              className="rounded-xl border border-[#E4E9F1] bg-white p-5 shadow-sm"
+              className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-all space-y-3"
             >
-              <h3 className="text-lg font-semibold text-[#141C24] mb-1">
-                {cat.name}
-              </h3>
-              {cat.icon && (
-                <p className="text-sm text-gray-500 mb-1">
-                  Icono: <code>{cat.icon}</code>
+              <div className="flex items-center gap-3">
+                {cat.icon && <div className="text-2xl">{cat.icon}</div>}
+                <h3 className="text-lg font-semibold text-gray-900">
+                  {cat.name}
+                </h3>
+              </div>
+              {cat.description && (
+                <p className="text-sm text-gray-600 leading-snug">
+                  {cat.description}
                 </p>
               )}
-              <p className="text-sm text-gray-600">{cat.description}</p>
-              <div className="mt-4 flex gap-4">
+              <div className="flex gap-4 text-sm pt-2">
                 <Link
                   to={`/dashboard/categorias/${cat._id}/editar`}
-                  className="text-sm text-blue-600 hover:underline"
+                  className="text-blue-600 hover:underline font-medium"
                 >
                   Editar
                 </Link>
                 <button
                   onClick={() => handleDelete(cat._id)}
-                  className="text-sm text-red-500 hover:underline"
+                  className="text-red-500 hover:underline font-medium"
                 >
                   Eliminar
                 </button>
@@ -97,6 +101,6 @@ export default function Categorias() {
           ))}
         </div>
       )}
-    </div>
+    </section>
   );
 }

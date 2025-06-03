@@ -44,3 +44,7 @@ export async function deleteCategory(id) {
   const res = await axiosInstance.delete(`/categories/${id}`);
   return res.data;
 }
+export async function contarCategorias() {
+  const res = await axiosInstance.get("/categories"); // trae todas
+  return res.data.categories.length;
+}

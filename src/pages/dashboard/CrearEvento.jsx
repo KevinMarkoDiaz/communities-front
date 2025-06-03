@@ -1,12 +1,42 @@
 // src/pages/dashboard/CrearEvento.jsx
 import { Helmet } from "react-helmet-async";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { createEvent } from "../../api/eventApi";
 import CrearEditarEventoForm from "../../components/dashboard/formularios/evento/CrearEditarEventoForm";
 
 export default function CrearEvento() {
-  const handleCrear = (valores) => {
-    console.log("🎉 Evento creado:", valores);
-    alert("Evento creado (simulado)");
-    // Aquí redirigís o llamás a la API real
+  const usuario = useSelector((state) => state.auth.usuario);
+  const navigate = useNavigate();
+
+  const handleCrear = async (valores, { setSubmitting }) => {
+    try {
+      const payload = {
+        ...valores,
+        categories: ["683ca148eeb450a92580128e"],
+        communities: ["683dcb3396226795b0ad6d05"],
+        organizer: usuario.id,
+        organizerModel: "User",
+        tags:
+          typeof valores.tags === "string"
+            ? valores.tags.split(",").map((tag) => tag.trim())
+            : valores.tags,
+        time: valores.time,
+      };
+
+      console.log("Payload final:", payload);
+
+      await createEvent(payload);
+      alert("🎉 Evento creado con éxito");
+      navigate("/dashboard/mis-eventos");
+    } catch (err) {
+      console.error("Error al crear evento:", err?.response?.data || err);
+      console.error("Error:", err?.response?.data || err);
+
+      alert("Ocurrió un error al crear el evento");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (

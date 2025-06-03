@@ -32,6 +32,7 @@ import EditarPerfil from "../pages/dashboard/EditarPerfil";
 import NegocioForm from "../pages/dashboard/NegocioForm";
 import CrearCategoriaView from "../pages/dashboard/CrearCategoriaView";
 import EditarCategoriaView from "../pages/dashboard/EditarCategoriaView";
+import { useInitAuth } from "../hooks/useInitAuth";
 
 const router = createBrowserRouter([
   {
@@ -119,5 +120,6 @@ const router = createBrowserRouter([
 ]);
 
 export default function AppRouter() {
+  useInitAuth();
   return <RouterProvider router={router} />;
 }

@@ -1,4 +1,4 @@
-// src/components/dashboard/formularios/eventos/CrearEditarEventoForm.jsx
+// src/components/dashboard/formularios/evento/CrearEditarEventoForm.jsx
 import { useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
@@ -7,8 +7,9 @@ import { AnimatePresence, motion } from "framer-motion";
 import Paso1Info from "./Paso1Info";
 import Paso2Detalles from "./Paso2Detalles";
 import Paso3Imagen from "./Paso3Imagen";
+import Paso4Opciones from "./Paso4Opciones";
 
-const pasos = [Paso1Info, Paso2Detalles, Paso3Imagen];
+const pasos = [Paso1Info, Paso2Detalles, Paso3Imagen, Paso4Opciones];
 
 const esquemaValidacion = [
   Yup.object({
@@ -17,6 +18,7 @@ const esquemaValidacion = [
   }),
   Yup.object({
     date: Yup.date().required("Fecha obligatoria"),
+    time: Yup.string().required("Hora obligatoria"), // 👈 nuevo
     location: Yup.string().required("Ubicación obligatoria"),
   }),
   Yup.object({
@@ -24,14 +26,22 @@ const esquemaValidacion = [
       .url("Debe ser una URL válida")
       .required("Imagen requerida"),
   }),
+  Yup.object({
+    categories: Yup.array().min(1, "Selecciona al menos una categoría"),
+    communities: Yup.array().min(1, "Selecciona al menos una comunidad"),
+  }),
 ];
 
 const valoresIniciales = {
   title: "",
   description: "",
   date: "",
+  time: "", // 👈 nuevo
   location: "",
   image: "",
+  categories: [],
+  communities: [],
+  tags: "",
 };
 
 export default function CrearEditarEventoForm({
@@ -48,9 +58,9 @@ export default function CrearEditarEventoForm({
     <Formik
       initialValues={initialValues}
       validationSchema={esquemaValidacion[paso]}
-      onSubmit={(values) => {
+      onSubmit={(values, actions) => {
         if (paso === pasos.length - 1) {
-          onSubmit(values);
+          onSubmit(values, actions); // ✅ Pasás también 'actions'
         } else {
           avanzar();
         }
