@@ -98,7 +98,20 @@ const validationSchema = [
     }).nullable(),
   }),
   Yup.object({
-    featuredImage: Yup.string().url("Must be a valid URL").nullable(),
+    featuredImage: Yup.mixed().required("Requerido"),
+    profileImage: Yup.mixed().required("Requerido"),
+
+    images: Yup.array()
+      .of(
+        Yup.mixed().test(
+          "is-valid-image",
+          "Cada imagen debe ser una URL válida o un archivo",
+          (value) =>
+            typeof value === "string" ||
+            (typeof File !== "undefined" && value instanceof File)
+        )
+      )
+      .min(1, "Sube al menos una imagen a la galería"),
     tags: Yup.array().of(Yup.string()).nullable(),
     isVerified: Yup.boolean().nullable(),
   }),
@@ -144,6 +157,7 @@ const defaultInitialValues = {
   featuredImage: "",
   tags: [],
   isVerified: false,
+  images: [],
 };
 
 export default function NegocioForm() {
@@ -179,10 +193,24 @@ export default function NegocioForm() {
         .then((res) => {
           const negocio = res.business;
           setInitialValues({
-            ...negocio,
+            name: negocio.name,
+            description: negocio.description,
+            category: negocio.category?._id || negocio.category,
+            community: negocio.community?._id || negocio.community,
+            contact: negocio.contact || defaultInitialValues.contact,
+            location: negocio.location || defaultInitialValues.location,
+            openingHours:
+              negocio.openingHours || defaultInitialValues.openingHours,
+            ownerId: negocio.owner?._id || negocio.owner,
+            ownerDisplay: {
+              name: negocio.owner?.name || "",
+              image: negocio.owner?.profileImage || "",
+            },
             featuredImage: negocio.featuredImage || "",
+            profileImage: negocio.profileImage || "",
             tags: negocio.tags || [],
             isVerified: negocio.isVerified || false,
+            images: negocio.images || [],
           });
         })
         .catch((err) => {
@@ -193,9 +221,6 @@ export default function NegocioForm() {
     }
   }, [id]);
 
-  const avanzar = () => setPaso((prev) => Math.min(prev + 1, steps.length - 1));
-  const retroceder = () => setPaso((prev) => Math.max(prev - 1, 0));
-
   if (cargando) return <p className="p-4">Cargando datos...</p>;
 
   return (
@@ -204,64 +229,72 @@ export default function NegocioForm() {
       initialValues={initialValues}
       validationSchema={validationSchema[paso]}
       onSubmit={async (values, { setSubmitting }) => {
-        console.log("🧪 Datos originales:", values);
+        try {
+          if (paso === steps.length - 1) {
+            const { featuredImage, profileImage, images, ...otrosCampos } =
+              values;
+            const formData = new FormData();
 
-        if (paso === steps.length - 1) {
-          try {
-            // ✅ Sanitizar horarios correctamente
-            const valuesSanitizados = {
-              ...values,
-              openingHours: values.openingHours.map((hora) =>
-                hora.closed
-                  ? { day: hora.day, closed: true } // ✅ nada de open/close
-                  : {
-                      day: hora.day,
-                      closed: false,
-                      open: hora.open,
-                      close: hora.close,
-                    }
-              ),
-            };
+            // Imagen destacada
+            if (featuredImage instanceof File) {
+              formData.append("featuredImage", featuredImage);
+            } else if (typeof featuredImage === "string") {
+              formData.append("featuredImageUrl", featuredImage); // 🆕
+            }
 
-            console.log("🧪 Enviando datos sanitizados:", valuesSanitizados);
+            // Imagen de perfil
+            if (profileImage instanceof File) {
+              formData.append("profileImage", profileImage);
+            } else if (typeof profileImage === "string") {
+              formData.append("profileImageUrl", profileImage); // 🆕
+            }
 
+            // Galería
+            const nuevasImagenes = images.filter((img) => img instanceof File);
+            const imagenesExistentes = images.filter(
+              (img) => typeof img === "string"
+            );
+
+            nuevasImagenes.forEach((img) => formData.append("images", img));
+            if (imagenesExistentes.length > 0) {
+              formData.append(
+                "existingImages",
+                JSON.stringify(imagenesExistentes)
+              ); // 🆕
+            }
+
+            // Resto de campos
+            Object.entries(otrosCampos).forEach(([key, value]) => {
+              formData.append(
+                key,
+                typeof value === "object" ? JSON.stringify(value) : value ?? ""
+              );
+            });
+
+            let response;
             if (id) {
-              await updateBusiness(id, valuesSanitizados);
-              alert("Negocio actualizado exitosamente.");
+              for (let pair of formData.entries()) {
+                console.log("🧾 FormData:", pair[0], pair[1]);
+              }
+
+              response = await updateBusiness(id, formData);
             } else {
-              await createBusiness(valuesSanitizados);
-              alert("Negocio creado exitosamente.");
+              response = await createBusiness(formData);
             }
 
+            console.log("🎉 Negocio guardado:", response);
             navigate("/dashboard/mis-negocios");
-          } catch (error) {
-            const errores = error.response?.data?.errors;
-
-            if (Array.isArray(errores)) {
-              const mensaje = errores
-                .map((err) => {
-                  const campo = err?.path?.join(" > ") || "campo desconocido";
-                  return `• Error en ${campo}: ${
-                    err.message || "Error desconocido"
-                  }`;
-                })
-                .join("\n");
-
-              alert(`❌ Errores de validación:\n\n${mensaje}`);
-            } else {
-              alert("❌ Ocurrió un error al guardar el negocio.");
-            }
-          } finally {
-            setSubmitting(false);
           }
-        } else {
-          avanzar();
+        } catch (error) {
+          console.error("❌ Error al guardar el negocio:", error);
+        } finally {
+          setSubmitting(false);
         }
       }}
       validateOnBlur={false}
       validateOnChange={false}
     >
-      {() => (
+      {({ validateForm }) => (
         <Form className="space-y-6 p-4 overflow-hidden relative">
           <AnimatePresence mode="wait">
             <motion.div
@@ -281,19 +314,32 @@ export default function NegocioForm() {
             {paso > 0 && (
               <button
                 type="button"
-                onClick={retroceder}
+                onClick={() => setPaso((prev) => Math.max(prev - 1, 0))}
                 className="btn btn-secondary"
               >
                 Atrás
               </button>
             )}
-            <button type="submit" className="btn btn-primary">
-              {paso === steps.length - 1
-                ? id
-                  ? "Actualizar"
-                  : "Guardar"
-                : "Siguiente"}
-            </button>
+            {paso === steps.length - 1 ? (
+              <button type="submit" className="btn btn-primary">
+                {id ? "Actualizar" : "Guardar"}
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={async () => {
+                  const errors = await validateForm();
+                  if (Object.keys(errors).length === 0) {
+                    setPaso((prev) => prev + 1);
+                  } else {
+                    console.warn("Errores en el paso actual:", errors);
+                  }
+                }}
+              >
+                Siguiente
+              </button>
+            )}
           </div>
         </Form>
       )}

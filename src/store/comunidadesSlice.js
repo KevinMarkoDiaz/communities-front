@@ -1,21 +1,31 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
-import { fetchComunidades } from "../utils/api"
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { getAllCommunities, getMyCommunities } from "../api/communityApi";
 
-// Thunk para cargar las comunidades
-export const obtenerComunidades = createAsyncThunk(
-  "comunidades/fetch",
+// 🔁 Thunk para obtener todas
+export const fetchComunidades = createAsyncThunk(
+  "comunidades/fetchAll",
   async (_, { rejectWithValue }) => {
     try {
-      const data = await fetchComunidades()
-      if (!data || data.error) {
-        return rejectWithValue(data.error || "Error al obtener comunidades")
-      }
-      return data
+      const data = await getAllCommunities();
+      return data.communities;
     } catch (error) {
-      return rejectWithValue(error.message || "Error desconocido")
+      return rejectWithValue(error.message || "Error desconocido");
     }
   }
-)
+);
+
+// 🔁 Thunk para obtener solo las del usuario autenticado
+export const fetchMisComunidades = createAsyncThunk(
+  "comunidades/fetchMine",
+  async (_, { rejectWithValue }) => {
+    try {
+      const data = await getMyCommunities();
+      return data.communities;
+    } catch (error) {
+      return rejectWithValue(error.message || "Error desconocido");
+    }
+  }
+);
 
 const comunidadesSlice = createSlice({
   name: "comunidades",
@@ -27,25 +37,38 @@ const comunidadesSlice = createSlice({
   },
   reducers: {
     setBusqueda: (state, action) => {
-      state.busqueda = action.payload
+      state.busqueda = action.payload;
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(obtenerComunidades.pending, (state) => {
-        state.loading = true
-        state.error = null
+      .addCase(fetchComunidades.pending, (state) => {
+        state.loading = true;
+        state.error = null;
       })
-      .addCase(obtenerComunidades.fulfilled, (state, action) => {
-        state.loading = false
-        state.lista = action.payload
+      .addCase(fetchComunidades.fulfilled, (state, action) => {
+        state.loading = false;
+        state.lista = action.payload;
       })
-      .addCase(obtenerComunidades.rejected, (state, action) => {
-        state.loading = false
-        state.error = action.payload || action.error.message
+      .addCase(fetchComunidades.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       })
-  },
-})
 
-export const { setBusqueda } = comunidadesSlice.actions
-export default comunidadesSlice.reducer
+      .addCase(fetchMisComunidades.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchMisComunidades.fulfilled, (state, action) => {
+        state.loading = false;
+        state.lista = action.payload;
+      })
+      .addCase(fetchMisComunidades.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+  },
+});
+
+export const { setBusqueda } = comunidadesSlice.actions;
+export default comunidadesSlice.reducer;

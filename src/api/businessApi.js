@@ -1,13 +1,35 @@
 import axiosInstance from "./axiosInstance";
 
 /**
- * Crear un nuevo negocio.
- * @param {Object} data - Datos del negocio (name, description, category, etc.)
+ * Crear un nuevo negocio (con soporte para FormData).
+ * @param {FormData} formData - FormData con datos + archivos
  */
-export async function createBusiness(data) {
-  console.log("Valores a enviar al backend:", data);
+export async function createBusiness(formData) {
+  console.log("Valores a enviar al backend:", formData);
 
-  const response = await axiosInstance.post("/businesses", data);
+  const response = await axiosInstance.post("/businesses", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+    withCredentials: true, // si usás cookies
+  });
+
+  return response.data;
+}
+
+/**
+ * Actualizar un negocio existente.
+ * @param {string} id - ID del negocio
+ * @param {FormData} formData - FormData con datos actualizados + archivos
+ */
+export async function updateBusiness(id, formData) {
+  const response = await axiosInstance.put(`/businesses/${id}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+    withCredentials: true,
+  });
+
   return response.data;
 }
 
@@ -28,15 +50,7 @@ export async function getBusinessById(id) {
   return response.data;
 }
 
-/**
- * Actualizar un negocio existente.
- * @param {string} id - ID del negocio
- * @param {Object} data - Datos actualizados
- */
-export async function updateBusiness(id, data) {
-  const response = await axiosInstance.put(`/businesses/${id}`, data);
-  return response.data;
-}
+
 
 /**
  * Eliminar un negocio.

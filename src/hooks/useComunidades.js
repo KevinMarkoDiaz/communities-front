@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  obtenerComunidades,
+
+  fetchComunidades,
   setBusqueda as setBusquedaComunidades
 } from "../store/comunidadesSlice";
 
@@ -13,7 +14,7 @@ export function useComunidades() {
 
   useEffect(() => {
     if (!lista || lista.length === 0) {
-      dispatch(obtenerComunidades());
+      dispatch(fetchComunidades());
     }
   }, [dispatch, lista]);
   

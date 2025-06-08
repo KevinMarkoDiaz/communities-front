@@ -93,69 +93,87 @@ export default function DashboardLayout() {
                   }
                 >
                   <p className="text-[#141C24] text-sm font-medium leading-normal">
-                    Profile
+                    Mi perfil
                   </p>
                 </NavLink>
+
                 <NavLink
                   to="mis-negocios"
                   className={({ isActive }) =>
-                    `flex items-center gap-3 px-3 py-2 ${
-                      isActive ? "bg-[#E4E9F1] rounded-full" : ""
+                    `flex items-center gap-3 px-3 py-2 rounded-full ${
+                      isActive ? "bg-[#E4E9F1]" : ""
                     }`
                   }
                 >
                   <p className="text-[#141C24] text-sm font-medium leading-normal">
-                    My Businesses
+                    Mis negocios
                   </p>
                 </NavLink>
+
                 <NavLink
                   to="mis-eventos"
                   className={({ isActive }) =>
-                    `flex items-center gap-3 px-3 py-2 ${
-                      isActive ? "bg-[#E4E9F1] rounded-full" : ""
+                    `flex items-center gap-3 px-3 py-2 rounded-full ${
+                      isActive ? "bg-[#E4E9F1]" : ""
                     }`
                   }
                 >
                   <p className="text-[#141C24] text-sm font-medium leading-normal">
-                    My Events
+                    Mis eventos
                   </p>
                 </NavLink>
+
                 <NavLink
                   to="comunidades"
                   className={({ isActive }) =>
-                    `flex items-center gap-3 px-3 py-2 ${
-                      isActive ? "bg-[#E4E9F1] rounded-full" : ""
+                    `flex items-center gap-3 px-3 py-2 rounded-full ${
+                      isActive ? "bg-[#E4E9F1]" : ""
                     }`
                   }
                 >
                   <p className="text-[#141C24] text-sm font-medium leading-normal">
-                    My Communities
+                    Mis comunidades
                   </p>
                 </NavLink>
+
                 {usuario?.role === "admin" && (
                   <NavLink
                     to="categorias"
                     className={({ isActive }) =>
-                      `flex items-center gap-3 px-3 py-2 ${
-                        isActive ? "bg-[#E4E9F1] rounded-full" : ""
+                      `flex items-center gap-3 px-3 py-2 rounded-full ${
+                        isActive ? "bg-[#E4E9F1]" : ""
                       }`
                     }
                   >
                     <p className="text-[#141C24] text-sm font-medium leading-normal">
-                      Categorías
+                      Mis categorías
                     </p>
                   </NavLink>
                 )}
+
+                {/* 💎 Botón Premium */}
+                <NavLink
+                  to="/premium"
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 px-3 py-2 rounded-full ${
+                      isActive ? "bg-[#F3E8FF]" : ""
+                    }`
+                  }
+                >
+                  <p className="text-[#7C3AED] text-sm font-medium leading-normal">
+                    💎 Hazte Premium
+                  </p>
+                </NavLink>
               </div>
             </div>
 
-            {/* Log Out abajo pegado */}
+            {/* Cerrar sesión */}
             <button
               onClick={handleLogout}
               className="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-gray-200 rounded"
             >
               <p className="text-[#141C24] text-sm font-medium leading-normal">
-                Log Out
+                Cerrar sesión
               </p>
             </button>
           </div>

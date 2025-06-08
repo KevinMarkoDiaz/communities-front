@@ -1,4 +1,3 @@
-// src/pages/dashboard/MisEventos.jsx
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -45,10 +44,10 @@ export default function MisEventos() {
   return (
     <div className="p-4 space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-[22px] font-bold text-[#141C24]">Mis eventos</h2>
+        <h2 className="text-2xl font-bold text-[#141C24]">Mis eventos</h2>
         <Link
           to="crear"
-          className="bg-[#141C24] text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-[#1f2937] transition"
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition text-sm font-medium"
         >
           + Nuevo evento
         </Link>
@@ -57,7 +56,7 @@ export default function MisEventos() {
       {eventos.length === 0 ? (
         <p className="text-gray-600">No has creado eventos todavía.</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
+        <div className="space-y-3">
           {eventos.map((evento) => (
             <CardEvento
               key={evento._id}

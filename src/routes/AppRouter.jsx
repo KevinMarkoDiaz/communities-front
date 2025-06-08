@@ -32,7 +32,12 @@ import EditarPerfil from "../pages/dashboard/EditarPerfil";
 import NegocioForm from "../pages/dashboard/NegocioForm";
 import CrearCategoriaView from "../pages/dashboard/CrearCategoriaView";
 import EditarCategoriaView from "../pages/dashboard/EditarCategoriaView";
+
 import { useInitAuth } from "../hooks/useInitAuth";
+import PremiumInfo from "../pages/premium/PremiumInfo";
+import SuscripcionStripe from "../pages/premium/SuscripcionStripe";
+import SuscripcionExitosa from "../pages/premium/SuscripcionExitosa";
+import SuscripcionCancelada from "../pages/premium/SuscripcionCancelada";
 
 const router = createBrowserRouter([
   {
@@ -46,6 +51,12 @@ const router = createBrowserRouter([
       { path: "/eventos/:id", element: <EventoDetalle /> },
       { path: "/comunidades", element: <Comunidadeshome /> },
       { path: "/comunidades/:id", element: <ComunidadDetalle /> },
+
+      // 🟨 Rutas Premium
+      { path: "/premium", element: <PremiumInfo /> },
+      { path: "/suscribirse", element: <SuscripcionStripe /> },
+      { path: "/suscripcion-exitosa", element: <SuscripcionExitosa /> },
+      { path: "/suscripcion-cancelada", element: <SuscripcionCancelada /> },
 
       {
         path: "/promociones",
@@ -112,7 +123,7 @@ const router = createBrowserRouter([
   { path: "/login", element: <Login /> },
   { path: "/registro", element: <Registro /> },
 
-  // Ruta 404 (opcional)
+  // Ruta 404
   {
     path: "*",
     element: <div className="p-10 text-center">404 - Página no encontrada</div>,

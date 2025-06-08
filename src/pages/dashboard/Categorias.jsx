@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { getAllCategories, deleteCategory } from "../../api/categoryApi";
 import { Link } from "react-router-dom";
+import CardCategoria from "../../components/categoria/CardCategoria";
 
 export default function Categorias() {
   const [categorias, setCategorias] = useState([]);
@@ -20,7 +21,7 @@ export default function Categorias() {
     const cargar = async () => {
       try {
         const res = await getAllCategories();
-        setCategorias(res.categories || res); // Ajustable si cambia backend
+        setCategorias(res.categories || res);
       } catch (err) {
         setError("No se pudieron cargar las categorías");
         console.error(err);
@@ -50,14 +51,12 @@ export default function Categorias() {
   if (error) return <div className="p-4 text-red-600">{error}</div>;
 
   return (
-    <section className="p-6 max-w-7xl mx-auto space-y-6">
+    <div className="p-4 space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-gray-900 tracking-tight">
-          Categorías
-        </h2>
+        <h2 className="text-2xl font-bold text-[#141C24]">Mis categorías</h2>
         <Link
           to="crear"
-          className="bg-gray-900 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-gray-800 transition"
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition text-sm font-medium"
         >
           + Nueva categoría
         </Link>
@@ -66,41 +65,16 @@ export default function Categorias() {
       {categorias.length === 0 ? (
         <p className="text-gray-600">No hay categorías registradas.</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="space-y-3">
           {categorias.map((cat) => (
-            <div
+            <CardCategoria
               key={cat._id}
-              className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-all space-y-3"
-            >
-              <div className="flex items-center gap-3">
-                {cat.icon && <div className="text-2xl">{cat.icon}</div>}
-                <h3 className="text-lg font-semibold text-gray-900">
-                  {cat.name}
-                </h3>
-              </div>
-              {cat.description && (
-                <p className="text-sm text-gray-600 leading-snug">
-                  {cat.description}
-                </p>
-              )}
-              <div className="flex gap-4 text-sm pt-2">
-                <Link
-                  to={`/dashboard/categorias/${cat._id}/editar`}
-                  className="text-blue-600 hover:underline font-medium"
-                >
-                  Editar
-                </Link>
-                <button
-                  onClick={() => handleDelete(cat._id)}
-                  className="text-red-500 hover:underline font-medium"
-                >
-                  Eliminar
-                </button>
-              </div>
-            </div>
+              categoria={cat}
+              onDelete={handleDelete}
+            />
           ))}
         </div>
       )}
-    </section>
+    </div>
   );
 }

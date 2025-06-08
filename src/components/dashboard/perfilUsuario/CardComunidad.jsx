@@ -1,36 +1,62 @@
+import { Link } from "react-router-dom";
+
 export default function CardComunidad({
   id,
-  title = "The Founders Club",
-  description = "Una comunidad para emprendedores y dueños de negocios.",
+  name = "Nombre comunidad",
+  description = "Descripción de la comunidad.",
+  flagImage,
+  language = "es",
+  owner,
+  usuario,
+  onDelete,
 }) {
+  const puedeEditar = usuario?.role === "admin" || usuario?._id === owner;
+
   return (
-    <div className="flex items-center gap-4 bg-[#F8F9FB] px-4 min-h-[72px] py-2 justify-between">
-      <div className="flex items-center gap-4">
+    <div className="p-4 @container w-full">
+      <div className="w-full flex flex-col md:flex-row items-start gap-4 bg-gray-50 rounded-2xl shadow-sm p-4">
+        {/* Imagen */}
         <div
-          className="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-14"
+          className="w-full aspect-video md:aspect-auto md:w-40 md:h-28 bg-center bg-no-repeat bg-cover rounded-xl shrink-0"
           style={{
-            backgroundImage: `url(https://cdn.usegalileo.ai/sdxl10/${id}.png)`,
+            backgroundImage: `url(${
+              flagImage || `https://cdn.usegalileo.ai/sdxl10/${id}.png`
+            })`,
           }}
         ></div>
-        <div className="flex flex-col justify-center">
-          <p className="text-[#141C24] text-base font-medium leading-normal line-clamp-1">
-            {title}
-          </p>
-          <p className="text-[#3F5374] text-sm font-normal leading-normal line-clamp-2">
-            {description}
-          </p>
+
+        {/* Contenido */}
+        <div className="flex justify-between flex-1 gap-3 py-2">
+          <div className="space-y-1">
+            <p className="text-[#3F5374] text-sm">
+              Owned by: {usuario?.role === "admin" ? owner || "N/A" : "Vos"}
+            </p>
+            <p className="text-[#141C24] text-lg font-bold leading-tight tracking-[-0.015em]">
+              {name}
+            </p>
+            <p className="text-[#3F5374] text-base line-clamp-2">
+              {description}
+            </p>
+            <p className="text-[#3F5374] text-sm">{language}</p>
+          </div>
+
+          {puedeEditar && (
+            <div className="flex gap-2 mt-2 flex flex-col">
+              <Link
+                to={`/dashboard/comunidades/${id}/editar`}
+                className="w-[96px] h-9 rounded-full bg-[#E4E9F1] text-[#141C24] text-sm font-medium flex items-center justify-center hover:bg-[#d4dde7] transition"
+              >
+                Edit
+              </Link>
+              <button
+                onClick={() => onDelete?.(id)}
+                className="w-[96px] h-9 rounded-full bg-[#F4C753] text-[#141C24] text-sm font-medium flex items-center justify-center hover:bg-[#f1bb2a] transition"
+              >
+                Delete
+              </button>
+            </div>
+          )}
         </div>
-      </div>
-      <div className="shrink-0">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          fill="currentColor"
-          viewBox="0 0 256 256"
-        >
-          <path d="M140,128a12,12,0,1,1-12-12A12,12,0,0,1,140,128Zm56-12a12,12,0,1,0,12,12A12,12,0,0,0,196,116ZM60,116a12,12,0,1,0,12,12A12,12,0,0,0,60,116Z" />
-        </svg>
       </div>
     </div>
   );
