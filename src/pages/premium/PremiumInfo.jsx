@@ -1,8 +1,24 @@
 import { Helmet } from "react-helmet-async";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { crearSesionStripe } from "../../api/stripeApi";
+// import { useNavigate } from "react-router-dom";
 
 export default function PremiumInfo() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
+  const manejarSuscripcion = async () => {
+    try {
+      setLoading(true);
+      const url = await crearSesionStripe(); // Llama al backend
+      window.location.href = url; // Redirige al checkout de Stripe
+    } catch (error) {
+      console.error("❌ Error al iniciar suscripción:", error);
+      alert("Ocurrió un error al procesar la suscripción.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -49,10 +65,11 @@ export default function PremiumInfo() {
                 $9.99 / mes
               </p>
               <button
-                onClick={() => navigate("/suscribirse")}
+                onClick={manejarSuscripcion}
+                disabled={loading}
                 className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-full transition"
               >
-                Suscribirse ahora
+                {loading ? "Redirigiendo..." : "Suscribirse ahora"}
               </button>
             </div>
           </div>

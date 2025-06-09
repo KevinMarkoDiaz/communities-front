@@ -27,18 +27,10 @@ export default function EventosProximos() {
           <Link
             to={`/eventos/${evento.id || evento._id}`}
             key={evento.id || evento._id}
-            className="flex-shrink-0 snap-start w-full max-w-[320px]"
+            className="flex-shrink-0 snap-start min-w-[280px] sm:min-w-[250px] md:min-w-[250px] lg:min-w-[320px]"
           >
             <CardDestacado
               title={evento.title}
-              description={`📅 ${new Date(evento.date).toLocaleDateString(
-                "es-ES",
-                {
-                  day: "numeric",
-                  month: "short",
-                  year: "numeric",
-                }
-              )}`}
               image={evento.image}
               modo="vertical"
             />

@@ -7,7 +7,7 @@ export default function CardPromoHome({
   isVerified,
 }) {
   return (
-    <div className="relative w-[150px] sm:w-[180px] md:w-[200px] aspect-[4/2] rounded-[1.5rem] overflow-hidden shadow-md bg-gray-100 transition hover:scale-[1.02]">
+    <div className="relative w-[150px] sm:w-[180px] md:w-[200px] aspect-[4/2] rounded-[1.5rem] overflow-hidden shadow-md bg-gray-100 transition hover:shadow-lg mb-4">
       {/* Imagen de fondo */}
       {image && (
         <div

@@ -16,7 +16,7 @@ export default function ScrollCarousel({ children }) {
   };
 
   return (
-    <div className="relative w-full overflow-hidden">
+    <div className="relative w-full overflow-x-hidden gap-32">
       <button
         onClick={() => scroll("left")}
         className="hidden md:flex absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow"
@@ -29,7 +29,7 @@ export default function ScrollCarousel({ children }) {
       >
         <FiChevronRight size={20} />
       </button>
-      <div className="w-full overflow-hidden px-4">
+      <div className="w-full overflow-x-hidden px-4">
         <div
           ref={scrollRef}
           className="flex gap-4 overflow-x-auto scroll-smooth touch-pan-x whitespace-nowrap

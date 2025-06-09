@@ -19,40 +19,28 @@ export default function Home() {
         />
       </Helmet>
 
-      <div className="px-4 sm:px-6 lg:px-8 py-10 space-y-12 max-w-6xl mx-auto flex flex-col gap-32">
-        {/* Banner de video */}
-        <div className="w-full flex justify-center px-4 py-10">
-          <video
-            src={bannerBTN}
-            autoPlay
-            muted
-            playsInline
-            className="rounded-xl max-w-6xl w-full shadow-lg"
-          />
+      {/* Buscador y comunidad */}
+      <div className="flex flex-col lg:flex-row gap-8">
+        <div className="w-full lg:w-5/5">
+          <BusquedaList />
         </div>
+        {/* <div className="w-full lg:w-3/5"><VistaComunidad /></div> */}
+      </div>
 
-        {/* Buscador y comunidad */}
-        <div className="flex flex-col lg:flex-row gap-8">
-          <div className="w-full lg:w-5/5">
-            <BusquedaList />
-          </div>
-          {/* <div className="w-full lg:w-3/5"><VistaComunidad /></div> */}
-        </div>
+      {/* Secciones principales */}
+      <div className="flex flex-col gap-24">
+        <PromocionesDestacadas />
+        <NegociosSugeridos />
+        <EventosProximos />
+        <ComunidadesDestacadas />
 
-        {/* Secciones principales */}
-        <div className="flex flex-col gap-24">
-          <PromocionesDestacadas />
-          <NegociosSugeridos />
-          <EventosProximos />
-          <ComunidadesDestacadas />
+        {/* ✅ Nueva sección: promociones */}
 
-          {/* ✅ Nueva sección: promociones */}
-
-          {/* Sección final de bienvenida */}
-          <div className="px-4 sm:px-6 lg:px-8 py-10 space-y-12 max-w-6xl mx-auto">
+        {/* Sección final de bienvenida */}
+        {/* <div className="px-4 sm:px-6 lg:px-8 py-10 space-y-12 max-w-6xl mx-auto">
             <div className="flex flex-col lg:flex-row gap-8 lg:items-center">
               {/* Texto */}
-              <div className="w-full lg:w-2/5 space-y-4 flex flex-col justify-center h-full">
+        {/* <div className="w-full lg:w-2/5 space-y-4 flex flex-col justify-center h-full">
                 <h2 className="text-3xl font-extrabold text-[#F45525] tracking-tight">
                   ¡Bienvenido a Communities!
                 </h2>
@@ -64,14 +52,23 @@ export default function Home() {
                   tu <span className="font-bold">comunidad</span> donde quiera
                   que estés.
                 </p>
-              </div>
+              </div> */}
 
-              {/* Imagen ilustrativa */}
-              <div className="w-full lg:w-3/5">
+        {/* Imagen ilustrativa */}
+        {/* <div className="w-full lg:w-3/5">
                 <HeroBannerLatino />
               </div>
-            </div>
-          </div>
+            </div> */}
+        {/* Banner de video */}
+        {/* </div> */}
+        <div className="w-full flex justify-center px-4 py-10">
+          <video
+            src={bannerBTN}
+            autoPlay
+            muted
+            playsInline
+            className="rounded-xl max-w-6xl w-full shadow-lg"
+          />
         </div>
       </div>
     </>

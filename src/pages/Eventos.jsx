@@ -48,9 +48,8 @@ export default function Eventos() {
         />
       </Helmet>
 
-      <div className="px-4 sm:px-6 lg:px-8 py-10 max-w-6xl mx-auto overflow-hidden flex-col flex gap-18">
-        <BannerEvento scrollToRef={gridRef} />
-        <div className="flex-col flex gap-18">
+      <div className="w-full max-w-full overflow-hidden flex flex-col gap-18">
+        <div className="flex flex-col gap-18">
           <SearchBar
             value={busqueda}
             onChange={(text) => dispatch(setBusqueda(text))}
@@ -91,6 +90,7 @@ export default function Eventos() {
           currentPage={paginaActual}
           onPageChange={setPaginaActual}
         />
+        <BannerEvento scrollToRef={gridRef} />
       </div>
     </>
   );

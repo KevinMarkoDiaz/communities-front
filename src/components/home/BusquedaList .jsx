@@ -15,14 +15,12 @@ export default function BusquedaList() {
     (state) => state.busquedaGlobal
   );
   const [input, setInput] = useState("");
-
-  const resultadosRef = useRef(null); // 👈 ref para el scroll
+  const resultadosRef = useRef(null);
 
   const handleBuscar = () => {
     const texto = input.trim();
     if (texto) {
       dispatch(buscarGlobalThunk(texto)).then(() => {
-        // 👇 hacemos scroll suave a los resultados después de la búsqueda
         resultadosRef.current?.scrollIntoView({ behavior: "smooth" });
       });
     } else {
@@ -49,15 +47,15 @@ export default function BusquedaList() {
         )}
       />
 
-      <div
-        ref={resultadosRef} // 👈 marcamos la sección a la que hacer scroll
-        className="layout-content-container flex flex-col max-w-[960px] mx-auto space-y-8"
+      <main
+        ref={resultadosRef}
+        className="w-full px-4 sm:px-6 lg:px-8 xl:px-10 max-w-screen-xl mx-auto flex flex-col gap-8 py-10"
       >
-        {loading && <p className="text-gray-500 px-4">Buscando...</p>}
-        {error && <p className="text-red-500 px-4">Error: {error}</p>}
+        {loading && <p className="text-gray-500">Buscando...</p>}
+        {error && <p className="text-red-500">Error: {error}</p>}
 
         {!loading && resultados.length === 0 && input && (
-          <p className="text-gray-500 px-4">No se encontraron resultados.</p>
+          <p className="text-gray-500">No se encontraron resultados.</p>
         )}
 
         {resultados.map((item) => {
@@ -72,7 +70,7 @@ export default function BusquedaList() {
           else if (item.tipo === "comunidad") to = `/comunidades/${id}`;
 
           return (
-            <Link to={to} key={id}>
+            <Link to={to} key={id} className="w-full">
               <CardHorizontal
                 title={title}
                 description={description}
@@ -81,7 +79,7 @@ export default function BusquedaList() {
             </Link>
           );
         })}
-      </div>
+      </main>
     </>
   );
 }

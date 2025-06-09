@@ -13,30 +13,13 @@ import Pagination from "../components/Pagination";
 
 export default function Comunidades() {
   const { comunidadesFiltradas, busqueda, setBusqueda, error, loading } =
-    useComunidades(); // 🗒️ Reemplazar más adelante con fetch paginado
+    useComunidades();
 
   const gridRef = useRef(null);
 
-  // ✅ Estados de paginación local
   const [paginaActual, setPaginaActual] = useState(1);
   const comunidadesPorPagina = 12;
 
-  // 🟩 Cuando uses API, reemplazá por estos estados y un fetch
-  /*
-  const [comunidades, setComunidades] = useState([]);
-  const [totalPaginas, setTotalPaginas] = useState(1);
-  useEffect(() => {
-    const fetchComunidades = async () => {
-      const res = await fetch(`/api/comunidades?page=${paginaActual}&limit=${comunidadesPorPagina}&busqueda=${busqueda}`);
-      const data = await res.json();
-      setComunidades(data.data);
-      setTotalPaginas(data.pages);
-    };
-    fetchComunidades();
-  }, [paginaActual, busqueda]);
-  */
-
-  // ✅ Paginar desde el frontend (mock o lista completa)
   const totalPaginas = Math.ceil(
     comunidadesFiltradas.length / comunidadesPorPagina
   );
@@ -47,7 +30,6 @@ export default function Comunidades() {
     indexFin
   );
 
-  // ✅ Volver a página 1 cuando se cambia la búsqueda
   useEffect(() => {
     setPaginaActual(1);
   }, [busqueda]);
@@ -65,16 +47,17 @@ export default function Comunidades() {
         />
       </Helmet>
 
-      <div className="px-4 sm:px-6 lg:px-8 py-10 max-w-6xl mx-auto flex flex-col gap-20">
-        {" "}
-        <BannerComunidades scrollToRef={gridRef} />
-        <SearchBar
-          value={busqueda}
-          onChange={setBusqueda}
-          placeholder="Buscar comunidades..."
-        />
+      <div className="w-full max-w-full overflow-hidden flex flex-col gap-18">
+        <div className="flex flex-col gap-18">
+          <SearchBar
+            value={busqueda}
+            onChange={setBusqueda}
+            placeholder="Buscar comunidades..."
+          />
+        </div>
+
         <ComunidadesDestacadas />
-        {/* ✅ Grid de resultados paginados */}
+
         <div ref={gridRef}>
           <GridWrapper className="min-h-[70vh]">
             {comunidadesPaginadas.map((comunidad) => (
@@ -98,12 +81,13 @@ export default function Comunidades() {
             )}
           </GridWrapper>
         </div>
-        {/* ✅ Paginador */}
+
         <Pagination
           totalPages={totalPaginas}
           currentPage={paginaActual}
           onPageChange={setPaginaActual}
         />
+        <BannerComunidades scrollToRef={gridRef} />
       </div>
     </>
   );

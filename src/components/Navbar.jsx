@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Icon from "../assets/logo.png";
-import colIcon from "../assets/col.png";
 
 export default function Header() {
   const usuario = useSelector((state) => state.auth.usuario);
@@ -49,7 +48,6 @@ export default function Header() {
       <header className="px-6 sm:px-10 py-4 bg-white border-b border-[#E4E9F1] text-[#141C24] z-20 relative">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src={colIcon} alt="icono bandera" className="h-6" />
             <Link to="/" className="text-xl font-extrabold">
               <img src={Icon} alt="Communities logo" className="h-10" />
             </Link>

@@ -65,10 +65,8 @@ export default function Negocios() {
         />
       </Helmet>
 
-      <div className="px-4 sm:px-6 lg:px-8 py-10 max-w-6xl mx-auto overflow-hidden flex-col flex gap-18">
-        {" "}
-        <BannerNegocios scrollToRef={gridRef} />
-        <div className="flex-col flex gap-18">
+      <div className="w-full max-w-full overflow-hidden flex flex-col gap-18">
+        <div className="flex flex-col gap-18">
           <CategoryCarousel />
           <SearchBar
             value={busqueda}
@@ -77,8 +75,6 @@ export default function Negocios() {
           />
         </div>
         <NegociosSugeridos />
-        {/* ✅ Grid de negocios: usar negociosPaginados ahora */}
-        {/* 🗒️ Cambiar a negocios.map cuando conectes a API */}
         <GridWrapper ref={gridRef} tipo="lista" className="min-h-[70vh]">
           {negociosPaginados.map((negocio) => (
             <Link
@@ -97,18 +93,18 @@ export default function Negocios() {
             </Link>
           ))}
 
-          {negociosFiltrados.length === 0 && ( // 🗒️ Cambiar a negocios.length cuando uses la API
+          {negociosFiltrados.length === 0 && (
             <p className="text-gray-500 w-full text-center">
               No se encontraron resultados.
             </p>
           )}
         </GridWrapper>
-        {/* ✅ Paginador dinámico (lo podés dejar igual con la API) */}
         <Pagination
           totalPages={totalPaginas}
           currentPage={paginaActual}
           onPageChange={setPaginaActual}
         />
+        <BannerNegocios scrollToRef={gridRef} />
       </div>
     </>
   );

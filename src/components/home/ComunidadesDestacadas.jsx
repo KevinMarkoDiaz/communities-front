@@ -25,11 +25,10 @@ export default function ComunidadesDestacadas() {
           <Link
             to={`/comunidades/${comunidad.id || comunidad._id}`}
             key={comunidad.id || comunidad._id}
-            className="flex-shrink-0 snap-start min-w-[280px] sm:min-w-[320px] md:min-w-[320px]"
+            className="flex-shrink-0 snap-start min-w-[280px] sm:min-w-[250px] md:min-w-[250px] lg:min-w-[320px]"
           >
             <CardDestacado
               title={comunidad.name}
-              description={comunidad.description}
               image={comunidad.flagImage}
               modo="vertical"
             />

@@ -6,8 +6,8 @@ export default function BannerNegocios({ scrollToRef }) {
   };
 
   return (
-    <div className="px-4 sm:px-8 lg:px-16 py-10 flex justify-center">
-      <div className="w-full max-w-5xl rounded-xl overflow-hidden relative">
+    <div className="flex justify-center">
+      <div className="w-fullrounded-xl overflow-hidden relative">
         {/* 🎥 Fondo de video */}
         <video
           className="absolute inset-0 w-full h-full object-cover"

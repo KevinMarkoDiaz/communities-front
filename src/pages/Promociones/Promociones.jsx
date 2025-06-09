@@ -1,8 +1,8 @@
 import { Helmet } from "react-helmet-async";
 
-import promo1 from "../../assets/d.jpg";
-import promo2 from "../../assets/d.jpg";
-import promo3 from "../../assets/d.jpg";
+import bndc from "../../assets/bndc.png";
+import bnnl from "../../assets/bnnl.png";
+import bnpf from "../../assets/bnpf.png";
 import bannerBTN from "../../assets/bannerBTN.mp4"; // ✅ Importar video
 
 import { usePromociones } from "../../data/usePromociones";
@@ -10,6 +10,7 @@ import BannerPromociones from "../../components/promo/BannerPromociones";
 import ScrollCarousel from "../../components/ScrollCarousel";
 import CardPromoHome from "../../components/promo/CardPromoHome";
 import PromocionesDestacadas from "../../components/home/PromocionesDestacadas";
+import { Link } from "react-router-dom";
 
 export default function Promociones() {
   const { lista: promociones } = usePromociones();
@@ -33,8 +34,9 @@ export default function Promociones() {
 
         <ScrollCarousel>
           {items.map((promo) => (
-            <div
+            <Link
               key={promo.id}
+              to={`/promociones/${promo.id || promo._id}`}
               className="flex-shrink-0 snap-start w-[160px] sm:w-[180px] md:w-[200px]"
             >
               <CardPromoHome
@@ -45,7 +47,7 @@ export default function Promociones() {
                 descuento={promo.descuento}
                 isVerified={promo.isVerified}
               />
-            </div>
+            </Link>
           ))}
         </ScrollCarousel>
       </section>
@@ -62,24 +64,24 @@ export default function Promociones() {
         />
       </Helmet>
 
-      <div className="px-4 sm:px-6 lg:px-8 py-10 max-w-6xl mx-auto flex flex-col gap-36">
+      <div className="w-full max-w-full overflow-hidden flex flex-col gap-36">
         <PromocionesDestacadas />
 
         {renderCarrusel(
           "Descuentos imperdibles",
-          promo1,
+          bndc,
           promosDescuento,
           "descuento"
         )}
         {renderCarrusel(
           "Nuevos lanzamientos",
-          promo2,
+          bnnl,
           promosLanzamiento,
           "lanzamiento"
         )}
         {renderCarrusel(
           "Promo fin de semana",
-          promo3,
+          bnpf,
           promosFinSemana,
           "fin_de_semana"
         )}

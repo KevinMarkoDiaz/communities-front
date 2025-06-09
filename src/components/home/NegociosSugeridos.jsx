@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import CardDestacado from "../Card";
 import ScrollCarousel from "../ScrollCarousel";
 import { useNegocios } from "../../hooks/useNegocios";
@@ -7,7 +8,7 @@ import BannerTituloSugeridos from "../BannerTituloSugeridos";
 export default function NegociosSugeridos() {
   const { lista: negocios } = useNegocios();
 
-  const destacados = negocios.slice(0, 6); // Opcional: limitar para scroll más limpio
+  const destacados = negocios.slice(0, 6); // Limita para un mejor scroll
 
   if (destacados.length === 0) return null;
 
@@ -21,20 +22,20 @@ export default function NegociosSugeridos() {
 
       <ScrollCarousel>
         {destacados.map((n) => (
-          <div
+          <Link
+            to={`/negocios/${n.id || n._id}`}
             key={n.id || n._id}
-            className="flex-shrink-0 snap-start min-w-[280px] sm:min-w-[320px] md:min-w-[320px]"
+            className="flex-shrink-0 snap-start min-w-[280px] sm:min-w-[250px] md:min-w-[250px] lg:min-w-[320px]"
           >
             <CardDestacado
               title={n.nombre}
               image={n.imagenDestacada}
-              description={n.descripcion}
               isNew={n.isNew}
               hasDiscount={n.hasDiscount}
               isVerified={n.verificado}
               modo="vertical"
             />
-          </div>
+          </Link>
         ))}
       </ScrollCarousel>
     </section>

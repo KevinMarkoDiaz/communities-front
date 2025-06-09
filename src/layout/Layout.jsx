@@ -1,6 +1,6 @@
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import StickyAds from "../components/StickyAds"; // nuevo componente
+import StickyAds from "../components/StickyAds";
 import { Outlet, useLocation } from "react-router-dom";
 
 export default function Layout() {
@@ -23,13 +23,18 @@ export default function Layout() {
         </div>
       )}
 
-      <main className="flex w-full max-w-[95%] lg:max-w-[80%] mx-auto gap-4 flex-grow">
+      <main className="flex w-full max-w-full xl:max-w-[80%] mx-auto gap-4 flex-grow px-4">
         <div className="flex-1 flex flex-col gap-12 py-8 overflow-hidden">
           <Outlet />
         </div>
 
-        {!hideAds && <StickyAds />}
+        {!hideAds && (
+          <div className="hidden lg:block">
+            <StickyAds />
+          </div>
+        )}
       </main>
+
       {!hideAds && (
         <div className="w-full bg-gray-100 text-center py-2">
           <div className="ads-banner h-[90px] bg-gray-200 flex items-center justify-center text-sm text-gray-500 border border-dashed">
@@ -37,6 +42,7 @@ export default function Layout() {
           </div>
         </div>
       )}
+
       <Footer />
     </div>
   );
