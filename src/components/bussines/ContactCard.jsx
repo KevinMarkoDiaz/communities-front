@@ -5,10 +5,10 @@ export function ContactCard({ contact }) {
 
   const { phone, email, website } = contact;
 
-  const InfoItem = ({ Icon, label, value, href }) => (
+  const InfoItem = ({ label, value, href }) => (
     <div className="flex items-center gap-4 bg-white px-4 min-h-[72px] py-2">
       <div className="text-[#181411] flex items-center justify-center rounded-lg bg-[#f5f2f0] shrink-0 size-12">
-        <Icon size={20} />
+        {/* <Icon size={20} /> */}
       </div>
       <div className="flex flex-col justify-center">
         <p className="text-[#181411] text-base font-medium leading-normal line-clamp-1">

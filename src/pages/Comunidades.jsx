@@ -1,13 +1,13 @@
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
-import GridWrapper from "../components/GridWrapper";
-import Card from "../components/Card";
-import Loading from "../components/Loading";
+import { useRef, useEffect, useState } from "react";
 import { useComunidades } from "../hooks/useComunidades";
+
+import GridWrapper from "../components/GridWrapper";
+import CardLista from "../components/CardLista"; // Cambiamos a CardLista para mantener consistencia visual
+import Loading from "../components/Loading";
 import SearchBar from "../components/SearchBar";
 import BannerComunidades from "../components/communities/BannerComunidades";
-
-import { useRef, useEffect, useState } from "react";
 import ComunidadesDestacadas from "../components/home/ComunidadesDestacadas";
 import Pagination from "../components/Pagination";
 
@@ -49,6 +49,7 @@ export default function Comunidades() {
 
       <div className="w-full max-w-full overflow-hidden flex flex-col gap-18">
         <div className="flex flex-col gap-18">
+          {/* Aquí podrías agregar un CategoryCarousel si vas a tener categorías de comunidades */}
           <SearchBar
             value={busqueda}
             onChange={setBusqueda}
@@ -58,35 +59,36 @@ export default function Comunidades() {
 
         <ComunidadesDestacadas />
 
-        <div ref={gridRef}>
-          <GridWrapper className="min-h-[70vh]">
-            {comunidadesPaginadas.map((comunidad) => (
-              <Link
-                key={comunidad.id || comunidad._id}
-                to={`/comunidades/${comunidad.id || comunidad._id}`}
-                className="flex-shrink-0"
-              >
-                <Card
-                  title={comunidad.name}
-                  description={comunidad.description}
-                  image={comunidad.flagImage}
-                />
-              </Link>
-            ))}
+        <GridWrapper ref={gridRef} tipo="lista" className="min-h-[70vh]">
+          {comunidadesPaginadas.map((comunidad) => (
+            <Link
+              key={comunidad.id || comunidad._id}
+              to={`/comunidades/${comunidad.id || comunidad._id}`}
+              className="flex-shrink-0"
+            >
+              <CardLista
+                title={comunidad.name}
+                description={comunidad.description}
+                image={comunidad.bannerImage || comunidad.flagImage}
+                isVerified={comunidad.isVerified}
+                logo={comunidad.flagImage}
+              />
+            </Link>
+          ))}
 
-            {comunidadesFiltradas.length === 0 && (
-              <p className="text-gray-500 w-full text-center">
-                No se encontraron comunidades.
-              </p>
-            )}
-          </GridWrapper>
-        </div>
+          {comunidadesFiltradas.length === 0 && (
+            <p className="text-gray-500 w-full text-center">
+              No se encontraron comunidades.
+            </p>
+          )}
+        </GridWrapper>
 
         <Pagination
           totalPages={totalPaginas}
           currentPage={paginaActual}
           onPageChange={setPaginaActual}
         />
+
         <BannerComunidades scrollToRef={gridRef} />
       </div>
     </>

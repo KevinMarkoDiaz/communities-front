@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { fetchBusquedaGlobal } from "../utils/api";
+import { fetchBusquedaGlobal } from "../api/busquedaApi";
 
 export const buscarGlobalThunk = createAsyncThunk(
   "busquedaGlobal/fetch",
@@ -19,7 +19,7 @@ const busquedaGlobalSlice = createSlice({
     termino: "",
     resultados: [],
     loading: false,
-    error: null
+    error: null,
   },
   reducers: {
     limpiarBusquedaGlobal: (state) => {
@@ -27,7 +27,7 @@ const busquedaGlobalSlice = createSlice({
       state.resultados = [];
       state.loading = false;
       state.error = null;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -44,7 +44,7 @@ const busquedaGlobalSlice = createSlice({
         state.loading = false;
         state.error = action.payload || action.error.message;
       });
-  }
+  },
 });
 
 export const { limpiarBusquedaGlobal } = busquedaGlobalSlice.actions;

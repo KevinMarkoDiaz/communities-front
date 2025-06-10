@@ -12,9 +12,7 @@ export function OwnerCard({ owner }) {
         }}
       />
       <div>
-        <p className="text-base font-medium">
-          {owner.name || "Propietario verificado"}
-        </p>
+        <p className="text-base font-medium">{owner.name}</p>
         <p className="text-sm text-[#8a7560]">Dueño del comercio</p>
       </div>
     </div>

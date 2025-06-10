@@ -19,8 +19,8 @@ export async function getCommunityById(id) {
 /**
  * Crear una comunidad
  */
-export async function createCommunity(data) {
-  const res = await axiosInstance.post("/communities", data);
+export async function createCommunity(formData) {
+  const res = await axiosInstance.post("/communities", formData);
   return res.data;
 }
 
@@ -48,7 +48,6 @@ export async function getMyCommunities() {
   return res.data;
 }
 
-
 /**
  * Contar solo las comunidades del usuario autenticado
  */
@@ -56,4 +55,3 @@ export async function contarComunidades() {
   const res = await axiosInstance.get("/communities/mine");
   return res.data.communities.length;
 }
-

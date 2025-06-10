@@ -1,8 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-
-// Mock local temporal (reemplazar por API real si usás backend)
-import negocios from "../data/negociosData";
+import { getBusinessById } from "../api/businessApi";
 
 // Componentes reutilizables
 import BusinessHero from "../components/bussines/BusinessHero";
@@ -20,10 +18,20 @@ export default function NegocioDetalle() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simular fetch con mock local
-    const data = negocios.find((n) => n.id === Number(id));
-    setNegocio(data);
-    setLoading(false);
+    const fetchNegocio = async () => {
+      try {
+        const data = await getBusinessById(id);
+        console.log("🧪 Negocio recibido:", data);
+        setNegocio(data.business);
+      } catch (error) {
+        console.error("Error al cargar el negocio:", error);
+        setNegocio(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNegocio();
   }, [id]);
 
   if (loading) return <div className="p-4">Cargando negocio...</div>;
@@ -34,50 +42,57 @@ export default function NegocioDetalle() {
     <div className="flex flex-col gap-6 px-4 sm:px-8 lg:px-40 py-5">
       {/* Imagen principal */}
       <BusinessHero
-        title={negocio.nombre}
-        imageUrl="https://cdn.usegalileo.ai/sdxl10/4ac6d9b7-194a-463d-b7a5-91be2c87dd15.png"
+        businessName={negocio.name}
+        backgroundImageUrl={negocio.featuredImage}
       />
 
       {/* Descripción */}
-      <p className="text-lg text-[#181411]">{negocio.descripcion}</p>
+      <p className="text-lg text-[#181411]">{negocio.description}</p>
+
+      {/* Tarjeta visual */}
       <BusinessCard
-        image="https://cdn.usegalileo.ai/sdxl10/4ac6d9b7-194a-463d-b7a5-91be2c87dd15.png"
-        category="Mexican"
-        title="Modern Mexican Cuisine"
-        description="Chef Carlos Salgado's modern Mexican cuisine is inspired by the flavors and traditions of his family's native state of Michoacán."
-        highlight="2013 Michelin Star Recipient"
+        imageUrl={negocio.profileImage}
+        categoryName={negocio.category?.name}
+        businessName={negocio.name}
+        businessDescription={negocio.description}
+        highlightText={negocio.isVerified ? "Verificado por Communities" : ""}
       />
 
-      {/* Info extra */}
-      <ContactCard contact={negocio.contacto} />
-      <OpeningHoursList hours={negocio.horarios} />
-      <PhotoGallery
-        images={[
-          "https://cdn.usegalileo.ai/sdxl10/27102898-b896-4b4d-9a78-02f3c57d59ce.png",
-          "https://cdn.usegalileo.ai/sdxl10/165d77d4-a3e2-46c7-a8aa-03033f199c33.png",
-          "https://cdn.usegalileo.ai/sdxl10/465aca94-974b-4ca0-a28f-b60337483476.png",
-          "https://cdn.usegalileo.ai/sdxl10/fbb50c17-a54b-4eb9-9f50-9d9fef4771d5.png",
-          "https://cdn.usegalileo.ai/sdxl10/27102898-b896-4b4d-9a78-02f3c57d59ce.png",
-          "https://cdn.usegalileo.ai/sdxl10/165d77d4-a3e2-46c7-a8aa-03033f199c33.png",
-          "https://cdn.usegalileo.ai/sdxl10/465aca94-974b-4ca0-a28f-b60337483476.png",
-          "https://cdn.usegalileo.ai/sdxl10/fbb50c17-a54b-4eb9-9f50-9d9fef4771d5.png",
-        ]}
-      />
+      {/* Contacto */}
+      {negocio.contact && <ContactCard contact={negocio.contact} />}
 
-      <OwnerCard
-        owner={{
-          name: negocio.propietario.nombre,
-          profileImage: negocio.propietario.imagen,
-        }}
-      />
-      {negocio?.ubicacion?.coordenadas && (
-        <MapaNegocioDetalle
-          lat={negocio.ubicacion.coordenadas.lat}
-          lng={negocio.ubicacion.coordenadas.lng}
-          nombre={negocio.nombre}
+      {/* Horarios */}
+      {negocio.openingHours?.length > 0 && (
+        <OpeningHoursList hours={negocio.openingHours} />
+      )}
+
+      {/* Galería */}
+      {negocio.images?.length > 0 && (
+        <PhotoGallery galleryImages={negocio.images} />
+      )}
+
+      {/* Propietario */}
+      {negocio.owner && (
+        <OwnerCard
+          owner={{
+            name: `${negocio.owner.name} ${negocio.owner.lastName}`,
+            profileImage: negocio.owner.profileImage,
+          }}
         />
       )}
-      <CommunityTags tags={negocio.etiquetas} />
+
+      {/* Mapa */}
+      {negocio.location?.coordinates?.lat &&
+        negocio.location?.coordinates?.lng && (
+          <MapaNegocioDetalle
+            lat={negocio.location?.coordinates?.lat}
+            lng={negocio.location?.coordinates?.lng}
+            name={negocio.name}
+          />
+        )}
+
+      {/* Etiquetas */}
+      {negocio.tags?.length > 0 && <CommunityTags tags={negocio.tags} />}
     </div>
   );
 }

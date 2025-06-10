@@ -4,18 +4,20 @@ import { useSelector } from "react-redux";
 import { getCommunityById, updateCommunity } from "../../api/communityApi";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import DropzoneImagen from "../../components/DropzoneImagen";
 
 const esquemaComunidad = Yup.object().shape({
   name: Yup.string().required("Nombre obligatorio"),
   description: Yup.string().required("Descripción obligatoria"),
   language: Yup.string().required("Idioma obligatorio"),
-  flagImage: Yup.string().url("Debe ser una URL válida").optional(),
+  tipo: Yup.string().required("Tipo obligatorio"),
+  flagImage: Yup.mixed().nullable(),
+  bannerImage: Yup.mixed().nullable(),
 });
 
 export default function EditarComunidad() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const token = useSelector((state) => state.auth.token);
   const usuario = useSelector((state) => state.auth.usuario);
 
   const [comunidad, setComunidad] = useState(null);
@@ -44,9 +46,29 @@ export default function EditarComunidad() {
     cargar();
   }, [id, usuario]);
 
-  const handleSubmit = async (valores, { setSubmitting }) => {
+  const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      await updateCommunity(id, valores, token);
+      const formData = new FormData();
+
+      if (values.flagImage && typeof values.flagImage !== "string") {
+        formData.append("flagImage", values.flagImage);
+      }
+
+      if (values.bannerImage && typeof values.bannerImage !== "string") {
+        formData.append("bannerImage", values.bannerImage);
+      }
+
+      const payload = {
+        name: values.name,
+        description: values.description,
+        language: values.language,
+        tipo: values.tipo,
+        owner: comunidad.owner,
+      };
+
+      formData.append("data", JSON.stringify(payload));
+
+      await updateCommunity(id, formData);
       navigate("/dashboard/comunidades");
     } catch (err) {
       console.error("Error al actualizar comunidad:", err);
@@ -68,70 +90,115 @@ export default function EditarComunidad() {
           name: comunidad.name || "",
           description: comunidad.description || "",
           language: comunidad.language || "es",
-          flagImage: comunidad.flagImage || "",
+          tipo: comunidad.tipo || "migrante",
+          flagImage: comunidad.flagImage || null,
+          bannerImage: comunidad.bannerImage || null,
         }}
         enableReinitialize
         validationSchema={esquemaComunidad}
         onSubmit={handleSubmit}
       >
-        {() => (
-          <Form className="space-y-4">
+        {({ values, setFieldValue }) => (
+          <Form className="space-y-5">
             <div>
+              <label className="block text-sm font-medium mb-1">
+                Nombre de la comunidad
+              </label>
               <Field
                 name="name"
-                placeholder="Nombre de la comunidad"
-                className="w-full px-4 py-2 rounded-xl border border-[#E4E9F1] focus:outline-none focus:ring-2 focus:ring-[#F4C753]"
+                className="w-full px-4 py-2 border border-gray-300 rounded-xl"
               />
               <ErrorMessage
                 name="name"
                 component="div"
-                className="text-sm text-red-600 mt-1"
+                className="text-red-600 text-sm mt-1"
               />
             </div>
 
             <div>
+              <label className="block text-sm font-medium mb-1">
+                Descripción
+              </label>
               <Field
                 name="description"
-                placeholder="Descripción"
                 as="textarea"
-                className="w-full px-4 py-2 rounded-xl border border-[#E4E9F1] resize-none h-24 focus:outline-none focus:ring-2 focus:ring-[#F4C753]"
+                className="w-full px-4 py-2 border border-gray-300 rounded-xl resize-none min-h-[100px]"
               />
               <ErrorMessage
                 name="description"
                 component="div"
-                className="text-sm text-red-600 mt-1"
+                className="text-red-600 text-sm mt-1"
               />
             </div>
 
             <div>
+              <label className="block text-sm font-medium mb-1">Idioma</label>
               <Field
                 name="language"
-                placeholder="Idioma (es, en...)"
-                className="w-full px-4 py-2 rounded-xl border border-[#E4E9F1] focus:outline-none focus:ring-2 focus:ring-[#F4C753]"
+                className="w-full px-4 py-2 border border-gray-300 rounded-xl"
               />
               <ErrorMessage
                 name="language"
                 component="div"
-                className="text-sm text-red-600 mt-1"
+                className="text-red-600 text-sm mt-1"
               />
             </div>
 
             <div>
+              <label className="block text-sm font-medium mb-1">
+                Tipo de comunidad
+              </label>
               <Field
+                as="select"
+                name="tipo"
+                className="w-full px-4 py-2 border border-gray-300 rounded-xl"
+              >
+                <option value="migrante">Migrante</option>
+                <option value="cultural">Cultural</option>
+                <option value="social">Social</option>
+              </Field>
+              <ErrorMessage
+                name="tipo"
+                component="div"
+                className="text-red-600 text-sm mt-1"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Imagen de bandera
+              </label>
+              <DropzoneImagen
+                value={values.flagImage}
                 name="flagImage"
-                placeholder="URL de la bandera"
-                className="w-full px-4 py-2 rounded-xl border border-[#E4E9F1] focus:outline-none focus:ring-2 focus:ring-[#F4C753]"
+                onChange={(file) => setFieldValue("flagImage", file)}
               />
               <ErrorMessage
                 name="flagImage"
                 component="div"
-                className="text-sm text-red-600 mt-1"
+                className="text-red-600 text-sm mt-1"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Imagen destacada
+              </label>
+              <DropzoneImagen
+                value={values.bannerImage}
+                name="bannerImage"
+                onChange={(file) => setFieldValue("bannerImage", file)}
+              />
+              <ErrorMessage
+                name="bannerImage"
+                component="div"
+                className="text-red-600 text-sm mt-1"
               />
             </div>
 
             <button
               type="submit"
-              className="w-full bg-[#F4C753] text-[#141C24] py-2 rounded-xl font-semibold hover:bg-[#e7b93e] transition"
+              className="w-full bg-blue-600 text-white font-medium py-2 rounded-xl hover:bg-blue-700 transition-all"
             >
               Guardar cambios
             </button>

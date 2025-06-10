@@ -27,7 +27,7 @@ export default function CardLista({
       <div className="flex-shrink-0">
         {hasImage ? (
           <div
-            className="w-36 h-16 sm:w-60 sm:h-20 rounded-l-2xl bg-cover bg-center"
+            className="w-36 h-16 sm:w-60 sm:h-25 rounded-l-2xl bg-cover bg-center"
             style={{
               backgroundImage: `url("${image}")`,
             }}

@@ -33,6 +33,35 @@ export default function BusquedaList() {
     dispatch(limpiarBusquedaGlobal());
   };
 
+  const getRuta = (tipo, id) => {
+    switch (tipo) {
+      case "negocio":
+        return `/negocios/${id}`;
+      case "evento":
+        return `/eventos/${id}`;
+      case "comunidad":
+        return `/comunidades/${id}`;
+      default:
+        return "#";
+    }
+  };
+
+  const getImagen = (item) => {
+    return (
+      item.imagen || item.imagenDestacada || item.image || item.flagImage || ""
+    );
+  };
+
+  const getTitulo = (item) => {
+    return (
+      item.nombre || item.titulo || item.title || item.name || "Sin título"
+    );
+  };
+
+  const getDescripcion = (item) => {
+    return item.descripcion || item.description || "";
+  };
+
   return (
     <>
       <HeroBanner
@@ -58,27 +87,19 @@ export default function BusquedaList() {
           <p className="text-gray-500">No se encontraron resultados.</p>
         )}
 
-        {resultados.map((item) => {
-          const id = item.id || item._id;
-          const title = item.nombre || item.title || item.name || "Sin título";
-          const description = item.descripcion || item.description || "";
-          const image = item.imagenDestacada || item.flagImage || null;
-
-          let to = "#";
-          if (item.tipo === "negocio") to = `/negocios/${id}`;
-          else if (item.tipo === "evento") to = `/eventos/${id}`;
-          else if (item.tipo === "comunidad") to = `/comunidades/${id}`;
-
-          return (
-            <Link to={to} key={id} className="w-full">
+        {!loading &&
+          resultados.map((item) => (
+            <Link
+              to={getRuta(item.tipo, item.id || item._id)}
+              key={item.id || item._id}
+            >
               <CardHorizontal
-                title={title}
-                description={description}
-                image={image}
+                title={getTitulo(item)}
+                description={getDescripcion(item)}
+                image={getImagen(item)}
               />
             </Link>
-          );
-        })}
+          ))}
       </main>
     </>
   );

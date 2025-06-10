@@ -1,13 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { fetchEventos } from "../utils/api";
+import { getAllEvents } from "../api/eventApi";
 
-export const obtenerEventos = createAsyncThunk(
-  "eventos/fetch",
-  async () => {
-    const data = await fetchEventos();
-    return data;
-  }
-);
+export const obtenerEventos = createAsyncThunk("eventos/fetch", async () => {
+  const data = await getAllEvents();
+  // 🔒 Adaptar si viene como { events: [...] }
+  return Array.isArray(data) ? data : data.events || [];
+});
 
 const eventosSlice = createSlice({
   name: "eventos",
@@ -15,12 +13,12 @@ const eventosSlice = createSlice({
     lista: [],
     loading: false,
     error: null,
-    busqueda: "" // 🔹 agregamos este campo
+    busqueda: "",
   },
   reducers: {
     setBusqueda: (state, action) => {
       state.busqueda = action.payload;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -29,17 +27,17 @@ const eventosSlice = createSlice({
         state.error = null;
       })
       .addCase(obtenerEventos.fulfilled, (state, action) => {
+        console.log("🧪 Payload recibido:", action.payload);
+
         state.loading = false;
-        state.lista = action.payload;
+        state.lista = Array.isArray(action.payload) ? action.payload : [];
       })
       .addCase(obtenerEventos.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.error.message || "Error al cargar eventos";
       });
-  }
+  },
 });
 
-// 🔹 Exportamos la acción acá
 export const { setBusqueda } = eventosSlice.actions;
-
 export default eventosSlice.reducer;

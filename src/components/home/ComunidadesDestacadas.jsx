@@ -29,8 +29,9 @@ export default function ComunidadesDestacadas() {
           >
             <CardDestacado
               title={comunidad.name}
-              image={comunidad.flagImage}
+              image={comunidad.bannerImage || comunidad.flagImage}
               modo="vertical"
+              logo={comunidad.flagImage}
             />
           </Link>
         ))}

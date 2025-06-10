@@ -7,7 +7,7 @@ export function OpeningHoursList({ hours }) {
         Horarios de atención
       </h2>
       <div className="p-4 grid grid-cols-2">
-        {hours.map(({ dia, apertura, cierre }, idx) => (
+        {hours.map(({ day, open, close, closed }, idx) => (
           <div
             key={idx}
             className={`flex flex-col gap-1 border-t border-solid border-t-[#e6e0db] py-4 ${
@@ -19,10 +19,10 @@ export function OpeningHoursList({ hours }) {
             }`}
           >
             <p className="text-[#8a7460] text-sm font-normal leading-normal capitalize">
-              {dia}
+              {day}
             </p>
             <p className="text-[#181411] text-sm font-normal leading-normal">
-              {apertura && cierre ? `${apertura} - ${cierre}` : "Cerrado"}
+              {closed ? "Cerrado" : `${open} - ${close}`}
             </p>
           </div>
         ))}

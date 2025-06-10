@@ -3,16 +3,18 @@ import * as Yup from "yup";
 import { useSelector } from "react-redux";
 import { createCommunity } from "../../api/communityApi";
 import { useNavigate } from "react-router-dom";
+import DropzoneImagen from "../../components/DropzoneImagen";
 
 const esquemaComunidad = Yup.object().shape({
   name: Yup.string().required("Nombre obligatorio"),
   description: Yup.string().required("Descripción obligatoria"),
-  language: Yup.string().default("es"),
-  flagImage: Yup.string().url("Debe ser una URL válida").optional(),
+  language: Yup.string().required("Idioma obligatorio"),
+  tipo: Yup.string().required("Tipo obligatorio"),
+  flagImage: Yup.mixed().nullable(),
+  bannerImage: Yup.mixed().nullable(),
 });
 
 export default function CrearComunidad() {
-  const token = useSelector((state) => state.auth.token);
   const usuario = useSelector((state) => state.auth.usuario);
   const navigate = useNavigate();
 
@@ -20,14 +22,33 @@ export default function CrearComunidad() {
     return <div className="p-4 text-red-600">Acceso no autorizado</div>;
   }
 
-  const handleSubmit = async (valores, { setSubmitting }) => {
+  const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      const datos = {
-        ...valores,
-        owner: usuario._id,
+      const formData = new FormData();
+
+      // Imágenes (pueden venir como File)
+      if (values.flagImage) formData.append("flagImage", values.flagImage);
+      if (values.bannerImage)
+        formData.append("bannerImage", values.bannerImage);
+
+      // Datos JSON (INCLUYE owner, name, etc.)
+      const payload = {
+        name: values.name,
+        description: values.description,
+        language: values.language,
+        tipo: "migrante",
+        owner: usuario.id, // <- ✅ esto estaba faltando
       };
 
-      await createCommunity(datos, token);
+      formData.append("data", JSON.stringify(payload));
+
+      // DEBUG
+      for (const pair of formData.entries()) {
+        console.log(usuario.id);
+        console.log("📦 FormData =>", pair[0], pair[1]);
+      }
+
+      await createCommunity(formData); // axiosInstance ya tiene withCredentials
       navigate("/dashboard/comunidades");
     } catch (err) {
       console.error("Error al crear comunidad:", err);
@@ -47,18 +68,23 @@ export default function CrearComunidad() {
           name: "",
           description: "",
           language: "es",
-          flagImage: "",
+          tipo: "migrante",
+          flagImage: null,
+          bannerImage: null,
+          owner: "",
         }}
         validationSchema={esquemaComunidad}
         onSubmit={handleSubmit}
       >
-        {() => (
-          <Form className="space-y-4">
+        {({ values, setFieldValue }) => (
+          <Form className="space-y-5">
             <div>
+              <label className="block text-sm font-medium mb-1">
+                Nombre de la comunidad
+              </label>
               <Field
                 name="name"
-                placeholder="Nombre de la comunidad"
-                className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="w-full px-4 py-2 border border-gray-300 rounded-xl"
               />
               <ErrorMessage
                 name="name"
@@ -68,11 +94,13 @@ export default function CrearComunidad() {
             </div>
 
             <div>
+              <label className="block text-sm font-medium mb-1">
+                Descripción
+              </label>
               <Field
                 name="description"
                 as="textarea"
-                placeholder="Descripción"
-                className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none min-h-[100px]"
+                className="w-full px-4 py-2 border border-gray-300 rounded-xl resize-none min-h-[100px]"
               />
               <ErrorMessage
                 name="description"
@@ -82,10 +110,11 @@ export default function CrearComunidad() {
             </div>
 
             <div>
+              <label className="block text-sm font-medium mb-1">Idioma</label>
               <Field
                 name="language"
-                placeholder="Idioma (es, en, pt...)"
-                className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+                placeholder="es"
+                className="w-full px-4 py-2 border border-gray-300 rounded-xl"
               />
               <ErrorMessage
                 name="language"
@@ -95,13 +124,52 @@ export default function CrearComunidad() {
             </div>
 
             <div>
+              <label className="block text-sm font-medium mb-1">
+                Tipo de comunidad
+              </label>
               <Field
+                as="select"
+                name="tipo"
+                className="w-full px-4 py-2 border border-gray-300 rounded-xl"
+              >
+                <option value="migrante">Migrante</option>
+                <option value="cultural">Cultural</option>
+                <option value="social">Social</option>
+              </Field>
+              <ErrorMessage
+                name="tipo"
+                component="div"
+                className="text-red-600 text-sm mt-1"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Imagen de bandera
+              </label>
+              <DropzoneImagen
+                value={values.flagImage}
                 name="flagImage"
-                placeholder="URL de la bandera (opcional)"
-                className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+                onChange={(file) => setFieldValue("flagImage", file)}
               />
               <ErrorMessage
                 name="flagImage"
+                component="div"
+                className="text-red-600 text-sm mt-1"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Imagen destacada
+              </label>
+              <DropzoneImagen
+                value={values.bannerImage}
+                name="bannerImage"
+                onChange={(file) => setFieldValue("bannerImage", file)}
+              />
+              <ErrorMessage
+                name="bannerImage"
                 component="div"
                 className="text-red-600 text-sm mt-1"
               />

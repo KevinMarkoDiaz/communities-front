@@ -1,8 +1,8 @@
-export function PhotoGallery({ images = [] }) {
-  if (!Array.isArray(images) || images.length === 0) return null;
+export function PhotoGallery({ galleryImages = [] }) {
+  if (!Array.isArray(galleryImages) || galleryImages.length === 0) return null;
 
   // Limitar a 8 imágenes máximo
-  const visibleImages = images.slice(0, 8);
+  const visibleImages = galleryImages.slice(0, 8);
 
   return (
     <div className="w-full">

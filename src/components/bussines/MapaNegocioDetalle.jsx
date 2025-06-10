@@ -4,7 +4,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
-export default function MapaNegocioDetalle({ lat, lng, nombre }) {
+export default function MapaNegocioDetalle({ lat, lng, name }) {
   const mapRef = useRef(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [userCoords, setUserCoords] = useState(null);
@@ -19,7 +19,8 @@ export default function MapaNegocioDetalle({ lat, lng, nombre }) {
   }, []);
 
   useEffect(() => {
-    if (!mapRef.current) return;
+    if (!mapRef.current || typeof lat !== "number" || typeof lng !== "number")
+      return;
 
     const map = new mapboxgl.Map({
       container: mapRef.current,
@@ -28,13 +29,11 @@ export default function MapaNegocioDetalle({ lat, lng, nombre }) {
       zoom: 14,
     });
 
-    // marcador del negocio
     new mapboxgl.Marker()
       .setLngLat([lng, lat])
-      .setPopup(new mapboxgl.Popup().setText(nombre))
+      .setPopup(new mapboxgl.Popup().setText(name || "Ubicación del negocio"))
       .addTo(map);
 
-    // marcador azul del usuario
     if (userCoords) {
       new mapboxgl.Marker({ color: "blue" })
         .setLngLat(userCoords)
@@ -44,7 +43,7 @@ export default function MapaNegocioDetalle({ lat, lng, nombre }) {
 
     map.on("load", () => setIsLoaded(true));
     return () => map.remove();
-  }, [lat, lng, nombre, userCoords]);
+  }, [lat, lng, name, userCoords]);
 
   return (
     <div className="relative overflow-hidden rounded-xl shadow">

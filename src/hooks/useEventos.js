@@ -4,7 +4,9 @@ import { obtenerEventos, setBusqueda } from "../store/eventosSlice";
 
 export function useEventos() {
   const dispatch = useDispatch();
-  const { lista, loading, error, busqueda } = useSelector((state) => state.eventos);
+  const { lista, loading, error, busqueda } = useSelector(
+    (state) => state.eventos
+  );
 
   useEffect(() => {
     if (!lista || lista.length === 0) {
@@ -21,6 +23,6 @@ export function useEventos() {
     loading,
     error,
     busqueda,
-    setBusqueda: (texto) => dispatch(setBusqueda(texto))
+    setBusqueda: (texto) => dispatch(setBusqueda(texto)),
   };
 }

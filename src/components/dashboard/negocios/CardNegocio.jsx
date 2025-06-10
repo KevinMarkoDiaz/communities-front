@@ -1,8 +1,7 @@
 import { Link } from "react-router-dom";
 
 export default function CardNegocio({ negocio, onDelete }) {
-  const { _id, name, description, imagenDestacada, category, location } =
-    negocio;
+  const { _id, name, description, profileImage, category, location } = negocio;
 
   return (
     <div className="p-4 w-full">
@@ -12,8 +11,7 @@ export default function CardNegocio({ negocio, onDelete }) {
           className="w-full aspect-video md:aspect-auto md:w-40 md:h-28 bg-center bg-no-repeat bg-cover rounded-xl shrink-0"
           style={{
             backgroundImage: `url(${
-              imagenDestacada ||
-              "https://cdn.usegalileo.ai/sdxl10/placeholder.png"
+              profileImage || "https://cdn.usegalileo.ai/sdxl10/placeholder.png"
             })`,
           }}
         ></div>

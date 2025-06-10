@@ -23,16 +23,16 @@ export default function NegociosSugeridos() {
       <ScrollCarousel>
         {destacados.map((n) => (
           <Link
-            to={`/negocios/${n.id || n._id}`}
-            key={n.id || n._id}
+            to={`/negocios/${n._id}`}
+            key={n._id}
             className="flex-shrink-0 snap-start min-w-[280px] sm:min-w-[250px] md:min-w-[250px] lg:min-w-[320px]"
           >
             <CardDestacado
-              title={n.nombre}
-              image={n.imagenDestacada}
-              isNew={n.isNew}
-              hasDiscount={n.hasDiscount}
-              isVerified={n.verificado}
+              title={n.name}
+              image={n.featuredImage}
+              isNew={false} // o lógica: Date.now() - new Date(n.createdAt) < 7 días
+              hasDiscount={false} // futura lógica
+              isVerified={n.isVerified}
               modo="vertical"
             />
           </Link>

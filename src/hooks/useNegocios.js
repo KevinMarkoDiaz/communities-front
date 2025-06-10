@@ -1,6 +1,10 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { obtenerNegocios } from "../store/negociosSlice";
+import {
+  obtenerNegocios,
+  setBusqueda,
+  setCategoria,
+} from "../store/negociosSlice";
 
 export function useNegocios() {
   const dispatch = useDispatch();
@@ -8,20 +12,23 @@ export function useNegocios() {
     (state) => state.negocios
   );
 
+  // Obtener negocios al montar
   useEffect(() => {
     if (!lista || lista.length === 0) {
       dispatch(obtenerNegocios());
     }
-  }, [dispatch, lista]);
-  
+  }, [dispatch]);
 
+  // Aplicar filtros locales
   const negociosFiltrados = lista.filter((negocio) => {
-    const coincideBusqueda = negocio.nombre
-      .toLowerCase()
-      .includes(busqueda.toLowerCase());
+    const nombre = negocio.nombre?.toLowerCase?.() || "";
+    const categoriaNegocio = negocio.categoria?.toLowerCase?.() || "";
+    const categoriaFiltro =
+      typeof categoria === "string" ? categoria.toLowerCase() : "todas";
 
+    const coincideBusqueda = nombre.includes(busqueda.toLowerCase());
     const coincideCategoria =
-      categoria === "todas" || negocio.categoria === categoria;
+      categoriaFiltro === "todas" || categoriaNegocio === categoriaFiltro;
 
     return coincideBusqueda && coincideCategoria;
   });
@@ -33,5 +40,7 @@ export function useNegocios() {
     error,
     busqueda,
     categoria,
+    setBusqueda: (text) => dispatch(setBusqueda(text)),
+    setCategoria: (cat) => dispatch(setCategoria(cat)),
   };
 }

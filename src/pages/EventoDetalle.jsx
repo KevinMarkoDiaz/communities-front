@@ -12,10 +12,19 @@ export default function EventoDetalle() {
     const cargarEvento = async () => {
       try {
         const data = await getEventById(id);
+        console.log("✅ Evento cargado:", data);
         setEvento(data);
       } catch (err) {
-        console.error("Error al cargar evento:", err);
-        setError("No se pudo cargar el evento");
+        if (err.response) {
+          console.error("❌ Error del servidor:", err.response.data);
+          setError(err.response.data?.message || "Error del servidor");
+        } else if (err.request) {
+          console.error("🌐 No se pudo conectar al servidor.");
+          setError("No se pudo conectar al servidor");
+        } else {
+          console.error("⚠️ Error desconocido:", err.message);
+          setError("Error desconocido");
+        }
       } finally {
         setLoading(false);
       }

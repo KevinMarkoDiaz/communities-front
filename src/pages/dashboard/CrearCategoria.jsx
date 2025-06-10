@@ -1,13 +1,14 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useSelector } from "react-redux";
-import { createCategory } from "../../api/categoryApi";
 import { useNavigate } from "react-router-dom";
+import DropzoneImagen from "../../components/DropzoneImagen";
+import { createCategory } from "../../api/categoryApi";
 
 const esquemaCategoria = Yup.object().shape({
   name: Yup.string().required("Nombre obligatorio"),
   description: Yup.string().required("Descripción obligatoria"),
-  icon: Yup.string().optional(),
+  icon: Yup.mixed().required("Icono obligatorio"),
 });
 
 export default function CrearCategoria() {
@@ -21,22 +22,38 @@ export default function CrearCategoria() {
 
   const handleSubmit = async (valores, { setSubmitting }) => {
     try {
+      const formData = new FormData();
+
       const data = {
-        ...valores,
+        name: valores.name,
+        description: valores.description,
         createdBy: usuario._id,
       };
 
-      await createCategory(data, token);
+      formData.append("data", JSON.stringify(data));
+
+      if (valores.icon && typeof valores.icon !== "string") {
+        formData.append("profileImage", valores.icon); // ⬅️ nombre esperado por Multer + Cloudinary
+      }
+      console.log("📦 FormData a enviar:");
+      for (let [key, value] of formData.entries()) {
+        console.log(key, value);
+      }
+
+      await createCategory(formData, token);
+      console.log(formData);
+      alert("✅ Categoría creada correctamente");
       navigate("/dashboard/categorias");
     } catch (err) {
-      console.error("Error al crear categoría:", err);
+      console.error("❌ Error al crear categoría:", err);
+      alert("Ocurrió un error");
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <div className="max-w-xl mx-auto p-4 bg-white ">
+    <div className="max-w-xl mx-auto p-4 bg-white">
       <h2 className="text-2xl font-bold mb-6 text-[#141C24]">
         Nueva categoría
       </h2>
@@ -45,12 +62,12 @@ export default function CrearCategoria() {
         initialValues={{
           name: "",
           description: "",
-          icon: "",
+          icon: null,
         }}
         validationSchema={esquemaCategoria}
         onSubmit={handleSubmit}
       >
-        {() => (
+        {({ values, setFieldValue }) => (
           <Form className="space-y-6">
             <div>
               <label className="block text-sm font-medium mb-1">Nombre</label>
@@ -84,11 +101,10 @@ export default function CrearCategoria() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">Icono</label>
-              <Field
-                name="icon"
-                placeholder="URL del icono (opcional)"
-                className="form-input w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl h-12 px-4"
+              <DropzoneImagen
+                value={values.icon}
+                onChange={(file) => setFieldValue("icon", file)}
+                label="Icono de la categoría"
               />
               <ErrorMessage
                 name="icon"
