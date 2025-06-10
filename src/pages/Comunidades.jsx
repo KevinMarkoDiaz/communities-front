@@ -4,7 +4,7 @@ import { useRef, useEffect, useState } from "react";
 import { useComunidades } from "../hooks/useComunidades";
 
 import GridWrapper from "../components/GridWrapper";
-import CardLista from "../components/CardLista"; // Cambiamos a CardLista para mantener consistencia visual
+import CardLista from "../components/CardLista";
 import Loading from "../components/Loading";
 import SearchBar from "../components/SearchBar";
 import BannerComunidades from "../components/communities/BannerComunidades";
@@ -49,15 +49,21 @@ export default function Comunidades() {
 
       <div className="w-full max-w-full overflow-hidden flex flex-col gap-18">
         <div className="flex flex-col gap-18">
-          {/* Aquí podrías agregar un CategoryCarousel si vas a tener categorías de comunidades */}
-          <SearchBar
-            value={busqueda}
-            onChange={setBusqueda}
-            placeholder="Buscar comunidades..."
-          />
+          <ComunidadesDestacadas />
+          <div>
+            <h4 className="text-xl md:text-xl font-bold text-black tracking-tight leading-snug my-4">
+              Buscá tu comunidad de origen o afinidad
+            </h4>
+            <SearchBar
+              value={busqueda}
+              onChange={setBusqueda}
+              onSearch={(text) => {
+                setBusqueda(text?.trim() || "");
+              }}
+              placeholder="Buscar comunidades..."
+            />
+          </div>
         </div>
-
-        <ComunidadesDestacadas />
 
         <GridWrapper ref={gridRef} tipo="lista" className="min-h-[70vh]">
           {comunidadesPaginadas.map((comunidad) => (

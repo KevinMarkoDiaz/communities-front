@@ -136,6 +136,19 @@ export default function DashboardLayout() {
                   </p>
                 </NavLink>
 
+                <NavLink
+                  to="mis-promos"
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 px-3 py-2 rounded-full ${
+                      isActive ? "bg-[#E4E9F1]" : ""
+                    }`
+                  }
+                >
+                  <p className="text-[#141C24] text-sm font-medium leading-normal">
+                    Mis promos
+                  </p>
+                </NavLink>
+
                 {usuario?.role === "admin" && (
                   <NavLink
                     to="categorias"

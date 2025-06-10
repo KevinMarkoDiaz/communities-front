@@ -1,9 +1,30 @@
-// src/components/dashboard/formularios/evento/Paso4Opciones.jsx
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Field, ErrorMessage } from "formik";
+import { fetchCategorias } from "../../../../store/categoriasSlice";
+import { fetchComunidades } from "../../../../store/comunidadesSlice";
 
 export default function Paso4Opciones() {
+  const dispatch = useDispatch();
+
+  const categorias = useSelector((state) => state.categorias.data);
+  const categoriasLoading = useSelector((state) => state.categorias.loading);
+
+  const comunidades = useSelector((state) => state.comunidades.lista);
+  const comunidadesLoading = useSelector((state) => state.comunidades.loading);
+
+  useEffect(() => {
+    if (categorias.length === 0) dispatch(fetchCategorias());
+    if (comunidades.length === 0) dispatch(fetchComunidades());
+  }, [dispatch, categorias.length, comunidades.length]);
+
+  if (categoriasLoading || comunidadesLoading) {
+    return <p className="text-sm text-gray-500">Cargando opciones...</p>;
+  }
+
   return (
     <div className="space-y-6">
+      {/* Categorías */}
       <div>
         <label className="block text-sm font-medium mb-1">Categorías</label>
         <Field
@@ -12,9 +33,11 @@ export default function Paso4Opciones() {
           multiple
           className="form-select w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl px-4 py-2 h-32"
         >
-          <option value="666a1c5cb58a59e2fd93a111">Cultura</option>
-          <option value="666a1c5cb58a59e2fd93a112">Educación</option>
-          <option value="666a1c5cb58a59e2fd93a113">Negocios</option>
+          {categorias.map((cat) => (
+            <option key={cat._id} value={cat._id}>
+              {cat.name}
+            </option>
+          ))}
         </Field>
         <ErrorMessage
           name="categories"
@@ -23,6 +46,7 @@ export default function Paso4Opciones() {
         />
       </div>
 
+      {/* Comunidades */}
       <div>
         <label className="block text-sm font-medium mb-1">Comunidades</label>
         <Field
@@ -31,8 +55,11 @@ export default function Paso4Opciones() {
           multiple
           className="form-select w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl px-4 py-2 h-32"
         >
-          <option value="666a1c5cb58a59e2fd93b001">Colombiana</option>
-          <option value="666a1c5cb58a59e2fd93b002">Venezolana</option>
+          {comunidades.map((com) => (
+            <option key={com._id} value={com._id}>
+              {com.name}
+            </option>
+          ))}
         </Field>
         <ErrorMessage
           name="communities"
@@ -41,6 +68,7 @@ export default function Paso4Opciones() {
         />
       </div>
 
+      {/* Tags */}
       <div>
         <label className="block text-sm font-medium mb-1">
           Etiquetas (separadas por coma)

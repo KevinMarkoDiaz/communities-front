@@ -18,7 +18,7 @@ export default function CardDestacado({
   const hasImage = Boolean(image);
 
   const classMap = {
-    vertical: "flex flex-col h-auto w-[85%] md:w-full max-w-[350px]",
+    vertical: "flex flex-col h-auto w-[100%] md:w-full max-w-[350px]",
     "horizontal-full": "flex h-36 w-full max-w-6xl mx-auto",
     "horizontal-compact":
       "flex h-36 w-[85%] md:w-full max-w-[350px] flex-shrink-0",
@@ -31,7 +31,7 @@ export default function CardDestacado({
       <div
         className={
           modo === "vertical"
-            ? "w-full h-22 bg-gray-100"
+            ? "w-full  h-42 md:h-22 bg-gray-100"
             : "w-1/3 h-full bg-gray-100 flex items-center justify-center"
         }
       >

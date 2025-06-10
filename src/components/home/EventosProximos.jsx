@@ -9,7 +9,10 @@ export default function EventosProximos() {
   const { lista: eventos } = useEventos();
 
   const eventosProximos = eventos
-    .filter((e) => new Date(e.date) > new Date())
+    .filter((e) => {
+      const fechaEvento = new Date(e.date);
+      return !isNaN(fechaEvento) && fechaEvento > new Date();
+    })
     .slice(0, 6);
 
   if (eventosProximos.length === 0) return null;
@@ -23,19 +26,25 @@ export default function EventosProximos() {
       />
 
       <ScrollCarousel>
-        {eventosProximos.map((evento) => (
-          <Link
-            to={`/eventos/${evento.id || evento._id}`}
-            key={evento.id || evento._id}
-            className="flex-shrink-0 snap-start min-w-[280px] sm:min-w-[250px] md:min-w-[250px] lg:min-w-[320px]"
-          >
-            <CardDestacado
-              title={evento.title}
-              image={evento.image}
-              modo="vertical"
-            />
-          </Link>
-        ))}
+        {eventosProximos.map((evento) => {
+          const { _id, title, featuredImage } = evento;
+
+          return (
+            <Link
+              to={`/eventos/${_id}`}
+              key={_id}
+              className="flex-shrink-0 snap-start min-w-[280px] sm:min-w-[250px] md:min-w-[250px] lg:min-w-[320px]"
+            >
+              <CardDestacado
+                title={title}
+                image={
+                  featuredImage || `https://cdn.usegalileo.ai/sdxl10/${_id}.png`
+                }
+                modo="vertical"
+              />
+            </Link>
+          );
+        })}
       </ScrollCarousel>
     </section>
   );

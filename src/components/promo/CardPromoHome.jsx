@@ -7,7 +7,7 @@ export default function CardPromoHome({
   isVerified,
 }) {
   return (
-    <div className="relative w-[150px] sm:w-[180px] md:w-[200px] aspect-[4/2] rounded-[1.5rem] overflow-hidden shadow-md bg-gray-100 transition hover:shadow-lg mb-4">
+    <div className="relative w-[150px] sm:w-[220px] md:w-[400px] aspect-[5/2] rounded-[1.5rem] overflow-hidden shadow-md bg-gray-100 transition hover:shadow-lg mb-4">
       {/* Imagen de fondo */}
       {image && (
         <div
@@ -26,7 +26,7 @@ export default function CardPromoHome({
         <div className="flex gap-2 mb-1 text-[9px] sm:text-[10px] font-semibold uppercase italic">
           {hasDiscount && descuento && (
             <span
-              className="flex items-center gap-1 px-2 py-[1px] tracking-tight"
+              className="flex items-center gap-1 text-[1rem] px-2 py-[1px] tracking-tight"
               style={{
                 background: "linear-gradient(to right, #fbbf24, #fde68a)",
                 clipPath:
@@ -42,7 +42,7 @@ export default function CardPromoHome({
 
           {isNew && (
             <span
-              className="flex items-center gap-1 px-2 py-[1px] text-black shadow-[1px_1px_2px_rgba(0,0,0,0.4)]"
+              className="flex text-[1rem] items-center gap-1 px-2 py-[1px] text-black shadow-[1px_1px_2px_rgba(0,0,0,0.4)]"
               style={{
                 background: "linear-gradient(to right, #d8b4fe, #f3e8ff)",
                 clipPath:
@@ -50,7 +50,7 @@ export default function CardPromoHome({
               }}
             >
               <svg
-                className="w-3 h-3 text-white drop-shadow-[1px_1px_1px_rgba(0,0,0,0.5)]"
+                className="w-5 h-5 text-white drop-shadow-[1px_1px_1px_rgba(0,0,0,0.5)]"
                 fill="currentColor"
                 viewBox="0 0 20 20"
               >
@@ -63,7 +63,7 @@ export default function CardPromoHome({
 
         {/* Título y verificación */}
         <div className="flex items-center justify-between">
-          <p className="text-xs sm:text-sm font-bold truncate">{title}</p>
+          <p className="text-sm sm:text-lg font-bold truncate">{title}</p>
           {isVerified && (
             <div
               className="w-4 h-4 p-[2px] ring-1 ring-sky-300 bg-sky-400 rounded-full flex items-center justify-center"

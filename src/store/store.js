@@ -5,6 +5,7 @@ import authReducer from "./authSlice";
 import comunidadesReducer from "./comunidadesSlice";
 import busquedaGlobalReducer from "./busquedaGlobalSlice"; // 🆕
 import categoriasReducer from "./categoriasSlice"; // nuevo
+import promocionesReducer from "./promocionesSlice";
 
 export const store = configureStore({
   reducer: {
@@ -14,5 +15,6 @@ export const store = configureStore({
     comunidades: comunidadesReducer,
     busquedaGlobal: busquedaGlobalReducer, // 🆕 agregado
     categorias: categoriasReducer,
+    promociones: promocionesReducer,
   },
 });

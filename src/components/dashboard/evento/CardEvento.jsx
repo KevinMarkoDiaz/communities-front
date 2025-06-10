@@ -1,7 +1,18 @@
 import { Link } from "react-router-dom";
 
 export default function CardEvento({ evento, onDelete }) {
-  const { _id, title, description, date, location } = evento;
+  const {
+    _id,
+    title = "Sin título",
+    description = "Sin descripción",
+    date,
+    location = "Ubicación no disponible",
+    featuredImage,
+  } = evento;
+
+  // Si no hay imagen destacada, usar imagen por defecto
+  const imagenUrl =
+    featuredImage || `https://cdn.usegalileo.ai/sdxl10/${_id || "default"}.png`;
 
   return (
     <div className="p-4 w-full">
@@ -9,9 +20,7 @@ export default function CardEvento({ evento, onDelete }) {
         {/* Imagen del evento */}
         <div
           className="w-full aspect-video md:aspect-auto md:w-40 md:h-28 bg-center bg-no-repeat bg-cover rounded-xl shrink-0"
-          style={{
-            backgroundImage: `url(https://cdn.usegalileo.ai/sdxl10/${_id}.png)`,
-          }}
+          style={{ backgroundImage: `url(${imagenUrl})` }}
         ></div>
 
         {/* Contenido */}
@@ -24,11 +33,12 @@ export default function CardEvento({ evento, onDelete }) {
               {description}
             </p>
             <p className="text-[#A0AEC0] text-sm">
-              {new Date(date).toLocaleDateString()} – {location}
+              {date ? new Date(date).toLocaleDateString() : "Fecha no definida"}{" "}
+              – {location}
             </p>
           </div>
 
-          <div className="flex gap-2 mt-2  flex-col">
+          <div className="flex gap-2 mt-2 flex-col">
             <Link
               to={`/dashboard/mis-eventos/${_id}/editar`}
               className="w-[96px] h-9 rounded-full bg-[#E4E9F1] text-[#141C24] text-sm font-medium flex items-center justify-center hover:bg-[#d4dde7] transition"

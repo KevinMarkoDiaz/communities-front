@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { FiMenu, FiX } from "react-icons/fi";
 import Icon from "../assets/logo.png";
 
 export default function Header() {
   const usuario = useSelector((state) => state.auth.usuario);
   const [showSticky, setShowSticky] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -16,27 +18,62 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const NavLinks = () => (
-    <nav className="flex items-center gap-6 text-sm">
-      <Link to="/negocios" className="hover:text-[#FB8500]">
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  }, [mobileMenuOpen]);
+
+  const NavLinks = ({ isMobile = false }) => (
+    <nav
+      className={`${
+        isMobile
+          ? "flex flex-col gap-6 text-lg mt-6 text-center"
+          : "flex items-center gap-6 text-sm"
+      }`}
+    >
+      <Link
+        to="/negocios"
+        className="hover:text-[#FB8500]"
+        onClick={() => setMobileMenuOpen(false)}
+      >
         Business
       </Link>
-      <Link to="/eventos" className="hover:text-[#FB8500]">
+      <Link
+        to="/eventos"
+        className="hover:text-[#FB8500]"
+        onClick={() => setMobileMenuOpen(false)}
+      >
         Events
       </Link>
-      <Link to="/comunidades" className="hover:text-[#FB8500]">
+      <Link
+        to="/comunidades"
+        className="hover:text-[#FB8500]"
+        onClick={() => setMobileMenuOpen(false)}
+      >
         Communities
       </Link>
-      <Link to="/promociones" className="hover:text-[#FB8500]">
+      <Link
+        to="/promociones"
+        className="hover:text-[#FB8500]"
+        onClick={() => setMobileMenuOpen(false)}
+      >
         Promos
       </Link>
     </nav>
   );
 
-  const PerfilBtn = () => (
+  const PerfilBtn = ({ isMobile = false }) => (
     <Link
       to={usuario ? "/dashboard/perfil" : "/login"}
-      className="flex items-center justify-center h-9 px-4 bg-[#F4C753] text-[#141C24] text-sm font-bold rounded-xl hover:bg-[#e7b93e] transition"
+      onClick={() => setMobileMenuOpen(false)}
+      className={`${
+        isMobile
+          ? "inline-block mt-6 text-[#141C24] text-sm font-medium border border-[#F4C753] rounded-full px-5 py-2 hover:bg-[#f4c753]/10 transition"
+          : "flex items-center justify-center h-9 px-4 bg-[#F4C753] text-[#141C24] text-sm font-bold rounded-xl hover:bg-[#e7b93e] transition"
+      }`}
     >
       {usuario ? "Perfil" : "Entrar"}
     </Link>
@@ -47,13 +84,12 @@ export default function Header() {
       {/* Header principal */}
       <header className="px-6 sm:px-10 py-4 bg-white border-b border-[#E4E9F1] text-[#141C24] z-20 relative">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link to="/" className="text-xl font-extrabold">
-              <img src={Icon} alt="Communities logo" className="h-10" />
-            </Link>
-          </div>
+          <Link to="/" className="text-xl font-extrabold">
+            <img src={Icon} alt="Communities logo" className="h-10" />
+          </Link>
 
-          <div className="flex items-center gap-6">
+          {/* Desktop nav */}
+          <div className="hidden md:flex items-center gap-6">
             <NavLinks />
             <PerfilBtn />
             {usuario && (
@@ -67,25 +103,58 @@ export default function Header() {
               />
             )}
           </div>
+
+          {/* Mobile menu toggle */}
+          <button
+            className="md:hidden text-2xl"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            {mobileMenuOpen ? <FiX /> : <FiMenu />}
+          </button>
+        </div>
+
+        {/* Mobile nav */}
+        <div
+          className={`md:hidden fixed inset-0 bg-white z-50 flex flex-col items-center px-6 py-8 overflow-y-auto transform transition-all duration-300 ${
+            mobileMenuOpen
+              ? "translate-y-0 opacity-100 pointer-events-auto"
+              : "-translate-y-full opacity-0 pointer-events-none"
+          }`}
+        >
+          <div className="w-full flex justify-between items-center">
+            <Link
+              to="/"
+              className="text-base font-bold"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <img src={Icon} alt="logo" className="h-10" />
+            </Link>
+            <button
+              className="text-2xl text-[#141C24]"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <FiX />
+            </button>
+          </div>
+
+          <NavLinks isMobile />
+          <PerfilBtn isMobile />
         </div>
       </header>
 
-      {/* Sticky Header */}
+      {/* Sticky Header solo en desktop */}
       <div
-        className={`fixed top-0 left-0 right-0 bg-white border-b border-[#E4E9F1] shadow-sm transition-all duration-300 transform ${
+        className={`hidden md:block fixed top-0 left-0 right-0 bg-white border-b border-[#E4E9F1] shadow-sm transition-all duration-300 transform ${
           showSticky
             ? "translate-y-0 opacity-100 z-50"
             : "-translate-y-full opacity-0 z-0"
         }`}
       >
         <div className="flex items-center justify-between px-6 py-2">
-          <div className="flex items-center gap-2">
-            <Link to="/" className="text-base font-bold">
-              <img src={Icon} alt="logo" className="h-10" />
-            </Link>
-          </div>
-
-          <div className="flex items-center gap-4">
+          <Link to="/" className="text-base font-bold">
+            <img src={Icon} alt="logo" className="h-10" />
+          </Link>
+          <div className="hidden md:flex items-center gap-4">
             <NavLinks />
             <PerfilBtn />
           </div>

@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 
-export default function CardNegocio({ negocio, onDelete }) {
-  const { _id, name, description, profileImage, category, location } = negocio;
+export default function CardPromo({ promo, onDelete }) {
+  const { _id, name, description, featuredImage, type, startDate, endDate } =
+    promo;
 
   return (
     <div className="p-4 w-full">
@@ -11,7 +12,8 @@ export default function CardNegocio({ negocio, onDelete }) {
           className="w-full aspect-video md:aspect-auto md:w-40 md:h-28 bg-center bg-no-repeat bg-cover rounded-xl shrink-0"
           style={{
             backgroundImage: `url(${
-              profileImage || "https://cdn.usegalileo.ai/sdxl10/placeholder.png"
+              featuredImage ||
+              "https://cdn.usegalileo.ai/sdxl10/placeholder.png"
             })`,
           }}
         ></div>
@@ -25,24 +27,21 @@ export default function CardNegocio({ negocio, onDelete }) {
             <p className="text-[#3F5374] text-base line-clamp-2">
               {description}
             </p>
-            <p className="text-[#6B7280] text-sm">
-              {category?.name || "Sin categoría"} · {location?.city},{" "}
-              {location?.state}
+            <p className="text-[#6B7280] text-sm capitalize">
+              {type.replace(/_/g, " ")}
+            </p>
+            <p className="text-sm text-gray-500">
+              {new Date(startDate).toLocaleDateString()} -{" "}
+              {new Date(endDate).toLocaleDateString()}
             </p>
           </div>
 
           <div className="flex gap-2 mt-2 flex-col">
             <Link
-              to={`/dashboard/mis-negocios/${_id}/editar`}
+              to={`/dashboard/promociones/${_id}/editar`}
               className="w-[96px] h-9 rounded-full bg-[#E4E9F1] text-[#141C24] text-sm font-medium flex items-center justify-center hover:bg-[#d4dde7] transition"
             >
               Editar
-            </Link>
-            <Link
-              to={`/dashboard/mis-negocios/${_id}/promos/nueva`}
-              className="w-[96px] h-9 rounded-full bg-[#A3E635] text-sm flex items-center justify-center hover:bg-[#84cc16]"
-            >
-              + Promo
             </Link>
             <button
               onClick={() => onDelete(_id)}

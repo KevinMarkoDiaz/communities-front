@@ -61,7 +61,7 @@ export default function Home() {
             </div> */}
         {/* Banner de video */}
         {/* </div> */}
-        <div className="w-full flex justify-center px-4 py-10">
+        <div className="w-full hidden sm:flex justify-center px-4 py-10">
           <video
             src={bannerBTN}
             autoPlay

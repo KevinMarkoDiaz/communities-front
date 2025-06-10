@@ -25,7 +25,7 @@ export default function NegociosSugeridos() {
           <Link
             to={`/negocios/${n._id}`}
             key={n._id}
-            className="flex-shrink-0 snap-start min-w-[280px] sm:min-w-[250px] md:min-w-[250px] lg:min-w-[320px]"
+            className="flex-shrink-0 snap-start min-w-[250px] sm:min-w-[300px] md:min-w-[250px] lg:min-w-[320px]"
           >
             <CardDestacado
               title={n.name}

@@ -50,33 +50,52 @@ export default function Eventos() {
 
       <div className="w-full max-w-full overflow-hidden flex flex-col gap-18">
         <div className="flex flex-col gap-18">
-          <SearchBar
-            value={busqueda}
-            onChange={(text) => dispatch(setBusqueda(text))}
-            placeholder="Buscar eventos..."
-          />
+          <EventosProximos />
+          <div>
+            <h4 className="text-xl md:text-xl font-bold text-black tracking-tight leading-snug my-4">
+              Descubre eventos que enriquecen tu conexión cultural
+            </h4>
+            <SearchBar
+              value={busqueda}
+              onChange={(text) => dispatch(setBusqueda(text))}
+              onSearch={(text) => dispatch(setBusqueda(text?.trim() || ""))}
+              placeholder="Buscar eventos..."
+            />
+          </div>
         </div>
-
-        <EventosProximos />
 
         {/* Grid paginado */}
         <GridWrapper ref={gridRef} tipo="lista" className="min-h-[70vh]">
-          {eventosPaginados.map((evento) => (
-            <Link
-              to={`/eventos/${evento.id || evento._id}`}
-              key={evento.id || evento._id}
-              className="flex-shrink-0"
-            >
-              <CardLista
-                title={evento.title}
-                description={`${evento.description?.slice(0, 90)}...`}
-                image={evento.image}
-                isNew={evento.isNew}
-                hasDiscount={false}
-                isVerified={evento.verificado}
-              />
-            </Link>
-          ))}
+          {eventosPaginados.map((evento) => {
+            const {
+              _id,
+              title,
+              description,
+              featuredImage,
+              isNew = false,
+              isVerified = false,
+            } = evento;
+
+            return (
+              <Link to={`/eventos/${_id}`} key={_id} className="flex-shrink-0">
+                <CardLista
+                  title={title}
+                  description={
+                    description?.length > 90
+                      ? description.slice(0, 90) + "..."
+                      : description || "Sin descripción"
+                  }
+                  image={
+                    featuredImage ||
+                    `https://cdn.usegalileo.ai/sdxl10/${_id}.png`
+                  }
+                  isNew={isNew}
+                  hasDiscount={false}
+                  isVerified={isVerified}
+                />
+              </Link>
+            );
+          })}
 
           {eventosFiltrados.length === 0 && (
             <p className="text-gray-500 w-full text-center">

@@ -16,6 +16,8 @@ import Perfil from "../pages/dashboard/Perfil";
 import MisNegocios from "../pages/dashboard/MisNegocios";
 import MisEventos from "../pages/dashboard/MisEventos";
 import CrearEvento from "../pages/dashboard/CrearEvento";
+import CrearPromo from "../pages/dashboard/CrearPromo";
+
 import EditarEvento from "../pages/dashboard/EditarEvento";
 import Categorias from "../pages/dashboard/Categorias";
 import Comunidades from "../pages/dashboard/Comunidades";
@@ -38,6 +40,8 @@ import PremiumInfo from "../pages/premium/PremiumInfo";
 import SuscripcionStripe from "../pages/premium/SuscripcionStripe";
 import SuscripcionExitosa from "../pages/premium/SuscripcionExitosa";
 import SuscripcionCancelada from "../pages/premium/SuscripcionCancelada";
+import PromosPorNegocio from "../pages/dashboard/PromosPorNegocio";
+import MisPromos from "../pages/dashboard/misPromos";
 
 const router = createBrowserRouter([
   {
@@ -83,20 +87,33 @@ const router = createBrowserRouter([
         children: [
           { path: "perfil", element: <Perfil /> },
           { path: "perfil/editar", element: <EditarPerfil /> },
+
           {
             path: "mis-negocios",
             children: [
               { path: "", element: <MisNegocios /> },
               { path: "crear", element: <NegocioForm /> },
               { path: ":id/editar", element: <NegocioForm /> },
+              { path: ":id/promos", element: <PromosPorNegocio /> },
+              { path: ":id/promos/nueva", element: <CrearPromo /> },
             ],
           },
+
           {
             path: "mis-eventos",
             children: [
               { path: "", element: <MisEventos /> },
               { path: "crear", element: <CrearEvento /> },
               { path: ":id/editar", element: <EditarEvento /> },
+            ],
+          },
+
+          // ✅ Mis promociones
+          {
+            path: "mis-promos",
+            children: [
+              { path: "", element: <MisPromos /> },
+              // { path: ":id/editar", element: <EditarPromo /> },
             ],
           },
           {
@@ -107,6 +124,7 @@ const router = createBrowserRouter([
               { path: ":id/editar", element: <EditarCategoriaView /> },
             ],
           },
+
           {
             path: "comunidades",
             children: [

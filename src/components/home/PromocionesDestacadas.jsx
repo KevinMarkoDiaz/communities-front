@@ -9,12 +9,13 @@ export default function PromocionesDestacadas() {
   const banners = [
     {
       id: 1,
-      video: bannerDSS,
+      video: bannerOFF,
+
       to: "/promociones/promo-fin-de-semana",
     },
     {
       id: 2,
-      video: bannerOFF,
+      video: bannerDSS,
       to: "/promociones/descuentos-imperdibles",
     },
     {

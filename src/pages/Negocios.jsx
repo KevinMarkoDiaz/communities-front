@@ -47,14 +47,21 @@ export default function Negocios() {
       <div className="w-full max-w-full overflow-hidden flex flex-col gap-18">
         <div className="flex flex-col gap-18">
           <CategoryCarousel />
-          <SearchBar
-            value={busqueda}
-            onChange={setBusqueda}
-            placeholder="Buscar negocios..."
-          />
+          <NegociosSugeridos />
+          <div>
+            <h4 className="text-xl md:text-xl font-bold text-black tracking-tight leading-snug my-4">
+              Busca los negocios que te conectan con tu comunidad
+            </h4>
+            <SearchBar
+              value={busqueda}
+              onChange={setBusqueda}
+              onSearch={(text) => {
+                setBusqueda(text?.trim() || "");
+              }}
+              placeholder="Buscar negocios..."
+            />
+          </div>
         </div>
-
-        <NegociosSugeridos />
 
         <GridWrapper ref={gridRef} tipo="lista" className="min-h-[70vh]">
           {negociosPaginados.map((negocio) => (
