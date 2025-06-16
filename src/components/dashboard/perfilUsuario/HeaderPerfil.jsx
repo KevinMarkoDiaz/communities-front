@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import AvatarPlaceholder from "../../placeholder/AvatarPlaceholder";
 
 export default function HeaderPerfil({ usuario }) {
   if (!usuario) return null; // o un pequeño loading/spinner
@@ -8,10 +9,18 @@ export default function HeaderPerfil({ usuario }) {
   return (
     <div className="flex p-4 flex-col gap-4 sm:flex-row sm:justify-between sm:items-center">
       <div className="flex gap-4">
-        <div
-          className="bg-center bg-no-repeat aspect-square bg-cover rounded-full min-h-32 w-32"
-          style={{ backgroundImage: `url("${profileImage}")` }}
-        ></div>
+        <div className="w-32 h-32 rounded-full overflow-hidden flex items-center justify-center bg-gray-100">
+          {profileImage ? (
+            <img
+              src={profileImage}
+              alt={name}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <AvatarPlaceholder />
+          )}
+        </div>
+
         <div className="flex flex-col justify-center">
           <p className="text-[#141C24] text-[22px] font-bold leading-tight tracking-[-0.015em]">
             {name}

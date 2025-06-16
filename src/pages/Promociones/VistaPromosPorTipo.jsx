@@ -53,7 +53,7 @@ export default function VistaPromosPorTipo({
         )}
 
         {!loading && !error && promosFiltradas.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4 sm:px-6 lg:px-8 place-items-center">
             {promosFiltradas.map((promo) => (
               <CardPromoHome
                 key={promo._id || promo.id}

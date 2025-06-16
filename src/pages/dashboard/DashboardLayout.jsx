@@ -2,8 +2,9 @@ import { Outlet, NavLink, Link, useNavigate } from "react-router-dom"; // <-- im
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Icon from "../../assets/logo.png";
-import HeaderDashboard from "../../components/dashboard/HeaderDashboard";
 import { logout } from "../../store/authSlice";
+import Navbar from "../../components/Navbar";
+import SidebarDashboard from "./SidebarDashboard";
 
 export default function DashboardLayout() {
   const dispatch = useDispatch();
@@ -26,7 +27,7 @@ export default function DashboardLayout() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <HeaderDashboard usuario={usuario} />
+      <Navbar />
 
       {/* Sticky Header */}
       <div
@@ -70,128 +71,7 @@ export default function DashboardLayout() {
 
       {/* Layout */}
       <div className="flex flex-1">
-        <aside className="w-64 md:w-72 lg:w-80 px-4 py-5 bg-[#F8F9FB] flex-shrink-0">
-          <div className="flex flex-col h-full min-h-[700px] bg-[#F8F9FB] p-4">
-            {/* Encabezado y navegación */}
-            <div className="flex flex-col gap-4 flex-1">
-              <div className="flex flex-col">
-                <h1 className="text-[#141C24] text-base font-medium leading-normal">
-                  Dashboard
-                </h1>
-                <p className="text-[#3F5374] text-sm font-normal leading-normal">
-                  {usuario?.name} • {usuario?.title || "Usuario"}
-                </p>
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <NavLink
-                  to="perfil"
-                  className={({ isActive }) =>
-                    `flex items-center gap-3 px-3 py-2 rounded-full ${
-                      isActive ? "bg-[#E4E9F1]" : ""
-                    }`
-                  }
-                >
-                  <p className="text-[#141C24] text-sm font-medium leading-normal">
-                    Mi perfil
-                  </p>
-                </NavLink>
-
-                <NavLink
-                  to="mis-negocios"
-                  className={({ isActive }) =>
-                    `flex items-center gap-3 px-3 py-2 rounded-full ${
-                      isActive ? "bg-[#E4E9F1]" : ""
-                    }`
-                  }
-                >
-                  <p className="text-[#141C24] text-sm font-medium leading-normal">
-                    Mis negocios
-                  </p>
-                </NavLink>
-
-                <NavLink
-                  to="mis-eventos"
-                  className={({ isActive }) =>
-                    `flex items-center gap-3 px-3 py-2 rounded-full ${
-                      isActive ? "bg-[#E4E9F1]" : ""
-                    }`
-                  }
-                >
-                  <p className="text-[#141C24] text-sm font-medium leading-normal">
-                    Mis eventos
-                  </p>
-                </NavLink>
-
-                <NavLink
-                  to="comunidades"
-                  className={({ isActive }) =>
-                    `flex items-center gap-3 px-3 py-2 rounded-full ${
-                      isActive ? "bg-[#E4E9F1]" : ""
-                    }`
-                  }
-                >
-                  <p className="text-[#141C24] text-sm font-medium leading-normal">
-                    Mis comunidades
-                  </p>
-                </NavLink>
-
-                <NavLink
-                  to="mis-promos"
-                  className={({ isActive }) =>
-                    `flex items-center gap-3 px-3 py-2 rounded-full ${
-                      isActive ? "bg-[#E4E9F1]" : ""
-                    }`
-                  }
-                >
-                  <p className="text-[#141C24] text-sm font-medium leading-normal">
-                    Mis promos
-                  </p>
-                </NavLink>
-
-                {usuario?.role === "admin" && (
-                  <NavLink
-                    to="categorias"
-                    className={({ isActive }) =>
-                      `flex items-center gap-3 px-3 py-2 rounded-full ${
-                        isActive ? "bg-[#E4E9F1]" : ""
-                      }`
-                    }
-                  >
-                    <p className="text-[#141C24] text-sm font-medium leading-normal">
-                      Mis categorías
-                    </p>
-                  </NavLink>
-                )}
-
-                {/* 💎 Botón Premium */}
-                <NavLink
-                  to="/premium"
-                  className={({ isActive }) =>
-                    `flex items-center gap-3 px-3 py-2 rounded-full ${
-                      isActive ? "bg-[#F3E8FF]" : ""
-                    }`
-                  }
-                >
-                  <p className="text-[#7C3AED] text-sm font-medium leading-normal">
-                    💎 Hazte Premium
-                  </p>
-                </NavLink>
-              </div>
-            </div>
-
-            {/* Cerrar sesión */}
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-gray-200 rounded"
-            >
-              <p className="text-[#141C24] text-sm font-medium leading-normal">
-                Cerrar sesión
-              </p>
-            </button>
-          </div>
-        </aside>
-
+        <SidebarDashboard usuario={usuario} handleLogout={handleLogout} />
         <main className="flex-grow p-6">
           <Outlet />
         </main>

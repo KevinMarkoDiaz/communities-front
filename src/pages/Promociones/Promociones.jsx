@@ -55,7 +55,7 @@ export default function Promociones() {
             <Link
               key={promo._id}
               to={`/promociones/${promo._id}`}
-              className="flex-shrink-0 snap-start w-[160px] sm:w-[220px] md:w-[400px]"
+              className="flex-shrink-0 snap-start w-[220px] sm:w-[320px] md:w-[400px]"
             >
               <CardPromoHome
                 title={promo.name}
@@ -84,7 +84,7 @@ export default function Promociones() {
         />
       </Helmet>
 
-      <div className="w-full max-w-full overflow-hidden flex flex-col gap-36">
+      <div className="w-full max-w-full overflow-hidden flex flex-col gap-12 md:gap-36">
         {loading && (
           <p className="text-center text-gray-500">Cargando promociones...</p>
         )}
@@ -98,7 +98,7 @@ export default function Promociones() {
             {renderCarrusel("Nuevos lanzamientos", bnnl, promosLanzamiento)}
             {renderCarrusel("Promo fin de semana", bnpf, promosFinSemana)}
 
-            <div className="w-full flex justify-center px-4 py-10">
+            <div className="w-full hidden sm:flex justify-center px-4 py-10">
               <video
                 src={bannerBTN}
                 autoPlay

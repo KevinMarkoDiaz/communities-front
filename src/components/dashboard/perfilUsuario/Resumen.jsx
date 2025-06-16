@@ -45,7 +45,7 @@ export default function Resumen() {
       path: "/dashboard/comunidades",
     },
     {
-      label: "Categorías Creadas",
+      label: "Categorías ",
       value: resumenData.categorias,
       path: "/dashboard/categorias",
     },
@@ -55,7 +55,7 @@ export default function Resumen() {
       path: "/dashboard/mis-negocios",
     },
     {
-      label: "Eventos Creados",
+      label: "Eventos ",
       value: resumenData.eventos,
       path: "/dashboard/mis-eventos",
     },
@@ -71,7 +71,7 @@ export default function Resumen() {
           <div
             key={index}
             onClick={() => navigate(item.path)}
-            className="cursor-pointer bg-white rounded-2xl border border-gray-200 hover:shadow-md transition-all p-4 space-y-1"
+            className="cursor-pointer bg-white rounded-2xl border border-gray-200 shadow-md hover:shadow-lg transition-all p-4 space-y-1"
           >
             <p className="text-[#3F5374] text-sm font-medium tracking-tight">
               {item.label}
