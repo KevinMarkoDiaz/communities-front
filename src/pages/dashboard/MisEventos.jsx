@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { getMyEvents, deleteEvent } from "../../api/eventApi";
 import CardEvento from "../../components/dashboard/evento/CardEvento";
+import { MdEventAvailable } from "react-icons/md";
 
 export default function MisEventos() {
   const [eventos, setEventos] = useState([]);
@@ -42,14 +43,15 @@ export default function MisEventos() {
   if (error) return <div className="p-4 text-red-600">{error}</div>;
 
   return (
-    <div className="p-4 space-y-6">
+    <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-[#141C24]">Mis eventos</h2>
+        <h2 className="text-xl font-bold">Eventos</h2>
         <Link
           to="crear"
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition text-sm font-medium"
+          className="flex items-center gap-2 bg-white text-black p-1 rounded hover:bg-black hover:text-white transition text-sm"
         >
-          + Nuevo evento
+          <MdEventAvailable className="text-lg" />
+          Agregar
         </Link>
       </div>
 

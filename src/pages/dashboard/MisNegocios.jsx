@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import CardNegocio from "../../components/dashboard/negocios/CardNegocio";
 import { deleteBusiness, getMyBusinesses } from "../../api/businessApi";
+import { MdAddBusiness } from "react-icons/md";
 
 export default function MisNegocios() {
   const [negocios, setNegocios] = useState([]);
@@ -43,14 +44,15 @@ export default function MisNegocios() {
   if (error) return <div className="p-4 text-red-600">{error}</div>;
 
   return (
-    <div className="p-4 space-y-6">
+    <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Mis negocios</h2>
+        <h2 className="text-xl font-bold">Negocios</h2>
         <Link
           to="crear"
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+          className="flex items-center gap-2 bg-white text-black p-1 rounded hover:bg-black hover:text-white transition text-sm"
         >
-          + Nuevo negocio
+          <MdAddBusiness className="text-lg" />
+          Agregar
         </Link>
       </div>
 

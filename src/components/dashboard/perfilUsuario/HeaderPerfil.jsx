@@ -7,9 +7,9 @@ export default function HeaderPerfil({ usuario }) {
   const { name, location, role, profileImage } = usuario;
 
   return (
-    <div className="flex p-4 flex-col gap-4 sm:flex-row sm:justify-between sm:items-center">
+    <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center">
       <div className="flex gap-4">
-        <div className="w-32 h-32 rounded-full overflow-hidden flex items-center justify-center bg-gray-100">
+        <div className="w-22 h-22 md:w-32 md:h-32 rounded-full overflow-hidden flex items-center justify-center bg-gray-100">
           {profileImage ? (
             <img
               src={profileImage}

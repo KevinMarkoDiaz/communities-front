@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { getAllCommunities, deleteCommunity } from "../../api/communityApi";
 import { Link } from "react-router-dom";
 import CardComunidad from "../../components/dashboard/perfilUsuario/CardComunidad";
+import { MdGroups } from "react-icons/md";
 
 export default function Comunidades() {
   const [comunidades, setComunidades] = useState([]);
@@ -62,14 +63,15 @@ export default function Comunidades() {
   if (error) return <div className="p-4 text-red-600">{error}</div>;
 
   return (
-    <div className="p-4 space-y-6">
+    <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-[#141C24]">Mis comunidades</h2>
+        <h2 className="text-xl font-bold text-[#141C24]">Comunidades</h2>
         <Link
           to="crear"
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition text-sm font-medium"
+          className="flex items-center gap-2 bg-white text-black p-1 rounded hover:bg-black hover:text-white transition text-sm"
         >
-          + Nueva comunidad
+          <MdGroups className="text-lg" />
+          Agregar
         </Link>
       </div>
 
