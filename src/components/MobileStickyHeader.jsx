@@ -10,7 +10,6 @@ export default function MobileStickyHeader() {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Mostrar header solo cuando scroll va hacia arriba
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
@@ -18,7 +17,7 @@ export default function MobileStickyHeader() {
         setShow(true);
       } else {
         setShow(false);
-        setMenuOpen(false); // cerrar el menú si se esconde el header
+        setMenuOpen(false);
       }
       setLastScrollY(currentScrollY);
     };
@@ -27,7 +26,6 @@ export default function MobileStickyHeader() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
-  // Evitar scroll cuando el menú está abierto
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "auto";
   }, [menuOpen]);
@@ -35,26 +33,18 @@ export default function MobileStickyHeader() {
   const closeMenu = () => setMenuOpen(false);
 
   const NavLinks = () => (
-    <nav className="flex flex-col gap-6 text-lg mt-6 text-left">
-      <Link to="/negocios" onClick={closeMenu} className="hover:text-[#FB8500]">
-        Business
+    <nav className="flex flex-col gap-4 mt-6 text-left text-base font-semibold">
+      <Link to="/negocios" onClick={closeMenu}>
+        Negocios
       </Link>
-      <Link to="/eventos" onClick={closeMenu} className="hover:text-[#FB8500]">
-        Events
+      <Link to="/eventos" onClick={closeMenu}>
+        Eventos
       </Link>
-      <Link
-        to="/comunidades"
-        onClick={closeMenu}
-        className="hover:text-[#FB8500]"
-      >
-        Communities
+      <Link to="/comunidades" onClick={closeMenu}>
+        Comunidades
       </Link>
-      <Link
-        to="/promociones"
-        onClick={closeMenu}
-        className="hover:text-[#FB8500]"
-      >
-        Promos
+      <Link to="/promociones" onClick={closeMenu}>
+        Promociones
       </Link>
     </nav>
   );
@@ -63,18 +53,18 @@ export default function MobileStickyHeader() {
     <Link
       to={usuario ? "/dashboard/perfil" : "/login"}
       onClick={closeMenu}
-      className="inline-block mt-10 text-[#000]  text-lg font-bold  rounded-full py-2 transition"
+      className="text-[#000] text-md font-bold rounded-md hover:bg-gray-100 transition"
     >
-      {usuario ? "Perfil" : "Entrar"}
+      {usuario ? "Mi perfil" : "Entrar"}
     </Link>
   );
 
   return (
     <>
-      {/* Header sticky */}
+      {/* Sticky Header */}
       <div
         className={`md:hidden fixed top-0 left-0 right-0 bg-white border-b border-[#E4E9F1] shadow-sm transition-transform duration-300 z-50 ${
-          show && !menuOpen ? "translate-y-0 " : "-translate-y-full"
+          show && !menuOpen ? "translate-y-0" : "-translate-y-full"
         }`}
       >
         <div className="flex items-center justify-between px-4 py-2">
@@ -85,41 +75,54 @@ export default function MobileStickyHeader() {
           <div className="flex items-center gap-4">
             <Link
               to={usuario ? "/dashboard/perfil" : "/login"}
-              className="text-sm font-medium text-[#fff] bg-[#FB8500] rounded-md px-3 py-1 hover:bg-[#fff] hover:text-[#FB8500] transition"
+              className="text-sm font-medium text-white bg-[#FB8500] rounded-md px-3 py-1 hover:bg-white hover:text-[#FB8500] transition"
               onClick={() => setMenuOpen(false)}
             >
               {usuario ? "Perfil" : "Entrar"}
             </Link>
 
             <button
-              className="text-2xl "
-              onClick={() => setMenuOpen(!menuOpen)}
+              className="text-2xl text-[#141C24]"
+              onClick={() => setMenuOpen(true)}
             >
-              {menuOpen ? <FiX /> : <FiMenu />}
+              <FiMenu />
             </button>
           </div>
         </div>
       </div>
 
-      {/* Menú desplegable */}
+      {/* Menú lateral */}
       <div
-        className={`md:hidden fixed inset-0  z-40 flex flex-col items-left px-6 py-4 overflow-y-auto transition-all duration-300 ${
-          menuOpen
-            ? "translate-y-0 opacity-100 pointer-events-auto bg-[#FB8500] font-bold text-[#fff]"
-            : "-translate-y-full opacity-0 pointer-events-none"
+        className={`fixed inset-0 z-50 transition-all duration-300 ${
+          menuOpen ? "pointer-events-auto" : "pointer-events-none"
         }`}
       >
-        <div className="w-full flex justify-between items-center mb-4">
-          <Link to="/" onClick={closeMenu}>
-            <img src={Icon} alt="logo" className="h-10" />
-          </Link>
-          <button className="text-2xl" onClick={closeMenu}>
-            <FiX />
-          </button>
-        </div>
+        {/* Overlay oscuro */}
+        <div
+          className={`absolute inset-0 bg-black bg-opacity-40 transition-opacity duration-300 ${
+            menuOpen ? "opacity-100" : "opacity-0"
+          }`}
+          onClick={closeMenu}
+        ></div>
 
-        <NavLinks />
-        <PerfilBtn />
+        {/* Panel lateral izquierdo */}
+        <div
+          className={`absolute top-0 left-0 h-full w-full bg-[#FB8500] text-white transform transition-transform duration-300 ${
+            menuOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
+        >
+          <div className="flex justify-between items-center px-4 py-3 border-b border-white/20">
+            <img src={Icon} alt="logo" className="h-8" />
+            <button onClick={closeMenu} className="text-2xl">
+              <FiX />
+            </button>
+          </div>
+
+          <div className="px-6 gap-8 flex flex-col">
+            <NavLinks />
+            <PerfilBtn />
+          </div>
+        </div>
       </div>
     </>
   );

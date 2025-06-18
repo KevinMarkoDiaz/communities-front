@@ -36,13 +36,13 @@ export default function HeaderPerfil({ usuario }) {
       <div className="flex w-full max-w-[480px] gap-3 sm:w-auto">
         <Link
           to="/dashboard/perfil/editar"
-          className="h-10 px-4 bg-[#E4E9F1] text-[#141C24] text-sm font-bold rounded-full flex-1 sm:flex-auto truncate flex items-center justify-center text-center"
+          className="h-10 px-4 bg-[#000] text-[#fff] hover:text-[#000] hover:bg-[#fff]  text-sm rounded-md flex-1 sm:flex-auto truncate flex items-center justify-center text-center transition"
         >
           Editar Perfil
         </Link>
         <Link
           to="/dashboard/mis-negocios/crear"
-          className="h-10 px-4 bg-[#F4C753] text-[#141C24] text-sm font-bold rounded-full flex-1 sm:flex-auto truncate flex items-center justify-center text-center"
+          className="h-10 px-4 bg-[#000] text-[#fff] hover:text-[#000] hover:bg-[#fff] text-sm  rounded-md flex-1 sm:flex-auto truncate flex items-center justify-center text-center transition"
         >
           Agregar Negocio
         </Link>
