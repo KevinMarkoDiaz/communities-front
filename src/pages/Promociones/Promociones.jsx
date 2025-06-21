@@ -10,6 +10,7 @@ import PromocionesDestacadas from "../../components/home/PromocionesDestacadas";
 
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
+import PromocionesD from "../../assets/PromocionesD.png";
 
 import bndc from "../../assets/bndc.png";
 import bnnl from "../../assets/bnnl.png";
@@ -55,7 +56,7 @@ export default function Promociones() {
             <Link
               key={promo._id}
               to={`/promociones/${promo._id}`}
-              className="flex-shrink-0 snap-start w-[220px] sm:w-[320px] md:w-[400px]"
+              className="flex-shrink-0 snap-start w-[220px] sm:w-[320px] md:w-[300px] lg:w-[260px]"
             >
               <CardPromoHome
                 title={promo.name}
@@ -84,7 +85,7 @@ export default function Promociones() {
         />
       </Helmet>
 
-      <div className="w-full max-w-full overflow-hidden flex flex-col gap-12 md:gap-36">
+      <div className="w-full max-w-full overflow-hidden flex flex-col gap-12 md:gap-26">
         {loading && (
           <p className="text-center text-gray-500">Cargando promociones...</p>
         )}
@@ -92,7 +93,7 @@ export default function Promociones() {
 
         {!loading && !error && (
           <>
-            <PromocionesDestacadas />
+            <PromocionesDestacadas imagen={PromocionesD} />
 
             {renderCarrusel("Descuentos imperdibles", bndc, promosDescuento)}
             {renderCarrusel("Nuevos lanzamientos", bnnl, promosLanzamiento)}

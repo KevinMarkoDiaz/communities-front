@@ -22,7 +22,7 @@ export function useNegocios() {
   // Aplicar filtros locales
   const negociosFiltrados = lista.filter((negocio) => {
     const nombre = negocio.nombre?.toLowerCase?.() || "";
-    const categoriaNegocio = negocio.categoria?.toLowerCase?.() || "";
+    const categoriaNegocio = negocio.category?.name?.toLowerCase?.() || "";
     const categoriaFiltro =
       typeof categoria === "string" ? categoria.toLowerCase() : "todas";
 

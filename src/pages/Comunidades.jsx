@@ -1,19 +1,20 @@
 import { Helmet } from "react-helmet-async";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useRef, useEffect, useState } from "react";
 import { useComunidades } from "../hooks/useComunidades";
 
 import GridWrapper from "../components/GridWrapper";
 import CardLista from "../components/CardLista";
 import Loading from "../components/Loading";
-import SearchBar from "../components/SearchBar";
 import BannerComunidades from "../components/communities/BannerComunidades";
 import ComunidadesDestacadas from "../components/home/ComunidadesDestacadas";
 import Pagination from "../components/Pagination";
+import ComunidadesD from "../assets/ComunidadesD.png";
+import BusquedaGlobalWrapper from "../components/search/BusquedaGlobalWrapper";
+import ResetBusquedaOnMount from "../utils/ResetBusquedaOnMount";
 
 export default function Comunidades() {
-  const { comunidadesFiltradas, busqueda, setBusqueda, error, loading } =
-    useComunidades();
+  const { comunidadesFiltradas, busqueda, error, loading } = useComunidades();
 
   const gridRef = useRef(null);
 
@@ -39,6 +40,8 @@ export default function Comunidades() {
 
   return (
     <>
+      <ResetBusquedaOnMount />
+
       <Helmet>
         <title>Communities | Comunidades</title>
         <meta
@@ -49,18 +52,17 @@ export default function Comunidades() {
 
       <div className="w-full max-w-full overflow-hidden flex flex-col gap-18">
         <div className="flex flex-col gap-18">
-          <ComunidadesDestacadas />
+          <ComunidadesDestacadas imagen={ComunidadesD} />
           <div>
             <h4 className="text-xl md:text-xl font-bold text-black tracking-tight leading-snug my-4">
               Buscá tu comunidad de origen o afinidad
             </h4>
-            <SearchBar
-              value={busqueda}
-              onChange={setBusqueda}
-              onSearch={(text) => {
-                setBusqueda(text?.trim() || "");
-              }}
-              placeholder="Buscar comunidades..."
+            <BusquedaGlobalWrapper
+              placeholder="Buscar tu comunidad..."
+              filtroTipo="comunidad"
+              onSelectResultado={(item) =>
+                Navigate(`/comunidades/${item._id || item.id}`)
+              }
             />
           </div>
         </div>

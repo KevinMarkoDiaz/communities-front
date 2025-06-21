@@ -1,11 +1,10 @@
 import { Link } from "react-router-dom";
 import ScrollCarousel from "../ScrollCarousel";
 import { useEventos } from "../../hooks/useEventos";
-import hb from "../../assets/hb.png";
 import BannerTituloSugeridos from "../BannerTituloSugeridos";
 import CardDestacado from "../Card";
 
-export default function EventosProximos() {
+export default function EventosProximos({ imagen }) {
   const { lista: eventos } = useEventos();
 
   const eventosProximos = eventos
@@ -21,7 +20,7 @@ export default function EventosProximos() {
     <section className="space-y-4">
       <BannerTituloSugeridos
         titulo="Viví tu cultura. Sumate a los eventos que hacen vibrar tu comunidad."
-        imagen={hb}
+        imagen={imagen}
         link="/eventos"
       />
 

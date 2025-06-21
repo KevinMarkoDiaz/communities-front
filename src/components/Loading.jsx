@@ -2,7 +2,7 @@ import sombrero from "../assets/loader.png"; // ajustá el path si está en otra
 
 export default function Loading() {
   return (
-    <div className="flex flex-col items-center justify-center gap-6 text-[#f45525]">
+    <div className="min-h-screen flex flex-col items-center justify-center gap-6 text-[#f45525]">
       <div className="w-28 h-28 animate-bounce">
         <img
           src={sombrero}

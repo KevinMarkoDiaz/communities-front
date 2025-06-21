@@ -1,20 +1,20 @@
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useState, useRef, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 import CardLista from "../components/CardLista";
 import Loading from "../components/Loading";
 import GridWrapper from "../components/GridWrapper";
-import SearchBar from "../components/SearchBar";
 import BannerEvento from "../components/eventos/BannerEvento";
 import EventosProximos from "../components/home/EventosProximos";
 import Pagination from "../components/Pagination";
-import { setBusqueda } from "../store/eventosSlice";
 import { useEventos } from "../hooks/useEventos";
+import EventosP from "../assets/EventosP.png";
+import BusquedaGlobalWrapper from "../components/search/BusquedaGlobalWrapper";
+import ResetBusquedaOnMount from "../utils/ResetBusquedaOnMount";
 
 export default function Eventos() {
-  const dispatch = useDispatch();
   const { lista: eventosFiltrados, loading, error } = useEventos();
   const busqueda = useSelector((state) => state.eventos.busqueda);
 
@@ -40,6 +40,8 @@ export default function Eventos() {
 
   return (
     <>
+      <ResetBusquedaOnMount />
+
       <Helmet>
         <title>Communities | Eventos</title>
         <meta
@@ -50,16 +52,17 @@ export default function Eventos() {
 
       <div className="w-full max-w-full overflow-hidden flex flex-col gap-18">
         <div className="flex flex-col gap-18">
-          <EventosProximos />
+          <EventosProximos imagen={EventosP} />
           <div>
             <h4 className="text-xl md:text-xl font-bold text-black tracking-tight leading-snug my-4">
               Descubre eventos que enriquecen tu conexión cultural
             </h4>
-            <SearchBar
-              value={busqueda}
-              onChange={(text) => dispatch(setBusqueda(text))}
-              onSearch={(text) => dispatch(setBusqueda(text?.trim() || ""))}
+            <BusquedaGlobalWrapper
               placeholder="Buscar eventos..."
+              filtroTipo="evento"
+              onSelectResultado={(item) =>
+                Navigate(`/negocios/${item._id || item.id}`)
+              }
             />
           </div>
         </div>

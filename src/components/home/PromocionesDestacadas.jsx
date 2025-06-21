@@ -2,10 +2,9 @@ import BannerTituloSugeridos from "../BannerTituloSugeridos";
 import bannerDSS from "../../assets/bannerDSS.mp4";
 import bannerOFF from "../../assets/bannerOFF.mp4";
 import bannerTLB from "../../assets/bannerTLB.mp4";
-import promo2 from "../../assets/a.jpg";
 import CardPromoBanner from "./CardPromoBanner";
 
-export default function PromocionesDestacadas() {
+export default function PromocionesDestacadas({ imagen }) {
   const banners = [
     {
       id: 1,
@@ -28,8 +27,8 @@ export default function PromocionesDestacadas() {
   return (
     <section className="space-y-4">
       <BannerTituloSugeridos
-        titulo="Promociones destacadas"
-        imagen={promo2}
+        titulo="Promociones destacadas de tu comunidad"
+        imagen={imagen}
         link="/promociones"
       />
 

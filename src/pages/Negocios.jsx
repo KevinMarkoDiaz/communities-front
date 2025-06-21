@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useRef, useState, useEffect } from "react";
 
@@ -6,16 +6,17 @@ import CardLista from "../components/CardLista";
 import Loading from "../components/Loading";
 import GridWrapper from "../components/GridWrapper";
 import CategoryCarousel from "../components/CategoryCarousel";
-import SearchBar from "../components/SearchBar";
 import BannerNegocios from "../components/bussines/BannerNegocios";
 import NegociosSugeridos from "../components/home/NegociosSugeridos";
 import Pagination from "../components/Pagination";
+import NegociosS from "../assets/NegociosS.png";
 
 import { useNegocios } from "../hooks/useNegocios";
+import BusquedaGlobalWrapper from "../components/search/BusquedaGlobalWrapper";
+import ResetBusquedaOnMount from "../utils/ResetBusquedaOnMount";
 
 export default function Negocios() {
-  const { negociosFiltrados, loading, error, busqueda, setBusqueda } =
-    useNegocios();
+  const { negociosFiltrados, loading, error, busqueda } = useNegocios();
 
   const gridRef = useRef(null);
 
@@ -36,6 +37,7 @@ export default function Negocios() {
 
   return (
     <>
+      <ResetBusquedaOnMount />
       <Helmet>
         <title>Communities | Negocios</title>
         <meta
@@ -46,19 +48,18 @@ export default function Negocios() {
 
       <div className="w-full max-w-full overflow-hidden flex flex-col gap-18">
         <div className="flex flex-col gap-18">
+          <NegociosSugeridos imagen={NegociosS} />
           <CategoryCarousel />
-          <NegociosSugeridos />
           <div>
             <h4 className="text-xl md:text-xl font-bold text-black tracking-tight leading-snug my-4">
               Busca los negocios que te conectan con tu comunidad
             </h4>
-            <SearchBar
-              value={busqueda}
-              onChange={setBusqueda}
-              onSearch={(text) => {
-                setBusqueda(text?.trim() || "");
-              }}
+            <BusquedaGlobalWrapper
               placeholder="Buscar negocios..."
+              filtroTipo="negocio"
+              onSelectResultado={(item) =>
+                Navigate(`/negocios/${item._id || item.id}`)
+              }
             />
           </div>
         </div>

@@ -34,9 +34,9 @@ export default function SearchBarGlobal({
 
         <button
           onClick={onBuscar}
-          className="  rounded-lg hover:bg-blue-700 transition"
+          className="  rounded-xl p-1 bg-[#FB8500] transition cursor-pointer"
         >
-          <FiSearch size={25} className="text-white" />
+          <FiSearch size={25} className="text-white " />
         </button>
       </div>
     </div>

@@ -1,17 +1,18 @@
-export default function CardHorizontal({ title, description, image }) {
+export default function CardHorizontal({ title, description, image, tipo }) {
   const hasImage = Boolean(image);
 
   return (
-    <div className="flex items-center gap-4  px-4 min-h-[72px] py-2 rounded-lg  transition duration-300">
+    <div className="flex flex-col md:flex-row items-start md:items-center gap-4 px-2 py-1 min-h-[100px] border border-gray-200 bg-white transition duration-300 hover:shadow-lg rounded-xl">
+      {/* Imagen o ícono */}
       <div
-        className={`aspect-square bg-center bg-no-repeat bg-cover rounded-lg size-14 flex items-center justify-center ${
-          hasImage ? "" : "bg-gray-200"
+        className={`w-full md:w-50 aspect-[16/9] bg-center bg-no-repeat bg-cover rounded-xl flex items-center justify-center ${
+          hasImage ? "" : "bg-gray-100"
         }`}
         style={hasImage ? { backgroundImage: `url("${image}")` } : {}}
       >
         {!hasImage && (
           <svg
-            className="w-6 h-6 text-gray-400"
+            className="w-8 h-8 text-gray-400"
             fill="none"
             stroke="currentColor"
             strokeWidth={1.5}
@@ -28,12 +29,16 @@ export default function CardHorizontal({ title, description, image }) {
         )}
       </div>
 
-      <div className="flex flex-col justify-center">
-        <p className="text-[#141C24] text-base font-medium leading-normal line-clamp-1">
+      {/* Texto */}
+      <div className="flex flex-col justify-center gap-1 w-full">
+        <p className="text-[#141C24] text-[16px] font-semibold leading-tight tracking-tight line-clamp-1">
           {title}
         </p>
-        <p className="text-[#3F5374] text-sm font-normal leading-normal line-clamp-2">
+        <p className="text-[#5A6B87] text-xs font-normal leading-snug line-clamp-2">
           {description}
+        </p>
+        <p className="text-[#7A8CA3] text-xs font-medium uppercase tracking-wide">
+          {tipo}
         </p>
       </div>
     </div>

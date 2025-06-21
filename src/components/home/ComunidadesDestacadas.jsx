@@ -1,11 +1,10 @@
 import { Link } from "react-router-dom";
 import ScrollCarousel from "../ScrollCarousel";
 import { useComunidades } from "../../hooks/useComunidades";
-import hb from "../../assets/hb.png";
 import BannerTituloSugeridos from "../BannerTituloSugeridos";
 import CardDestacado from "../Card";
 
-export default function ComunidadesDestacadas() {
+export default function ComunidadesDestacadas({ imagen }) {
   const { lista: comunidades } = useComunidades();
 
   const destacadas = comunidades.slice(0, 6);
@@ -16,7 +15,7 @@ export default function ComunidadesDestacadas() {
     <section className="space-y-4">
       <BannerTituloSugeridos
         titulo="Encontrá tu comunidad y sentite en casa"
-        imagen={hb}
+        imagen={imagen}
         link="/comunidades"
       />
 

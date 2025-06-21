@@ -2,10 +2,9 @@ import { Link } from "react-router-dom";
 import CardDestacado from "../Card";
 import ScrollCarousel from "../ScrollCarousel";
 import { useNegocios } from "../../hooks/useNegocios";
-import hb from "../../assets/hb.png";
 import BannerTituloSugeridos from "../BannerTituloSugeridos";
 
-export default function NegociosSugeridos() {
+export default function NegociosSugeridos({ imagen }) {
   const { lista: negocios } = useNegocios();
 
   const destacados = negocios.slice(0, 6); // Limita para un mejor scroll
@@ -16,7 +15,7 @@ export default function NegociosSugeridos() {
     <section className="space-y-4">
       <BannerTituloSugeridos
         titulo="Destacados de tu comunidad"
-        imagen={hb}
+        imagen={imagen}
         link="/negocios"
       />
 

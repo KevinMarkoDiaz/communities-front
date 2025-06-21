@@ -6,6 +6,7 @@ export const buscarGlobalThunk = createAsyncThunk(
   async (termino, { rejectWithValue }) => {
     try {
       const resultados = await fetchBusquedaGlobal(termino);
+      console.log(termino, resultados);
       return { termino, resultados };
     } catch (error) {
       return rejectWithValue(error.message || "Error al buscar globalmente");

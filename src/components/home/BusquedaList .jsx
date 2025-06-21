@@ -48,7 +48,11 @@ export default function BusquedaList() {
 
   const getImagen = (item) => {
     return (
-      item.imagen || item.imagenDestacada || item.image || item.flagImage || ""
+      item.imagen ||
+      item.imagenDestacada ||
+      item.featuredImage ||
+      item.bannerImage ||
+      ""
     );
   };
 
@@ -56,6 +60,10 @@ export default function BusquedaList() {
     return (
       item.nombre || item.titulo || item.title || item.name || "Sin título"
     );
+  };
+
+  const getTipo = (item) => {
+    return item.tipo || "Sin tipo";
   };
 
   const getDescripcion = (item) => {
@@ -97,6 +105,7 @@ export default function BusquedaList() {
                 title={getTitulo(item)}
                 description={getDescripcion(item)}
                 image={getImagen(item)}
+                tipo={getTipo(item)}
               />
             </Link>
           ))}

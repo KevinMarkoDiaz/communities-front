@@ -25,55 +25,70 @@ export default function CategoryCarousel() {
       {loading ? (
         <p className="px-4">Cargando categorías...</p>
       ) : (
-        <ScrollCarousel>
-          {categorias.map((cat) => (
-            <button
-              key={cat._id}
-              onClick={() => dispatch(setCategoria(cat.valor || cat.name))}
-              className={`flex flex-col gap-2 flex-shrink-0 snap-start
-    w-[40vw] aspect-square sm:w-[140px] md:w-[160px]
-    rounded-lg text-left transition ring-offset-1 ${
-      categoriaSeleccionada === (cat.valor || cat.name)
-        ? "ring-2 ring-[#f4c753]"
-        : ""
-    }`}
-            >
-              <div
-                className="w-full h-full rounded-xl flex items-center justify-center bg-gray-100 overflow-hidden"
-                style={
-                  cat.icon
-                    ? {
-                        backgroundImage: `url("${cat.icon}")`,
-                        backgroundSize: "cover",
-                        backgroundPosition: "center",
-                      }
-                    : {}
-                }
-              >
-                {!cat.icon && (
-                  <svg
-                    className="w-8 h-8 text-gray-400"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={1.5}
-                    viewBox="0 0 24 24"
+        <>
+          <ScrollCarousel>
+            {categorias.map((cat) => {
+              const valor = (cat.valor || cat.name).toLowerCase();
+              const seleccionada =
+                categoriaSeleccionada.toLowerCase() === valor;
+
+              return (
+                <button
+                  key={cat._id}
+                  onClick={() => dispatch(setCategoria(valor))}
+                  className={`flex flex-col gap-2 flex-shrink-0 snap-start cursor-pointer
+                    w-[40vw] aspect-square sm:w-[140px] md:w-[160px]
+                    rounded-lg text-left transition ring-offset-1 
+                    ${seleccionada ? "ring-2 ring-[#f4c753]" : "hover:shadow"}`}
+                >
+                  <div
+                    className="w-full h-full rounded-xl flex items-center justify-center bg-gray-100 overflow-hidden"
+                    style={
+                      cat.icon
+                        ? {
+                            backgroundImage: `url("${cat.icon}")`,
+                            backgroundSize: "cover",
+                            backgroundPosition: "center",
+                          }
+                        : {}
+                    }
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10
-          10-4.48 10-10S17.52 2 12 2zm0 18c-1.85 0-3.55-.63-4.9-1.69.01-2.5 3.27-3.88 4.9-3.88
-          1.63 0 4.89 1.38 4.9 3.88C15.55 19.37 13.85 20 12 20zm0-8a3 3 0 100-6 3 3 0 000 6z"
-                    />
-                  </svg>
-                )}
-              </div>
-              <p className="text-[#181411] text-sm font-medium leading-tight truncate mt-1">
-                {cat.name}
-              </p>
+                    {!cat.icon && (
+                      <svg
+                        className="w-8 h-8 text-gray-400"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={1.5}
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10
+                            10-4.48 10-10S17.52 2 12 2zm0 18c-1.85 0-3.55-.63-4.9-1.69.01-2.5 3.27-3.88 4.9-3.88
+                            1.63 0 4.89 1.38 4.9 3.88C15.55 19.37 13.85 20 12 20zm0-8a3 3 0 100-6 3 3 0 000 6z"
+                        />
+                      </svg>
+                    )}
+                  </div>
+                  <p className="text-[#181411] text-sm font-medium leading-tight truncate mt-1">
+                    {cat.name}
+                  </p>
+                </button>
+              );
+            })}
+          </ScrollCarousel>
+
+          {/* Botón "Todas las categorías" debajo */}
+          <div className="px-4 pt-3">
+            <button
+              onClick={() => dispatch(setCategoria("todas"))}
+              className="text-md font-semibold text-[#181411] cursor-pointer transition"
+            >
+              Todas las categorías
             </button>
-          ))}
-        </ScrollCarousel>
+          </div>
+        </>
       )}
     </div>
   );
