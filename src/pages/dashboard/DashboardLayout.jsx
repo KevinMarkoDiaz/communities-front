@@ -1,12 +1,11 @@
 import { Outlet, NavLink, Link, useNavigate } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { logout } from "../../store/authSlice";
 import Navbar from "../../components/Navbar";
 import SidebarDashboard from "./SidebarDashboard";
 import MobileFooterDashboard from "./MobileFooterDashboard";
-import MobileStickyHeader from "../../components/MobileStickyHeader";
 
 export default function DashboardLayout() {
   const dispatch = useDispatch();
@@ -22,7 +21,6 @@ export default function DashboardLayout() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <MobileStickyHeader />
       <Navbar />
 
       {/* Layout principal */}

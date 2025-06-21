@@ -10,6 +10,7 @@ export default function Header() {
   const [showSticky, setShowSticky] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  // Sticky solo para desktop
   useEffect(() => {
     const handleScroll = () => {
       setShowSticky(window.scrollY > 120);
@@ -18,6 +19,7 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Previene scroll en mobile
   useEffect(() => {
     document.body.style.overflow = mobileMenuOpen ? "hidden" : "auto";
   }, [mobileMenuOpen]);
@@ -62,9 +64,9 @@ export default function Header() {
   return (
     <>
       {/* Header principal */}
-      <header className="px-6 sm:px-10 py-4 bg-white border-b border-[#E4E9F1] text-[#141C24] z-20 relative">
-        <div className="flex items-center justify-between">
-          <Link to="/" className="text-xl font-extrabold z-100">
+      <header className="px-6 sm:px-10 py-4 bg-white border-b border-[#E4E9F1] text-[#141C24] z-50  relative">
+        <div className="flex items-center justify-between relative z-50">
+          <Link to="/" className="text-xl font-extrabold">
             <img src={Icon} alt="Communities logo" className="h-10" />
           </Link>
 
@@ -84,67 +86,73 @@ export default function Header() {
             )}
           </div>
 
-          {/* Mobile menu toggle */}
+          {/* Botón mobile */}
           <button
-            className="md:hidden text-2xl z-100"
+            className="md:hidden text-2xl"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
-            {mobileMenuOpen ? (
-              <FiX className=" font-bold text-white" />
-            ) : (
-              <FiMenu />
-            )}
+            {mobileMenuOpen ? <FiX className="font-bold " /> : <FiMenu />}
           </button>
-        </div>
-
-        {/* Menú móvil con backdrop blur y drawer lateral */}
-        <div
-          className={`md:hidden fixed inset-0 z-50 flex backdrop-blur-sm bg-gray-900/70   transition-opacity duration-300 ${
-            mobileMenuOpen
-              ? "opacity-100 pointer-events-auto"
-              : "opacity-0 pointer-events-none"
-          }`}
-        >
-          {/* Fondo blur */}
-          <div
-            className="absolute inset-0  bg-white/30"
-            onClick={() => setMobileMenuOpen(false)}
-          />
-          <div
-            className="absolute inset-0 z-10 bg-center bg-cover blur-xs opacity-50"
-            style={{
-              backgroundImage: `url(${fondoDecorativo})`,
-            }}
-            onClick={() => setMobileMenuOpen(false)}
-          />
-          {/* Drawer lateral */}
-          <div
-            className={`relative h-full w-80 px-6 py-8 transform transition-transform duration-300 ${
-              mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
-            }`}
-          >
-            <NavLinks isMobile />
-            <PerfilBtn isMobile />
-          </div>
         </div>
       </header>
 
-      {/* Sticky Header solo en desktop */}
+      {/* Menú mobile */}
       <div
-        className={`hidden md:block fixed top-0 left-0 right-0 bg-white border-b border-[#E4E9F1] shadow-sm transition-all duration-300 transform ${
-          showSticky
-            ? "translate-y-0 opacity-100 z-50"
-            : "-translate-y-full opacity-0 z-0"
+        className={`md:hidden fixed inset-0 z-40 flex backdrop-blur-sm bg-gray-900/70 transition-opacity duration-300 ${
+          mobileMenuOpen
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none"
         }`}
       >
-        <div className="flex items-center justify-between px-6 py-2">
-          <Link to="/" className="text-base font-bold z-100">
+        {/* Fondo blur + decorativo */}
+        <div
+          className="absolute inset-0 bg-white/30"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+        <div
+          className={`absolute inset-0 bg-center bg-cover transition-all duration-500 ease-in-out transform ${
+            mobileMenuOpen
+              ? "opacity-50 scale-100"
+              : "opacity-0 scale-95 pointer-events-none"
+          }`}
+          style={{ backgroundImage: `url(${fondoDecorativo})` }}
+          onClick={() => setMobileMenuOpen(false)}
+        />
+
+        {/* Drawer lateral */}
+        <div
+          className={`relative h-full w-80 px-6 py-8 transform transition-transform duration-300 ${
+            mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
+        >
+          <NavLinks isMobile />
+          <PerfilBtn isMobile />
+        </div>
+      </div>
+
+      {/* Sticky Header en desktop */}
+      <div
+        className={`fixed top-0 left-0 right-0  bg-white  border-b border-[#E4E9F1] shadow-sm transition-all duration-300 transform ${
+          showSticky
+            ? "translate-y-0 opacity-100 z-40  "
+            : "-translate-y-full opacity-0 z-0    "
+        }`}
+      >
+        <div className="flex items-center justify-between px-6 py-2 relative z-50">
+          <Link to="/" className="text-base font-bold">
             <img src={Icon} alt="logo" className="h-10" />
           </Link>
-          <div className="hidden md:flex items-center gap-4">
+          <div className="flex items-center gap-4 hidden md:block">
             <NavLinks />
             <PerfilBtn />
           </div>
+          {/* Botón mobile también en sticky */}
+          <button
+            className="md:hidden text-2xl"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            {mobileMenuOpen ? <FiX className="font-bold " /> : <FiMenu />}
+          </button>
         </div>
       </div>
     </>

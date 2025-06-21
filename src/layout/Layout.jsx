@@ -2,7 +2,6 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import StickyAds from "../components/StickyAds";
 import { Outlet, useLocation } from "react-router-dom";
-import MobileStickyHeader from "../components/MobileStickyHeader";
 
 export default function Layout() {
   const location = useLocation();
@@ -14,7 +13,6 @@ export default function Layout() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <MobileStickyHeader />
       <Navbar />
 
       {!hideAds && (
