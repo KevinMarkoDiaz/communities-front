@@ -18,18 +18,46 @@ const esquemaValidacion = [
   Yup.object({
     title: Yup.string().required("Título obligatorio"),
     description: Yup.string().required("Descripción obligatoria"),
+    tags: Yup.string().nullable(),
   }),
   Yup.object({
     date: Yup.date().required("Fecha obligatoria"),
     time: Yup.string().required("Hora obligatoria"),
     location: Yup.string().required("Ubicación obligatoria"),
+    isOnline: Yup.boolean(),
+    virtualLink: Yup.string().when("isOnline", (isOnline, schema) =>
+      isOnline
+        ? schema.required("El link virtual es obligatorio").url("URL inválida")
+        : schema.notRequired()
+    ),
+    registrationLink: Yup.string().nullable().url("Debe ser una URL válida"),
   }),
   Yup.object({
     image: Yup.mixed().required("Imagen destacada requerida"),
+    images: Yup.array().of(Yup.mixed()).nullable(),
   }),
   Yup.object({
-    categories: Yup.array().min(1, "Selecciona al menos una categoría"),
-    communities: Yup.array().min(1, "Selecciona al menos una comunidad"),
+    categories: Yup.array()
+      .min(1, "Selecciona al menos una categoría")
+      .of(Yup.string().required()),
+    communities: Yup.array()
+      .min(1, "Selecciona al menos una comunidad")
+      .of(Yup.string().required()),
+    isFree: Yup.boolean(),
+    price: Yup.mixed().when("isFree", {
+      is: false,
+      then: () =>
+        Yup.number()
+          .typeError("Debe ser un número")
+          .required("Precio obligatorio")
+          .min(1, "Debe ser mayor a 0"),
+      otherwise: () => Yup.number().notRequired(),
+    }),
+    sponsors: Yup.array().of(Yup.string()).nullable(),
+    language: Yup.string().oneOf(["es", "en", "pt", "fr"]).default("es"),
+    status: Yup.string().oneOf(["activo", "cancelado", "finalizado"]),
+    featured: Yup.boolean(),
+    isPublished: Yup.boolean(),
   }),
 ];
 
@@ -40,9 +68,23 @@ const valoresIniciales = {
   time: "",
   location: "",
   image: null,
+  images: [],
   categories: [],
   communities: [],
   tags: "",
+  language: "es",
+  isFree: true,
+  price: 0,
+  isOnline: false,
+  virtualLink: "",
+  registrationLink: "",
+  sponsors: [],
+  status: "activo",
+  featured: false,
+  isPublished: false,
+  organizer: "",
+  organizerModel: "",
+  organizerLabel: "",
 };
 
 export default function CrearEditarEventoForm({
@@ -52,15 +94,39 @@ export default function CrearEditarEventoForm({
   const PasoActual = pasos[paso];
 
   const usuario = useSelector((state) => state.auth.usuario);
-  const token = useSelector((state) => state.auth.token);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const avanzar = () => setPaso((prev) => Math.min(prev + 1, pasos.length - 1));
   const retroceder = () => setPaso((prev) => Math.max(prev - 1, 0));
 
   const handleSubmit = async (values, actions) => {
     try {
+      console.log("🚀 Submitting values:", values);
       const formData = new FormData();
+
+      if (values.image && typeof values.image !== "string") {
+        console.log("🖼️ Imagen destacada:", values.image.name);
+        formData.append("featuredImage", values.image);
+      }
+
+      if (Array.isArray(values.images)) {
+        values.images.forEach((img, i) => {
+          if (img instanceof File) {
+            console.log(`🖼️ Imagen galería #${i + 1}:`, img.name);
+            formData.append("images", img);
+          }
+        });
+      }
+
+      const tagsArray = values.tags
+        ? values.tags.split(",").map((tag) => tag.trim())
+        : [];
+
+      const organizerId = values.organizer?.value || usuario._id;
+      const organizerModel =
+        values.organizer?.model ||
+        (usuario.role === "business_owner" ? "Business" : "User");
 
       const data = {
         title: values.title,
@@ -68,22 +134,36 @@ export default function CrearEditarEventoForm({
         date: values.date,
         time: values.time,
         location: values.location,
-        tags: values.tags
-          ? values.tags.split(",").map((tag) => tag.trim())
-          : [],
-        categories: values.categories,
         communities: values.communities,
-        createdBy: usuario._id,
+        businesses: values.businesses || [],
+        categories: values.categories,
+        tags: tagsArray,
+        language: values.language || "es",
+        price: Number(values.price),
+        isFree: values.isFree,
+        isOnline: values.isOnline,
+        status: values.status || "activo",
+        featured: values.featured || false,
+        isPublished: values.isPublished || false,
+        registrationLink: values.registrationLink || "",
+        sponsors: values.sponsors || [],
+        organizer: organizerId,
+        organizerModel: organizerModel,
       };
 
-      formData.append("data", JSON.stringify(data));
-
-      if (values.image && typeof values.image !== "string") {
-        formData.append("featuredImage", values.image);
+      if (values.isOnline && values.virtualLink) {
+        data.virtualLink = values.virtualLink;
       }
 
-      await createEvent(formData, token);
-      dispatch(obtenerEventos()); // ← 🔁 actualiza Redux
+      if (values.coordinates) {
+        data.coordinates = values.coordinates;
+      }
+
+      console.log("📦 Datos enviados al backend:", data);
+      formData.append("data", JSON.stringify(data));
+
+      await createEvent(formData);
+      dispatch(obtenerEventos());
       alert("✅ Evento creado correctamente");
       navigate("/dashboard/mis-eventos");
     } catch (err) {
