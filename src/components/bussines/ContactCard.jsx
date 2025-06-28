@@ -5,13 +5,13 @@ export function ContactCard({ contact }) {
 
   const { phone, email, website } = contact;
 
-  const InfoItem = ({ label, value, href }) => (
+  const InfoItem = ({ label, value, href, Icon }) => (
     <div className="flex items-center gap-4 bg-white px-4 min-h-[72px] py-2">
-      <div className="text-[#181411] flex items-center justify-center rounded-lg bg-[#f5f2f0] shrink-0 size-12">
-        {/* <Icon size={20} /> */}
+      <div className="flex items-center justify-center rounded-lg bg-gray-100 shrink-0 size-12">
+        {Icon && <Icon size={20} className="text-gray-600" />}
       </div>
       <div className="flex flex-col justify-center">
-        <p className="text-[#181411] text-base font-medium leading-normal line-clamp-1">
+        <p className="text-gray-900 text-base font-medium leading-normal line-clamp-1">
           {href ? (
             <a
               href={href}
@@ -25,7 +25,7 @@ export function ContactCard({ contact }) {
             value
           )}
         </p>
-        <p className="text-[#8a7460] text-sm font-normal leading-normal line-clamp-1">
+        <p className="text-gray-500 text-sm font-normal leading-normal line-clamp-1">
           {label}
         </p>
       </div>
@@ -34,7 +34,7 @@ export function ContactCard({ contact }) {
 
   return (
     <div className="bg-white rounded-xl shadow-sm">
-      <h2 className="text-[#181411] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">
+      <h2 className="text-gray-900 text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">
         Contacto
       </h2>
       <div className="flex flex-col">

@@ -12,8 +12,8 @@ import {
 
 import Paso1General from "../../components/dashboard/formularios/negocios/Paso1General";
 import Paso2Contacto from "../../components/dashboard/formularios/negocios/Paso2Contacto";
-import Paso3Ubicacion from "../../components/dashboard/formularios/negocios/Paso3Ubicacion";
 import Paso4Horarios from "../../components/dashboard/formularios/negocios/Paso4Horarios";
+import Paso3Ubicacion from "../../components/dashboard/formularios/PasoUbicacion";
 import Paso5Propietario from "../../components/dashboard/formularios/negocios/Paso5Propietario";
 import Paso6Extras from "../../components/dashboard/formularios/negocios/Paso6Extras";
 import { getAllCategories } from "../../api/categoryApi";
@@ -228,8 +228,17 @@ export default function NegocioForm() {
       enableReinitialize
       initialValues={initialValues}
       validationSchema={validationSchema[paso]}
-      onSubmit={async (values, { setSubmitting }) => {
+      validateOnBlur={false}
+      validateOnChange={false}
+      onSubmit={async (values, { setSubmitting, validateForm }) => {
         try {
+          const errors = await validateForm();
+          if (Object.keys(errors).length > 0) {
+            console.warn("❌ Errores al intentar guardar:", errors);
+            setSubmitting(false);
+            return;
+          }
+
           if (paso === steps.length - 1) {
             const { featuredImage, profileImage, images, ...otrosCampos } =
               values;
@@ -239,14 +248,14 @@ export default function NegocioForm() {
             if (featuredImage instanceof File) {
               formData.append("featuredImage", featuredImage);
             } else if (typeof featuredImage === "string") {
-              formData.append("featuredImageUrl", featuredImage); // 🆕
+              formData.append("featuredImageUrl", featuredImage);
             }
 
             // Imagen de perfil
             if (profileImage instanceof File) {
               formData.append("profileImage", profileImage);
             } else if (typeof profileImage === "string") {
-              formData.append("profileImageUrl", profileImage); // 🆕
+              formData.append("profileImageUrl", profileImage);
             }
 
             // Galería
@@ -260,7 +269,7 @@ export default function NegocioForm() {
               formData.append(
                 "existingImages",
                 JSON.stringify(imagenesExistentes)
-              ); // 🆕
+              );
             }
 
             // Resto de campos
@@ -291,8 +300,6 @@ export default function NegocioForm() {
           setSubmitting(false);
         }
       }}
-      validateOnBlur={false}
-      validateOnChange={false}
     >
       {({ validateForm }) => (
         <Form className="space-y-6 p-4 overflow-hidden relative">
@@ -320,26 +327,32 @@ export default function NegocioForm() {
                 Atrás
               </button>
             )}
-            {paso === steps.length - 1 ? (
-              <button type="submit" className="btn btn-primary">
-                {id ? "Actualizar" : "Guardar"}
-              </button>
-            ) : (
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={async () => {
-                  const errors = await validateForm();
-                  if (Object.keys(errors).length === 0) {
+
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={async () => {
+                const errors = await validateForm();
+
+                if (Object.keys(errors).length === 0) {
+                  // 👇 solo avanzar si NO estás en el último paso
+                  if (paso < steps.length - 1) {
                     setPaso((prev) => prev + 1);
                   } else {
-                    console.warn("Errores en el paso actual:", errors);
+                    // 👇 solo enviar si estás en el último paso
+                    document.querySelector("form").requestSubmit(); // fuerza submit
                   }
-                }}
-              >
-                Siguiente
-              </button>
-            )}
+                } else {
+                  console.warn("Errores en el paso actual:", errors);
+                }
+              }}
+            >
+              {paso === steps.length - 1
+                ? id
+                  ? "Actualizar"
+                  : "Guardar"
+                : "Siguiente"}
+            </button>
           </div>
         </Form>
       )}

@@ -55,3 +55,8 @@ export async function contarComunidades() {
   const res = await axiosInstance.get("/communities/mine");
   return res.data.communities.length;
 }
+
+export async function getCommunityBySlug(slug) {
+  const res = await axiosInstance.get(`/communities/slug/${slug}`);
+  return res.data;
+}

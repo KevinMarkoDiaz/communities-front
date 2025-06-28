@@ -1,154 +1,273 @@
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getEventById } from "../api/eventApi";
+import { getBusinessById } from "../api/businessApi";
+import { getCommunityById } from "../api/communityApi";
+import MapaNegocioDetalle from "../components/bussines/MapaNegocioDetalle";
+import Compartir from "../components/Compartir";
 
 export default function EventoDetalle() {
   const { id } = useParams();
   const [evento, setEvento] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [sponsorsData, setSponsorsData] = useState([]);
+  const [communitiesData, setCommunitiesData] = useState([]);
 
   useEffect(() => {
     const cargarEvento = async () => {
       try {
         const { event } = await getEventById(id);
-        console.log(event);
-        // Normalización defensiva
         setEvento({
-          id: event._id || "",
-          title: event.title || "",
-          description: event.description || "",
-          date: event.date || "",
-          time: event.time || "",
-          location: event.location || "",
-          image: event.featuredImage || "",
+          id: event._id,
+          title: event.title,
+          description: event.description,
+          date: event.date,
+          time: event.time,
+          location: event.location,
+          image: event.featuredImage,
+          images: event.images || [],
           tags: event.tags || [],
-          organizerModel: event.organizerModel || "",
-          organizer: {
-            id: event.organizer?._id,
-            fullName: `${event.organizer?.name || ""} ${
-              event.organizer?.lastName || ""
-            }`.trim(),
-            email: event.organizer?.email || "",
-            profileImage:
-              event.organizer?.profileImage || "/avatar-placeholder.png",
-            title: event.organizer?.title || "",
-            description: event.organizer?.description || "",
-          },
+          price: event.price ?? 0,
+          isFree: event.isFree ?? true,
+          registrationLink: event.registrationLink || "",
+          isOnline: event.isOnline || false,
+          virtualLink: event.virtualLink || "",
+          status: event.status,
+          organizerModel: event.organizerModel,
+          organizer: event.organizer,
+          sponsors: event.sponsors || [],
+          categories: event.categories || [],
+          communities: event.communities || [],
+          businesses: event.businesses || [],
           createdAt: event.createdAt,
-          updatedAt: event.updatedAt,
         });
-        console.log(evento);
       } catch (err) {
         setError("No se pudo cargar el evento");
       } finally {
         setLoading(false);
       }
     };
-
     cargarEvento();
   }, [id]);
+
   useEffect(() => {
-    if (evento) {
-      console.log("Evento cargado:", evento);
-    }
-  }, [evento]);
+    const cargarSponsors = async () => {
+      if (evento?.sponsors?.length > 0) {
+        try {
+          const promises = evento.sponsors.map((s) => getBusinessById(s._id));
+          const data = await Promise.all(promises);
+          setSponsorsData(data);
+        } catch (err) {
+          console.error("Error cargando sponsors:", err);
+        }
+      }
+    };
+    cargarSponsors();
+  }, [evento?.sponsors]);
+
+  useEffect(() => {
+    const cargarCommunities = async () => {
+      if (evento?.communities?.length > 0) {
+        try {
+          const promises = evento.communities.map((c) =>
+            getCommunityById(c._id)
+          );
+          const data = await Promise.all(promises);
+          setCommunitiesData(data);
+        } catch (err) {
+          console.error("Error cargando comunidades:", err);
+        }
+      }
+    };
+    cargarCommunities();
+  }, [evento?.communities]);
 
   if (loading) return <div className="p-4">Cargando evento...</div>;
-  if (error) return <div className="p-4 text-red-600">{error}</div>;
-  if (!evento) return <div className="p-4">Evento no encontrado.</div>;
+  if (error || !evento)
+    return (
+      <div className="p-4 text-red-600">{error || "Evento no encontrado."}</div>
+    );
 
   return (
-    <div className="px-4 sm:px-8 lg:px-40 py-5 flex justify-center">
-      <div className="w-full max-w-[960px] flex flex-col">
-        {/* Hero visual */}
+    <div className="px-4 sm:px-8 lg:px-8 xl:px-40 py-5 flex justify-center">
+      <div className="w-full max-w-[960px] flex flex-col gap-16">
+        {/* Imagen destacada */}
         <div
-          className="w-full bg-center bg-no-repeat bg-cover flex flex-col justify-end overflow-hidden bg-white rounded-xl min-h-[218px]"
-          style={{
-            backgroundImage: `linear-gradient(0deg, rgba(0,0,0,0.3), rgba(0,0,0,0)), url(${evento.image})`,
-          }}
+          className="w-full h-56 sm:h-72 rounded-xl bg-cover bg-center shadow-md"
+          style={{ backgroundImage: `url(${evento.image})` }}
         />
 
-        {/* Título */}
-        <h1 className="text-[#141414] text-2xl font-bold leading-tight tracking-tight px-4 pt-5 pb-3">
-          {evento.title || "Título no disponible"}
-        </h1>
-
-        {/* Fecha y hora */}
-        <h2 className="text-[#141414] text-lg font-bold px-4 pb-3">
-          {new Date(evento.date).toLocaleDateString()} - {evento.time}
-        </h2>
-
-        {/* Ubicación */}
-        <div className="flex items-center gap-4 bg-white px-4 min-h-[72px] py-2">
-          <div className="text-[#141414] flex items-center justify-center rounded-lg bg-[#F4F4F4] w-12 h-12">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              fill="currentColor"
-              viewBox="0 0 256 256"
-            >
-              <path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,191.89c-18.73-20.27-30.09-49-31.77-79.89h63.54C158.09,166.87,146.73,195.62,128,215.89Z" />
-            </svg>
+        {/* Encabezado */}
+        <div className="space-y-1">
+          <div className="flex justify-between items-center w-full">
+            <h1 className="text-2xl font-bold text-gray-900">{evento.title}</h1>
+            {evento.status && (
+              <span className="flex items-center gap-2 w-fit px-2 py-1 rounded-full bg-green-100 text-green-700 text-xs font-medium">
+                <span className="relative flex h-3 w-3 items-center justify-center">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-green-700"></span>
+                </span>
+                Activo
+              </span>
+            )}
           </div>
-          <div className="flex flex-col justify-center">
-            <p className="text-[#141414] text-base font-medium leading-normal">
-              {evento.location}
+
+          {/* Fecha y lugar */}
+          <p className="text-sm text-gray-500">
+            {new Date(evento.date).toLocaleDateString()} - {evento.time}
+            {evento.location?.address && (
+              <>
+                {" · "}
+                {evento.location.address}, {evento.location.city}
+              </>
+            )}
+          </p>
+
+          {/* Precio */}
+          {!evento.isFree && evento.price > 0 && (
+            <p className="text-sm text-green-600 font-medium">
+              Precio: ${evento.price}
             </p>
-            <p className="text-neutral-500 text-sm font-normal leading-normal">
-              {evento.time}
-            </p>
-          </div>
+          )}
+          <p className="text-xs text-gray-400">
+            Publicado el {new Date(evento.createdAt).toLocaleDateString()}
+          </p>
         </div>
 
-        {/* Descripción */}
-        <p className="text-[#141414] text-base font-normal leading-normal px-4 pt-3 pb-3 whitespace-pre-line">
-          {evento.description || "Este evento no tiene descripción."}
-        </p>
+        {/* Botones */}
+        <div className="flex flex-col gap-3">
+          {evento.registrationLink && (
+            <a
+              href={evento.registrationLink}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-block w-fit px-4 py-2 bg-black text-white text-sm rounded transition"
+            >
+              Registrate
+            </a>
+          )}
+          {evento.isOnline && evento.virtualLink && (
+            <a
+              href={evento.virtualLink}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-block w-fit px-4 py-2 bg-green-600 text-white text-sm rounded transition"
+            >
+              Ingresar al evento virtual
+            </a>
+          )}
+          {/* Compartir */}
+          <Compartir
+            url={window.location.href}
+            title={`Participá en "${evento.title}" en Communities`}
+            text={`Mirá este evento: ${
+              evento.title
+            } - ${evento.description?.slice(0, 100)}...`}
+          />
+        </div>
 
-        {/* Tags */}
-        {Array.isArray(evento.tags) && evento.tags.length > 0 && (
-          <div className="flex gap-3 flex-wrap px-4 pb-2">
-            {evento.tags.map((tag, i) => (
+        <hr className="border-t border-gray-200" />
+
+        {/* Descripción */}
+        <div className="border-l-4 border-gray-200 pl-4">
+          <p className="font-sans text-[15px] text-gray-800 leading-relaxed whitespace-pre-line">
+            {evento.description}
+          </p>
+        </div>
+
+        {/* Galería */}
+        {evento.images.length > 0 && (
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {evento.images.map((img, idx) => (
               <div
-                key={i}
-                className="flex h-8 items-center justify-center rounded-full bg-[#F4F4F4] px-4 text-[#141414] text-sm font-medium"
-              >
-                {tag}
-              </div>
+                key={idx}
+                className="w-full h-40 rounded-xl bg-cover bg-center"
+                style={{ backgroundImage: `url(${img})` }}
+              />
             ))}
           </div>
         )}
 
-        {/* Organizador */}
-        {evento.organizer && (
-          <>
-            <h2 className="text-[#141414] text-lg font-bold px-4 pt-5 pb-3">
-              Organizado por
+        {/* Tags */}
+        <div className="flex flex-wrap gap-2">
+          {evento.tags.map((tag, i) => (
+            <span
+              key={i}
+              className="bg-gray-100 text-gray-800 px-3 py-1 text-xs rounded-full"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+
+        <hr className="border-t border-gray-200" />
+
+        {/* Sponsors */}
+        {sponsorsData.length > 0 && (
+          <div>
+            <h2 className="text-lg font-semibold text-gray-800 mb-2">
+              Patrocinadores
             </h2>
-            <div className="flex items-center gap-4 bg-white px-4 py-2">
-              <div
-                className="bg-center bg-no-repeat bg-cover rounded-full h-14 w-14"
-                style={{
-                  backgroundImage: `url(${
-                    evento.organizer.profileImage || "/avatar-placeholder.png"
-                  })`,
-                }}
-              />
-              <div className="flex flex-col justify-center">
-                <p className="text-[#141414] text-base font-medium leading-normal">
-                  {evento.organizer.fullName || "Nombre no disponible"}
-                </p>
-                <p className="text-neutral-500 text-sm font-normal leading-normal">
-                  {evento.organizer.description || ""}
-                </p>
-              </div>
+            <div className="flex gap-3 flex-wrap">
+              {sponsorsData.map(({ business }) => (
+                <Link
+                  to={`/negocios/${business.id}`}
+                  key={business.id}
+                  className="flex flex-col items-center w-24"
+                >
+                  <div
+                    className="w-20 h-20 rounded-xl bg-cover bg-center border mb-1"
+                    style={{
+                      backgroundImage: `url(${
+                        business.profileImage || "/avatar-placeholder.png"
+                      })`,
+                    }}
+                  />
+                  <p className="text-xs text-center text-gray-700 font-medium line-clamp-2">
+                    {business.name}
+                  </p>
+                </Link>
+              ))}
             </div>
-          </>
+          </div>
         )}
 
-        {/* CTA */}
+        {/* Comunidades */}
+        {communitiesData.length > 0 && (
+          <div>
+            <h2 className="text-lg font-semibold text-gray-800 mb-2">
+              Comunidades relacionadas
+            </h2>
+            <div className="flex gap-2 flex-wrap">
+              {communitiesData.map(({ community }) => (
+                <Link
+                  key={community._id}
+                  to={`/comunidades/${community._id}`}
+                  className="flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 text-sm text-gray-700 hover:bg-gray-200"
+                >
+                  <img
+                    src={community.flagImage || "/placeholder-flag.png"}
+                    alt="bandera"
+                    className="h-4 w-4 rounded-full object-cover"
+                  />
+                  {community.name}
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+        <hr className="border-t border-gray-200" />
+
+        {/* Mapa */}
+        {evento?.location?.coordinates?.lat &&
+          evento?.location?.coordinates?.lng && (
+            <MapaNegocioDetalle
+              lat={evento.location.coordinates.lat}
+              lng={evento.location.coordinates.lng}
+              name={evento.title}
+            />
+          )}
       </div>
     </div>
   );

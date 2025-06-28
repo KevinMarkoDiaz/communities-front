@@ -28,7 +28,7 @@ export default function CardLista({
           <div
             className="w-full h-40 sm:h-24 sm:rounded-l-2xl rounded-t-2xl bg-cover bg-center"
             style={{
-              backgroundImage: `url("${image}")`,
+              backgroundImage: `url(${image})`,
             }}
           />
         ) : (

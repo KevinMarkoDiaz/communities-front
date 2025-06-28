@@ -10,21 +10,25 @@ import { obtenerNegocios } from "../../../../store/negociosSlice";
 export default function Paso4Opciones() {
   const dispatch = useDispatch();
   const { values, setFieldValue } = useFormikContext();
-  const categorias = useSelector((state) => state.categorias?.data || []);
-  const comunidades = useSelector((state) => state.comunidades?.lista || []);
-  const negocios = useSelector((state) => state.negocios?.lista || []);
+
+  // ✅ Aseguramos arrays por defecto
+  const categorias = useSelector((state) => state.categorias?.data ?? []);
+  const comunidades = useSelector((state) => state.comunidades?.lista ?? []);
+  const negocios = useSelector((state) => state.negocios?.lista ?? []);
 
   const usuario = useSelector((state) => state.auth.usuario);
+
   const loading =
     useSelector((state) => state.categorias.loading) ||
     useSelector((state) => state.comunidades.loading) ||
     useSelector((state) => state.negocios.loading);
 
+  // ✅ Protección contra undefined en .length
   useEffect(() => {
-    if (categorias.length === 0) dispatch(fetchCategorias());
-    if (comunidades.length === 0) dispatch(fetchComunidades());
-    if (negocios.length === 0) dispatch(obtenerNegocios());
-  }, [dispatch, categorias.length, comunidades.length, negocios.length]);
+    if (!categorias?.length) dispatch(fetchCategorias());
+    if (!comunidades?.length) dispatch(fetchComunidades());
+    if (!negocios?.length) dispatch(obtenerNegocios());
+  }, [dispatch]);
 
   if (loading) {
     return <p className="text-sm text-gray-500">Cargando opciones...</p>;
@@ -76,7 +80,7 @@ export default function Paso4Opciones() {
         />
       </div>
 
-      {/* Sponsors (Negocios que auspician) */}
+      {/* Sponsors */}
       <div>
         <label className="block text-sm font-medium mb-1">
           Negocios auspiciantes (opcional)
@@ -133,13 +137,19 @@ export default function Paso4Opciones() {
           Marcar como destacado
         </label>
       </div>
+
+      {/* Select personalizado para sponsors */}
       <SelectNegocioSponsor
-        value={values.sponsors?.map((id) => {
-          const negocio = negocios.find((n) => n._id === id);
-          return negocio
-            ? { value: id, label: negocio.name }
-            : { value: id, label: id };
-        })}
+        value={
+          Array.isArray(values.sponsors)
+            ? values.sponsors.map((id) => {
+                const negocio = negocios.find((n) => n._id === id);
+                return negocio
+                  ? { value: id, label: negocio.name }
+                  : { value: id, label: id };
+              })
+            : []
+        }
         onChange={(selected) =>
           setFieldValue(
             "sponsors",
@@ -147,14 +157,15 @@ export default function Paso4Opciones() {
           )
         }
       />
-      {/* Mostrar solo si el usuario es admin */}
+
+      {/* Organizer solo para admin */}
       {usuario.role === "admin" && (
         <SelectOrganizer
           value={
             values.organizer && values.organizerModel
               ? {
                   value: values.organizer,
-                  label: values.organizerLabel || "", // opcional si querés mostrar en edición
+                  label: values.organizerLabel || "",
                   model: values.organizerModel,
                 }
               : null
@@ -162,10 +173,11 @@ export default function Paso4Opciones() {
           onChange={(selected) => {
             setFieldValue("organizer", selected.value);
             setFieldValue("organizerModel", selected.model);
-            setFieldValue("organizerLabel", selected.label); // opcional
+            setFieldValue("organizerLabel", selected.label);
           }}
         />
       )}
+
       {/* Publicado */}
       <div className="flex items-center space-x-2">
         <Field

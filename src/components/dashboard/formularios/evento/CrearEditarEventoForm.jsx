@@ -6,36 +6,74 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import Paso1Info from "./Paso1Info";
+import PasoUbicacion from "../PasoUbicacion";
 import Paso2Detalles from "./Paso2Detalles";
 import Paso3Imagen from "./Paso3Imagen";
 import Paso4Opciones from "./Paso4Opciones";
+
 import { obtenerEventos } from "../../../../store/eventosSlice";
 import { createEvent } from "../../../../api/eventApi";
 
-const pasos = [Paso1Info, Paso2Detalles, Paso3Imagen, Paso4Opciones];
+// 🧩 Pasos ordenados
+const pasos = [
+  Paso1Info, // paso 0
+  PasoUbicacion, // paso 1 (ubicación física)
+  Paso2Detalles, // paso 2 (online/links)
+  Paso3Imagen, // paso 3
+  Paso4Opciones, // paso 4
+];
 
+// ✅ Validaciones ordenadas igual que `pasos`
 const esquemaValidacion = [
+  // Paso 0: info básica
   Yup.object({
     title: Yup.string().required("Título obligatorio"),
     description: Yup.string().required("Descripción obligatoria"),
     tags: Yup.string().nullable(),
   }),
+
+  // Paso 1: ubicación física
+  Yup.object({
+    location: Yup.object({
+      address: Yup.string().required("Dirección obligatoria"),
+      city: Yup.string().required("Ciudad obligatoria"),
+      state: Yup.string().required("Estado obligatorio"),
+      zipCode: Yup.string().required("Código postal obligatorio"),
+      country: Yup.string().required("País obligatorio"),
+      coordinates: Yup.object({
+        lat: Yup.number().nullable(),
+        lng: Yup.number().nullable(),
+      }).nullable(),
+    }).required("Ubicación obligatoria"),
+  }),
+
+  // Paso 2: detalles online
   Yup.object({
     date: Yup.date().required("Fecha obligatoria"),
     time: Yup.string().required("Hora obligatoria"),
-    location: Yup.string().required("Ubicación obligatoria"),
     isOnline: Yup.boolean(),
-    virtualLink: Yup.string().when("isOnline", (isOnline, schema) =>
-      isOnline
-        ? schema.required("El link virtual es obligatorio").url("URL inválida")
-        : schema.notRequired()
-    ),
-    registrationLink: Yup.string().nullable().url("Debe ser una URL válida"),
+    virtualLink: Yup.string()
+      .transform((value) => (value === "" ? null : value))
+      .when("isOnline", {
+        is: true,
+        then: (schema) =>
+          schema.required("El link virtual es obligatorio").url("URL inválida"),
+        otherwise: (schema) => schema.nullable().notRequired(),
+      }),
+    registrationLink: Yup.string()
+      .transform((value) => (value === "" ? null : value))
+      .nullable()
+      .notRequired()
+      .url("Debe ser una URL válida"),
   }),
+
+  // Paso 3: imágenes
   Yup.object({
     image: Yup.mixed().required("Imagen destacada requerida"),
     images: Yup.array().of(Yup.mixed()).nullable(),
   }),
+
+  // Paso 4: opciones finales
   Yup.object({
     categories: Yup.array()
       .min(1, "Selecciona al menos una categoría")
@@ -61,12 +99,23 @@ const esquemaValidacion = [
   }),
 ];
 
+// 🧪 Valores iniciales
 const valoresIniciales = {
   title: "",
   description: "",
   date: "",
   time: "",
-  location: "",
+  location: {
+    address: "",
+    city: "",
+    state: "",
+    zipCode: "",
+    country: "USA",
+    coordinates: {
+      lat: null,
+      lng: null,
+    },
+  },
   image: null,
   images: [],
   categories: [],
@@ -89,10 +138,11 @@ const valoresIniciales = {
 
 export default function CrearEditarEventoForm({
   initialValues = valoresIniciales,
+  onSubmit,
+  modoEdicion = false,
 }) {
   const [paso, setPaso] = useState(0);
   const PasoActual = pasos[paso];
-
   const usuario = useSelector((state) => state.auth.usuario);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -100,20 +150,17 @@ export default function CrearEditarEventoForm({
   const avanzar = () => setPaso((prev) => Math.min(prev + 1, pasos.length - 1));
   const retroceder = () => setPaso((prev) => Math.max(prev - 1, 0));
 
-  const handleSubmit = async (values, actions) => {
+  const handleSubmitInterno = async (values, actions) => {
     try {
-      console.log("🚀 Submitting values:", values);
       const formData = new FormData();
 
       if (values.image && typeof values.image !== "string") {
-        console.log("🖼️ Imagen destacada:", values.image.name);
         formData.append("featuredImage", values.image);
       }
 
       if (Array.isArray(values.images)) {
-        values.images.forEach((img, i) => {
+        values.images.forEach((img) => {
           if (img instanceof File) {
-            console.log(`🖼️ Imagen galería #${i + 1}:`, img.name);
             formData.append("images", img);
           }
         });
@@ -155,11 +202,6 @@ export default function CrearEditarEventoForm({
         data.virtualLink = values.virtualLink;
       }
 
-      if (values.coordinates) {
-        data.coordinates = values.coordinates;
-      }
-
-      console.log("📦 Datos enviados al backend:", data);
       formData.append("data", JSON.stringify(data));
 
       await createEvent(formData);
@@ -167,7 +209,7 @@ export default function CrearEditarEventoForm({
       alert("✅ Evento creado correctamente");
       navigate("/dashboard/mis-eventos");
     } catch (err) {
-      console.error("❌ Error al crear evento:", err);
+      console.error("❌ Error al guardar evento:", err);
       alert("Ocurrió un error al guardar el evento");
     } finally {
       actions.setSubmitting(false);
@@ -177,10 +219,13 @@ export default function CrearEditarEventoForm({
   return (
     <Formik
       initialValues={initialValues}
+      enableReinitialize
       validationSchema={esquemaValidacion[paso]}
       onSubmit={(values, actions) => {
         if (paso === pasos.length - 1) {
-          handleSubmit(values, actions);
+          modoEdicion
+            ? onSubmit(values, actions)
+            : handleSubmitInterno(values, actions);
         } else {
           avanzar();
         }

@@ -78,7 +78,7 @@ export default function Eventos() {
               isNew = false,
               isVerified = false,
             } = evento;
-
+            console.log(evento);
             return (
               <Link to={`/eventos/${_id}`} key={_id} className="flex-shrink-0">
                 <CardLista
@@ -88,10 +88,7 @@ export default function Eventos() {
                       ? description.slice(0, 90) + "..."
                       : description || "Sin descripción"
                   }
-                  image={
-                    featuredImage ||
-                    `https://cdn.usegalileo.ai/sdxl10/${_id}.png`
-                  }
+                  image={featuredImage || ``}
                   isNew={isNew}
                   hasDiscount={false}
                   isVerified={isVerified}

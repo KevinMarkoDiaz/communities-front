@@ -10,8 +10,9 @@ export default function CardComunidad({
   owner,
   usuario,
   onDelete,
+  slug,
 }) {
-  const puedeEditar = usuario?.role === "admin" || usuario?._id === owner;
+  const puedeEditar = usuario?.role === "admin" || usuario?._id === owner?._id;
 
   return (
     <div className="w-full">
@@ -31,7 +32,7 @@ export default function CardComunidad({
           <div className="space-y-1">
             {usuario?.role === "admin" && (
               <p className="text-[#3F5374] text-xs">
-                Creado por: {owner || "N/A"}
+                Creado por: {owner?.name || "N/A"}
               </p>
             )}
 
@@ -55,7 +56,7 @@ export default function CardComunidad({
                 <MdDelete className="text-lg" />
               </button>
               <Link
-                to={`/dashboard/comunidades/${id}/editar`}
+                to={`/dashboard/comunidades/${slug}/editar`}
                 className="text-black p-1 rounded hover:bg-black hover:text-white transition text-sm"
                 title="Editar"
               >

@@ -34,7 +34,7 @@ export default function CardEvento({ evento, onDelete }) {
             </p>
             <p className="text-[#6B7280] text-xs md:text-sm">
               {date ? new Date(date).toLocaleDateString() : "Fecha no definida"}{" "}
-              · {location}
+              · {location?.address}, {location?.city}, {location?.state}
             </p>
           </div>
 

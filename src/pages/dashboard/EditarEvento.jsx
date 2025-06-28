@@ -20,7 +20,8 @@ export default function EditarEvento() {
     const cargar = async () => {
       try {
         const data = await getEventById(id);
-
+        console.log(data.event);
+        console.log(evento);
         // Opcional: validar que el usuario sea el organizador o admin
         if (
           usuario.role !== "admin" &&
@@ -31,7 +32,7 @@ export default function EditarEvento() {
           return;
         }
 
-        setEvento(data);
+        setEvento(data.event);
       } catch (err) {
         console.error(err);
         setError("Error al cargar evento");
@@ -45,7 +46,62 @@ export default function EditarEvento() {
 
   const handleEditar = async (valores, { setSubmitting }) => {
     try {
-      await updateEvent(id, valores, token);
+      const formData = new FormData();
+
+      // Solo agregá las imágenes si son nuevas (tipo File)
+      if (valores.image && typeof valores.image !== "string") {
+        formData.append("featuredImage", valores.image);
+      }
+
+      if (Array.isArray(valores.images)) {
+        valores.images.forEach((img) => {
+          if (img instanceof File) {
+            formData.append("images", img);
+          }
+        });
+      }
+
+      const tagsArray = valores.tags
+        ? valores.tags.split(",").map((tag) => tag.trim())
+        : [];
+
+      const organizerId = valores.organizer?.value || usuario._id;
+      const organizerModel = valores.organizer?.model || "User";
+
+      const data = {
+        title: valores.title,
+        description: valores.description,
+        date: valores.date,
+        time: valores.time,
+        location: valores.location,
+        communities: valores.communities,
+        businesses: valores.businesses || [],
+        categories: valores.categories,
+        tags: tagsArray,
+        language: valores.language || "es",
+        price: Number(valores.price),
+        isFree: valores.isFree,
+        isOnline: valores.isOnline,
+        status: valores.status || "activo",
+        featured: valores.featured || false,
+        isPublished: valores.isPublished || false,
+        registrationLink: valores.registrationLink || "",
+        sponsors: valores.sponsors || [],
+        organizer: organizerId,
+        organizerModel,
+      };
+
+      if (valores.isOnline && valores.virtualLink) {
+        data.virtualLink = valores.virtualLink;
+      }
+
+      if (valores.coordinates) {
+        data.coordinates = valores.coordinates;
+      }
+
+      formData.append("data", JSON.stringify(data));
+
+      await updateEvent(id, formData, token); // <-- asegúrate de pasar FormData
       alert("✅ Evento actualizado");
       navigate("/dashboard/mis-eventos");
     } catch (err) {
@@ -70,14 +126,18 @@ export default function EditarEvento() {
         <h1 className="text-2xl font-bold text-[#141C24]">Editar Evento</h1>
         <CrearEditarEventoForm
           onSubmit={handleEditar}
+          modoEdicion
           initialValues={{
             title: evento.title || "",
             description: evento.description || "",
             date: evento.date?.slice(0, 10) || "",
             time: evento.time || "",
             location: evento.location || "",
-            image: evento.featuredImage || "",
-            images: evento.images || [],
+            image: evento.featuredImage || "", // puede ser una URL
+            images: Array.isArray(evento.images) ? evento.images : [],
+            categories: evento.categories?.map((c) => c._id || c) || [],
+            communities: evento.communities?.map((c) => c._id || c) || [],
+            businesses: evento.businesses?.map((b) => b._id || b) || [],
             tags: Array.isArray(evento.tags) ? evento.tags.join(", ") : "",
             language: evento.language || "es",
             isFree: evento.isFree ?? true,
@@ -85,14 +145,17 @@ export default function EditarEvento() {
             isOnline: evento.isOnline ?? false,
             virtualLink: evento.virtualLink || "",
             registrationLink: evento.registrationLink || "",
-            sponsors: evento.sponsors?.map((s) => s._id) || [],
+            sponsors: evento.sponsors?.map((s) => s._id || s) || [],
             status: evento.status || "activo",
             featured: evento.featured ?? false,
             isPublished: evento.isPublished ?? false,
-
-            communities: evento.communities?.map((c) => c._id) || [],
-            businesses: evento.businesses?.map((b) => b._id) || [],
-            categories: evento.categories?.map((c) => c._id) || [],
+            organizer: {
+              value: evento.organizer?._id || evento.organizer?.id || "",
+              model: evento.organizer?.__t || "User", // o "Business" si viene así
+            },
+            organizerModel: evento.organizer?.__t || "User",
+            organizerLabel: evento.organizer?.name || "", // si querés mostrar el nombre
+            coordinates: evento.coordinates || null,
           }}
         />
       </section>

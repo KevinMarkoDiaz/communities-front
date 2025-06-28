@@ -20,21 +20,6 @@ export default function Paso2Detalles() {
         />
       </div>
 
-      {/* Ubicación */}
-      <div>
-        <label className="block text-sm font-medium mb-1">Ubicación</label>
-        <Field
-          name="location"
-          placeholder="Ciudad, Estado"
-          className="form-input w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl h-12 px-4"
-        />
-        <ErrorMessage
-          name="location"
-          component="div"
-          className="text-red-500 text-sm"
-        />
-      </div>
-
       {/* Hora */}
       <div>
         <label htmlFor="time" className="block text-sm font-medium mb-1">

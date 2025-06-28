@@ -89,6 +89,7 @@ export default function Comunidades() {
               language={com.language}
               owner={com.owner}
               usuario={usuario}
+              slug={com.slug}
               onDelete={handleDelete}
             />
           ))}

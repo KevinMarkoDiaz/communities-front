@@ -1,9 +1,11 @@
 import { Field, ErrorMessage, useFormikContext } from "formik";
 import DropzoneImagen from "../../../DropzoneImagen";
 import DropzoneGaleria from "../../../DropzoneGaleria";
+import { useState } from "react";
 
 export default function Paso6Extras() {
   const { setFieldValue, values } = useFormikContext();
+  const [tagsInput, setTagsInput] = useState("");
 
   return (
     <div className="space-y-5">
@@ -37,13 +39,14 @@ export default function Paso6Extras() {
         <label className="block text-sm font-medium text-[#141C24] mb-1">
           Etiquetas (separadas por coma)
         </label>
-        <Field
-          name="tagsString"
-          placeholder="Yoga, Bienestar, Meditación"
+        <input
+          type="text"
+          placeholder="Café, Latino, Artesanal"
           className="form-input w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl h-14 px-4 placeholder:text-[#3F5374]"
-          value={values.tags?.join(", ") || ""}
-          onChange={(e) => {
-            const tags = e.target.value
+          value={tagsInput}
+          onChange={(e) => setTagsInput(e.target.value)}
+          onBlur={() => {
+            const tags = tagsInput
               .split(",")
               .map((tag) => tag.trim())
               .filter(Boolean);

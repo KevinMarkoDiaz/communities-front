@@ -9,7 +9,7 @@ export function BusinessCard({
     <div className="p-4 @container">
       <div className="flex flex-col items-stretch justify-start rounded-xl bg-white shadow-[0_0_4px_rgba(0,0,0,0.1)] @xl:flex-row @xl:items-start">
         <div
-          className="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-xl"
+          className="w-full h-40 @xl:h-48 bg-center bg-no-repeat bg-cover rounded-xl @xl:rounded-l-xl @xl:rounded-r-none @xl:w-64"
           style={{ backgroundImage: `url("${imageUrl}")` }}
         ></div>
         <div className="flex w-full min-w-72 grow flex-col items-stretch justify-center gap-1 py-4 px-4 @xl:px-4">
