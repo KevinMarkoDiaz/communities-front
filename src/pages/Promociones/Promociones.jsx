@@ -51,11 +51,11 @@ export default function Promociones() {
     return (
       <section className="space-y-4">
         <BannerPromociones titulo={titulo} imagen={imagen} />
-        <ScrollCarousel>
+        <ScrollCarousel className="relative overflow-visible">
           {items.map((promo) => (
             <Link
               key={promo._id}
-              to={`/promociones/${promo._id}`}
+              to={`/negocios/${promo.business._id}`}
               className="flex-shrink-0 snap-start w-[220px] sm:w-[320px] md:w-[300px] lg:w-[260px]"
             >
               <CardPromoHome
@@ -93,7 +93,7 @@ export default function Promociones() {
 
         {!loading && !error && (
           <>
-            <PromocionesDestacadas imagen={PromocionesD} />
+            <PromocionesDestacadas Link={false} imagen={PromocionesD} />
 
             {renderCarrusel("Descuentos imperdibles", bndc, promosDescuento)}
             {renderCarrusel("Nuevos lanzamientos", bnnl, promosLanzamiento)}

@@ -142,7 +142,7 @@ export default function Header() {
           <Link to="/" className="text-base font-bold">
             <img src={Icon} alt="logo" className="h-10" />
           </Link>
-          <div className="flex items-center gap-4 hidden md:block">
+          <div className="hidden md:flex items-center gap-6">
             <NavLinks />
             <PerfilBtn />
           </div>

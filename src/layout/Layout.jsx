@@ -2,10 +2,11 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import StickyAds from "../components/StickyAds";
 import { Outlet, useLocation } from "react-router-dom";
+import { useInitData } from "../hooks/useInitData";
 
 export default function Layout() {
   const location = useLocation();
-
+  useInitData();
   const hiddenAdsRoutes = ["/login", "/register", "/dashboard"];
   const hideAds = hiddenAdsRoutes.some((route) =>
     location.pathname.startsWith(route)
