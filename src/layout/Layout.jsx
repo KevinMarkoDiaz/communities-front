@@ -3,10 +3,21 @@ import Footer from "../components/Footer";
 import StickyAds from "../components/StickyAds";
 import { Outlet, useLocation } from "react-router-dom";
 import { useInitData } from "../hooks/useInitData";
+import { useEffect } from "react";
+import CookieConsentModal from "../components/CookieConsentModal";
 
 export default function Layout() {
   const location = useLocation();
   useInitData();
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "smooth",
+    });
+  }, [location.pathname]);
+
   const hiddenAdsRoutes = ["/login", "/register", "/dashboard"];
   const hideAds = hiddenAdsRoutes.some((route) =>
     location.pathname.startsWith(route)
@@ -45,6 +56,7 @@ export default function Layout() {
       )}
 
       <Footer />
+      <CookieConsentModal />
     </div>
   );
 }

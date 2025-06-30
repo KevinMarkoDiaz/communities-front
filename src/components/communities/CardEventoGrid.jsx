@@ -7,7 +7,7 @@ export default function CardEventoGrid({ title, subtitle, image, to }) {
       className="flex flex-col sm:flex-row w-full bg-white rounded-xl shadow hover:shadow-md transition overflow-hidden"
     >
       {/* Imagen a la derecha en desktop */}
-      <div className="w-full sm:w-1/3 aspect-[3/2] sm:aspect-auto flex-shrink-0 bg-gray-200">
+      <div className="w-full sm:w-1/3 aspect-square flex-shrink-0 bg-gray-200">
         {image ? (
           <img src={image} alt={title} className="w-full h-full object-cover" />
         ) : (

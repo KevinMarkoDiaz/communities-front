@@ -3,9 +3,12 @@ import ScrollCarousel from "../ScrollCarousel";
 import { useComunidades } from "../../hooks/useComunidades";
 import BannerTituloSugeridos from "../BannerTituloSugeridos";
 import CardDestacado from "../Card";
+import SugeridosSkeleton from "../Skeleton/SugeridosSkeleton";
 
 export default function ComunidadesDestacadas({ imagen }) {
-  const { lista: comunidades } = useComunidades();
+  const { lista: comunidades, loading } = useComunidades();
+
+  if (loading) return <SugeridosSkeleton />;
 
   const destacadas = comunidades.slice(0, 6);
 

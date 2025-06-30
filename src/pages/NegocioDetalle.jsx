@@ -1,7 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getBusinessById } from "../api/businessApi";
-import { getCommunityById } from "../api/communityApi";
 import {
   FaFacebook,
   FaInstagram,
@@ -20,12 +19,12 @@ import { BusinessCard } from "../components/bussines/BusinessCard";
 import { PhotoGallery } from "../components/bussines/PhotoGallery";
 import MapaNegocioDetalle from "../components/bussines/MapaNegocioDetalle";
 import Compartir from "../components/Compartir";
+import DetalleSkeleton from "../components/Skeleton/DetalleSkeleton";
 
 export default function NegocioDetalle() {
   const { id } = useParams();
   const [negocio, setNegocio] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [communityData, setCommunityData] = useState(null);
 
   useEffect(() => {
     const fetchNegocio = async () => {
@@ -42,15 +41,21 @@ export default function NegocioDetalle() {
     fetchNegocio();
   }, [id]);
 
-  useEffect(() => {
-    if (negocio?.community) {
-      setCommunityData(negocio.community);
-    }
-  }, [negocio?.community]);
+  if (loading) {
+    return (
+      <div className="px-4 sm:px-8 lg:px-8 xl:px-40 py-5 flex justify-center">
+        <div className="w-full max-w-[960px]">
+          <DetalleSkeleton />
+        </div>
+      </div>
+    );
+  }
 
-  if (loading) return <div className="p-4">Cargando negocio...</div>;
-  if (!negocio)
-    return <div className="p-4 text-red-600">Negocio no encontrado.</div>;
+  if (!negocio) {
+    return (
+      <div className="p-4 text-center text-red-600">Negocio no encontrado.</div>
+    );
+  }
 
   return (
     <div className="px-4 sm:px-8 lg:px-8 xl:px-40 py-5 flex justify-center">
@@ -105,6 +110,7 @@ export default function NegocioDetalle() {
         </div>
 
         <hr className="border-t border-gray-200" />
+
         {/* Descripción */}
         <div className="border-l-4 border-gray-200 pl-4">
           <p className="text-[15px] text-gray-800 leading-relaxed whitespace-pre-line">
@@ -216,22 +222,22 @@ export default function NegocioDetalle() {
         )}
 
         {/* Comunidad relacionada */}
-        {communityData && (
+        {negocio.community && (
           <div>
             <h2 className="text-lg font-semibold text-gray-800 mb-2">
               Comunidad relacionada
             </h2>
             <div className="flex gap-2 flex-wrap">
               <Link
-                to={`/comunidades/${communityData._id}`}
+                to={`/comunidades/${negocio.community._id}`}
                 className="flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 text-sm text-gray-700 hover:bg-gray-200"
               >
                 <img
-                  src={communityData.flagImage || "/placeholder-flag.png"}
+                  src={negocio.community.flagImage || "/placeholder-flag.png"}
                   alt="bandera"
                   className="h-4 w-4 rounded-full object-cover"
                 />
-                {communityData.name}
+                {negocio.community.name}
               </Link>
             </div>
           </div>

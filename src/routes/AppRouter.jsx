@@ -5,6 +5,7 @@ import Negocios from "../pages/Negocios";
 import Eventos from "../pages/Eventos";
 import Comunidadeshome from "../pages/Comunidades";
 import ComunidadDetalle from "../pages/ComunidadDetalle";
+import AboutUs from "../pages/AboutUs";
 
 import Login from "../pages/Login";
 import Registro from "../pages/Registro";
@@ -42,6 +43,9 @@ import SuscripcionExitosa from "../pages/premium/SuscripcionExitosa";
 import SuscripcionCancelada from "../pages/premium/SuscripcionCancelada";
 import PromosPorNegocio from "../pages/dashboard/PromosPorNegocio";
 import MisPromos from "../pages/dashboard/misPromos";
+import Contact from "../pages/Contact";
+import LegalPrivacidad from "../pages/LegalPrivacidad";
+import LegalTerminos from "../pages/LegalTerminos";
 
 const router = createBrowserRouter([
   {
@@ -55,7 +59,10 @@ const router = createBrowserRouter([
       { path: "/eventos/:id", element: <EventoDetalle /> },
       { path: "/comunidades", element: <Comunidadeshome /> },
       { path: "/comunidades/:id", element: <ComunidadDetalle /> },
-
+      { path: "/about", element: <AboutUs /> },
+      { path: "/contact", element: <Contact /> },
+      { path: "/legal-privacy", element: <LegalPrivacidad /> },
+      { path: "/legal-terms", element: <LegalTerminos /> },
       // 🟨 Rutas Premium
       { path: "/premium", element: <PremiumInfo /> },
       { path: "/suscribirse", element: <SuscripcionStripe /> },
@@ -98,7 +105,6 @@ const router = createBrowserRouter([
               { path: ":id/promos/nueva", element: <CrearPromo /> },
             ],
           },
-
           {
             path: "mis-eventos",
             children: [
@@ -107,14 +113,9 @@ const router = createBrowserRouter([
               { path: ":id/editar", element: <EditarEvento /> },
             ],
           },
-
-          // ✅ Mis promociones
           {
             path: "mis-promos",
-            children: [
-              { path: "", element: <MisPromos /> },
-              // { path: ":id/editar", element: <EditarPromo /> },
-            ],
+            children: [{ path: "", element: <MisPromos /> }],
           },
           {
             path: "categorias",
@@ -124,7 +125,6 @@ const router = createBrowserRouter([
               { path: ":id/editar", element: <EditarCategoriaView /> },
             ],
           },
-
           {
             path: "comunidades",
             children: [
@@ -141,7 +141,6 @@ const router = createBrowserRouter([
   { path: "/login", element: <Login /> },
   { path: "/registro", element: <Registro /> },
 
-  // Ruta 404
   {
     path: "*",
     element: <div className="p-10 text-center">404 - Página no encontrada</div>,

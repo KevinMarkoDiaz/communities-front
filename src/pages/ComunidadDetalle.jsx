@@ -5,7 +5,8 @@ import { useMemo } from "react";
 import Compartir from "../components/Compartir";
 import MapaNegocioDetalle from "../components/bussines/MapaNegocioDetalle";
 import CardNegocioHome from "../components/communities/CardNegocioHome";
-import CardEventoGrid from "../components/communities/CardEventoGrid"; // Asegúrate de tener este componente
+import CardEventoGrid from "../components/communities/CardEventoGrid";
+import DetalleSkeleton from "../components/Skeleton/DetalleSkeleton";
 import {
   FaFacebook,
   FaInstagram,
@@ -17,7 +18,7 @@ import {
 
 export default function ComunidadDetalle() {
   const { id } = useParams();
-  const { lista } = useSelector((state) => state.comunidades);
+  const { lista, loading, error } = useSelector((state) => state.comunidades);
   const eventos = useSelector((state) => state.eventos.lista);
   const eventosLoading = useSelector((state) => state.eventos.loading);
   const negocios = useSelector((state) => state.negocios.lista);
@@ -26,6 +27,16 @@ export default function ComunidadDetalle() {
   const comunidad = lista.find(
     (c) => String(c.id) === id || String(c._id) === id
   );
+
+  if (loading) {
+    return (
+      <div className="px-4 sm:px-8 lg:px-8 xl:px-40 py-5 flex justify-center">
+        <div className="w-full max-w-[1400px]">
+          <DetalleSkeleton />
+        </div>
+      </div>
+    );
+  }
 
   if (!comunidad) {
     return (
@@ -38,7 +49,6 @@ export default function ComunidadDetalle() {
     );
   }
 
-  // Negocios relacionados
   const negociosDeLaComunidad = useMemo(() => {
     return negocios.filter((n) => {
       if (!n.community) return false;
@@ -49,7 +59,6 @@ export default function ComunidadDetalle() {
     });
   }, [negocios, comunidad]);
 
-  // Eventos relacionados
   const eventosDeLaComunidad = useMemo(() => {
     return eventos.filter((e) => {
       const porNombre = e.comunidad?.trim() === comunidad.name?.trim();
@@ -68,7 +77,6 @@ export default function ComunidadDetalle() {
     website: <FaGlobe />,
     youtube: <FaYoutube />,
   };
-
   return (
     <>
       <Helmet>
@@ -177,19 +185,17 @@ export default function ComunidadDetalle() {
             ) : eventosDeLaComunidad.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {eventosDeLaComunidad.map((ev) => (
-                  <Link key={ev._id} to={`/eventos/${ev._id}`}>
-                    <CardEventoGrid
-                      key={ev._id}
-                      title={ev.title}
-                      subtitle={
-                        ev.date
-                          ? new Date(ev.date).toLocaleDateString()
-                          : "Sin fecha"
-                      }
-                      image={ev.featuredImage}
-                      to={`/eventos/${ev._id}`}
-                    />
-                  </Link>
+                  <CardEventoGrid
+                    key={ev._id}
+                    title={ev.title}
+                    subtitle={
+                      ev.date
+                        ? new Date(ev.date).toLocaleDateString()
+                        : "Sin fecha"
+                    }
+                    image={ev.featuredImage}
+                    to={`/eventos/${ev._id}`}
+                  />
                 ))}
               </div>
             ) : (
@@ -200,30 +206,31 @@ export default function ComunidadDetalle() {
           </section>
 
           {/* Redes sociales */}
-          {comunidad.socialMediaLinks && (
-            <div>
-              <h2 className="text-lg font-semibold text-gray-800 mb-2">
-                Redes sociales
-              </h2>
-              <div className="flex gap-3 flex-wrap">
-                {Object.entries(comunidad.socialMediaLinks).map(
-                  ([key, value]) =>
-                    value && (
-                      <a
-                        key={key}
-                        href={value}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="flex items-center gap-2 px-3 py-1 bg-gray-100 text-sm text-gray-700 rounded-full hover:bg-gray-200"
-                      >
-                        {socialIcons[key.toLowerCase()] || <FaGlobe />}
-                        <span className="capitalize">{key}</span>
-                      </a>
-                    )
-                )}
+          {comunidad.socialMediaLinks &&
+            Object.keys(comunidad.socialMediaLinks).length > 0 && (
+              <div>
+                <h2 className="text-lg font-semibold text-gray-800 mb-2">
+                  Redes sociales
+                </h2>
+                <div className="flex gap-3 flex-wrap">
+                  {Object.entries(comunidad.socialMediaLinks).map(
+                    ([key, value]) =>
+                      value && (
+                        <a
+                          key={key}
+                          href={value}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="flex items-center gap-2 px-3 py-1 bg-gray-100 text-sm text-gray-700 rounded-full hover:bg-gray-200"
+                        >
+                          {socialIcons[key.toLowerCase()] || <FaGlobe />}
+                          <span className="capitalize">{key}</span>
+                        </a>
+                      )
+                  )}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
           {/* Mapa */}
           {comunidad.mapCenter?.lat && comunidad.mapCenter?.lng && (

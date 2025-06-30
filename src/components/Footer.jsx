@@ -48,10 +48,10 @@ export default function Footer() {
         <div className="space-y-3">
           <h3 className="text-base font-bold uppercase tracking-wide">Legal</h3>
           <div className="flex flex-col gap-2 text-sm">
-            <Link to="/privacidad" className="hover:underline">
+            <Link to="/legal-privacy" className="hover:underline">
               Privacidad
             </Link>
-            <Link to="/terminos" className="hover:underline">
+            <Link to="/legal-terms" className="hover:underline">
               Términos
             </Link>
           </div>

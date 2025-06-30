@@ -3,9 +3,12 @@ import CardDestacado from "../Card";
 import ScrollCarousel from "../ScrollCarousel";
 import { useNegocios } from "../../hooks/useNegocios";
 import BannerTituloSugeridos from "../BannerTituloSugeridos";
+import SugeridosSkeleton from "../Skeleton/SugeridosSkeleton";
 
 export default function NegociosSugeridos({ imagen }) {
-  const { lista: negocios } = useNegocios();
+  const { lista: negocios, loading } = useNegocios();
+
+  if (loading) return <SugeridosSkeleton />;
 
   const destacados = negocios.slice(0, 6); // Limita para un mejor scroll
 
@@ -24,13 +27,13 @@ export default function NegociosSugeridos({ imagen }) {
           <Link
             to={`/negocios/${n._id}`}
             key={n._id}
-            className="flex-shrink-0 snap-start min-w-[250px] sm:min-w-[300px] md:min-w-[250px] lg:min-w-[320px]"
+            className="flex-shrink-0 snap-start min-w-[280px] sm:min-w-[250px] md:min-w-[250px] lg:min-w-[320px]"
           >
             <CardDestacado
               title={n.name}
               image={n.featuredImage}
-              isNew={false} // o lógica: Date.now() - new Date(n.createdAt) < 7 días
-              hasDiscount={false} // futura lógica
+              isNew={false} // o lógica si quieres detectar "nuevo"
+              hasDiscount={false} // futura lógica de descuentos
               isVerified={n.isVerified}
               modo="vertical"
             />

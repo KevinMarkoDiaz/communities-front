@@ -5,6 +5,7 @@ import { getBusinessById } from "../api/businessApi";
 import { getCommunityById } from "../api/communityApi";
 import MapaNegocioDetalle from "../components/bussines/MapaNegocioDetalle";
 import Compartir from "../components/Compartir";
+import DetalleSkeleton from "../components/Skeleton/DetalleSkeleton";
 
 export default function EventoDetalle() {
   const { id } = useParams();
@@ -43,7 +44,8 @@ export default function EventoDetalle() {
           createdAt: event.createdAt,
         });
       } catch (err) {
-        setError("No se pudo cargar el evento");
+        console.error("Error cargando evento:", err);
+        setError("No se pudo cargar el evento.");
       } finally {
         setLoading(false);
       }
@@ -83,10 +85,20 @@ export default function EventoDetalle() {
     cargarCommunities();
   }, [evento?.communities]);
 
-  if (loading) return <div className="p-4">Cargando evento...</div>;
+  if (loading)
+    return (
+      <div className="px-4 sm:px-8 lg:px-8 xl:px-40 py-5 flex justify-center">
+        <div className="w-full max-w-[960px]">
+          <DetalleSkeleton />
+        </div>
+      </div>
+    );
+
   if (error || !evento)
     return (
-      <div className="p-4 text-red-600">{error || "Evento no encontrado."}</div>
+      <div className="p-4 text-red-600 text-center">
+        {error || "Evento no encontrado."}
+      </div>
     );
 
   return (
@@ -113,7 +125,6 @@ export default function EventoDetalle() {
             )}
           </div>
 
-          {/* Fecha y lugar */}
           <p className="text-sm text-gray-500">
             {new Date(evento.date).toLocaleDateString()} - {evento.time}
             {evento.location?.address && (
@@ -124,7 +135,6 @@ export default function EventoDetalle() {
             )}
           </p>
 
-          {/* Precio */}
           {!evento.isFree && evento.price > 0 && (
             <p className="text-sm text-green-600 font-medium">
               Precio: ${evento.price}
@@ -157,7 +167,6 @@ export default function EventoDetalle() {
               Ingresar al evento virtual
             </a>
           )}
-          {/* Compartir */}
           <Compartir
             url={window.location.href}
             title={`Participá en "${evento.title}" en Communities`}
@@ -177,7 +186,7 @@ export default function EventoDetalle() {
         </div>
 
         {/* Galería */}
-        {evento.images.length > 0 && (
+        {evento.images?.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {evento.images.map((img, idx) => (
               <div
@@ -190,16 +199,18 @@ export default function EventoDetalle() {
         )}
 
         {/* Tags */}
-        <div className="flex flex-wrap gap-2">
-          {evento.tags.map((tag, i) => (
-            <span
-              key={i}
-              className="bg-gray-100 text-gray-800 px-3 py-1 text-xs rounded-full"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
+        {evento.tags?.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {evento.tags.map((tag, i) => (
+              <span
+                key={i}
+                className="bg-gray-100 text-gray-800 px-3 py-1 text-xs rounded-full"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
 
         <hr className="border-t border-gray-200" />
 
@@ -257,6 +268,7 @@ export default function EventoDetalle() {
             </div>
           </div>
         )}
+
         <hr className="border-t border-gray-200" />
 
         {/* Mapa */}

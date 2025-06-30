@@ -49,7 +49,8 @@ const comunidadesSlice = createSlice({
   initialState: {
     lista: [],
     comunidadActual: null,
-    loading: false,
+    loadingLista: false,
+    loadingDetalle: false,
     error: null,
     busqueda: "",
   },
@@ -65,15 +66,15 @@ const comunidadesSlice = createSlice({
     builder
       // 🔁 fetchComunidades
       .addCase(fetchComunidades.pending, (state) => {
-        state.loading = true;
+        state.loadingLista = true;
         state.error = null;
       })
       .addCase(fetchComunidades.fulfilled, (state, action) => {
-        state.loading = false;
+        state.loadingLista = false;
         state.lista = action.payload;
       })
       .addCase(fetchComunidades.rejected, (state, action) => {
-        state.loading = false;
+        state.loadingLista = false;
         state.error = action.payload;
       })
 
@@ -93,16 +94,16 @@ const comunidadesSlice = createSlice({
 
       // 🔁 fetchCommunityBySlug
       .addCase(fetchCommunityBySlug.pending, (state) => {
-        state.loading = true;
+        state.loadingDetalle = true;
         state.error = null;
         state.comunidadActual = null;
       })
       .addCase(fetchCommunityBySlug.fulfilled, (state, action) => {
-        state.loading = false;
+        state.loadingDetalle = false;
         state.comunidadActual = action.payload;
       })
       .addCase(fetchCommunityBySlug.rejected, (state, action) => {
-        state.loading = false;
+        state.loadingDetalle = false;
         state.error = action.payload;
         state.comunidadActual = null;
       });

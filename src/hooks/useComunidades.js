@@ -1,14 +1,13 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-
   fetchComunidades,
-  setBusqueda as setBusquedaComunidades
+  setBusqueda as setBusquedaComunidades,
 } from "../store/comunidadesSlice";
 
 export function useComunidades() {
   const dispatch = useDispatch();
-  const { lista, loading, error, busqueda } = useSelector(
+  const { lista, loadingLista, error, busqueda } = useSelector(
     (state) => state.comunidades
   );
 
@@ -17,7 +16,6 @@ export function useComunidades() {
       dispatch(fetchComunidades());
     }
   }, [dispatch, lista]);
-  
 
   const comunidadesFiltradas = lista.filter((comunidad) =>
     comunidad.name.toLowerCase().includes(busqueda.toLowerCase())
@@ -26,9 +24,9 @@ export function useComunidades() {
   return {
     lista,
     comunidadesFiltradas,
-    loading,
+    loading: loadingLista,
     error,
     busqueda,
-    setBusqueda: (text) => dispatch(setBusquedaComunidades(text))
+    setBusqueda: (text) => dispatch(setBusquedaComunidades(text)),
   };
 }

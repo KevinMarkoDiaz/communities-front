@@ -18,7 +18,8 @@ export default function CardDestacado({
   const hasImage = Boolean(image);
 
   const classMap = {
-    vertical: "flex flex-col h-auto w-[100%] md:w-full max-w-[350px]",
+    vertical:
+      "flex flex-col h-auto w-[100%] md:w-full     max-w-[280px] sm:max-w-[250px] md:max-w-[250px] lg:max-w-[320px]",
     "horizontal-full": "flex h-36 w-full max-w-6xl mx-auto",
     "horizontal-compact":
       "flex h-36 w-[85%] md:w-full max-w-[350px] flex-shrink-0",
