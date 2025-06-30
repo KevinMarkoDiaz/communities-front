@@ -13,7 +13,6 @@ import {
 export const fetchPromosPorComunidad = createAsyncThunk(
   "promociones/fetchPorComunidad",
   async (communityId, { rejectWithValue }) => {
-    console.log("📡 Llamando API para comunidad:", communityId);
     try {
       const data = await getPromotionsByCommunity(communityId);
       return data;

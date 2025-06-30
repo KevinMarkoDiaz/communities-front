@@ -31,7 +31,6 @@ const negociosSlice = createSlice({
         state.error = null;
       })
       .addCase(obtenerNegocios.fulfilled, (state, action) => {
-        console.log("🧪 Payload recibido:", action.payload);
         state.loading = false;
         state.lista = Array.isArray(action.payload) ? action.payload : [];
       })

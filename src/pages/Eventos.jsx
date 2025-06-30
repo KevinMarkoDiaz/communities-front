@@ -78,7 +78,6 @@ export default function Eventos() {
               isNew = false,
               isVerified = false,
             } = evento;
-            console.log(evento);
             return (
               <Link to={`/eventos/${_id}`} key={_id} className="flex-shrink-0">
                 <CardLista

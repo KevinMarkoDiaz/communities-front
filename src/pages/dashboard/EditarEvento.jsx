@@ -20,8 +20,6 @@ export default function EditarEvento() {
     const cargar = async () => {
       try {
         const data = await getEventById(id);
-        console.log(data.event);
-        console.log(evento);
         // Opcional: validar que el usuario sea el organizador o admin
         if (
           usuario.role !== "admin" &&

@@ -35,13 +35,10 @@ export default function CrearCategoria() {
       if (valores.icon && typeof valores.icon !== "string") {
         formData.append("profileImage", valores.icon); // ⬅️ nombre esperado por Multer + Cloudinary
       }
-      console.log("📦 FormData a enviar:");
       for (let [key, value] of formData.entries()) {
-        console.log(key, value);
       }
 
       await createCategory(formData, token);
-      console.log(formData);
       alert("✅ Categoría creada correctamente");
       navigate("/dashboard/categorias");
     } catch (err) {

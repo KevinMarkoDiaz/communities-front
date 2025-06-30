@@ -46,6 +46,7 @@ import MisPromos from "../pages/dashboard/misPromos";
 import Contact from "../pages/Contact";
 import LegalPrivacidad from "../pages/LegalPrivacidad";
 import LegalTerminos from "../pages/LegalTerminos";
+import NotFound from "../pages/NotFound";
 
 const router = createBrowserRouter([
   {
@@ -143,7 +144,7 @@ const router = createBrowserRouter([
 
   {
     path: "*",
-    element: <div className="p-10 text-center">404 - Página no encontrada</div>,
+    element: <NotFound />,
   },
 ]);
 

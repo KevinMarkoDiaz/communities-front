@@ -16,7 +16,6 @@ export default function EditarComunidad() {
     const cargarComunidad = async () => {
       try {
         const data = await getCommunityBySlug(id);
-        console.log(data);
         setComunidad(data.community);
       } catch (err) {
         console.error("Error al cargar comunidad:", err);

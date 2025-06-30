@@ -5,8 +5,6 @@ import axiosInstance from "./axiosInstance";
  * @param {FormData} formData - FormData con datos + archivos
  */
 export async function createBusiness(formData) {
-  console.log("Valores a enviar al backend:", formData);
-
   const response = await axiosInstance.post("/businesses", formData, {
     headers: {
       "Content-Type": "multipart/form-data",
@@ -50,8 +48,6 @@ export async function getBusinessById(id) {
   return response.data;
 }
 
-
-
 /**
  * Eliminar un negocio.
  * @param {string} id - ID del negocio
@@ -66,7 +62,11 @@ export async function deleteBusiness(id) {
  * @param {Object} params - Parámetros de consulta (page, limit, search)
  * @returns {Promise<Object>} - { data: [], total, page, pages }
  */
-export async function getBusinessesPaginated({ page = 1, limit = 6, search = "" }) {
+export async function getBusinessesPaginated({
+  page = 1,
+  limit = 6,
+  search = "",
+}) {
   const response = await axiosInstance.get("/businesses", {
     params: {
       page,

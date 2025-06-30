@@ -95,8 +95,6 @@ export default function CrearEditarComunidadForm({
         payload.mapCenter.lng =
           payload.mapCenter.lng === "" ? null : payload.mapCenter.lng;
       }
-
-      console.log("📦 Payload:", payload);
       formData.append("data", JSON.stringify(payload));
 
       if (modoEdicion && comunidadInicial?._id) {

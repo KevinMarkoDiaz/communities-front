@@ -27,8 +27,6 @@ const eventosSlice = createSlice({
         state.error = null;
       })
       .addCase(obtenerEventos.fulfilled, (state, action) => {
-        console.log("🧪 Payload recibido:", action.payload);
-
         state.loading = false;
         state.lista = Array.isArray(action.payload) ? action.payload : [];
       })

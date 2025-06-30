@@ -283,15 +283,12 @@ export default function NegocioForm() {
             let response;
             if (id) {
               for (let pair of formData.entries()) {
-                console.log("🧾 FormData:", pair[0], pair[1]);
               }
 
               response = await updateBusiness(id, formData);
             } else {
               response = await createBusiness(formData);
             }
-
-            console.log("🎉 Negocio guardado:", response);
             navigate("/dashboard/mis-negocios");
           }
         } catch (error) {
