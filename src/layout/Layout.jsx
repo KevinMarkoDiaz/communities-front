@@ -2,12 +2,13 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import StickyAds from "../components/StickyAds";
 import { Outlet, useLocation } from "react-router-dom";
-import { useInitData } from "../hooks/useInitData";
-import { useEffect } from "react";
 import CookieConsentModal from "../components/CookieConsentModal";
+import { useEffect } from "react";
+import { useInitData } from "../hooks/useInitData";
 
 export default function Layout() {
   const location = useLocation();
+
   useInitData();
 
   useEffect(() => {

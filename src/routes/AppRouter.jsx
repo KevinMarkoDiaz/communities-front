@@ -36,7 +36,6 @@ import NegocioForm from "../pages/dashboard/NegocioForm";
 import CrearCategoriaView from "../pages/dashboard/CrearCategoriaView";
 import EditarCategoriaView from "../pages/dashboard/EditarCategoriaView";
 
-import { useInitAuth } from "../hooks/useInitAuth";
 import PremiumInfo from "../pages/premium/PremiumInfo";
 import SuscripcionStripe from "../pages/premium/SuscripcionStripe";
 import SuscripcionExitosa from "../pages/premium/SuscripcionExitosa";
@@ -149,6 +148,5 @@ const router = createBrowserRouter([
 ]);
 
 export default function AppRouter() {
-  useInitAuth();
   return <RouterProvider router={router} />;
 }

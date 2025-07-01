@@ -67,7 +67,6 @@ const authSlice = createSlice({
       })
       .addCase(fetchCurrentUser.rejected, (state, action) => {
         state.loading = false;
-        state.usuario = null; // limpia si falla (ej: no cookie)
         state.error = action.payload;
       });
   },
