@@ -1,28 +1,50 @@
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
+import { FaRegSadTear } from "react-icons/fa";
 
 export default function SuscripcionCancelada() {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Redirige de nuevo a la info premium después de unos segundos
-    const timeout = setTimeout(() => {
-      navigate("/premium");
-    }, 4000);
-
-    return () => clearTimeout(timeout);
-  }, [navigate]);
-
   return (
-    <section className="min-h-screen flex flex-col items-center justify-center text-center p-6">
-      <h1 className="text-3xl font-bold text-red-600">Pago cancelado</h1>
-      <p className="text-gray-700 mt-3">
-        No se completó la suscripción. Puedes intentarlo nuevamente cuando
-        quieras.
-      </p>
-      <p className="text-sm text-gray-500 mt-1">
-        Redirigiendo a la página de suscripción...
-      </p>
-    </section>
+    <>
+      <Helmet>
+        <title>Suscripción Cancelada – Communities</title>
+      </Helmet>
+
+      <section className="min-h-screen flex flex-col items-center justify-center text-center px-6 py-12 bg-white">
+        <div className="flex flex-col items-center space-y-4 max-w-xl">
+          <FaRegSadTear className="text-orange-400 text-6xl" />
+
+          <h1 className="text-3xl md:text-4xl font-bold text-orange-600">
+            ¡Uups! No pudimos completar tu suscripción
+          </h1>
+
+          <p className="text-gray-700 text-lg">
+            Parece que cancelaste el proceso o hubo un pequeño inconveniente.
+          </p>
+
+          <p className="text-gray-500 text-sm">
+            No pasa nada, puedes volver a intentarlo cuando prefieras. Mientras
+            tanto, tu cuenta sigue activa en el plan gratuito.
+          </p>
+
+          <div className="mt-6 flex flex-col sm:flex-row gap-3">
+            <button
+              onClick={() => navigate("/premium")}
+              className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-full text-sm font-semibold transition"
+            >
+              Intentar de nuevo
+            </button>
+
+            <button
+              onClick={() => navigate("/dashboard/perfil")}
+              className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-2 rounded-full text-sm font-semibold transition"
+            >
+              Ir a mi perfil
+            </button>
+          </div>
+        </div>
+      </section>
+    </>
   );
 }

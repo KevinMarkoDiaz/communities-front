@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { getEventById, updateEvent } from "../../api/eventApi";
 import CrearEditarEventoForm from "../../components/dashboard/formularios/evento/CrearEditarEventoForm";
+import authBg from "../../../src/assets/authbg.png";
 
 export default function EditarEvento() {
   const { id } = useParams();
@@ -20,11 +21,11 @@ export default function EditarEvento() {
     const cargar = async () => {
       try {
         const data = await getEventById(id);
-        // Opcional: validar que el usuario sea el organizador o admin
+
         if (
           usuario.role !== "admin" &&
           data.organizer !== usuario.id &&
-          data.organizer?.id !== usuario.id // por si viene populado
+          data.organizer?.id !== usuario.id
         ) {
           setError("Acceso no autorizado");
           return;
@@ -46,7 +47,6 @@ export default function EditarEvento() {
     try {
       const formData = new FormData();
 
-      // Solo agregá las imágenes si son nuevas (tipo File)
       if (valores.image && typeof valores.image !== "string") {
         formData.append("featuredImage", valores.image);
       }
@@ -99,7 +99,7 @@ export default function EditarEvento() {
 
       formData.append("data", JSON.stringify(data));
 
-      await updateEvent(id, formData, token); // <-- asegúrate de pasar FormData
+      await updateEvent(id, formData, token);
       alert("✅ Evento actualizado");
       navigate("/dashboard/mis-eventos");
     } catch (err) {
@@ -120,43 +120,68 @@ export default function EditarEvento() {
         <title>Editar Evento | Communities</title>
       </Helmet>
 
-      <section className="max-w-3xl mx-auto bg-white shadow rounded-2xl p-6 sm:p-10 space-y-6">
-        <h1 className="text-2xl font-bold text-[#141C24]">Editar Evento</h1>
-        <CrearEditarEventoForm
-          onSubmit={handleEditar}
-          modoEdicion
-          initialValues={{
-            title: evento.title || "",
-            description: evento.description || "",
-            date: evento.date?.slice(0, 10) || "",
-            time: evento.time || "",
-            location: evento.location || "",
-            image: evento.featuredImage || "", // puede ser una URL
-            images: Array.isArray(evento.images) ? evento.images : [],
-            categories: evento.categories?.map((c) => c._id || c) || [],
-            communities: evento.communities?.map((c) => c._id || c) || [],
-            businesses: evento.businesses?.map((b) => b._id || b) || [],
-            tags: Array.isArray(evento.tags) ? evento.tags.join(", ") : "",
-            language: evento.language || "es",
-            isFree: evento.isFree ?? true,
-            price: evento.price ?? 0,
-            isOnline: evento.isOnline ?? false,
-            virtualLink: evento.virtualLink || "",
-            registrationLink: evento.registrationLink || "",
-            sponsors: evento.sponsors?.map((s) => s._id || s) || [],
-            status: evento.status || "activo",
-            featured: evento.featured ?? false,
-            isPublished: evento.isPublished ?? false,
-            organizer: {
-              value: evento.organizer?._id || evento.organizer?.id || "",
-              model: evento.organizer?.__t || "User", // o "Business" si viene así
-            },
-            organizerModel: evento.organizer?.__t || "User",
-            organizerLabel: evento.organizer?.name || "", // si querés mostrar el nombre
-            coordinates: evento.coordinates || null,
+      <div className="flex flex-col items-center justify-center min-h-screen px-4">
+        <section
+          className="w-full max-w-5xl shadow rounded-2xl p-6 sm:p-16 space-y-6 bg-black/40 backdrop-blur-lg"
+          style={{
+            backgroundImage: `url(${authBg})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
           }}
-        />
-      </section>
+        >
+          <div className="space-y-2">
+            <h1 className="text-2xl font-bold text-[#141C24]">Editar Evento</h1>
+            <p className="text-gray-100 text-sm sm:text-base">
+              Modifica los detalles de tu evento para mantener informada a tu
+              comunidad.
+            </p>
+          </div>
+
+          <CrearEditarEventoForm
+            onSubmit={handleEditar}
+            modoEdicion
+            initialValues={{
+              title: evento.title || "",
+              description: evento.description || "",
+              date: evento.date?.slice(0, 10) || "",
+              time: evento.time || "",
+              location: evento.location || "",
+              image: evento.featuredImage || "",
+              images: Array.isArray(evento.images) ? evento.images : [],
+              categories: evento.categories?.map((c) => c._id || c) || [],
+              communities: evento.communities?.map((c) => c._id || c) || [],
+              businesses: evento.businesses?.map((b) => b._id || b) || [],
+              tags: Array.isArray(evento.tags) ? evento.tags.join(", ") : "",
+              language: evento.language || "es",
+              isFree: evento.isFree ?? true,
+              price: evento.price ?? 0,
+              isOnline: evento.isOnline ?? false,
+              virtualLink: evento.virtualLink || "",
+              registrationLink: evento.registrationLink || "",
+              sponsors: evento.sponsors?.map((s) => s._id || s) || [],
+              status: evento.status || "activo",
+              featured: evento.featured ?? false,
+              isPublished: evento.isPublished ?? false,
+              organizer: {
+                value: evento.organizer?._id || evento.organizer?.id || "",
+                model: evento.organizer?.__t || "User",
+              },
+              organizerModel: evento.organizer?.__t || "User",
+              organizerLabel: evento.organizer?.name || "",
+              coordinates: evento.coordinates || null,
+            }}
+          />
+        </section>
+
+        <div className="pt-6 text-center">
+          <p className="text-[#141C24] text-base font-medium">
+            ✨ Actualiza tu evento y sigue compartiendo experiencias únicas.
+          </p>
+          <p className="text-sm text-gray-600">
+            Mantén tu comunidad informada y comprometida.
+          </p>
+        </div>
+      </div>
     </>
   );
 }

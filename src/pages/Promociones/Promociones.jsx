@@ -15,7 +15,6 @@ import PromocionesD from "../../assets/PromocionesD.png";
 import bndc from "../../assets/bndc.png";
 import bnnl from "../../assets/bnnl.png";
 import bnpf from "../../assets/bnpf.png";
-import bannerBTN from "../../assets/bannerBTN.mp4";
 
 export default function Promociones() {
   const dispatch = useDispatch();
@@ -39,7 +38,7 @@ export default function Promociones() {
   );
   const promosFinSemana = lista.filter((p) => p.type === "promo_fin_de_semana");
 
-  const renderCarrusel = (titulo, imagen, items) => {
+  const renderCarrusel = (titulo, imagen, items, emoji, carouselProps = {}) => {
     if (items.length === 0) {
       return (
         <div className="text-center text-gray-400 text-sm italic">
@@ -49,22 +48,31 @@ export default function Promociones() {
     }
 
     return (
-      <section className="space-y-4">
-        <BannerPromociones titulo={titulo} imagen={imagen} />
-        <ScrollCarousel className="relative overflow-visible">
+      <section className="bg-gray-50 rounded-2xl shadow-inner p-6 space-y-6">
+        <BannerPromociones
+          titulo={
+            <span className="text-2xl sm:text-3xl font-extrabold text-sky-800 tracking-tight flex items-center gap-2">
+              <span>{emoji}</span> {titulo}
+            </span>
+          }
+          imagen={imagen}
+        />
+
+        <ScrollCarousel
+          className="relative overflow-visible"
+          {...carouselProps}
+        >
           {items.map((promo) => (
             <Link
               key={promo._id}
               to={`/negocios/${promo.business._id}`}
-              className="flex-shrink-0 snap-start w-[220px] sm:w-[320px] md:w-[300px] lg:w-[260px]"
+              className="flex-shrink-0 snap-start w-[220px] sm:w-[320px] md:w-[300px] lg:w-[260px] transform hover:scale-[1.03] transition duration-300"
             >
               <CardPromoHome
                 title={promo.name}
                 image={promo.featuredImage}
-                isNew={promo.type == "promo_fin_de_semana" ? true : false}
-                hasDiscount={
-                  promo.type == "descuentos_imperdibles" ? true : false
-                }
+                isNew={promo.type === "promo_fin_de_semana"}
+                hasDiscount={promo.type === "descuentos_imperdibles"}
                 descuento={"20"}
                 isVerified={true}
               />
@@ -85,7 +93,7 @@ export default function Promociones() {
         />
       </Helmet>
 
-      <div className="w-full max-w-full overflow-hidden flex flex-col gap-12 md:gap-26">
+      <div className="w-full max-w-full overflow-hidden flex flex-col gap-16 md:gap-28">
         {loading && (
           <p className="text-center text-gray-500">Cargando promociones...</p>
         )}
@@ -93,21 +101,35 @@ export default function Promociones() {
 
         {!loading && !error && (
           <>
+            {/* Hero de promociones */}
             <PromocionesDestacadas Link={false} imagen={PromocionesD} />
 
-            {renderCarrusel("Descuentos imperdibles", bndc, promosDescuento)}
-            {renderCarrusel("Nuevos lanzamientos", bnnl, promosLanzamiento)}
-            {renderCarrusel("Promo fin de semana", bnpf, promosFinSemana)}
+            {/* Primer carrusel: autoplay hacia la derecha */}
+            {renderCarrusel(
+              "Descuentos imperdibles",
+              bndc,
+              promosDescuento,
+              "🎉",
+              { autoplay: true, direction: "right" }
+            )}
 
-            <div className="w-full hidden sm:flex justify-center px-4 py-10">
-              <video
-                src={bannerBTN}
-                autoPlay
-                muted
-                playsInline
-                className="rounded-xl max-w-6xl w-full shadow-lg"
-              />
-            </div>
+            {/* Carrusel del medio: sin autoplay */}
+            {renderCarrusel(
+              "Nuevos lanzamientos",
+              bnnl,
+              promosLanzamiento,
+              "🆕",
+              { autoplay: true, direction: "right" }
+            )}
+
+            {/* Último carrusel: autoplay hacia la izquierda */}
+            {renderCarrusel(
+              "Promo fin de semana",
+              bnpf,
+              promosFinSemana,
+              "🌞",
+              { autoplay: true, direction: "right" }
+            )}
           </>
         )}
       </div>

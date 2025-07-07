@@ -37,7 +37,7 @@ export default function DropzoneGaleria({
 
   return (
     <div className="space-y-3">
-      <label className="block text-sm font-medium text-gray-700">{label}</label>
+      <label className="block text-sm font-medium text-gray-100">{label}</label>
 
       <div
         {...getRootProps()}

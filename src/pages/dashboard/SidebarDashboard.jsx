@@ -9,6 +9,7 @@ import {
   MdLogout,
 } from "react-icons/md";
 import { NavLink } from "react-router-dom";
+import authBg from "../../assets/authbg.png";
 
 const SidebarDashboard = ({ usuario, handleLogout }) => {
   const navItems = [
@@ -26,14 +27,33 @@ const SidebarDashboard = ({ usuario, handleLogout }) => {
   };
 
   return (
-    <aside className="w-20 md:w-64 lg:w-80 px-2 md:px-4 py-5 bg-[#F8F9FB] flex-shrink-0">
-      <div className="flex flex-col justify-between h-[calc(100vh-15vh)] md:min-h-[700px] bg-[#F8F9FB] p-2 md:p-4">
+    <aside
+      className="sticky top-0 h-[calc(100vh-0px)] w-20 md:w-64 lg:w-80 px-2 md:px-4 py-5 flex-shrink-0 relative overflow-hidden z-10 shadow-[4px_0_10px_-2px_rgba(0,0,0,0.3)]"
+      style={{
+        backgroundImage: `url(${authBg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      {/* Overlay con blur y oscurecimiento */}
+      <div className="absolute inset-0 backdrop-blur-sm bg-black/20 pointer-events-none" />
+
+      <div className="flex flex-col justify-between h-full px-2 py-18 md:px-4 relative z-10 pb-16">
         {/* Encabezado */}
-        <div className="hidden md:flex flex-col mb-4">
-          <h1 className="text-[#141C24] text-base font-medium leading-normal">
-            Dashboard
-          </h1>
-          <p className="text-[#3F5374] text-sm font-normal leading-normal">
+        <div className="hidden md:flex flex-col gap-1 mb-4">
+          <div className="flex items-center justify-between">
+            <h1 className="text-white text-base font-medium leading-normal">
+              Dashboard
+            </h1>
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 text-sm text-gray-200 hover:text-black hover:cursor-pointer  transition"
+            >
+              <MdLogout className="text-lg" />
+              <span>Cerrar sesión</span>
+            </button>
+          </div>
+          <p className="text-gray-200 text-sm font-normal leading-normal">
             {usuario?.name} • {usuario?.title || "Usuario"}
           </p>
         </div>
@@ -45,13 +65,15 @@ const SidebarDashboard = ({ usuario, handleLogout }) => {
               key={to}
               to={to}
               className={({ isActive }) =>
-                `flex items-center gap-3 px-3 py-2 rounded-full ${
-                  isActive ? "bg-[#E4E9F1]" : ""
+                `flex items-center gap-3 px-3 py-2 rounded-full transition ${
+                  isActive
+                    ? "bg-purple-700/30 text-white"
+                    : "text-gray-100 hover:bg-orange-500/20"
                 }`
               }
             >
               <span className="text-xl">{icon}</span>
-              <p className="hidden md:block text-[#141C24] text-sm font-medium leading-normal">
+              <p className="hidden md:block text-sm font-medium leading-normal">
                 {label}
               </p>
             </NavLink>
@@ -61,13 +83,15 @@ const SidebarDashboard = ({ usuario, handleLogout }) => {
             <NavLink
               to={adminItem.to}
               className={({ isActive }) =>
-                `flex items-center gap-3 px-3 py-2 rounded-full ${
-                  isActive ? "bg-[#E4E9F1]" : ""
+                `flex items-center gap-3 px-3 py-2 rounded-full transition ${
+                  isActive
+                    ? "bg-purple-700/30 text-white"
+                    : "text-gray-100 hover:bg-orange-500/20"
                 }`
               }
             >
               <span className="text-xl">{adminItem.icon}</span>
-              <p className="hidden md:block text-[#141C24] text-sm font-medium leading-normal">
+              <p className="hidden md:block text-sm font-medium leading-normal">
                 {adminItem.label}
               </p>
             </NavLink>
@@ -76,32 +100,21 @@ const SidebarDashboard = ({ usuario, handleLogout }) => {
           <NavLink
             to="/premium"
             className={({ isActive }) =>
-              `flex items-center gap-3 px-3 py-2 rounded-full ${
-                isActive ? "bg-[#F3E8FF]" : ""
+              `flex items-center gap-3 px-3 py-2 rounded-full transition ${
+                isActive
+                  ? "bg-purple-700/30 text-white"
+                  : "text-[#FCD34D] hover:bg-yellow-500/20"
               }`
             }
           >
-            <span className="text-xl text-[#7C3AED]">
+            <span className="text-xl">
               <MdStar />
             </span>
-            <p className="hidden md:block text-[#7C3AED] text-sm font-medium leading-normal">
+            <p className="hidden md:block text-sm font-medium leading-normal">
               💎 Hazte Premium
             </p>
           </NavLink>
         </div>
-
-        {/* Logout */}
-        <button
-          onClick={handleLogout}
-          className="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-gray-200 rounded"
-        >
-          <span className="text-xl">
-            <MdLogout />
-          </span>
-          <p className="hidden md:block text-[#141C24] text-sm font-medium leading-normal">
-            Cerrar sesión
-          </p>
-        </button>
       </div>
     </aside>
   );

@@ -77,9 +77,7 @@ export default function MapaComunidad({ negocios, coords }) {
                 <p class="text-xs text-gray-600 line-clamp-2">${
                   n.descripcion
                 }</p>
-                <a href="/negocios/${
-                  n.id
-                }" class="text-sm font-semibold  mt-1 ">
+                <a href="/negocios/${n.id}" class="text-sm font-semibold mt-1">
                   Ver perfil →
                 </a>
               </div>
@@ -103,15 +101,15 @@ export default function MapaComunidad({ negocios, coords }) {
   }, [userCoords]);
 
   return (
-    <div className="relative overflow-hidden rounded-xl shadow">
+    <div className="relative overflow-hidden rounded-xl shadow h-full">
       {!isLoaded && (
-        <div className="w-full h-[400px] flex items-center justify-center bg-gray-100">
+        <div className="w-full h-full flex items-center justify-center bg-gray-100">
           <Loading />
         </div>
       )}
       <div
         ref={mapRef}
-        className={`w-full h-[400px] transition-opacity duration-300 ${
+        className={`w-full h-full transition-opacity duration-300 ${
           isLoaded ? "opacity-100" : "opacity-0"
         }`}
       />

@@ -64,7 +64,7 @@ export default function Negocios() {
           </div>
         </div>
 
-        <GridWrapper ref={gridRef} tipo="lista" className="min-h-[70vh]">
+        <GridWrapper ref={gridRef} tipo="grid" className="min-h-[70vh]">
           {negociosPaginados.map((negocio) => (
             <Link
               key={negocio._id}
@@ -74,12 +74,13 @@ export default function Negocios() {
               <CardLista
                 title={negocio.name}
                 image={negocio.featuredImage}
-                description={negocio.description}
                 isVerified={negocio.isVerified}
-                isNew={false} // o lógica como: new Date() - new Date(negocio.createdAt) < 7 días
-                hasDiscount={false} // lógica futura si agregás descuentos
-                descuento="" // por ahora ""
+                isNew={false}
+                hasDiscount={false}
+                descuento=""
                 logo={negocio.profileImage || negocio.category?.icon}
+                category={negocio.category?.name}
+                location={`${negocio.location.city}, ${negocio.country || ""}`}
               />
             </Link>
           ))}

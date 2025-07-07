@@ -3,30 +3,31 @@ import BadgeIconVerified from "./badges/BadgeIconVerified";
 import BadgeNuevo from "./badges/BadgeNuevo";
 import AvatarPlaceholder from "./placeholder/AvatarPlaceholder";
 import ImagePlaceholderIcon from "./placeholder/ImagePlaceholderIcon";
+import { HiOutlineLocationMarker } from "react-icons/hi";
 
-export default function CardLista({
+export default function CardGrid({
   title,
   image,
-  description,
   isVerified = false,
   isNew = false,
   hasDiscount = false,
   descuento = "",
   logo,
+  category,
+  location,
 }) {
   const hasImage = Boolean(image);
 
   return (
     <div
-      className="w-full flex flex-col sm:flex-row items-start sm:items-center 
-        rounded-2xl border border-gray-200 bg-white
-        shadow-md hover:shadow-lg hover:border-black transition sm:gap-6"
+      className="relative flex flex-col rounded-2xl border border-gray-200 bg-white
+        shadow-sm hover:shadow-xl transition duration-300 overflow-hidden group"
     >
-      {/* Imagen */}
-      <div className="flex-shrink-0 w-full sm:w-60">
+      {/* Imagen principal con overlay y zoom */}
+      <div className="relative w-full h-48 bg-gray-200 overflow-hidden">
         {hasImage ? (
           <div
-            className="w-full h-40 sm:h-24 sm:rounded-l-2xl rounded-t-2xl bg-cover bg-center"
+            className="w-full h-full bg-cover bg-center transform transition-transform duration-500 group-hover:scale-110"
             style={{
               backgroundImage: `url(${image})`,
             }}
@@ -34,40 +35,74 @@ export default function CardLista({
         ) : (
           <ImagePlaceholderIcon />
         )}
-      </div>
 
-      {/* Contenido + logo */}
-      <div className="flex sm:flex-row flex-1 w-full min-w-0 px-4 pb-4 sm:pb-0 sm:items-center sm:justify-between">
-        {/* Texto */}
-        <div className="flex flex-col flex-1">
-          <div className="flex gap-2 mt-2 sm:mt-0 mb-1">
-            {hasDiscount && <BadgeDescuento value={descuento} />}
-            {isNew && <BadgeNuevo />}
-          </div>
+        {/* Overlay semitransparente al hover */}
+        <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition duration-300" />
 
-          <div className="flex items-center gap-1">
-            <p className="text-sm sm:text-base font-bold text-gray-900 line-clamp-2 sm:line-clamp-1">
-              {title}
-            </p>
-            {isVerified && <BadgeIconVerified />}
-          </div>
+        {/* Gradiente en base para destacar logo */}
+        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/40 to-transparent" />
 
-          <p className="text-sm text-gray-600 leading-tight line-clamp-3">
-            {description}
-          </p>
+        {/* Badges */}
+        <div className="absolute top-2 left-2 flex gap-1">
+          {hasDiscount && <BadgeDescuento value={descuento} />}
+          {isNew && <BadgeNuevo />}
         </div>
 
-        {/* Logo: móvil abajo derecha, desktop a la derecha */}
-        <div className="mt-2 sm:mt-0 sm:ml-4 self-end sm:self-center">
+        {/* Badge de categoría */}
+        {category && (
+          <div className="absolute top-2 right-2 bg-white text-xs font-semibold text-gray-800 px-2 py-0.5 rounded-full shadow-sm">
+            {category}
+          </div>
+        )}
+
+        {/* Botón Ver más */}
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100  duration-300 transition">
+          <button className="bg-orange-500 text-white text-xs px-3 py-1 rounded-full transition">
+            Ver más
+          </button>
+        </div>
+
+        {/* Logo o placeholder */}
+        <div className="absolute bottom-2 right-2 w-10 h-10 rounded-full border border-white shadow-md bg-white overflow-hidden">
           {logo ? (
             <div
-              className="w-10 h-10  rounded-2xl bg-cover bg-center"
+              className="w-full h-full bg-cover bg-center"
               style={{ backgroundImage: `url("${logo}")` }}
             />
           ) : (
             <AvatarPlaceholder />
           )}
         </div>
+      </div>
+
+      {/* Contenido */}
+      <div className="flex flex-col gap-0.5 px-3 py-3 flex-1">
+        <div className="flex items-center gap-1">
+          <h3
+            className="text-base font-semibold text-gray-900 tracking-tight"
+            style={{ letterSpacing: "0.02em" }}
+          >
+            {title}
+          </h3>
+          {isVerified && <BadgeIconVerified />}
+        </div>
+
+        {/* Ubicación */}
+        {location && (
+          <div className="flex items-center gap-1 mt-0.5">
+            <HiOutlineLocationMarker className="text-gray-500 w-4 h-4 flex-shrink-0" />
+            <p
+              className="text-xs font-medium text-gray-700 tracking-wide"
+              style={{ letterSpacing: "0.02em" }}
+            >
+              {location
+                .replace(/,\s*\d+$/, "")
+                .replace(/\s\d+$/, "")
+                .replace(/,\s*$/, "")
+                .trim()}
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

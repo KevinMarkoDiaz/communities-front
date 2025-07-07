@@ -1,5 +1,5 @@
-import { useField, useFormikContext } from "formik";
 import { useEffect, useState } from "react";
+import { useFormikContext } from "formik";
 import { useSelector } from "react-redux";
 import { searchUsersByName } from "../../../../api/businessApi";
 
@@ -13,7 +13,7 @@ export default function Paso5Propietario() {
   const isAdmin = usuario?.role === "admin";
   const isBusinessOwner = usuario?.role === "business_owner";
 
-  // Si es business_owner, rellenar campos automáticamente al montar
+  // Si es business_owner, setea automáticamente
   useEffect(() => {
     if (isBusinessOwner && usuario?._id) {
       setFieldValue("ownerId", usuario._id);
@@ -24,7 +24,6 @@ export default function Paso5Propietario() {
     }
   }, [usuario, isBusinessOwner, setFieldValue]);
 
-  // Buscar usuarios por nombre (solo admin)
   const handleBuscar = async () => {
     if (!search.trim()) return;
     setBuscando(true);
@@ -38,7 +37,6 @@ export default function Paso5Propietario() {
     }
   };
 
-  // Seleccionar un usuario como propietario
   const seleccionarUsuario = (user) => {
     setFieldValue("ownerId", user._id);
     setFieldValue("ownerDisplay", {
@@ -51,19 +49,19 @@ export default function Paso5Propietario() {
 
   return (
     <div className="space-y-6">
-      <h3 className="text-[#141C24] text-lg font-semibold">
+      <h3 className="text-white text-lg font-semibold">
         Propietario del negocio
       </h3>
 
       {isBusinessOwner && (
         <div>
-          <label className="block text-sm font-medium text-[#141C24] mb-1">
+          <label className="block text-sm font-medium text-white mb-1">
             Nombre del propietario
           </label>
           <input
             value={values.ownerDisplay.name}
             disabled
-            className="form-input w-full bg-gray-100 border border-[#D4DBE8] rounded-xl h-14 px-4 text-[#3F5374] cursor-not-allowed"
+            className="form-input w-full bg-white/10 border border-white/30 rounded-lg h-12 px-4 text-gray-300 cursor-not-allowed"
           />
         </div>
       )}
@@ -71,7 +69,7 @@ export default function Paso5Propietario() {
       {isAdmin && (
         <div className="space-y-3">
           <div>
-            <label className="block text-sm font-medium text-[#141C24] mb-1">
+            <label className="block text-sm font-medium text-white mb-1">
               Buscar usuario por nombre
             </label>
             <div className="flex gap-2">
@@ -80,12 +78,12 @@ export default function Paso5Propietario() {
                 placeholder="Ej: María López"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="form-input flex-1 h-12 px-4 border border-[#D4DBE8] rounded-xl"
+                className="flex-1 bg-white/10 border border-white/30 rounded-lg h-12 px-4 placeholder:text-gray-300 text-white focus:outline-none"
               />
               <button
                 type="button"
                 onClick={handleBuscar}
-                className="btn btn-primary"
+                className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-semibold transition"
               >
                 {buscando ? "Buscando..." : "Buscar"}
               </button>
@@ -93,15 +91,15 @@ export default function Paso5Propietario() {
           </div>
 
           {resultados.length > 0 && (
-            <ul className="border border-[#D4DBE8] rounded-xl p-2 space-y-2 bg-white max-h-60 overflow-auto">
+            <ul className="border border-white/20 rounded-lg p-2 space-y-2 bg-black/40 backdrop-blur max-h-60 overflow-auto">
               {resultados.map((user) => (
                 <li
                   key={user._id}
-                  className="p-2 hover:bg-gray-100 cursor-pointer rounded"
+                  className="p-2 hover:bg-white/10 cursor-pointer rounded text-white"
                   onClick={() => seleccionarUsuario(user)}
                 >
-                  <div className="font-medium text-[#141C24]">{user.name}</div>
-                  <div className="text-xs text-gray-500">{user.email}</div>
+                  <div className="font-medium">{user.name}</div>
+                  <div className="text-xs text-gray-300">{user.email}</div>
                 </li>
               ))}
             </ul>
@@ -111,14 +109,14 @@ export default function Paso5Propietario() {
 
       {values.ownerDisplay?.name && (
         <div>
-          <p className="text-sm text-[#141C24]">
+          <p className="text-sm text-white">
             <strong>Seleccionado:</strong> {values.ownerDisplay.name}
           </p>
           {values.ownerDisplay.image && (
             <img
               src={values.ownerDisplay.image}
               alt="Foto del propietario"
-              className="mt-2 w-20 h-20 object-cover rounded-full border"
+              className="mt-2 w-20 h-20 object-cover rounded-full border border-white/30"
             />
           )}
         </div>

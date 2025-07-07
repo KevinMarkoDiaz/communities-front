@@ -1,58 +1,75 @@
 // src/components/dashboard/formularios/perfil/Paso1Datos.jsx
-import { Field, ErrorMessage } from "formik";
+import { Field, ErrorMessage, useFormikContext } from "formik";
+import Select from "react-select";
+import { customSelectStylesForm } from "../../../../../src/styles/customSelectStylesForm";
 
 export default function Paso1Datos() {
+  const { values, setFieldValue } = useFormikContext();
+
+  // Opciones del título
+  const opcionesTitulo = [
+    { value: "Empresario", label: "Empresario" },
+    { value: "Estudiante", label: "Estudiante" },
+    { value: "Profesional", label: "Profesional" },
+    { value: "Otro", label: "Otro" },
+  ];
+
   return (
     <div className="space-y-6">
-      <h3 className="text-[#141C24] text-lg font-semibold">
-        Información personal
-      </h3>
+      <h3 className="text-white text-lg font-semibold">Información personal</h3>
 
+      {/* Nombre */}
       <div>
-        <label className="block text-sm font-medium mb-1">Nombre</label>
+        <label className="block text-sm font-medium text-white mb-1">
+          Nombre
+        </label>
         <Field
           name="name"
           placeholder="Kevin"
-          className="form-input w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl h-12 px-4"
+          className="w-full px-4 py-3 border border-white/30 bg-white/10 rounded-lg placeholder:text-gray-300 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
         />
         <ErrorMessage
           name="name"
           component="div"
-          className="text-red-500 text-sm"
+          className="text-red-400 text-sm mt-1"
         />
       </div>
 
+      {/* Apellido */}
       <div>
-        <label className="block text-sm font-medium mb-1">Apellido</label>
+        <label className="block text-sm font-medium text-white mb-1">
+          Apellido
+        </label>
         <Field
           name="lastName"
           placeholder="Díaz"
-          className="form-input w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl h-12 px-4"
+          className="w-full px-4 py-3 border border-white/30 bg-white/10 rounded-lg placeholder:text-gray-300 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
         />
         <ErrorMessage
           name="lastName"
           component="div"
-          className="text-red-500 text-sm"
+          className="text-red-400 text-sm mt-1"
         />
       </div>
 
+      {/* Título (React Select) */}
       <div>
-        <label className="block text-sm font-medium mb-1">Título</label>
-        <Field
-          as="select"
-          name="title"
-          className="form-select w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl h-12 px-4"
-        >
-          <option value="">Selecciona una opción</option>
-          <option value="Empresario">Empresario</option>
-          <option value="Estudiante">Estudiante</option>
-          <option value="Profesional">Profesional</option>
-          <option value="Otro">Otro</option>
-        </Field>
+        <label className="block text-sm font-medium text-white mb-1">
+          Título
+        </label>
+        <Select
+          options={opcionesTitulo}
+          placeholder="Selecciona una opción..."
+          styles={customSelectStylesForm}
+          value={
+            opcionesTitulo.find((opt) => opt.value === values.title) || null
+          }
+          onChange={(selected) => setFieldValue("title", selected?.value)}
+        />
         <ErrorMessage
           name="title"
           component="div"
-          className="text-red-500 text-sm"
+          className="text-red-400 text-sm mt-1"
         />
       </div>
     </div>

@@ -8,7 +8,6 @@ import ComunidadDetalle from "../pages/ComunidadDetalle";
 import AboutUs from "../pages/AboutUs";
 
 import Login from "../pages/Login";
-import Registro from "../pages/Registro";
 import NegocioDetalle from "../pages/NegocioDetalle";
 import EventoDetalle from "../pages/EventoDetalle";
 
@@ -37,7 +36,6 @@ import CrearCategoriaView from "../pages/dashboard/CrearCategoriaView";
 import EditarCategoriaView from "../pages/dashboard/EditarCategoriaView";
 
 import PremiumInfo from "../pages/premium/PremiumInfo";
-import SuscripcionStripe from "../pages/premium/SuscripcionStripe";
 import SuscripcionExitosa from "../pages/premium/SuscripcionExitosa";
 import SuscripcionCancelada from "../pages/premium/SuscripcionCancelada";
 import PromosPorNegocio from "../pages/dashboard/PromosPorNegocio";
@@ -46,6 +44,8 @@ import Contact from "../pages/Contact";
 import LegalPrivacidad from "../pages/LegalPrivacidad";
 import LegalTerminos from "../pages/LegalTerminos";
 import NotFound from "../pages/NotFound";
+import RegistroMultiStep from "../pages/Registro";
+import CrearNegocio from "../pages/dashboard/CrearNegocio";
 
 const router = createBrowserRouter([
   {
@@ -65,7 +65,6 @@ const router = createBrowserRouter([
       { path: "/legal-terms", element: <LegalTerminos /> },
       // 🟨 Rutas Premium
       { path: "/premium", element: <PremiumInfo /> },
-      { path: "/suscribirse", element: <SuscripcionStripe /> },
       { path: "/suscripcion-exitosa", element: <SuscripcionExitosa /> },
       { path: "/suscripcion-cancelada", element: <SuscripcionCancelada /> },
 
@@ -99,8 +98,8 @@ const router = createBrowserRouter([
             path: "mis-negocios",
             children: [
               { path: "", element: <MisNegocios /> },
-              { path: "crear", element: <NegocioForm /> },
-              { path: ":id/editar", element: <NegocioForm /> },
+              { path: "crear", element: <CrearNegocio /> },
+              { path: ":id/editar", element: <CrearNegocio /> },
               { path: ":id/promos", element: <PromosPorNegocio /> },
               { path: ":id/promos/nueva", element: <CrearPromo /> },
             ],
@@ -139,7 +138,7 @@ const router = createBrowserRouter([
   },
 
   { path: "/login", element: <Login /> },
-  { path: "/registro", element: <Registro /> },
+  { path: "/registro", element: <RegistroMultiStep /> },
 
   {
     path: "*",

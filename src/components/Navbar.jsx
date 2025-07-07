@@ -24,12 +24,14 @@ export default function Header() {
     document.body.style.overflow = mobileMenuOpen ? "hidden" : "auto";
   }, [mobileMenuOpen]);
 
-  const NavLinks = ({ isMobile = false }) => (
+  const NavLinks = ({ isMobile = false, isSticky = false }) => (
     <nav
       className={`${
         isMobile
           ? "flex flex-col gap-6 text-lg mt-14 text-left font-bold text-white w-full"
-          : "flex items-center gap-6 text-sm"
+          : `flex items-center gap-6 text-sm ${
+              isSticky ? "text-gray-200" : "text-[#141C24]"
+            }`
       }`}
     >
       <Link to="/negocios" onClick={() => setMobileMenuOpen(false)}>
@@ -47,14 +49,18 @@ export default function Header() {
     </nav>
   );
 
-  const PerfilBtn = ({ isMobile = false }) => (
+  const PerfilBtn = ({ isMobile = false, isSticky = false }) => (
     <Link
       to={usuario ? "/dashboard/perfil" : "/login"}
       onClick={() => setMobileMenuOpen(false)}
       className={`${
         isMobile
           ? "inline-block mt-6 font-bold text-white text-lg underline underline-offset-4 decoration-2 transition"
-          : "flex items-center justify-center h-9 px-4 bg-[#F4C753] text-[#141C24] text-sm font-bold rounded-xl hover:bg-[#e7b93e] transition"
+          : `flex items-center justify-center h-9 px-4 ${
+              isSticky
+                ? "bg-white text-black hover:bg-orange-600"
+                : "bg-black text-white hover:bg-orange-600"
+            } text-sm font-bold rounded-xl transition`
       }`}
     >
       {usuario ? "Perfil" : "Entrar"}
@@ -64,7 +70,7 @@ export default function Header() {
   return (
     <>
       {/* Header principal */}
-      <header className="px-6 sm:px-10 py-4 bg-white border-b border-[#E4E9F1] text-[#141C24] z-50  relative">
+      <header className="px-6 sm:px-10 py-2 bg-white border-b border-[#E4E9F1] text-[#141C24] z-50  relative">
         <div className="flex items-center justify-between relative z-50">
           <Link to="/" className="text-xl font-extrabold">
             <img src={Icon} alt="Communities logo" className="h-10" />
@@ -132,26 +138,47 @@ export default function Header() {
 
       {/* Sticky Header en desktop */}
       <div
-        className={`fixed top-0 left-0 right-0  bg-white  border-b border-[#E4E9F1] shadow-sm transition-all duration-300 transform ${
+        className={`fixed top-0 left-0 right-0 bg-black/50 backdrop-blur-md  shadow-md transition-all duration-300 transform ${
           showSticky
-            ? "translate-y-0 opacity-100 z-40  "
-            : "-translate-y-full opacity-0 z-0    "
+            ? "translate-y-0 opacity-100 z-40"
+            : "-translate-y-full opacity-0 z-0"
         }`}
       >
-        <div className="flex items-center justify-between px-6 py-2 relative z-50">
-          <Link to="/" className="text-base font-bold">
+        <div className="relative flex items-center justify-between px-6 py-4 z-50">
+          {/* Links izquierda */}
+          <div className="hidden md:flex items-center gap-6">
+            <NavLinks isSticky />
+          </div>
+
+          {/* Logo centrado */}
+          <Link
+            to="/"
+            className="absolute left-1/2 -translate-x-1/2 text-base font-bold"
+          >
             <img src={Icon} alt="logo" className="h-10" />
           </Link>
-          <div className="hidden md:flex items-center gap-6">
-            <NavLinks />
-            <PerfilBtn />
+
+          {/* Botón y avatar derecha */}
+          <div className="hidden md:flex items-center gap-4">
+            <PerfilBtn isSticky />
+            {usuario && (
+              <div
+                className="w-9 h-9 rounded-full bg-cover bg-center"
+                style={{
+                  backgroundImage: `url(${
+                    usuario.profileImage || "/avatar-placeholder.png"
+                  })`,
+                }}
+              />
+            )}
           </div>
+
           {/* Botón mobile también en sticky */}
           <button
-            className="md:hidden text-2xl"
+            className="md:hidden text-2xl ml-auto"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
-            {mobileMenuOpen ? <FiX className="font-bold " /> : <FiMenu />}
+            {mobileMenuOpen ? <FiX className="font-bold" /> : <FiMenu />}
           </button>
         </div>
       </div>

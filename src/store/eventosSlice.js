@@ -1,11 +1,32 @@
+// src/store/eventosSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getAllEvents } from "../api/eventApi";
+import { getAllEvents, getMyEvents } from "../api/eventApi";
 
-export const obtenerEventos = createAsyncThunk("eventos/fetch", async () => {
-  const data = await getAllEvents();
-  // 🔒 Adaptar si viene como { events: [...] }
-  return Array.isArray(data) ? data : data.events || [];
-});
+// 🔁 Todos los eventos
+export const obtenerEventos = createAsyncThunk(
+  "eventos/fetch",
+  async (_, { rejectWithValue }) => {
+    try {
+      const data = await getAllEvents();
+      return Array.isArray(data) ? data : data.events || [];
+    } catch (error) {
+      return rejectWithValue(error.message || "Error al cargar eventos");
+    }
+  }
+);
+
+// 🔁 Solo mis eventos
+export const fetchMisEventos = createAsyncThunk(
+  "eventos/fetchMine",
+  async (_, { rejectWithValue }) => {
+    try {
+      const data = await getMyEvents();
+      return Array.isArray(data) ? data : data.events || [];
+    } catch (error) {
+      return rejectWithValue(error.message || "Error al cargar tus eventos");
+    }
+  }
+);
 
 const eventosSlice = createSlice({
   name: "eventos",
@@ -22,6 +43,7 @@ const eventosSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // Todos los eventos
       .addCase(obtenerEventos.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -32,7 +54,21 @@ const eventosSlice = createSlice({
       })
       .addCase(obtenerEventos.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || "Error al cargar eventos";
+        state.error = action.payload;
+      })
+
+      // Solo mis eventos
+      .addCase(fetchMisEventos.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchMisEventos.fulfilled, (state, action) => {
+        state.loading = false;
+        state.lista = Array.isArray(action.payload) ? action.payload : [];
+      })
+      .addCase(fetchMisEventos.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });

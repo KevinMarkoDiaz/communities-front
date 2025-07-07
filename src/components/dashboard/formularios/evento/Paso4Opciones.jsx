@@ -1,21 +1,21 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Field, ErrorMessage, useFormikContext } from "formik";
+import Select from "react-select";
 import { fetchCategorias } from "../../../../store/categoriasSlice";
 import { fetchComunidades } from "../../../../store/comunidadesSlice";
+import { obtenerNegocios } from "../../../../store/negociosSlice";
+import { customSelectStylesForm } from "../../../../../src/styles/customSelectStylesForm.js";
 import SelectNegocioSponsor from "../../../SelectNegocioSponsor";
 import SelectOrganizer from "../../../SelectOrganizer";
-import { obtenerNegocios } from "../../../../store/negociosSlice";
 
 export default function Paso4Opciones() {
   const dispatch = useDispatch();
   const { values, setFieldValue } = useFormikContext();
 
-  // ✅ Aseguramos arrays por defecto
   const categorias = useSelector((state) => state.categorias?.data ?? []);
   const comunidades = useSelector((state) => state.comunidades?.lista ?? []);
   const negocios = useSelector((state) => state.negocios?.lista ?? []);
-
   const usuario = useSelector((state) => state.auth.usuario);
 
   const loading =
@@ -23,7 +23,6 @@ export default function Paso4Opciones() {
     useSelector((state) => state.comunidades.loading) ||
     useSelector((state) => state.negocios.loading);
 
-  // ✅ Protección contra undefined en .length
   useEffect(() => {
     if (!categorias?.length) dispatch(fetchCategorias());
     if (!comunidades?.length) dispatch(fetchComunidades());
@@ -39,44 +38,62 @@ export default function Paso4Opciones() {
       {/* Categorías */}
       <div>
         <label className="block text-sm font-medium mb-1">Categorías</label>
-        <Field
-          as="select"
-          name="categories"
-          multiple
-          className="form-select w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl px-4 py-2 h-32"
-        >
-          {categorias.map((cat) => (
-            <option key={cat._id} value={cat._id}>
-              {cat.name}
-            </option>
-          ))}
-        </Field>
+        <Select
+          isMulti
+          options={categorias.map((cat) => ({
+            value: cat._id,
+            label: cat.name,
+          }))}
+          value={categorias
+            .filter((c) => values.categories?.includes(c._id))
+            .map((c) => ({
+              value: c._id,
+              label: c.name,
+            }))}
+          styles={customSelectStylesForm}
+          onChange={(selected) =>
+            setFieldValue(
+              "categories",
+              selected.map((s) => s.value)
+            )
+          }
+          placeholder="Selecciona categorías..."
+        />
         <ErrorMessage
           name="categories"
           component="div"
-          className="text-red-500 text-sm"
+          className="text-red-500 text-sm mt-1"
         />
       </div>
 
       {/* Comunidades */}
       <div>
         <label className="block text-sm font-medium mb-1">Comunidades</label>
-        <Field
-          as="select"
-          name="communities"
-          multiple
-          className="form-select w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl px-4 py-2 h-32"
-        >
-          {comunidades.map((com) => (
-            <option key={com._id} value={com._id}>
-              {com.name}
-            </option>
-          ))}
-        </Field>
+        <Select
+          isMulti
+          options={comunidades.map((com) => ({
+            value: com._id,
+            label: com.name,
+          }))}
+          value={comunidades
+            .filter((c) => values.communities?.includes(c._id))
+            .map((c) => ({
+              value: c._id,
+              label: c.name,
+            }))}
+          styles={customSelectStylesForm}
+          onChange={(selected) =>
+            setFieldValue(
+              "communities",
+              selected.map((s) => s.value)
+            )
+          }
+          placeholder="Selecciona comunidades..."
+        />
         <ErrorMessage
           name="communities"
           component="div"
-          className="text-red-500 text-sm"
+          className="text-red-500 text-sm mt-1"
         />
       </div>
 
@@ -85,22 +102,31 @@ export default function Paso4Opciones() {
         <label className="block text-sm font-medium mb-1">
           Negocios auspiciantes (opcional)
         </label>
-        <Field
-          as="select"
-          name="sponsors"
-          multiple
-          className="form-select w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl px-4 py-2 h-32"
-        >
-          {negocios.map((n) => (
-            <option key={n._id} value={n._id}>
-              {n.name}
-            </option>
-          ))}
-        </Field>
+        <Select
+          isMulti
+          options={negocios.map((n) => ({
+            value: n._id,
+            label: n.name,
+          }))}
+          value={negocios
+            .filter((n) => values.sponsors?.includes(n._id))
+            .map((n) => ({
+              value: n._id,
+              label: n.name,
+            }))}
+          styles={customSelectStylesForm}
+          onChange={(selected) =>
+            setFieldValue(
+              "sponsors",
+              selected.map((s) => s.value)
+            )
+          }
+          placeholder="Selecciona negocios..."
+        />
         <ErrorMessage
           name="sponsors"
           component="div"
-          className="text-red-500 text-sm"
+          className="text-red-500 text-sm mt-1"
         />
       </div>
 
@@ -109,19 +135,30 @@ export default function Paso4Opciones() {
         <label className="block text-sm font-medium mb-1">
           Estado del evento
         </label>
-        <Field
-          as="select"
-          name="status"
-          className="form-select w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl h-12 px-4"
-        >
-          <option value="activo">Activo</option>
-          <option value="cancelado">Cancelado</option>
-          <option value="finalizado">Finalizado</option>
-        </Field>
+        <Select
+          options={[
+            { value: "activo", label: "Activo" },
+            { value: "cancelado", label: "Cancelado" },
+            { value: "finalizado", label: "Finalizado" },
+          ]}
+          value={
+            values.status
+              ? {
+                  value: values.status,
+                  label:
+                    values.status.charAt(0).toUpperCase() +
+                    values.status.slice(1),
+                }
+              : null
+          }
+          styles={customSelectStylesForm}
+          onChange={(selected) => setFieldValue("status", selected.value)}
+          placeholder="Selecciona estado..."
+        />
         <ErrorMessage
           name="status"
           component="div"
-          className="text-red-500 text-sm"
+          className="text-red-500 text-sm mt-1"
         />
       </div>
 
@@ -138,44 +175,35 @@ export default function Paso4Opciones() {
         </label>
       </div>
 
-      {/* Select personalizado para sponsors */}
-      <SelectNegocioSponsor
-        value={
-          Array.isArray(values.sponsors)
-            ? values.sponsors.map((id) => {
-                const negocio = negocios.find((n) => n._id === id);
-                return negocio
-                  ? { value: id, label: negocio.name }
-                  : { value: id, label: id };
-              })
-            : []
-        }
-        onChange={(selected) =>
-          setFieldValue(
-            "sponsors",
-            selected.map((s) => s.value)
-          )
-        }
-      />
-
       {/* Organizer solo para admin */}
       {usuario.role === "admin" && (
-        <SelectOrganizer
-          value={
-            values.organizer && values.organizerModel
-              ? {
-                  value: values.organizer,
-                  label: values.organizerLabel || "",
-                  model: values.organizerModel,
-                }
-              : null
-          }
-          onChange={(selected) => {
-            setFieldValue("organizer", selected.value);
-            setFieldValue("organizerModel", selected.model);
-            setFieldValue("organizerLabel", selected.label);
-          }}
-        />
+        <div>
+          <label className="block text-sm font-medium mb-1">
+            Organizador del evento
+          </label>
+          <SelectOrganizer
+            placeholder="Selecciona el organizador (usuario o negocio)..."
+            value={
+              values.organizer && values.organizerModel
+                ? {
+                    value: values.organizer,
+                    label: values.organizerLabel || "",
+                    model: values.organizerModel,
+                  }
+                : null
+            }
+            onChange={(selected) => {
+              setFieldValue("organizer", selected.value);
+              setFieldValue("organizerModel", selected.model);
+              setFieldValue("organizerLabel", selected.label);
+            }}
+          />
+          <ErrorMessage
+            name="organizer"
+            component="div"
+            className="text-red-500 text-sm mt-1"
+          />
+        </div>
       )}
 
       {/* Publicado */}

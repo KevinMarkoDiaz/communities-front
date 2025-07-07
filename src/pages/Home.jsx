@@ -1,14 +1,16 @@
+import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import NegociosSugeridos from "../components/home/NegociosSugeridos";
 import EventosProximos from "../components/home/EventosProximos";
 import ComunidadesDestacadas from "../components/home/ComunidadesDestacadas";
-import BusquedaList from "../components/home/BusquedaList ";
-import HeroBannerLatino from "../components/home/HeroBannerLatino";
+import BusquedaList from "../components/home/BusquedaList";
 import VistaComunidad from "../components/VistaComunidad";
 import PromocionesDestacadas from "../components/home/PromocionesDestacadas";
-import bannerBTN from "../assets/bannerBTN.mp4"; // ✅ Importar video
+import bannerBTN from "../assets/bannerBTN.mp4";
 
 export default function Home() {
+  const [activePanel, setActivePanel] = useState("map"); // 'map' o 'search'
+
   return (
     <>
       <Helmet>
@@ -19,48 +21,36 @@ export default function Home() {
         />
       </Helmet>
 
-      {/* Buscador y comunidad */}
-      <div className="flex flex-col lg:flex-row gap-8">
-        <div className="w-full lg:w-5/5">
+      {/* Distribución en grid */}
+      <div className="relative flex flex-col lg:flex-row gap-4 min-h-[500px]">
+        {/* Mapa */}
+        <div
+          onFocus={() => setActivePanel("map")}
+          className={`transition-all duration-500 ease-in-out w-full ${
+            activePanel === "map" ? "lg:w-[75%]" : "lg:w-[25%]"
+          }`}
+        >
+          <VistaComunidad />
+        </div>
+
+        {/* Buscador */}
+        <div
+          onFocus={() => setActivePanel("search")}
+          className={`transition-all duration-500 ease-in-out w-full ${
+            activePanel === "search" ? "lg:w-[75%]" : "lg:w-[25%]"
+          }`}
+        >
           <BusquedaList />
         </div>
-        {/* <div className="w-full lg:w-3/5"><VistaComunidad /></div> */}
       </div>
 
       {/* Secciones principales */}
-      <div className="flex flex-col gap-24">
+      <div className="flex flex-col gap-24 mt-12">
         <PromocionesDestacadas />
         <NegociosSugeridos />
         <EventosProximos />
         <ComunidadesDestacadas />
 
-        {/* ✅ Nueva sección: promociones */}
-
-        {/* Sección final de bienvenida */}
-        {/* <div className="px-4 sm:px-6 lg:px-8 py-10 space-y-12 max-w-6xl mx-auto">
-            <div className="flex flex-col lg:flex-row gap-8 lg:items-center">
-              {/* Texto */}
-        {/* <div className="w-full lg:w-2/5 space-y-4 flex flex-col justify-center h-full">
-                <h2 className="text-3xl font-extrabold text-[#F45525] tracking-tight">
-                  ¡Bienvenido a Communities!
-                </h2>
-                <p className="text-[#141C24] text-lg leading-relaxed">
-                  Conectá con lo mejor de tu cultura en EE.UU. <br />
-                  Descubrí <span className="font-bold">negocios latinos</span>,
-                  participá en{" "}
-                  <span className="font-bold">eventos locales</span>, y encontrá
-                  tu <span className="font-bold">comunidad</span> donde quiera
-                  que estés.
-                </p>
-              </div> */}
-
-        {/* Imagen ilustrativa */}
-        {/* <div className="w-full lg:w-3/5">
-                <HeroBannerLatino />
-              </div>
-            </div> */}
-        {/* Banner de video */}
-        {/* </div> */}
         <div className="w-full hidden sm:flex justify-center px-4 py-10">
           <video
             src={bannerBTN}

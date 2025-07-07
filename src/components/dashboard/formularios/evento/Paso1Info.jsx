@@ -1,77 +1,91 @@
 import { Field, ErrorMessage, useFormikContext } from "formik";
+import Select from "react-select";
+import { customSelectStylesForm } from "../../../../styles/customSelectStylesForm";
 
 export default function Paso1Info() {
-  const { values } = useFormikContext();
+  const { values, setFieldValue } = useFormikContext();
+
+  const opcionesIdioma = [
+    { value: "es", label: "Español" },
+    { value: "en", label: "Inglés" },
+    { value: "pt", label: "Portugués" },
+    { value: "fr", label: "Francés" },
+  ];
 
   return (
     <div className="space-y-6">
       {/* Título */}
       <div>
-        <label className="block text-sm font-medium mb-1">Título</label>
+        <label className="block text-sm font-medium text-white mb-1">
+          Título del evento
+        </label>
         <Field
           name="title"
           placeholder="Título del evento"
-          className="form-input w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl h-12 px-4"
+          className="w-full px-4 py-3 border border-white/40 bg-white/10 rounded-lg placeholder:text-gray-300 focus:outline-none"
         />
         <ErrorMessage
           name="title"
           component="div"
-          className="text-red-500 text-sm"
+          className="text-red-400 text-sm mt-1"
         />
       </div>
 
       {/* Descripción */}
       <div>
-        <label className="block text-sm font-medium mb-1">Descripción</label>
+        <label className="block text-sm font-medium text-white mb-1">
+          Descripción
+        </label>
         <Field
           as="textarea"
           name="description"
           placeholder="Breve descripción del evento"
-          className="form-textarea w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl px-4 py-3"
+          rows={3}
+          className="w-full px-4 py-3 border border-white/40 bg-white/10 rounded-lg placeholder:text-gray-300 focus:outline-none"
         />
         <ErrorMessage
           name="description"
           component="div"
-          className="text-red-500 text-sm"
+          className="text-red-400 text-sm mt-1"
         />
       </div>
 
-      {/* Etiquetas (tags) */}
+      {/* Etiquetas */}
       <div>
-        <label className="block text-sm font-medium mb-1">
+        <label className="block text-sm font-medium text-white mb-1">
           Etiquetas (separadas por coma)
         </label>
         <Field
           name="tags"
           placeholder="ej. música, comida, feria"
-          className="form-input w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl h-12 px-4"
+          className="w-full px-4 py-3 border border-white/40 bg-white/10 rounded-lg placeholder:text-gray-300 focus:outline-none"
         />
         <ErrorMessage
           name="tags"
           component="div"
-          className="text-red-500 text-sm"
+          className="text-red-400 text-sm mt-1"
         />
       </div>
 
       {/* Idioma */}
       <div>
-        <label className="block text-sm font-medium mb-1">
+        <label className="block text-sm font-medium text-white mb-1">
           Idioma del evento
         </label>
-        <Field
-          as="select"
+        <Select
           name="language"
-          className="form-select w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl h-12 px-4"
-        >
-          <option value="es">Español</option>
-          <option value="en">Inglés</option>
-          <option value="pt">Portugués</option>
-          <option value="fr">Francés</option>
-        </Field>
+          options={opcionesIdioma}
+          placeholder="Selecciona un idioma..."
+          styles={customSelectStylesForm}
+          value={
+            opcionesIdioma.find((opt) => opt.value === values.language) || null
+          }
+          onChange={(option) => setFieldValue("language", option.value)}
+        />
         <ErrorMessage
           name="language"
           component="div"
-          className="text-red-500 text-sm"
+          className="text-red-400 text-sm mt-1"
         />
       </div>
 
@@ -81,27 +95,29 @@ export default function Paso1Info() {
           type="checkbox"
           name="isFree"
           id="isFree"
-          className="form-checkbox h-5 w-5 text-blue-600"
+          className="h-5 w-5 text-orange-500 border-white/40 bg-white/10 rounded focus:ring-0"
         />
-        <label htmlFor="isFree" className="text-sm font-medium">
+        <label htmlFor="isFree" className="text-sm text-white font-medium">
           Evento gratuito
         </label>
       </div>
 
-      {/* Precio (solo si no es gratuito) */}
+      {/* Precio */}
       {!values.isFree && (
         <div>
-          <label className="block text-sm font-medium mb-1">Precio</label>
+          <label className="block text-sm font-medium text-white mb-1">
+            Precio
+          </label>
           <Field
             type="number"
             name="price"
             placeholder="Ej: 10"
-            className="form-input w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl h-12 px-4"
+            className="w-full px-4 py-3 border border-white/40 bg-white/10 rounded-lg placeholder:text-gray-300 focus:outline-none"
           />
           <ErrorMessage
             name="price"
             component="div"
-            className="text-red-500 text-sm"
+            className="text-red-400 text-sm mt-1"
           />
         </div>
       )}

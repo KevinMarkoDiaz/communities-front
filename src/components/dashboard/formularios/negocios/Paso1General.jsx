@@ -1,20 +1,26 @@
 import { Field, ErrorMessage } from "formik";
+import Select from "react-select";
+import { useFormikContext } from "formik";
+import { customSelectStylesForm } from "../../../../../src/styles/customSelectStylesForm";
 
 /**
  * Paso 1: Información general del negocio
  * @param {{ categorias: Array<{ _id: string, name: string }>, comunidades: Array<{ _id: string, name: string }> }} props
  */
 export default function Paso1General({ categorias = [], comunidades = [] }) {
+  const { values, setFieldValue } = useFormikContext();
+
   return (
     <div className="space-y-5">
+      {/* Nombre */}
       <div>
-        <label className="block text-sm font-medium text-[#141C24] mb-1">
+        <label className="block text-sm font-medium text-white mb-1">
           Nombre
         </label>
         <Field
           name="name"
           placeholder="Estudio de Yoga Tierra y Alma"
-          className="form-input w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl h-14 px-4 placeholder:text-[#3F5374]"
+          className="form-input w-full bg-white/10 border border-white/30 rounded-lg h-12 px-4 placeholder:text-gray-300 focus:outline-none"
         />
         <ErrorMessage
           name="name"
@@ -23,15 +29,16 @@ export default function Paso1General({ categorias = [], comunidades = [] }) {
         />
       </div>
 
+      {/* Descripción */}
       <div>
-        <label className="block text-sm font-medium text-[#141C24] mb-1">
+        <label className="block text-sm font-medium text-white mb-1">
           Descripción
         </label>
         <Field
-          name="description"
           as="textarea"
+          name="description"
           placeholder="Describe tu negocio"
-          className="form-input w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl px-4 py-3 placeholder:text-[#3F5374]"
+          className="form-textarea w-full bg-white/10 border border-white/30 rounded-lg px-4 py-3 placeholder:text-gray-300 focus:outline-none"
         />
         <ErrorMessage
           name="description"
@@ -40,23 +47,28 @@ export default function Paso1General({ categorias = [], comunidades = [] }) {
         />
       </div>
 
+      {/* Categoría */}
       <div>
-        <label className="block text-sm font-medium text-[#141C24] mb-1">
+        <label className="block text-sm font-medium text-white mb-1">
           Categoría
         </label>
-        <Field
-          name="category"
-          as="select"
-          className="form-input w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl h-14 px-4 text-[#3F5374]"
-        >
-          <option value="">Seleccionar...</option>
-          {Array.isArray(categorias) &&
-            categorias.map((cat) => (
-              <option key={cat._id} value={cat._id}>
-                {cat.name}
-              </option>
-            ))}
-        </Field>
+        <Select
+          options={categorias.map((c) => ({
+            value: c._id,
+            label: c.name,
+          }))}
+          placeholder="Selecciona una categoría..."
+          styles={customSelectStylesForm}
+          value={
+            categorias
+              .filter((c) => c._id === values.category)
+              .map((c) => ({
+                value: c._id,
+                label: c.name,
+              }))[0] || null
+          }
+          onChange={(selected) => setFieldValue("category", selected?.value)}
+        />
         <ErrorMessage
           name="category"
           component="div"
@@ -64,23 +76,28 @@ export default function Paso1General({ categorias = [], comunidades = [] }) {
         />
       </div>
 
+      {/* Comunidad */}
       <div>
-        <label className="block text-sm font-medium text-[#141C24] mb-1">
+        <label className="block text-sm font-medium text-white mb-1">
           Comunidad
         </label>
-        <Field
-          name="community"
-          as="select"
-          className="form-input w-full bg-[#F8F9FB] border border-[#D4DBE8] rounded-xl h-14 px-4 text-[#3F5374]"
-        >
-          <option value="">Seleccionar...</option>
-          {Array.isArray(comunidades) &&
-            comunidades.map((com) => (
-              <option key={com._id} value={com._id}>
-                {com.name}
-              </option>
-            ))}
-        </Field>
+        <Select
+          options={comunidades.map((c) => ({
+            value: c._id,
+            label: c.name,
+          }))}
+          placeholder="Selecciona una comunidad..."
+          styles={customSelectStylesForm}
+          value={
+            comunidades
+              .filter((c) => c._id === values.community)
+              .map((c) => ({
+                value: c._id,
+                label: c.name,
+              }))[0] || null
+          }
+          onChange={(selected) => setFieldValue("community", selected?.value)}
+        />
         <ErrorMessage
           name="community"
           component="div"

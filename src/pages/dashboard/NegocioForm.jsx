@@ -28,18 +28,27 @@ const steps = [
   Paso6Extras,
 ];
 
+const nombresPasos = [
+  "General",
+  "Contacto",
+  "Ubicación",
+  "Horarios",
+  "Propietario",
+  "Extras",
+];
+
 const validationSchema = [
   Yup.object({
-    name: Yup.string().required("Name is required"),
-    description: Yup.string().required("Description is required"),
-    category: Yup.string().required("Category is required"),
-    community: Yup.string().required("Community is required"),
+    name: Yup.string().required("Nombre requerido"),
+    description: Yup.string().required("Descripción requerida"),
+    category: Yup.string().required("Categoría requerida"),
+    community: Yup.string().required("Comunidad requerida"),
   }),
   Yup.object({
     contact: Yup.object({
-      phone: Yup.string().required("Phone is required"),
-      email: Yup.string().email("Invalid email").required("Email is required"),
-      website: Yup.string().url("Invalid URL").nullable(),
+      phone: Yup.string().required("Teléfono requerido"),
+      email: Yup.string().email("Email inválido").required("Email requerido"),
+      website: Yup.string().url("URL inválida").nullable(),
       socialMedia: Yup.object({
         facebook: Yup.string().nullable(),
         instagram: Yup.string().nullable(),
@@ -49,11 +58,11 @@ const validationSchema = [
   }),
   Yup.object({
     location: Yup.object({
-      address: Yup.string().required("Address is required"),
-      city: Yup.string().required("City is required"),
-      state: Yup.string().required("State is required"),
-      zipCode: Yup.string().required("Zip code is required"),
-      country: Yup.string().required("Country is required"),
+      address: Yup.string().required("Dirección requerida"),
+      city: Yup.string().required("Ciudad requerida"),
+      state: Yup.string().required("Estado requerido"),
+      zipCode: Yup.string().required("Código postal requerido"),
+      country: Yup.string().required("País requerido"),
       coordinates: Yup.object({
         lat: Yup.number().nullable(),
         lng: Yup.number().nullable(),
@@ -91,16 +100,15 @@ const validationSchema = [
       .required(),
   }),
   Yup.object({
-    ownerId: Yup.string().required("Se requiere un propietario"),
+    ownerId: Yup.string().required("Propietario requerido"),
     ownerDisplay: Yup.object({
       name: Yup.string().nullable(),
       image: Yup.string().url("Debe ser una URL válida").nullable(),
     }).nullable(),
   }),
   Yup.object({
-    featuredImage: Yup.mixed().required("Requerido"),
-    profileImage: Yup.mixed().required("Requerido"),
-
+    featuredImage: Yup.mixed().required("Imagen destacada requerida"),
+    profileImage: Yup.mixed().required("Imagen de perfil requerida"),
     images: Yup.array()
       .of(
         Yup.mixed().test(
@@ -111,7 +119,7 @@ const validationSchema = [
             (typeof File !== "undefined" && value instanceof File)
         )
       )
-      .min(1, "Sube al menos una imagen a la galería"),
+      .min(1, "Sube al menos una imagen"),
     tags: Yup.array().of(Yup.string()).nullable(),
     isVerified: Yup.boolean().nullable(),
   }),
@@ -126,11 +134,7 @@ const defaultInitialValues = {
     phone: "",
     email: "",
     website: "",
-    socialMedia: {
-      facebook: "",
-      instagram: "",
-      whatsapp: "",
-    },
+    socialMedia: { facebook: "", instagram: "", whatsapp: "" },
   },
   location: {
     address: "",
@@ -150,11 +154,9 @@ const defaultInitialValues = {
     { day: "Sunday", open: "", close: "", closed: false },
   ],
   ownerId: "",
-  ownerDisplay: {
-    name: "",
-    image: "",
-  },
+  ownerDisplay: { name: "", image: "" },
   featuredImage: "",
+  profileImage: "",
   tags: [],
   isVerified: false,
   images: [],
@@ -180,7 +182,7 @@ export default function NegocioForm() {
         setCategorias(cats.categories);
         setComunidades(comms.communities);
       } catch (err) {
-        console.error("Error cargando categorías o comunidades:", err);
+        console.error("Error cargando datos:", err);
       }
     };
     cargarOpciones();
@@ -193,29 +195,20 @@ export default function NegocioForm() {
         .then((res) => {
           const negocio = res.business;
           setInitialValues({
-            name: negocio.name,
-            description: negocio.description,
+            ...defaultInitialValues,
+            ...negocio,
             category: negocio.category?._id || negocio.category,
             community: negocio.community?._id || negocio.community,
-            contact: negocio.contact || defaultInitialValues.contact,
-            location: negocio.location || defaultInitialValues.location,
-            openingHours:
-              negocio.openingHours || defaultInitialValues.openingHours,
             ownerId: negocio.owner?._id || negocio.owner,
             ownerDisplay: {
               name: negocio.owner?.name || "",
               image: negocio.owner?.profileImage || "",
             },
-            featuredImage: negocio.featuredImage || "",
-            profileImage: negocio.profileImage || "",
-            tags: negocio.tags || [],
-            isVerified: negocio.isVerified || false,
-            images: negocio.images || [],
           });
         })
         .catch((err) => {
-          console.error("Error cargando negocio:", err);
-          alert("Error al cargar los datos del negocio.");
+          console.error("Error:", err);
+          alert("Error cargando datos del negocio.");
         })
         .finally(() => setCargando(false));
     }
@@ -231,125 +224,139 @@ export default function NegocioForm() {
       validateOnBlur={false}
       validateOnChange={false}
       onSubmit={async (values, { setSubmitting, validateForm }) => {
-        try {
-          const errors = await validateForm();
-          if (Object.keys(errors).length > 0) {
-            console.warn("❌ Errores al intentar guardar:", errors);
-            setSubmitting(false);
-            return;
-          }
+        const errors = await validateForm();
+        if (Object.keys(errors).length) {
+          console.warn("Errores:", errors);
+          setSubmitting(false);
+          return;
+        }
 
-          if (paso === steps.length - 1) {
-            const { featuredImage, profileImage, images, ...otrosCampos } =
-              values;
+        if (paso === steps.length - 1) {
+          try {
+            const { featuredImage, profileImage, images, ...rest } = values;
             const formData = new FormData();
 
-            // Imagen destacada
-            if (featuredImage instanceof File) {
+            if (featuredImage instanceof File)
               formData.append("featuredImage", featuredImage);
-            } else if (typeof featuredImage === "string") {
-              formData.append("featuredImageUrl", featuredImage);
-            }
+            else formData.append("featuredImageUrl", featuredImage);
 
-            // Imagen de perfil
-            if (profileImage instanceof File) {
+            if (profileImage instanceof File)
               formData.append("profileImage", profileImage);
-            } else if (typeof profileImage === "string") {
-              formData.append("profileImageUrl", profileImage);
-            }
+            else formData.append("profileImageUrl", profileImage);
 
-            // Galería
-            const nuevasImagenes = images.filter((img) => img instanceof File);
-            const imagenesExistentes = images.filter(
-              (img) => typeof img === "string"
+            images.forEach((img) =>
+              img instanceof File
+                ? formData.append("images", img)
+                : formData.append("existingImages[]", img)
             );
 
-            nuevasImagenes.forEach((img) => formData.append("images", img));
-            if (imagenesExistentes.length > 0) {
-              formData.append(
-                "existingImages",
-                JSON.stringify(imagenesExistentes)
-              );
-            }
+            Object.entries(rest).forEach(([k, v]) =>
+              formData.append(k, typeof v === "object" ? JSON.stringify(v) : v)
+            );
 
-            // Resto de campos
-            Object.entries(otrosCampos).forEach(([key, value]) => {
-              formData.append(
-                key,
-                typeof value === "object" ? JSON.stringify(value) : value ?? ""
-              );
-            });
+            id
+              ? await updateBusiness(id, formData)
+              : await createBusiness(formData);
 
-            let response;
-            if (id) {
-              for (let pair of formData.entries()) {
-              }
-
-              response = await updateBusiness(id, formData);
-            } else {
-              response = await createBusiness(formData);
-            }
             navigate("/dashboard/mis-negocios");
+          } catch (err) {
+            console.error("Error al guardar:", err);
+          } finally {
+            setSubmitting(false);
           }
-        } catch (error) {
-          console.error("❌ Error al guardar el negocio:", error);
-        } finally {
-          setSubmitting(false);
         }
       }}
     >
       {({ validateForm }) => (
-        <Form className="space-y-6 p-4 overflow-hidden relative">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={paso}
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -40 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-            >
-              <PasoActual
-                {...(paso === 0 ? { categorias, comunidades } : {})}
-              />
-            </motion.div>
-          </AnimatePresence>
+        <Form className="flex flex-col md:flex-row gap-8 w-full max-w-5xl mx-auto p-8 bg-black/40 backdrop-blur-lg rounded-2xl shadow-2xl text-white">
+          {/* Sidebar */}
+          <div className="flex flex-col space-y-8 w-full md:w-36">
+            {nombresPasos.map((nombre, index) => (
+              <div key={index} className="flex items-start relative">
+                {index !== nombresPasos.length - 1 && (
+                  <span
+                    className="absolute left-3 top-7 h-full w-px bg-white/20"
+                    style={{ minHeight: "1.5rem" }}
+                  />
+                )}
+                <div
+                  className={`flex items-center justify-center w-6 h-6 rounded-full border-2 ${
+                    paso === index
+                      ? "border-orange-500 bg-orange-500 text-black"
+                      : paso > index
+                      ? "border-green-500 bg-green-500 text-black"
+                      : "border-white/30 text-white"
+                  }`}
+                >
+                  {paso > index ? "✓" : index + 1}
+                </div>
+                <div className="ml-3 text-sm">{nombre}</div>
+              </div>
+            ))}
+          </div>
 
-          <div className="flex justify-between pt-6">
-            {paso > 0 && (
+          {/* Contenido */}
+          <div className="flex-1 space-y-6">
+            <div className="flex items-center justify-between mb-2">
+              <div className="text-sm font-medium">
+                Paso {paso + 1} de {steps.length}:{" "}
+                <span className="text-orange-400">{nombresPasos[paso]}</span>
+              </div>
+              <div className="w-1/3 h-2 bg-white/10 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-orange-500 transition-all"
+                  style={{
+                    width: `${((paso + 1) / steps.length) * 100}%`,
+                  }}
+                />
+              </div>
+            </div>
+
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={paso}
+                initial={{ opacity: 0, x: 40 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -40 }}
+                transition={{ duration: 0.3 }}
+              >
+                <PasoActual
+                  {...(paso === 0 ? { categorias, comunidades } : {})}
+                />
+              </motion.div>
+            </AnimatePresence>
+
+            <div className="flex justify-between gap-2 mt-6">
+              {paso > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setPaso((prev) => prev - 1)}
+                  className="w-full bg-white/10 border border-white/20 text-white py-3 rounded-lg font-semibold hover:bg-white/20 transition"
+                >
+                  Atrás
+                </button>
+              )}
               <button
                 type="button"
-                onClick={() => setPaso((prev) => Math.max(prev - 1, 0))}
-                className="btn btn-secondary"
-              >
-                Atrás
-              </button>
-            )}
-
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={async () => {
-                const errors = await validateForm();
-
-                if (Object.keys(errors).length === 0) {
-                  // 👇 solo avanzar si NO estás en el último paso
-                  if (paso < steps.length - 1) {
-                    setPaso((prev) => prev + 1);
-                  } else {
-                    // 👇 solo enviar si estás en el último paso
-                    document.querySelector("form").requestSubmit(); // fuerza submit
+                className="w-full bg-orange-600 hover:bg-orange-700 text-white py-3 rounded-lg font-semibold transition"
+                onClick={async () => {
+                  const errors = await validateForm();
+                  if (Object.keys(errors).length === 0) {
+                    if (paso < steps.length - 1) {
+                      setPaso((p) => p + 1);
+                    } else {
+                      document.querySelector("form").requestSubmit();
+                    }
                   }
-                } else {
-                  console.warn("Errores en el paso actual:", errors);
-                }
-              }}
-            >
-              {paso === steps.length - 1
-                ? id
-                  ? "Actualizar"
-                  : "Guardar"
-                : "Siguiente"}
-            </button>
+                }}
+              >
+                {paso === steps.length - 1
+                  ? id
+                    ? "Actualizar negocio"
+                    : "Crear negocio"
+                  : "Siguiente"}
+              </button>
+            </div>
           </div>
         </Form>
       )}

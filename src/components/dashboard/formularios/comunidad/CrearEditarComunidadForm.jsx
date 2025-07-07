@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSelector } from "react-redux";
+import { customSelectStylesForm } from "../../../../../src/styles/customSelectStylesForm.js";
 
 import Paso1Info from "./pasos/Paso1Info";
 import Paso2Cultura from "./pasos/Paso2Cultura";
@@ -17,6 +18,16 @@ import {
   initialValuesComunidad,
   validationSchemaComunidad,
 } from "./schemaComunidad";
+// Títulos de cada paso
+const nombresPasos = [
+  "Información Básica",
+  "Cultura y Origen",
+  "Recursos y Enlaces",
+  "Ubicación",
+  "SEO y Visibilidad",
+  "Imágenes",
+  "Resumen Final",
+];
 
 const pasos = [
   Paso1Info,
@@ -44,7 +55,6 @@ export default function CrearEditarComunidadForm({
 
       const formData = new FormData();
 
-      // ✅ Solo agregar si son archivos nuevos
       if (flagImage instanceof File) formData.append("flagImage", flagImage);
       if (bannerImage instanceof File)
         formData.append("bannerImage", bannerImage);
@@ -52,14 +62,12 @@ export default function CrearEditarComunidadForm({
         formData.append("originCountryFlag", originCountryInfo.flag);
       }
 
-      // Imágenes de comida
       food.forEach((item, index) => {
         if (item.image instanceof File) {
           formData.append(`foodImages[${index}]`, item.image);
         }
       });
 
-      // Construir payload limpio
       const payload = {
         ...resto,
         originCountryInfo: {
@@ -71,13 +79,12 @@ export default function CrearEditarComunidadForm({
         },
         food: food.map((item) => ({
           name: item.name,
-          description: item.description,
+          description: item.description || "",
           image: item.image instanceof File ? "" : item.image,
         })),
         owner: usuario.id,
       };
 
-      // Limpiar coordenadas si vienen vacías
       if (payload.location?.coordinates) {
         payload.location.coordinates.lat =
           payload.location.coordinates.lat === ""
@@ -95,6 +102,7 @@ export default function CrearEditarComunidadForm({
         payload.mapCenter.lng =
           payload.mapCenter.lng === "" ? null : payload.mapCenter.lng;
       }
+
       formData.append("data", JSON.stringify(payload));
 
       if (modoEdicion && comunidadInicial?._id) {
@@ -110,7 +118,6 @@ export default function CrearEditarComunidadForm({
     }
   };
 
-  // ✅ Valores iniciales adaptados dinámicamente
   const initialValuesFinales = useMemo(() => {
     if (!modoEdicion || !comunidadInicial) return initialValuesComunidad;
 
@@ -143,63 +150,111 @@ export default function CrearEditarComunidadForm({
       validateOnChange
     >
       {({ validateForm, values, setErrors }) => (
-        <Form className="space-y-6">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={paso}
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -40 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-            >
-              <PasoActual />
-            </motion.div>
-          </AnimatePresence>
+        <Form className="flex flex-col md:flex-row gap-8 w-full max-w-5xl mx-auto p-8 bg-black/40 backdrop-blur-lg rounded-2xl shadow-2xl text-white">
+          {/* Sidebar de pasos */}
+          <div className="flex flex-col space-y-8 w-full md:w-36">
+            {nombresPasos.map((nombre, index) => (
+              <div key={index} className="flex items-start relative">
+                {/* Línea vertical */}
+                {index !== nombresPasos.length - 1 && (
+                  <span
+                    className="absolute left-3 top-7 h-full w-px bg-white/20"
+                    style={{ minHeight: "1.5rem" }}
+                  />
+                )}
+                {/* Círculo con número */}
+                <div
+                  className={`flex items-center justify-center w-6 h-6 rounded-full border-2 ${
+                    paso === index
+                      ? "border-orange-500 bg-orange-500 text-black"
+                      : paso > index
+                      ? "border-green-500 bg-green-500 text-black"
+                      : "border-white/30 text-white"
+                  }`}
+                >
+                  {paso > index ? "✓" : index + 1}
+                </div>
+                {/* Nombre del paso */}
+                <div className="ml-3 text-sm leading-tight">{nombre}</div>
+              </div>
+            ))}
+          </div>
 
-          <div className="flex justify-between pt-6">
-            {paso > 0 && (
-              <button
-                type="button"
-                onClick={() => setPaso((p) => p - 1)}
-                className="btn btn-secondary"
+          {/* Contenido del paso */}
+          <div className="flex-1 space-y-6">
+            {/* Encabezado de progreso */}
+            <div className="flex items-center justify-between mb-2">
+              <div className="text-sm font-medium">
+                Paso {paso + 1} de {pasos.length}:{" "}
+                <span className="text-orange-400">{nombresPasos[paso]}</span>
+              </div>
+              <div className="w-1/3 h-2 bg-white/10 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-orange-500 transition-all"
+                  style={{
+                    width: `${((paso + 1) / pasos.length) * 100}%`,
+                  }}
+                />
+              </div>
+            </div>
+
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={paso}
+                initial={{ opacity: 0, x: 40 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -40 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
               >
-                Atrás
-              </button>
-            )}
+                <PasoActual customSelectStyles={customSelectStylesForm} />
+              </motion.div>
+            </AnimatePresence>
 
-            {paso === pasos.length - 1 ? (
-              <button type="submit" className="btn btn-primary">
-                {modoEdicion ? "Actualizar comunidad" : "Crear comunidad"}
-              </button>
-            ) : (
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={async () => {
-                  const currentSchema = validationSchemaComunidad[paso];
-                  try {
-                    await currentSchema.validate(values, {
-                      abortEarly: false,
-                    });
-                    setPaso((p) => p + 1);
-                  } catch (err) {
-                    const formattedErrors = {};
-                    if (err.inner) {
-                      err.inner.forEach((e) => {
-                        formattedErrors[e.path] = e.message;
+            {/* Botones */}
+            <div className="flex justify-between gap-2 mt-6">
+              {paso > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setPaso((p) => p - 1)}
+                  className="w-full bg-white/10 border border-white/20 text-white py-3 rounded-lg font-semibold hover:bg-white/20 transition"
+                >
+                  Atrás
+                </button>
+              )}
+
+              {paso === pasos.length - 1 ? (
+                <button
+                  type="submit"
+                  className="w-full bg-orange-600 hover:bg-orange-700 text-white py-3 rounded-lg font-semibold transition"
+                >
+                  {modoEdicion ? "Actualizar comunidad" : "Crear comunidad"}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={async () => {
+                    const currentSchema = validationSchemaComunidad[paso];
+                    try {
+                      await currentSchema.validate(values, {
+                        abortEarly: false,
                       });
+                      setPaso((p) => p + 1);
+                    } catch (err) {
+                      const formattedErrors = {};
+                      if (err.inner) {
+                        err.inner.forEach((e) => {
+                          formattedErrors[e.path] = e.message;
+                        });
+                      }
+                      setErrors(formattedErrors);
                     }
-                    setErrors(formattedErrors);
-                    console.warn(
-                      "❌ Errores en el paso actual:",
-                      formattedErrors
-                    );
-                  }
-                }}
-              >
-                Siguiente
-              </button>
-            )}
+                  }}
+                  className="w-full bg-orange-600 hover:bg-orange-700 text-white py-3 rounded-lg font-semibold transition"
+                >
+                  Siguiente
+                </button>
+              )}
+            </div>
           </div>
         </Form>
       )}

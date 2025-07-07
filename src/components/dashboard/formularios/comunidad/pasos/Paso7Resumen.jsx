@@ -5,16 +5,16 @@ export default function Paso7Resumen() {
 
   return (
     <div className="space-y-6">
-      <h3 className="text-lg font-semibold text-[#141C24]">
+      <h3 className="text-lg font-semibold text-green-200">
         Revisión final de la comunidad
       </h3>
 
-      <p className="text-sm text-gray-700">
+      <p className="text-sm text-gray-100">
         Asegúrate de que toda la información sea correcta antes de crear la
         comunidad. Aquí tienes un resumen de los datos que has ingresado:
       </p>
 
-      <div className="bg-[#F8F9FB] p-4 rounded-xl text-sm space-y-2 border">
+      <div className="bg-black/20 p-4 rounded-xl text-sm space-y-2 ">
         <p>
           <strong>Nombre:</strong> {values.name}
         </p>
@@ -109,7 +109,7 @@ export default function Paso7Resumen() {
         )}
       </div>
 
-      <p className="text-sm text-gray-500">
+      <p className="text-sm text-gray-100">
         Si todo está correcto, haz clic en <strong>Crear comunidad</strong> para
         finalizar.
       </p>

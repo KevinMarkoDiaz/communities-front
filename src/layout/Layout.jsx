@@ -19,7 +19,15 @@ export default function Layout() {
     });
   }, [location.pathname]);
 
-  const hiddenAdsRoutes = ["/login", "/register", "/dashboard"];
+  const hiddenAdsRoutes = [
+    "/login",
+    "/register",
+    "/dashboard",
+    "/premium",
+    "/suscribirse",
+    "/suscripcion-exitosa",
+    "/suscripcion-cancelada",
+  ];
   const hideAds = hiddenAdsRoutes.some((route) =>
     location.pathname.startsWith(route)
   );

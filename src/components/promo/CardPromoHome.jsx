@@ -11,7 +11,7 @@ export default function CardPromoHome({
   isVerified,
 }) {
   return (
-    <div className="relative z-0 w-[220px] sm:w-[280px] md:w-[300px] lg:w-[245px] xl:w-[225px] aspect-[4/6] md:aspect-[5/3] xl:aspect-[5/6]  rounded-[1.5rem] overflow-hidden shadow-md bg-gray-100 transition hover:shadow-lg mb-4">
+    <div className="relative z-0 w-[220px] sm:w-[280px] md:w-[300px] lg:w-[245px] xl:w-[225px] aspect-[4/6] md:aspect-[5/3] xl:aspect-[5/6]  rounded-[1.5rem] overflow-hidden shadow-md bg-gray-100 transition hover:shadow-lg my-4">
       {/* Imagen de fondo */}
       {image && (
         <div
@@ -21,7 +21,7 @@ export default function CardPromoHome({
       )}
 
       {/* Capa oscura */}
-      <div className="absolute inset-0 bg-black/30" />
+      <div className="absolute inset-0 bg-black/20" />
 
       {/* Contenido */}
       <div className="relative z-10 flex flex-col justify-between h-full p-3 text-white">

@@ -68,7 +68,7 @@ export default function Eventos() {
         </div>
 
         {/* Grid paginado */}
-        <GridWrapper ref={gridRef} tipo="lista" className="min-h-[70vh]">
+        <GridWrapper ref={gridRef} tipo="grid" className="min-h-[70vh]">
           {eventosPaginados.map((evento) => {
             const {
               _id,

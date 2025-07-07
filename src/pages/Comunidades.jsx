@@ -67,7 +67,7 @@ export default function Comunidades() {
           </div>
         </div>
 
-        <GridWrapper ref={gridRef} tipo="lista" className="min-h-[70vh]">
+        <GridWrapper ref={gridRef} tipo="grid" className="min-h-[70vh]">
           {comunidadesPaginadas.map((comunidad) => (
             <Link
               key={comunidad.id || comunidad._id}

@@ -1,11 +1,32 @@
+// src/store/negociosSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getAllBusinesses } from "../api/businessApi";
+import { getAllBusinesses, getMyBusinesses } from "../api/businessApi";
 
-// AsyncThunk para obtener todos los negocios
-export const obtenerNegocios = createAsyncThunk("negocios/fetch", async () => {
-  const data = await getAllBusinesses();
-  return Array.isArray(data) ? data : data.businesses || [];
-});
+// 🔁 Todos los negocios
+export const obtenerNegocios = createAsyncThunk(
+  "negocios/fetch",
+  async (_, { rejectWithValue }) => {
+    try {
+      const data = await getAllBusinesses();
+      return Array.isArray(data) ? data : data.businesses || [];
+    } catch (error) {
+      return rejectWithValue(error.message || "Error al cargar negocios");
+    }
+  }
+);
+
+// 🔁 Solo mis negocios
+export const fetchMisNegocios = createAsyncThunk(
+  "negocios/fetchMine",
+  async (_, { rejectWithValue }) => {
+    try {
+      const data = await getMyBusinesses();
+      return Array.isArray(data) ? data : data.businesses || [];
+    } catch (error) {
+      return rejectWithValue(error.message || "Error al cargar tus negocios");
+    }
+  }
+);
 
 const negociosSlice = createSlice({
   name: "negocios",
@@ -14,7 +35,7 @@ const negociosSlice = createSlice({
     loading: false,
     error: null,
     busqueda: "",
-    categoria: "todas", // o "" según tu lógica de filtros
+    categoria: "todas",
   },
   reducers: {
     setBusqueda: (state, action) => {
@@ -26,6 +47,7 @@ const negociosSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // Todos los negocios
       .addCase(obtenerNegocios.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -36,7 +58,21 @@ const negociosSlice = createSlice({
       })
       .addCase(obtenerNegocios.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || "Error al cargar negocios";
+        state.error = action.payload;
+      })
+
+      // Solo mis negocios
+      .addCase(fetchMisNegocios.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchMisNegocios.fulfilled, (state, action) => {
+        state.loading = false;
+        state.lista = Array.isArray(action.payload) ? action.payload : [];
+      })
+      .addCase(fetchMisNegocios.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });

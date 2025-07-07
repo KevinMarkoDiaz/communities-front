@@ -3,11 +3,10 @@ import axiosInstance from "./axiosInstance";
 
 /**
  * Login: envía credenciales, backend responde seteando cookie HttpOnly.
- * El token NO se maneja en JS, solo recibimos datos usuario.
  */
 export async function loginUser(credentials) {
   const response = await axiosInstance.post("/auth/login", credentials);
-  return response.data.user; // Solo la info del usuario, sin token
+  return response.data.user;
 }
 
 /**
@@ -15,7 +14,7 @@ export async function loginUser(credentials) {
  */
 export async function registerUser(data) {
   const response = await axiosInstance.post("/auth/register", data);
-  return response.data.user; // Info del usuario creado
+  return response.data.user;
 }
 
 /**
@@ -27,16 +26,23 @@ export async function logoutUser() {
 }
 
 /**
- * Obtener perfil del usuario logueado (usa cookie para auth)
+ * Obtener perfil del usuario logueado (/auth/profile)
  */
 export async function getUserProfile() {
   const response = await axiosInstance.get("/auth/profile");
   return response.data.user;
 }
+
 /**
- * Actualizar datos de usuario (PUT o PATCH /users/:id)
- * @param {string} userId - ID del usuario a actualizar
- * @param {object} data - Datos a actualizar
+ * Obtener perfil actual (/auth/me)
+ */
+export async function getCurrentUser() {
+  const response = await axiosInstance.get("/auth/me");
+  return response.data;
+}
+
+/**
+ * Actualizar datos de usuario
  */
 export async function updateUserApi(userId, data) {
   const response = await axiosInstance.put(`/users/${userId}`, data);

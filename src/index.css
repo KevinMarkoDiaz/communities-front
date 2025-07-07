@@ -17,3 +17,22 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+/* Estiliza el scroll del menú */
+.react-select__menu-list {
+  scrollbar-width: thin;
+  scrollbar-color: #fb923c rgba(255,255,255,0.1);
+}
+
+/* Para navegadores Webkit (Chrome, Edge, Safari) */
+.react-select__menu-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.react-select__menu-list::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.05);
+}
+
+.react-select__menu-list::-webkit-scrollbar-thumb {
+  background-color: #fb923c;
+  border-radius: 4px;
+}
