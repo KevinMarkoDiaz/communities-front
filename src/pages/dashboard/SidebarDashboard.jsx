@@ -5,12 +5,11 @@ import {
   MdGroups,
   MdLocalOffer,
   MdCategory,
-  MdStar,
   MdLogout,
 } from "react-icons/md";
 import { NavLink } from "react-router-dom";
 import authBg from "../../assets/authbg.png";
-
+import { FaRocket } from "react-icons/fa";
 const SidebarDashboard = ({ usuario, handleLogout }) => {
   const navItems = [
     { to: "perfil", label: "Mi perfil", icon: <MdPerson /> },
@@ -28,7 +27,7 @@ const SidebarDashboard = ({ usuario, handleLogout }) => {
 
   return (
     <aside
-      className="sticky top-0 h-[calc(100vh-0px)] w-20 md:w-64 lg:w-80 px-2 md:px-4 py-5 flex-shrink-0 relative overflow-hidden z-10 shadow-[4px_0_10px_-2px_rgba(0,0,0,0.3)]"
+      className="fixed top-0 left-0 h-screen w-20 md:w-64 lg:w-80 px-2 md:pt-45 md:px-0 flex-shrink-0 z-10 shadow-[4px_0_10px_-2px_rgba(0,0,0,0.3)]"
       style={{
         backgroundImage: `url(${authBg})`,
         backgroundSize: "cover",
@@ -38,28 +37,23 @@ const SidebarDashboard = ({ usuario, handleLogout }) => {
       {/* Overlay con blur y oscurecimiento */}
       <div className="absolute inset-0 backdrop-blur-sm bg-black/20 pointer-events-none" />
 
-      <div className="flex flex-col justify-between h-full px-2 py-18 md:px-4 relative z-10 pb-16">
+      <div className="flex flex-col justify-between h-full relative z-10">
         {/* Encabezado */}
-        <div className="hidden md:flex flex-col gap-1 mb-4">
-          <div className="flex items-center justify-between">
-            <h1 className="text-white text-base font-medium leading-normal">
+        <div className="w-full">
+          <div className="hidden md:flex w-full bg-black text-white px-3 py-3 mb-4">
+            <h1 className="text-base font-semibold leading-normal">
               Dashboard
             </h1>
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 text-sm text-gray-200 hover:text-black hover:cursor-pointer  transition"
-            >
-              <MdLogout className="text-lg" />
-              <span>Cerrar sesión</span>
-            </button>
           </div>
-          <p className="text-gray-200 text-sm font-normal leading-normal">
-            {usuario?.name} • {usuario?.title || "Usuario"}
-          </p>
+          <div className="hidden md:flex flex-col gap-1 px-4">
+            <p className="text-gray-00 text-sm font-bold leading-normal">
+              {usuario?.name} {usuario?.title}
+            </p>
+          </div>
         </div>
 
         {/* Navegación */}
-        <div className="flex flex-col gap-2 flex-1">
+        <div className="flex flex-col gap-2 flex-1 px-4 mt-4">
           {navItems.map(({ to, label, icon }) => (
             <NavLink
               key={to}
@@ -100,20 +94,38 @@ const SidebarDashboard = ({ usuario, handleLogout }) => {
           <NavLink
             to="/premium"
             className={({ isActive }) =>
-              `flex items-center gap-3 px-3 py-2 rounded-full transition ${
-                isActive
-                  ? "bg-purple-700/30 text-white"
-                  : "text-[#FCD34D] hover:bg-yellow-500/20"
-              }`
+              `group relative flex items-center gap-3 px-4 py-2 rounded-full border border-white text-white font-semibold transition-all overflow-hidden
+     ${
+       isActive
+         ? "shadow-[0_0_12px_rgba(255,255,255,0.4)]"
+         : "hover:border-green-400 hover:text-green-400 hover:shadow-[0_0_20px_rgba(34,197,94,0.5)]"
+     }`
             }
           >
-            <span className="text-xl">
-              <MdStar />
+            {/* Efecto shimmer */}
+            <span
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent 
+    -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out"
+            />
+
+            <span className="relative z-10 text-xl">
+              <FaRocket />
             </span>
-            <p className="hidden md:block text-sm font-medium leading-normal">
-              💎 Hazte Premium
+            <p className="hidden md:block relative z-10 text-sm font-semibold">
+              Dale un impulso a tu cuenta
             </p>
           </NavLink>
+        </div>
+
+        {/* Botón cerrar sesión fijo abajo */}
+        <div className="hidden md:flex w-full px-3 py-4">
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center justify-center gap-2 text-sm text-gray-200 hover:bg-black/50 hover:text-white transition rounded-full py-2"
+          >
+            <MdLogout className="text-lg" />
+            <span>Cerrar sesión</span>
+          </button>
         </div>
       </div>
     </aside>

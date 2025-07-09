@@ -8,10 +8,14 @@ import ResumenNegocios from "../../components/dashboard/perfilUsuario/ResumenNeg
 import ResumenEventos from "../../components/dashboard/perfilUsuario/ResumenEventos";
 import { fetchMisNegocios } from "../../store/negociosSlice";
 import { fetchMisEventos } from "../../store/eventosSlice";
+import PerfilSkeleton from "../../components/Skeleton/PerfilSkeleton";
 
 export default function PerfilPage() {
   const usuario = useSelector((state) => state.auth.usuario);
-  const loading = useSelector((state) => state.comunidades.loading);
+  const loadingComunidades = useSelector((state) => state.comunidades.loading);
+  const loadingNegocios = useSelector((state) => state.negocios.loading);
+  const loadingEventos = useSelector((state) => state.eventos.loading);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -20,29 +24,41 @@ export default function PerfilPage() {
     dispatch(fetchMisEventos());
   }, [dispatch]);
 
-  if (loading) return <p className="p-6 text-gray-500">Cargando usuario...</p>;
+  if (loadingComunidades || loadingNegocios || loadingEventos) {
+    return <PerfilSkeleton />;
+  }
 
   return (
-    <div className="max-w-[1200px] w-full mx-auto flex flex-col gap-8">
-      <HeaderPerfil usuario={usuario} />
+    <div className="max-w-[1200px] w-full mx-auto flex flex-col gap-8 p-4 md:p-6">
+      <div className="bg-white border border-gray-200 rounded-2xl shadow-sm  h-full">
+        <HeaderPerfil usuario={usuario} />
+      </div>
 
       {/* Primera fila */}
       <div className="flex flex-col gap-4 md:flex-row md:items-stretch">
         <div className="w-full md:w-1/3">
-          <Resumen />
+          <div className="bg-white border border-gray-200 rounded-2xl shadow-sm  h-full">
+            <Resumen />
+          </div>
         </div>
         <div className="w-full md:flex-1">
-          <ResumenComunidades />
+          <div className="bg-white border border-gray-200 rounded-2xl shadow-sm  h-full">
+            <ResumenComunidades />
+          </div>
         </div>
       </div>
 
       {/* Segunda fila */}
       <div className="flex flex-col gap-4 md:flex-row md:items-stretch">
         <div className="w-full md:w-1/2">
-          <ResumenNegocios />
+          <div className="bg-white border border-gray-200 rounded-2xl shadow-sm  h-full">
+            <ResumenNegocios />
+          </div>
         </div>
         <div className="w-full md:w-1/2">
-          <ResumenEventos />
+          <div className="bg-white border border-gray-200 rounded-2xl shadow-sm  h-full">
+            <ResumenEventos />
+          </div>
         </div>
       </div>
     </div>

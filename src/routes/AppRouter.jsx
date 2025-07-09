@@ -101,8 +101,12 @@ const router = createBrowserRouter([
               { path: "crear", element: <CrearNegocio /> },
               { path: ":id/editar", element: <CrearNegocio /> },
               { path: ":id/promos", element: <PromosPorNegocio /> },
-              { path: ":id/promos/nueva", element: <CrearPromo /> },
+              { path: ":negocioId/promos/nueva", element: <CrearPromo /> },
             ],
+          },
+          {
+            path: "promociones/:promoId/editar",
+            element: <CrearPromo />,
           },
           {
             path: "mis-eventos",

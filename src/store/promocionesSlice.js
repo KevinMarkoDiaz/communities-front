@@ -9,7 +9,7 @@ import {
   getAllPromotions,
 } from "../api/promotionApi";
 
-// 🔁 Obtener por comunidad
+// 🔁 Obtener promociones por comunidad
 export const fetchPromosPorComunidad = createAsyncThunk(
   "promociones/fetchPorComunidad",
   async (communityId, { rejectWithValue }) => {
@@ -22,7 +22,7 @@ export const fetchPromosPorComunidad = createAsyncThunk(
   }
 );
 
-// 👤 Obtener promos del usuario autenticado
+// 👤 Obtener promociones del usuario autenticado
 export const fetchMisPromos = createAsyncThunk(
   "promociones/fetchMisPromos",
   async (_, { rejectWithValue }) => {
@@ -37,7 +37,7 @@ export const fetchMisPromos = createAsyncThunk(
   }
 );
 
-// ➕ Crear promo
+// ➕ Crear promoción
 export const createPromo = createAsyncThunk(
   "promociones/create",
   async (formData, { rejectWithValue }) => {
@@ -50,7 +50,7 @@ export const createPromo = createAsyncThunk(
   }
 );
 
-// ✏️ Actualizar promo
+// ✏️ Actualizar promoción
 export const updatePromo = createAsyncThunk(
   "promociones/update",
   async ({ id, formData }, { rejectWithValue }) => {
@@ -63,7 +63,7 @@ export const updatePromo = createAsyncThunk(
   }
 );
 
-// ❌ Eliminar promo
+// ❌ Eliminar promoción
 export const deletePromo = createAsyncThunk(
   "promociones/delete",
   async (id, { rejectWithValue }) => {
@@ -75,6 +75,8 @@ export const deletePromo = createAsyncThunk(
     }
   }
 );
+
+// 🌐 Obtener todas las promociones
 export const fetchAllPromos = createAsyncThunk(
   "promociones/fetchAll",
   async (_, { rejectWithValue }) => {
@@ -82,10 +84,13 @@ export const fetchAllPromos = createAsyncThunk(
       const data = await getAllPromotions();
       return data;
     } catch (error) {
-      return rejectWithValue("Error al cargar todas las promociones", error);
+      return rejectWithValue(
+        error.message || "Error al cargar todas las promociones"
+      );
     }
   }
 );
+
 const promocionesSlice = createSlice({
   name: "promociones",
   initialState: {
@@ -96,8 +101,7 @@ const promocionesSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-
-      // 🔁 Comunidad
+      // 🔁 Promociones por comunidad
       .addCase(fetchPromosPorComunidad.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -125,12 +129,12 @@ const promocionesSlice = createSlice({
         state.error = action.payload;
       })
 
-      // ➕ Crear
+      // ➕ Crear promoción
       .addCase(createPromo.fulfilled, (state, action) => {
         state.lista.push(action.payload);
       })
 
-      // ✏️ Actualizar
+      // ✏️ Actualizar promoción
       .addCase(updatePromo.fulfilled, (state, action) => {
         const index = state.lista.findIndex(
           (p) => p._id === action.payload._id
@@ -140,10 +144,12 @@ const promocionesSlice = createSlice({
         }
       })
 
-      // ❌ Eliminar
+      // ❌ Eliminar promoción
       .addCase(deletePromo.fulfilled, (state, action) => {
         state.lista = state.lista.filter((p) => p._id !== action.payload);
       })
+
+      // 🌐 Todas las promociones
       .addCase(fetchAllPromos.pending, (state) => {
         state.loading = true;
         state.error = null;

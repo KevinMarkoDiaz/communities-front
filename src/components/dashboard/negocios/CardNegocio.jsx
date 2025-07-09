@@ -1,65 +1,81 @@
 import { Link } from "react-router-dom";
 import { MdEdit, MdDelete, MdLocalOffer } from "react-icons/md";
+import ConfirmDeleteModal from "../../ConfirmDeleteModal";
+import { useState } from "react";
+
 export default function CardNegocio({ negocio, onDelete }) {
-  const { _id, name, description, profileImage, category, location } = negocio;
+  const [showModal, setShowModal] = useState(false);
 
   return (
-    <div className="w-full">
-      <div className="w-full flex flex-col md:flex-row items-start gap-4 bg-gray-50 rounded-2xl shadow-sm hover:shadow-md transition-all p-4">
-        {/* Imagen destacada */}
-        <div
-          className="w-full aspect-video md:aspect-auto md:w-40 md:h-28 bg-center bg-no-repeat bg-cover rounded-xl shrink-0"
-          style={{
-            backgroundImage: `url(${
-              profileImage || "https://cdn.usegalileo.ai/sdxl10/placeholder.png"
-            })`,
-          }}
-        ></div>
+    <div className="group relative bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden border border-gray-200">
+      {/* Imagen destacada */}
+      <div className="w-full h-28 overflow-hidden">
+        <img
+          src={negocio.featuredImage}
+          alt={negocio.name}
+          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+        />
+      </div>
 
-        {/* Contenido */}
-        <div className="flex flex-col md:flex-row justify-between flex-1 gap-3 py-2">
-          <div className="space-y-1">
-            <p className="text-[#141C24] text-lg font-bold leading-tight tracking-[-0.015em]">
-              {name}
-            </p>
-            <p className="text-[#3F5374] text-base line-clamp-2 text-xs md:text-md">
-              {description}
-            </p>
-            <p className="text-[#6B7280] text-xs md:text-md">
-              {category?.name || "Sin categoría"} · {location?.city},{" "}
-              {location?.state}
-            </p>
-          </div>
-          <div className="flex gap-2 mt-auto  md:flex-col pt-2">
-            {/* Editar y eliminar arriba, lado a lado */}
-            <div className="flex gap-2">
-              <button
-                onClick={() => onDelete(_id)}
-                className="text-black p-1 rounded hover:bg-black hover:text-white transition text-sm"
-                title="Eliminar"
-              >
-                <MdDelete className="text-lg" />
-              </button>
-              <Link
-                to={`/dashboard/mis-negocios/${_id}/editar`}
-                className="text-black p-1 rounded hover:bg-black hover:text-white transition text-sm"
-                title="Editar"
-              >
-                <MdEdit className="text-lg" />
-              </Link>
-            </div>
+      <div className="flex flex-col gap-2 p-4">
+        {/* Nombre */}
+        <h3 className="text-sm font-semibold text-gray-700 truncate">
+          {negocio.name}
+        </h3>
 
-            {/* Promoción abajo, ícono + texto en una fila */}
+        {/* Categoría */}
+        {negocio.category && (
+          <span className="inline-block bg-black text-white text-xs font-medium px-2 py-0.5 rounded-full w-fit">
+            {negocio.category.name}
+          </span>
+        )}
+
+        {/* Acciones */}
+        <div className="flex justify-between items-center mt-3">
+          <Link
+            to={`/negocios/${negocio._id}`}
+            className="text-sm font-medium text-blue-300 hover:text-blue-800 transition"
+          >
+            Ver más
+          </Link>
+
+          <div className="flex gap-2">
             <Link
-              to={`/dashboard/mis-negocios/${_id}/promos/nueva`}
-              className="flex items-center gap-1 text-black p-1 rounded hover:bg-black hover:text-white transition text-sm"
+              to={`/dashboard/mis-negocios/${negocio._id}/promos/nueva`}
+              className="p-1 text-blue-300 hover:text-blue-600 transition"
+              title="Agregar promoción"
             >
-              <MdLocalOffer className="text-lg" />
-              <p className="hidden md:flex">Promoción </p>
+              <MdLocalOffer className="w-5 h-5" />
             </Link>
+            <Link
+              to={`/dashboard/mis-negocios/${negocio._id}/editar`}
+              className="p-1 text-gray-500 hover:text-black transition"
+              title="Editar"
+            >
+              <MdEdit className="w-5 h-5" />
+            </Link>
+            <button
+              onClick={() => setShowModal(true)}
+              className="p-1 text-gray-500 hover:text-red-600 transition"
+              title="Eliminar"
+            >
+              <MdDelete className="w-5 h-5" />
+            </button>
           </div>
         </div>
       </div>
+
+      <ConfirmDeleteModal
+        open={showModal}
+        onClose={() => setShowModal(false)}
+        onConfirm={() => {
+          setShowModal(false);
+          onDelete();
+        }}
+        entityName={negocio.name}
+        title="Eliminar negocio"
+        description="Para confirmar, escribe el nombre exacto del negocio:"
+      />
     </div>
   );
 }

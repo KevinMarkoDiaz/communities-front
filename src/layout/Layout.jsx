@@ -5,6 +5,7 @@ import { Outlet, useLocation } from "react-router-dom";
 import CookieConsentModal from "../components/CookieConsentModal";
 import { useEffect } from "react";
 import { useInitData } from "../hooks/useInitData";
+import AdBanner from "../components/ads/AdBanner";
 
 export default function Layout() {
   const location = useLocation();
@@ -38,9 +39,10 @@ export default function Layout() {
 
       {!hideAds && (
         <div className="w-full bg-gray-100 text-center py-2">
-          <div className="ads-banner h-[90px] bg-gray-200 flex items-center justify-center text-sm text-gray-500 border border-dashed">
-            Publicidad Top
-          </div>
+          <AdBanner
+            className="bg-gradient-to-r from-yellow-50 to-orange-100
+"
+          />
         </div>
       )}
 
@@ -58,9 +60,12 @@ export default function Layout() {
 
       {!hideAds && (
         <div className="w-full bg-gray-100 text-center py-2">
-          <div className="ads-banner h-[90px] bg-gray-200 flex items-center justify-center text-sm text-gray-500 border border-dashed">
-            Publicidad Intermedia
-          </div>
+          <AdBanner
+            // image="/anuncios/anunciante2.jpg"
+            // link="https://anunciante2.com"
+            className="bg-gradient-to-r from-yellow-50 to-orange-100
+"
+          />
         </div>
       )}
 

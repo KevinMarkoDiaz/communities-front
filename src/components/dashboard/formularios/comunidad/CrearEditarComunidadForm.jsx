@@ -158,7 +158,7 @@ export default function CrearEditarComunidadForm({
                 {/* Línea vertical */}
                 {index !== nombresPasos.length - 1 && (
                   <span
-                    className="absolute left-3 top-7 h-full w-px bg-white/20"
+                    className="absolute left-2.5 top-7 h-full w-px bg-white/20"
                     style={{ minHeight: "1.5rem" }}
                   />
                 )}

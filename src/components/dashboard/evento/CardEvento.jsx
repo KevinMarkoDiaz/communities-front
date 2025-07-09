@@ -1,64 +1,85 @@
 import { Link } from "react-router-dom";
 import { MdEdit, MdDelete } from "react-icons/md";
+import { useState } from "react";
+import ConfirmDeleteModal from "../../ConfirmDeleteModal";
 
 export default function CardEvento({ evento, onDelete }) {
-  const {
-    _id,
-    title = "Sin título",
-    description = "Sin descripción",
-    date,
-    location = "Ubicación no disponible",
-    featuredImage,
-  } = evento;
+  const { _id, title = "Sin título", date, location, featuredImage } = evento;
+
+  const [showModal, setShowModal] = useState(false);
 
   const imagenUrl =
     featuredImage || `https://cdn.usegalileo.ai/sdxl10/${_id || "default"}.png`;
 
   return (
-    <div className="w-full">
-      <div className="w-full flex flex-col md:flex-row items-start gap-4 bg-gray-50 rounded-2xl shadow-sm hover:shadow-md transition-all p-4">
-        {/* Imagen del evento */}
-        <div
-          className="w-full aspect-video md:aspect-auto md:w-40 md:h-28 bg-center bg-no-repeat bg-cover rounded-xl shrink-0"
-          style={{ backgroundImage: `url(${imagenUrl})` }}
-        ></div>
+    <div className="group relative bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden border border-gray-200">
+      {/* Imagen */}
+      <div className="w-full h-28 overflow-hidden">
+        <img
+          src={imagenUrl}
+          alt={title}
+          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+        />
+      </div>
 
-        {/* Contenido */}
-        <div className="flex flex-col md:flex-row justify-between flex-1 gap-3 py-2">
-          <div className="space-y-1">
-            <p className="text-[#141C24] text-lg font-bold leading-tight tracking-[-0.015em]">
-              {title}
-            </p>
-            <p className="text-[#3F5374] text-base line-clamp-2 text-xs md:text-md">
-              {description}
-            </p>
-            <p className="text-[#6B7280] text-xs md:text-sm">
-              {date ? new Date(date).toLocaleDateString() : "Fecha no definida"}{" "}
-              · {location?.address}, {location?.city}, {location?.state}
-            </p>
-          </div>
+      <div className="flex flex-col gap-2 p-4">
+        {/* Título */}
+        <h3 className="text-sm font-semibold text-gray-700 truncate">
+          {title}
+        </h3>
 
-          {/* Acciones */}
-          <div className="flex gap-2 mt-auto md:flex-col pt-2">
-            <div className="flex gap-2">
-              <button
-                onClick={() => onDelete(_id)}
-                className="text-black p-1 rounded hover:bg-black hover:text-white transition text-sm"
-                title="Eliminar"
-              >
-                <MdDelete className="text-lg" />
-              </button>
-              <Link
-                to={`/dashboard/mis-eventos/${_id}/editar`}
-                className="text-black p-1 rounded hover:bg-black hover:text-white transition text-sm"
-                title="Editar"
-              >
-                <MdEdit className="text-lg" />
-              </Link>
-            </div>
+        {/* Fecha */}
+        <span className="inline-block bg-black text-white text-xs font-medium px-2 py-0.5 rounded-full w-fit">
+          {date ? new Date(date).toLocaleDateString() : "Sin fecha"}
+        </span>
+
+        {/* Ubicación */}
+        {location?.city && (
+          <span className="text-xs text-gray-500">
+            {location.city}, {location.state}
+          </span>
+        )}
+
+        {/* Acciones */}
+        <div className="flex justify-between items-center mt-3">
+          <Link
+            to={`/eventos/${_id}`}
+            className="text-sm font-medium text-blue-300 hover:text-blue-800 transition"
+          >
+            Ver más
+          </Link>
+
+          <div className="flex gap-2">
+            <Link
+              to={`/dashboard/mis-eventos/${_id}/editar`}
+              className="p-1 text-gray-500 hover:text-black transition"
+              title="Editar"
+            >
+              <MdEdit className="w-5 h-5" />
+            </Link>
+            <button
+              onClick={() => setShowModal(true)}
+              className="p-1 text-gray-500 hover:text-red-600 transition"
+              title="Eliminar"
+            >
+              <MdDelete className="w-5 h-5" />
+            </button>
           </div>
         </div>
       </div>
+
+      {/* Modal Confirmación */}
+      <ConfirmDeleteModal
+        open={showModal}
+        onClose={() => setShowModal(false)}
+        onConfirm={() => {
+          setShowModal(false);
+          onDelete(_id);
+        }}
+        entityName={title}
+        title="Eliminar evento"
+        description="Para confirmar, escribe el nombre exacto del evento:"
+      />
     </div>
   );
 }

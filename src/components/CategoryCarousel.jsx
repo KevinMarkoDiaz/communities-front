@@ -36,10 +36,11 @@ export default function CategoryCarousel() {
                 <button
                   key={cat._id}
                   onClick={() => dispatch(setCategoria(valor))}
-                  className={`flex flex-col gap-2 flex-shrink-0 snap-start cursor-pointer
+                  className={`group flex flex-col gap-2 flex-shrink-0 snap-start cursor-pointer
                     w-[40vw] aspect-square sm:w-[140px] md:w-[160px]
-                    rounded-lg text-left transition ring-offset-1 
-                    ${seleccionada ? "ring-2 ring-[#f4c753]" : "hover:shadow"}`}
+                    rounded-lg text-left ring-offset-1 transition
+                    ${seleccionada ? "ring-2 ring-[#f4c753]" : ""}
+                  `}
                 >
                   <div
                     className="w-full h-full rounded-xl flex items-center justify-center bg-gray-100 overflow-hidden"
@@ -71,7 +72,7 @@ export default function CategoryCarousel() {
                       </svg>
                     )}
                   </div>
-                  <p className="text-[#181411] text-sm font-medium leading-tight truncate mt-1">
+                  <p className="text-[#181411] text-sm font-medium leading-tight truncate mt-1 transition-colors duration-200 group-hover:text-orange-600">
                     {cat.name}
                   </p>
                 </button>

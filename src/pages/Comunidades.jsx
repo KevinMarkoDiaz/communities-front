@@ -39,7 +39,7 @@ export default function Comunidades() {
   if (error) return <div className="p-4 text-red-600">Error: {error}</div>;
 
   return (
-    <>
+    <div className="flex flex-col gap-12 md:gap-16 xl:gap-24 mt-12">
       <ResetBusquedaOnMount />
 
       <Helmet>
@@ -50,9 +50,10 @@ export default function Comunidades() {
         />
       </Helmet>
 
-      <div className="w-full max-w-full overflow-hidden flex flex-col gap-18">
-        <div className="flex flex-col gap-18">
+      <div className="w-full max-w-full overflow-hidden flex flex-col gap-12 md:gap-16 xl:gap-24">
+        <div className="flex flex-col gap-12 md:gap-16 xl:gap-24">
           <ComunidadesDestacadas imagen={ComunidadesD} />
+
           <div>
             <h4 className="text-xl md:text-xl font-bold text-black tracking-tight leading-snug my-4">
               Buscá tu comunidad de origen o afinidad
@@ -95,10 +96,11 @@ export default function Comunidades() {
           totalPages={totalPaginas}
           currentPage={paginaActual}
           onPageChange={setPaginaActual}
+          gridRef={gridRef}
         />
 
         <BannerComunidades scrollToRef={gridRef} />
       </div>
-    </>
+    </div>
   );
 }

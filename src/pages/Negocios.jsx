@@ -36,8 +36,9 @@ export default function Negocios() {
   if (error) return <div className="p-4 text-red-600">Error: {error}</div>;
 
   return (
-    <>
+    <div className="flex flex-col gap-12 md:gap-16 xl:gap-24 mt-12">
       <ResetBusquedaOnMount />
+
       <Helmet>
         <title>Communities | Negocios</title>
         <meta
@@ -46,8 +47,8 @@ export default function Negocios() {
         />
       </Helmet>
 
-      <div className="w-full max-w-full overflow-hidden flex flex-col gap-18">
-        <div className="flex flex-col gap-18">
+      <div className="w-full max-w-full overflow-hidden flex flex-col gap-12 md:gap-16 xl:gap-24">
+        <div className="flex flex-col gap-12 md:gap-16 xl:gap-24">
           <NegociosSugeridos imagen={NegociosS} />
           <CategoryCarousel />
           <div>
@@ -96,10 +97,11 @@ export default function Negocios() {
           totalPages={totalPaginas}
           currentPage={paginaActual}
           onPageChange={setPaginaActual}
+          gridRef={gridRef}
         />
 
         <BannerNegocios scrollToRef={gridRef} />
       </div>
-    </>
+    </div>
   );
 }

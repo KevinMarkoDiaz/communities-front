@@ -1,185 +1,169 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { FiMenu, FiX } from "react-icons/fi";
+import { FiMenu, FiX, FiChevronDown } from "react-icons/fi";
+import { FaStore, FaCalendarAlt, FaUsers, FaTags } from "react-icons/fa";
 import Icon from "../assets/logo.png";
-import fondoDecorativo from "../assets/NV.svg";
 
 export default function Header() {
   const usuario = useSelector((state) => state.auth.usuario);
-  const [showSticky, setShowSticky] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [accionesOpen, setAccionesOpen] = useState(false);
 
-  // Sticky solo para desktop
   useEffect(() => {
-    const handleScroll = () => {
-      setShowSticky(window.scrollY > 120);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    document.body.style.overflow = mobileOpen ? "hidden" : "auto";
+  }, [mobileOpen]);
 
-  // Previene scroll en mobile
-  useEffect(() => {
-    document.body.style.overflow = mobileMenuOpen ? "hidden" : "auto";
-  }, [mobileMenuOpen]);
+  const navLinks = [
+    { to: "/negocios", icon: <FaStore />, label: "NEGOCIOS" },
+    { to: "/eventos", icon: <FaCalendarAlt />, label: "EVENTOS" },
+    { to: "/comunidades", icon: <FaUsers />, label: "COMUNIDADES" },
+    { to: "/promociones", icon: <FaTags />, label: "PROMOCIONES" },
+  ];
 
-  const NavLinks = ({ isMobile = false, isSticky = false }) => (
-    <nav
-      className={`${
-        isMobile
-          ? "flex flex-col gap-6 text-lg mt-14 text-left font-bold text-white w-full"
-          : `flex items-center gap-6 text-sm ${
-              isSticky ? "text-gray-200" : "text-[#141C24]"
-            }`
-      }`}
-    >
-      <Link to="/negocios" onClick={() => setMobileMenuOpen(false)}>
-        Negocios
-      </Link>
-      <Link to="/eventos" onClick={() => setMobileMenuOpen(false)}>
-        Eventos
-      </Link>
-      <Link to="/comunidades" onClick={() => setMobileMenuOpen(false)}>
-        Comunidades
-      </Link>
-      <Link to="/promociones" onClick={() => setMobileMenuOpen(false)}>
-        Promociones
-      </Link>
-    </nav>
-  );
-
-  const PerfilBtn = ({ isMobile = false, isSticky = false }) => (
-    <Link
-      to={usuario ? "/dashboard/perfil" : "/login"}
-      onClick={() => setMobileMenuOpen(false)}
-      className={`${
-        isMobile
-          ? "inline-block mt-6 font-bold text-white text-lg underline underline-offset-4 decoration-2 transition"
-          : `flex items-center justify-center h-9 px-4 ${
-              isSticky
-                ? "bg-white text-black hover:bg-orange-600"
-                : "bg-black text-white hover:bg-orange-600"
-            } text-sm font-bold rounded-xl transition`
-      }`}
-    >
-      {usuario ? "Perfil" : "Entrar"}
-    </Link>
-  );
+  const subNavLinks = [
+    { to: "/about", label: "SOBRE NOSOTROS" },
+    { to: "/contact", label: "CONTÁCTANOS" },
+    { to: "/legal-privacy", label: "PRIVACIDAD" },
+    { to: "/legal-terms", label: "TÉRMINOS" },
+  ];
 
   return (
     <>
-      {/* Header principal */}
-      <header className="px-6 sm:px-10 py-2 bg-white border-b border-[#E4E9F1] text-[#141C24] z-50  relative">
-        <div className="flex items-center justify-between relative z-50">
-          <Link to="/" className="text-xl font-extrabold">
+      {/* Banner superior */}
+      <div className="w-full bg-orange-500 text-white text-center py-1 text-sm z-50">
+        ✨ Juntos construimos una comunidad que apoya, inspira y crece unida
+      </div>
+
+      {/* Nav principal */}
+      <header className="bg-white shadow sticky top-0 z-50">
+        <div className="flex items-center justify-between px-6 py-3">
+          {/* Logo */}
+          <Link to="/">
             <img src={Icon} alt="Communities logo" className="h-10" />
           </Link>
 
-          {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-6">
-            <NavLinks />
-            <PerfilBtn />
-            {usuario && (
-              <div
-                className="w-9 h-9 rounded-full bg-cover bg-center"
-                style={{
-                  backgroundImage: `url(${
-                    usuario.profileImage || "/avatar-placeholder.png"
-                  })`,
-                }}
-              />
+          {/* Links desktop */}
+          <nav className="hidden md:flex gap-6 items-center">
+            {navLinks.map((link) => (
+              <Link
+                key={link.to}
+                to={link.to}
+                className="flex items-center gap-1 text-black text-sm font-semibold hover:text-orange-500 transition"
+              >
+                {link.icon}
+                {link.label}
+              </Link>
+            ))}
+
+            {/* Perfil */}
+            <Link
+              to={usuario ? "/dashboard/perfil" : "/login"}
+              className="bg-yellow-400 hover:bg-orange-500 text-black text-sm font-bold px-4 py-2 rounded transition"
+            >
+              {usuario ? "PERFIL" : "ENTRAR"}
+            </Link>
+          </nav>
+
+          {/* Botón Mobile */}
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="md:hidden text-2xl text-black"
+          >
+            {mobileOpen ? <FiX /> : <FiMenu />}
+          </button>
+        </div>
+
+        {/* Subnav con Dropdown */}
+        <div className="hidden md:flex justify-center bg-gray-100 border-t border-gray-200 relative">
+          {subNavLinks.map((link, idx) => (
+            <Link
+              key={link.to}
+              to={link.to}
+              className="text-xs text-gray-600 hover:text-orange-500 font-medium px-3 py-2 transition relative"
+            >
+              {link.label}
+              {idx < subNavLinks.length - 1 && (
+                <span className="absolute right-0 top-1/2 transform -translate-y-1/2 w-px h-4 bg-gray-300" />
+              )}
+            </Link>
+          ))}
+
+          {/* Dropdown Acciones */}
+          <div className="relative">
+            <button
+              onClick={() => setAccionesOpen(!accionesOpen)}
+              className="flex items-center gap-1 text-xs font-semibold text-white bg-yellow-400 hover:bg-yellow-500 transition px-3 py-2 rounded ml-4"
+            >
+              + PUBLICAR
+              <FiChevronDown className="text-base" />
+            </button>
+            {accionesOpen && (
+              <div className="absolute right-0 mt-2 bg-white border border-gray-200 shadow-lg rounded w-48 z-50">
+                <Link
+                  to="/dashboard/mis-negocios/crear"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  Crear Negocio
+                </Link>
+                <Link
+                  to="/dashboard/mis-eventos/crear"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  Crear Evento
+                </Link>
+                <Link
+                  to="/dashboard/comunidades/crear"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  Crear Comunidad
+                </Link>
+              </div>
             )}
           </div>
-
-          {/* Botón mobile */}
-          <button
-            className="md:hidden text-2xl"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            {mobileMenuOpen ? <FiX className="font-bold " /> : <FiMenu />}
-          </button>
         </div>
       </header>
 
-      {/* Menú mobile */}
+      {/* Mobile Menu */}
       <div
-        className={`md:hidden fixed inset-0 z-40 flex backdrop-blur-sm bg-gray-900/70 transition-opacity duration-300 ${
-          mobileMenuOpen
+        className={`fixed inset-0 z-40 bg-black/70 backdrop-blur-sm transition-opacity duration-300 ${
+          mobileOpen
             ? "opacity-100 pointer-events-auto"
             : "opacity-0 pointer-events-none"
         }`}
       >
-        {/* Fondo blur + decorativo */}
         <div
-          className="absolute inset-0 bg-white/30"
-          onClick={() => setMobileMenuOpen(false)}
-        />
-        <div
-          className={`absolute inset-0 bg-center bg-cover transition-all duration-500 ease-in-out transform ${
-            mobileMenuOpen
-              ? "opacity-50 scale-100"
-              : "opacity-0 scale-95 pointer-events-none"
-          }`}
-          style={{ backgroundImage: `url(${fondoDecorativo})` }}
-          onClick={() => setMobileMenuOpen(false)}
-        />
-
-        {/* Drawer lateral */}
-        <div
-          className={`relative h-full w-80 px-6 py-8 transform transition-transform duration-300 ${
-            mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
+          className={`absolute left-0 top-0 w-72 h-full bg-white p-6 transform transition-transform duration-300 ${
+            mobileOpen ? "translate-x-0" : "-translate-x-full"
+          } flex flex-col gap-6`}
         >
-          <NavLinks isMobile />
-          <PerfilBtn isMobile />
-        </div>
-      </div>
+          {navLinks.map((link) => (
+            <Link
+              key={link.to}
+              to={link.to}
+              onClick={() => setMobileOpen(false)}
+              className="flex items-center gap-2 text-black font-semibold text-base hover:text-orange-500 transition"
+            >
+              {link.icon}
+              {link.label}
+            </Link>
+          ))}
 
-      {/* Sticky Header en desktop */}
-      <div
-        className={`fixed top-0 left-0 right-0 bg-black/50 backdrop-blur-md  shadow-md transition-all duration-300 transform ${
-          showSticky
-            ? "translate-y-0 opacity-100 z-40"
-            : "-translate-y-full opacity-0 z-0"
-        }`}
-      >
-        <div className="relative flex items-center justify-between px-6 py-4 z-50">
-          {/* Links izquierda */}
-          <div className="hidden md:flex items-center gap-6">
-            <NavLinks isSticky />
-          </div>
-
-          {/* Logo centrado */}
           <Link
-            to="/"
-            className="absolute left-1/2 -translate-x-1/2 text-base font-bold"
+            to="/dashboard/mis-negocios/crear"
+            onClick={() => setMobileOpen(false)}
+            className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold px-4 py-2 rounded transition text-center"
           >
-            <img src={Icon} alt="logo" className="h-10" />
+            + PUBLICAR NEGOCIO
           </Link>
 
-          {/* Botón y avatar derecha */}
-          <div className="hidden md:flex items-center gap-4">
-            <PerfilBtn isSticky />
-            {usuario && (
-              <div
-                className="w-9 h-9 rounded-full bg-cover bg-center"
-                style={{
-                  backgroundImage: `url(${
-                    usuario.profileImage || "/avatar-placeholder.png"
-                  })`,
-                }}
-              />
-            )}
-          </div>
-
-          {/* Botón mobile también en sticky */}
-          <button
-            className="md:hidden text-2xl ml-auto"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          <Link
+            to={usuario ? "/dashboard/perfil" : "/login"}
+            onClick={() => setMobileOpen(false)}
+            className="text-black font-semibold text-base hover:text-orange-500 transition"
           >
-            {mobileMenuOpen ? <FiX className="font-bold" /> : <FiMenu />}
-          </button>
+            {usuario ? "PERFIL" : "ENTRAR"}
+          </Link>
         </div>
       </div>
     </>

@@ -27,7 +27,7 @@ export default function HeroBanner({ onBuscar }) {
           }}
         >
           <h1 className="text-white text-4xl font-black text-center tracking-[-0.033em] @[480px]:text-5xl">
-            Find the best local businesses, events, and news
+            Descubre los mejores negocios, eventos y novedades de tu comunidad
           </h1>
 
           <div className="w-full max-w-[480px]">{onBuscar && onBuscar()}</div>

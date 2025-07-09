@@ -103,7 +103,7 @@ export default function MapaComunidad({ negocios, coords }) {
   return (
     <div className="relative overflow-hidden rounded-xl shadow h-full">
       {!isLoaded && (
-        <div className="w-full h-full flex items-center justify-center bg-gray-100">
+        <div className="w-full h-full flex items-center justify-center max-h-[500px]">
           <Loading />
         </div>
       )}

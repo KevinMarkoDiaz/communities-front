@@ -39,6 +39,8 @@ export default function Promociones() {
   const promosFinSemana = lista.filter((p) => p.type === "promo_fin_de_semana");
 
   const renderCarrusel = (titulo, imagen, items, emoji, carouselProps = {}) => {
+    console.log(`Carrusel "${titulo}" tiene ${items.length} promos`, items);
+
     if (items.length === 0) {
       return (
         <div className="text-center text-gray-400 text-sm italic">
@@ -62,29 +64,31 @@ export default function Promociones() {
           className="relative overflow-visible"
           {...carouselProps}
         >
-          {items.map((promo) => (
-            <Link
-              key={promo._id}
-              to={`/negocios/${promo.business._id}`}
-              className="flex-shrink-0 snap-start w-[220px] sm:w-[320px] md:w-[300px] lg:w-[260px] transform hover:scale-[1.03] transition duration-300"
-            >
-              <CardPromoHome
-                title={promo.name}
-                image={promo.featuredImage}
-                isNew={promo.type === "promo_fin_de_semana"}
-                hasDiscount={promo.type === "descuentos_imperdibles"}
-                descuento={"20"}
-                isVerified={true}
-              />
-            </Link>
-          ))}
+          {items
+            .filter((promo) => promo && promo.business && promo.business._id)
+            .map((promo) => (
+              <Link
+                key={promo._id}
+                to={`/negocios/${promo.business._id}`}
+                className="flex-shrink-0 snap-start w-[220px] sm:w-[320px] md:w-[300px] lg:w-[260px] transform hover:scale-[1.03] transition duration-300"
+              >
+                <CardPromoHome
+                  title={promo.name}
+                  image={promo.featuredImage}
+                  isNew={promo.type === "promo_fin_de_semana"}
+                  hasDiscount={promo.type === "descuentos_imperdibles"}
+                  descuento={"20"}
+                  isVerified={true}
+                />
+              </Link>
+            ))}
         </ScrollCarousel>
       </section>
     );
   };
 
   return (
-    <>
+    <div className="flex flex-col gap-12 md:gap-16 xl:gap-24 mt-12">
       <Helmet>
         <title>Communities | Promociones</title>
         <meta
@@ -93,7 +97,7 @@ export default function Promociones() {
         />
       </Helmet>
 
-      <div className="w-full max-w-full overflow-hidden flex flex-col gap-16 md:gap-28">
+      <div className="w-full max-w-full overflow-hidden flex flex-col gap-12 md:gap-16 xl:gap-24">
         {loading && (
           <p className="text-center text-gray-500">Cargando promociones...</p>
         )}
@@ -133,6 +137,6 @@ export default function Promociones() {
           </>
         )}
       </div>
-    </>
+    </div>
   );
 }

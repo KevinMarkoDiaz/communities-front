@@ -54,28 +54,29 @@ export default function ScrollCarousel({
   }, [autoplay, currentDirection, speed, interval]);
 
   return (
-    <div className="relative w-full overflow-x-hidden gap-32">
+    <div className="relative w-full">
       {/* Botón izquierdo */}
       <button
         onClick={() => scroll("left")}
-        className="md:flex absolute left-2 text-[#fff] md:text-black top-1/2 -translate-y-1/2 z-10 md:bg-white p-2 rounded-full md:shadow"
+        className="hidden md:flex absolute left-2 text-black top-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow hover:bg-gray-100 transition"
       >
         <FiChevronLeft size={20} />
       </button>
+
       {/* Botón derecho */}
       <button
         onClick={() => scroll("right")}
-        className="md:flex absolute right-2 text-[#fff] md:text-black top-1/2 -translate-y-1/2 z-10 md:bg-white p-2 rounded-full md:shadow"
+        className="hidden md:flex absolute right-2 text-black top-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow hover:bg-gray-100 transition"
       >
         <FiChevronRight size={20} />
       </button>
 
       {/* Contenedor scrollable */}
-      <div className="w-full overflow-x-hidden px-4">
+      <div className="w-full overflow-x-hidden px-2">
         <div
           ref={scrollRef}
           className={`flex gap-4 overflow-x-auto scroll-smooth touch-pan-x whitespace-nowrap
-            scroll-snap-x scroll-snap-mandatory
+            snap-x snap-mandatory
             [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${className}`}
         >
           {children}

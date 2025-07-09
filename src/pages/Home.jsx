@@ -12,7 +12,8 @@ export default function Home() {
   const [activePanel, setActivePanel] = useState("map"); // 'map' o 'search'
 
   return (
-    <>
+    <div className="flex flex-col gap-12 md:gap-16 xl:gap-24 mt-12">
+      {" "}
       <Helmet>
         <title>Communities | Inicio</title>
         <meta
@@ -20,7 +21,6 @@ export default function Home() {
           content="Explora negocios, eventos y servicios útiles para comunidades migrantes en tu ciudad."
         />
       </Helmet>
-
       {/* Distribución en grid */}
       <div className="relative flex flex-col lg:flex-row gap-4 min-h-[500px]">
         {/* Mapa */}
@@ -43,9 +43,8 @@ export default function Home() {
           <BusquedaList />
         </div>
       </div>
-
       {/* Secciones principales */}
-      <div className="flex flex-col gap-24 mt-12">
+      <div className="flex flex-col gap-12 md:gap-16 xl:gap-24 mt-12">
         <PromocionesDestacadas />
         <NegociosSugeridos />
         <EventosProximos />
@@ -61,6 +60,6 @@ export default function Home() {
           />
         </div>
       </div>
-    </>
+    </div>
   );
 }

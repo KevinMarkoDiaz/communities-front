@@ -1,6 +1,6 @@
 // src/store/eventosSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getAllEvents, getMyEvents } from "../api/eventApi";
+import { getAllEvents, getMyEvents, deleteEvent } from "../api/eventApi";
 
 // 🔁 Todos los eventos
 export const obtenerEventos = createAsyncThunk(
@@ -24,6 +24,19 @@ export const fetchMisEventos = createAsyncThunk(
       return Array.isArray(data) ? data : data.events || [];
     } catch (error) {
       return rejectWithValue(error.message || "Error al cargar tus eventos");
+    }
+  }
+);
+
+// 🗑️ Eliminar evento
+export const deleteEvento = createAsyncThunk(
+  "eventos/deleteEvento",
+  async (id, { rejectWithValue }) => {
+    try {
+      await deleteEvent(id); // asegúrate que esta función exista en api/eventApi
+      return id;
+    } catch (error) {
+      return rejectWithValue(error.message || "Error al eliminar evento");
     }
   }
 );
@@ -69,6 +82,11 @@ const eventosSlice = createSlice({
       .addCase(fetchMisEventos.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+
+      // Eliminar evento
+      .addCase(deleteEvento.fulfilled, (state, action) => {
+        state.lista = state.lista.filter((e) => e._id !== action.payload);
       });
   },
 });

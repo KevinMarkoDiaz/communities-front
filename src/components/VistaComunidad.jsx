@@ -21,9 +21,9 @@ export default function VistaComunidad() {
     : { lat: 32.7767, lng: -96.797 }; // fallback
 
   return (
-    <section className="space-y-4 relative h-full">
+    <section className="space-y-4 relative h-full rounded-xl shadow">
       {loading && (
-        <div className="w-full h-full flex items-center justify-center">
+        <div className="w-full  h-full flex items-center justify-center max-h-[500px]">
           <Loading />
         </div>
       )}

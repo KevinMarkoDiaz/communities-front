@@ -39,7 +39,7 @@ export default function Eventos() {
   if (error) return <div className="p-4 text-red-600">Error: {error}</div>;
 
   return (
-    <>
+    <div className="flex flex-col gap-12 md:gap-16 xl:gap-24 mt-12">
       <ResetBusquedaOnMount />
 
       <Helmet>
@@ -50,9 +50,10 @@ export default function Eventos() {
         />
       </Helmet>
 
-      <div className="w-full max-w-full overflow-hidden flex flex-col gap-18">
-        <div className="flex flex-col gap-18">
+      <div className="w-full max-w-full overflow-hidden flex flex-col gap-12 md:gap-16 xl:gap-24">
+        <div className="flex flex-col gap-12 md:gap-16 xl:gap-24">
           <EventosProximos imagen={EventosP} />
+
           <div>
             <h4 className="text-xl md:text-xl font-bold text-black tracking-tight leading-snug my-4">
               Descubre eventos que enriquecen tu conexión cultural
@@ -61,7 +62,7 @@ export default function Eventos() {
               placeholder="Buscar eventos..."
               filtroTipo="evento"
               onSelectResultado={(item) =>
-                Navigate(`/negocios/${item._id || item.id}`)
+                Navigate(`/eventos/${item._id || item.id}`)
               }
             />
           </div>
@@ -107,9 +108,11 @@ export default function Eventos() {
           totalPages={totalPaginas}
           currentPage={paginaActual}
           onPageChange={setPaginaActual}
+          gridRef={gridRef}
         />
+
         <BannerEvento scrollToRef={gridRef} />
       </div>
-    </>
+    </div>
   );
 }

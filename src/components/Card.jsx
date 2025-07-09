@@ -19,7 +19,7 @@ export default function CardDestacado({
 
   const classMap = {
     vertical:
-      "flex flex-col h-auto w-[100%] md:w-full     max-w-[280px] sm:max-w-[250px] md:max-w-[250px] lg:max-w-[320px]",
+      "flex flex-col mb-8 h-auto w-[100%] md:w-full max-w-[280px] sm:max-w-[250px] md:max-w-[250px] lg:max-w-[320px]",
     "horizontal-full": "flex h-36 w-full max-w-6xl mx-auto",
     "horizontal-compact":
       "flex h-36 w-[85%] md:w-full max-w-[350px] flex-shrink-0",
@@ -27,18 +27,18 @@ export default function CardDestacado({
 
   return (
     <div
-      className={`border border-gray-300 rounded-2xl overflow-hidden shadow-md mb-6 transition hover:border-black hover:shadow-lg ${classMap[modo]}`}
+      className={`border border-gray-200 rounded-2xl bg-white overflow-hidden shadow-sm hover:shadow-xl transition duration-300 ease-in-out group ${classMap[modo]}`}
     >
       <div
         className={
           modo === "vertical"
-            ? "w-full  h-42 md:h-22 bg-gray-100"
-            : "w-1/3 h-full bg-gray-100 flex items-center justify-center"
+            ? "w-full h-42 md:h-36 relative overflow-hidden"
+            : "w-1/3 h-full relative overflow-hidden flex items-center justify-center"
         }
       >
         {hasImage ? (
           <div
-            className="w-full h-full bg-cover bg-center"
+            className="w-full h-full bg-cover bg-center transform group-hover:scale-105 transition duration-300"
             style={{ backgroundImage: `url("${image}")` }}
           />
         ) : (
@@ -49,7 +49,7 @@ export default function CardDestacado({
       <div
         className={`${
           modo === "vertical"
-            ? "px-4 py-2"
+            ? "px-4 py-3"
             : "w-2/3 p-4 flex flex-col justify-between"
         }`}
       >
@@ -62,7 +62,7 @@ export default function CardDestacado({
           <div className="flex items-start gap-3">
             {logo ? (
               <div
-                className="w-10 h-10 rounded-2xl bg-cover bg-center flex-shrink-0"
+                className="w-10 h-10 rounded-xl bg-cover bg-center flex-shrink-0"
                 style={{ backgroundImage: `url("${logo}")` }}
               />
             ) : (
@@ -72,7 +72,7 @@ export default function CardDestacado({
             <div className="flex flex-col gap-1 truncate">
               <div className="flex items-center gap-1">
                 <p
-                  className="text-black text-sm font-bold overflow-hidden text-ellipsis whitespace-normal [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] "
+                  className="text-gray-900 text-[15px] font-semibold leading-snug overflow-hidden text-ellipsis whitespace-normal [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical]"
                   title={title}
                 >
                   {title}
@@ -80,7 +80,7 @@ export default function CardDestacado({
                 {isVerified && <BadgeIconVerified />}
               </div>
               {description && (
-                <p className="text-[#3F5374] text-xs font-normal truncate">
+                <p className="text-gray-600 text-xs font-normal truncate">
                   {description}
                 </p>
               )}
@@ -90,7 +90,7 @@ export default function CardDestacado({
           <div className="flex flex-col gap-1 truncate">
             <div className="flex items-center gap-1">
               <p
-                className="text-black text-sm font-bold overflow-hidden text-ellipsis whitespace-normal [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] "
+                className="text-gray-900 text-[15px] font-semibold leading-snug overflow-hidden text-ellipsis whitespace-normal [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical]"
                 title={title}
               >
                 {title}
@@ -98,7 +98,7 @@ export default function CardDestacado({
               {isVerified && <BadgeIconVerified />}
             </div>
             {description && (
-              <p className="text-[#3F5374] text-xs font-normal truncate">
+              <p className="text-gray-600 text-xs font-normal truncate">
                 {description}
               </p>
             )}

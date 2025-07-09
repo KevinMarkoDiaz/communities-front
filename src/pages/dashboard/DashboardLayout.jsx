@@ -25,14 +25,11 @@ export default function DashboardLayout() {
 
       {/* Layout principal */}
       <div className="flex flex-1">
-        <div className="hidden md:block">
+        <div className=" hidden md:block">
           <SidebarDashboard usuario={usuario} handleLogout={handleLogout} />
         </div>
 
-        <main
-          ref={scrollRef} // 👈 aquí
-          className="flex-grow overflow-y-auto p-6 pb-24 md:pb-6"
-        >
+        <main className="flex-grow overflow-y-auto p-6 pb-24 md:pb-6  md:pl-84">
           <Outlet />
         </main>
 
