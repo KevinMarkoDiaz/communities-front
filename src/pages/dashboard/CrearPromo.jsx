@@ -3,6 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import authBg from "../../assets/authbg.png";
+import logo2 from "../../assets/communidades_text.svg";
+import icono from "../../assets/icono.svg";
 import PromoForm from "./PromoForm";
 import EditarPromoForm from "./EditarPromoForm";
 import { getPromotionById } from "../../api/promotionApi";
@@ -20,7 +22,6 @@ export default function CrearPromo() {
   useEffect(() => {
     const cargarPromo = async () => {
       if (promoId) {
-        // Buscar en Redux
         const encontrada = promociones.find((p) => p._id === promoId);
         if (encontrada) {
           setPromo(encontrada);
@@ -42,7 +43,6 @@ export default function CrearPromo() {
     cargarPromo();
   }, [promoId, promociones]);
 
-  // Si no tienes promos cargadas en Redux, las traemos una sola vez
   useEffect(() => {
     if (promociones.length === 0) {
       dispatch(fetchMisPromos());
@@ -50,7 +50,7 @@ export default function CrearPromo() {
   }, [dispatch, promociones.length]);
 
   return (
-    <div className="flex-col flex items-center justify-center min-h-screen px-4 gap-8">
+    <div className="flex flex-col items-center justify-center min-h-screen px-4 gap-8">
       <Helmet>
         <title>
           {esEdicion ? "Editar Promoción" : "Crear Promoción"} | Communities
@@ -58,40 +58,48 @@ export default function CrearPromo() {
       </Helmet>
 
       <section
-        className="w-full max-w-5xl shadow rounded-2xl p-6 sm:p-16 space-y-6"
+        className="relative w-full max-w-5xl shadow-xl rounded-2xl p-6 sm:p-16 space-y-6 overflow-hidden"
         style={{
           backgroundImage: `url(${authBg})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
       >
-        <div className="space-y-2">
-          <h1 className="text-2xl font-bold text-[#141C24]">
-            {esEdicion ? "Editar Promoción" : "Crear Promoción"}
-          </h1>
-          <p className="text-gray-100 text-sm sm:text-base">
+        {/* Capa semitransparente */}
+        <div className="absolute inset-0 bg-white/50 backdrop-blur-sm rounded-xl h-full"></div>
+
+        {/* Contenido */}
+        <div className="relative space-y-6 grid gap-8">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <h1 className="text-2xl font-bold text-black flex items-center gap-2">
+              {esEdicion ? "Editar Promoción" : "Crear Promoción"}
+            </h1>
+            <img src={logo2} alt="Communities Logo" className="h-6 w-auto" />
+          </div>
+
+          <p className="text-gray-700 text-sm sm:text-base">
             {esEdicion
               ? "Modifica los detalles de tu promoción para mantenerla actualizada y relevante."
               : "Comparte ofertas especiales y promociones exclusivas que ayuden a tu negocio a conectar con la comunidad latina 💫"}
           </p>
-        </div>
 
-        {esEdicion ? (
-          loading ? (
-            <p className="text-white">Cargando promoción...</p>
-          ) : promo ? (
-            <EditarPromoForm promo={promo} />
+          {esEdicion ? (
+            loading ? (
+              <p className="text-gray-600">Cargando promoción...</p>
+            ) : promo ? (
+              <EditarPromoForm promo={promo} />
+            ) : (
+              <p className="text-red-500">No se encontró la promoción.</p>
+            )
           ) : (
-            <p className="text-red-500">No se encontró la promoción.</p>
-          )
-        ) : (
-          <PromoForm />
-        )}
+            <PromoForm />
+          )}
+        </div>
       </section>
 
-      <div className="pt-6 text-center">
-        <p className="text-[#141C24] text-base font-medium">
-          🎁{" "}
+      <div className="pt-6 text-center space-y-2">
+        <p className="text-[#141C24] text-base font-medium flex justify-center items-center gap-2">
+          <img src={icono} alt="Icono" className="h-8 md:h-12" />
           {esEdicion
             ? "Mantén tus promociones al día y aumenta su impacto."
             : "Destaca tus productos y fortalece la identidad de tu comunidad."}

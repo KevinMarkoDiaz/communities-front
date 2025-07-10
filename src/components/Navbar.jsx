@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { FiMenu, FiX, FiChevronDown } from "react-icons/fi";
 import { FaStore, FaCalendarAlt, FaUsers, FaTags } from "react-icons/fa";
-import Icon from "../assets/logo.png";
+import Icon from "../assets/logo_icono.svg";
 
 export default function Header() {
   const usuario = useSelector((state) => state.auth.usuario);
@@ -37,10 +37,10 @@ export default function Header() {
 
       {/* Nav principal */}
       <header className="bg-white shadow sticky top-0 z-50">
-        <div className="flex items-center justify-between px-6 py-3">
+        <div className="flex items-center justify-between px-6  lg:px-10 py-1">
           {/* Logo */}
           <Link to="/">
-            <img src={Icon} alt="Communities logo" className="h-10" />
+            <img src={Icon} alt="Communities logo" className="h-20" />
           </Link>
 
           {/* Links desktop */}

@@ -50,7 +50,6 @@ export default function Negocios() {
       <div className="w-full max-w-full overflow-hidden flex flex-col gap-12 md:gap-16 xl:gap-24">
         <div className="flex flex-col gap-12 md:gap-16 xl:gap-24">
           <NegociosSugeridos imagen={NegociosS} />
-          <CategoryCarousel />
           <div>
             <h4 className="text-xl md:text-xl font-bold text-black tracking-tight leading-snug my-4">
               Busca los negocios que te conectan con tu comunidad
@@ -63,6 +62,7 @@ export default function Negocios() {
               }
             />
           </div>
+          <CategoryCarousel />
         </div>
 
         <GridWrapper ref={gridRef} tipo="grid" className="min-h-[70vh]">

@@ -56,25 +56,8 @@ export default function CrearCategoria() {
         <title>Nueva Categoría | Dashboard</title>
       </Helmet>
 
-      <div className="flex flex-col items-center justify-center min-h-screen px-4 ">
-        <section
-          className="w-full max-w-2xl shadow rounded-2xl p-6 sm:p-16 space-y-6 bg-black/40 backdrop-blur-lg"
-          style={{
-            backgroundImage: `url(${authBg})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        >
-          <div className="space-y-2">
-            <h1 className="text-2xl font-bold text-[#141C24]">
-              Nueva Categoría
-            </h1>
-            <p className="text-gray-100 text-sm sm:text-base">
-              Crea una categoría para organizar tus contenidos de forma clara y
-              accesible ✨
-            </p>
-          </div>
-
+      <div className="flex flex-col items-center justify-center px-4 ">
+        <section className="w-full max-w-2xl shadow rounded-2xl p-6 md:p-8 space-y-6 bg-black/40 backdrop-blur-lg">
           <Formik
             initialValues={{
               name: "",
@@ -150,15 +133,6 @@ export default function CrearCategoria() {
             )}
           </Formik>
         </section>
-
-        <div className="pt-6 text-center">
-          <p className="text-[#141C24] text-base font-medium">
-            🌟 Organiza tu plataforma y facilita la navegación de tus usuarios.
-          </p>
-          <p className="text-sm text-gray-600">
-            Las categorías ayudan a que tu contenido sea más accesible y claro.
-          </p>
-        </div>
       </div>
     </>
   );

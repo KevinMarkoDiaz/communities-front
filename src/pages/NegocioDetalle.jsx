@@ -8,8 +8,6 @@ import {
   FaYoutube,
   FaWhatsapp,
 } from "react-icons/fa";
-
-// Componentes reutilizables
 import BusinessHero from "../components/bussines/BusinessHero";
 import { CommunityTags } from "../components/bussines/CommunityTags";
 import { ContactCard } from "../components/bussines/ContactCard";
@@ -25,6 +23,7 @@ export default function NegocioDetalle() {
   const { id } = useParams();
   const [negocio, setNegocio] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [tab, setTab] = useState("horarios"); // tab activo
 
   useEffect(() => {
     const fetchNegocio = async () => {
@@ -60,7 +59,7 @@ export default function NegocioDetalle() {
   return (
     <div className="px-4 sm:px-8 lg:px-8 xl:px-40 py-5 flex justify-center">
       <div className="w-full max-w-[960px] flex flex-col gap-8">
-        {/* Imagen principal */}
+        {/* Hero */}
         <BusinessHero
           businessName={negocio.name}
           backgroundImageUrl={negocio.featuredImage}
@@ -80,7 +79,6 @@ export default function NegocioDetalle() {
               </span>
             )}
           </div>
-
           {/* Dirección */}
           {negocio.location?.address && (
             <p className="flex items-center text-sm text-gray-600 gap-2">
@@ -118,7 +116,7 @@ export default function NegocioDetalle() {
           </p>
         </div>
 
-        {/* Tarjeta visual */}
+        {/* Card visual */}
         <BusinessCard
           imageUrl={negocio.profileImage}
           categoryName={negocio.category?.name}
@@ -126,108 +124,119 @@ export default function NegocioDetalle() {
           highlightText={negocio.isVerified ? "Verificado por Communities" : ""}
         />
 
-        {/* Categoría descripción */}
         {negocio.category?.description && (
           <p className="text-sm text-gray-500 italic">
             {negocio.category.description}
           </p>
         )}
 
-        <hr className="border-t border-gray-200" />
+        {/* Navegación de tabs */}
+        <div className="flex flex-wrap gap-2 border-b border-gray-200 pt-4">
+          {[
+            { id: "horarios", label: "Horarios" },
+            { id: "galeria", label: "Galería" },
+            { id: "redes", label: "Redes Sociales" },
+            { id: "contacto", label: "Contacto" },
+          ].map((t) => (
+            <button
+              key={t.id}
+              onClick={() => setTab(t.id)}
+              className={`text-sm px-3 py-2 rounded-t font-medium transition ${
+                tab === t.id
+                  ? "bg-white border border-b-0 border-gray-200 text-gray-800"
+                  : "text-gray-600 hover:text-gray-800"
+              }`}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
 
-        {/* Contacto */}
-        {negocio.contact && <ContactCard contact={negocio.contact} />}
-
-        {/* Redes sociales */}
-        {negocio.contact?.socialMedia && (
-          <div>
-            <h2 className="text-lg font-semibold text-gray-800 mb-2">
-              Redes sociales
-            </h2>
-            <div className="flex gap-4 text-2xl text-gray-600">
-              {negocio.contact.socialMedia.instagram && (
-                <a
-                  href={negocio.contact.socialMedia.instagram}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-pink-600"
-                >
-                  <FaInstagram />
-                </a>
-              )}
-              {negocio.contact.socialMedia.facebook && (
-                <a
-                  href={negocio.contact.socialMedia.facebook}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-blue-600"
-                >
-                  <FaFacebook />
-                </a>
-              )}
-              {negocio.contact.socialMedia.twitter && (
-                <a
-                  href={negocio.contact.socialMedia.twitter}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-sky-500"
-                >
-                  <FaTwitter />
-                </a>
-              )}
-              {negocio.contact.socialMedia.youtube && (
-                <a
-                  href={negocio.contact.socialMedia.youtube}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-red-600"
-                >
-                  <FaYoutube />
-                </a>
-              )}
-              {negocio.contact.socialMedia.whatsapp && (
-                <a
-                  href={negocio.contact.socialMedia.whatsapp}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-green-500"
-                >
-                  <FaWhatsapp />
-                </a>
-              )}
+        {/* Contenido dinámico */}
+        <div className="pt-4 flex flex-col gap-4">
+          {tab === "horarios" && negocio.openingHours?.length > 0 && (
+            <OpeningHoursList hours={negocio.openingHours} />
+          )}
+          {tab === "galeria" && negocio.images?.length > 0 && (
+            <PhotoGallery galleryImages={negocio.images} />
+          )}
+          {tab === "redes" && negocio.contact?.socialMedia && (
+            <div className="space-y-3">
+              <h2 className="text-lg font-semibold text-gray-800 mb-2">
+                Redes sociales
+              </h2>
+              <div className="flex flex-col gap-2 text-sm">
+                {negocio.contact.socialMedia.instagram && (
+                  <a
+                    href={negocio.contact.socialMedia.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 hover:text-pink-600 transition"
+                  >
+                    <FaInstagram className="text-xl" />
+                    Instagram
+                  </a>
+                )}
+                {negocio.contact.socialMedia.facebook && (
+                  <a
+                    href={negocio.contact.socialMedia.facebook}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 hover:text-blue-600 transition"
+                  >
+                    <FaFacebook className="text-xl" />
+                    Facebook
+                  </a>
+                )}
+                {negocio.contact.socialMedia.twitter && (
+                  <a
+                    href={negocio.contact.socialMedia.twitter}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 hover:text-sky-500 transition"
+                  >
+                    <FaTwitter className="text-xl" />
+                    Twitter
+                  </a>
+                )}
+                {negocio.contact.socialMedia.youtube && (
+                  <a
+                    href={negocio.contact.socialMedia.youtube}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 hover:text-red-600 transition"
+                  >
+                    <FaYoutube className="text-xl" />
+                    YouTube
+                  </a>
+                )}
+                {negocio.contact.socialMedia.whatsapp && (
+                  <a
+                    href={negocio.contact.socialMedia.whatsapp}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 hover:text-green-500 transition"
+                  >
+                    <FaWhatsapp className="text-xl" />
+                    WhatsApp
+                  </a>
+                )}
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        <hr className="border-t border-gray-200" />
+          {tab === "contacto" && negocio.contact && (
+            <ContactCard contact={negocio.contact} />
+          )}
+        </div>
 
-        {/* Horarios */}
-        {negocio.openingHours?.length > 0 && (
-          <OpeningHoursList hours={negocio.openingHours} />
-        )}
-
-        {/* Galería */}
-        {negocio.images?.length > 0 && (
-          <PhotoGallery galleryImages={negocio.images} />
-        )}
-
-        {/* Propietario */}
-        {negocio.owner && (
-          <OwnerCard
-            owner={{
-              name: `${negocio.owner.name} ${negocio.owner.lastName}`,
-              profileImage: negocio.owner.profileImage,
-            }}
-          />
-        )}
-
-        {/* Comunidad relacionada */}
-        {negocio.community && (
-          <div>
-            <h2 className="text-lg font-semibold text-gray-800 mb-2">
-              Comunidad relacionada
-            </h2>
-            <div className="flex gap-2 flex-wrap">
+        {/* Mapa y comunidad */}
+        <div className="pt-6 flex flex-col gap-4">
+          {negocio.community && (
+            <div>
+              <h2 className="text-lg font-semibold text-gray-800 mb-2">
+                Comunidad relacionada
+              </h2>
               <Link
                 to={`/comunidades/${negocio.community._id}`}
                 className="flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 text-sm text-gray-700 hover:bg-gray-200"
@@ -240,34 +249,16 @@ export default function NegocioDetalle() {
                 {negocio.community.name}
               </Link>
             </div>
-          </div>
-        )}
-
-        <hr className="border-t border-gray-200" />
-
-        {/* Mapa */}
-        {negocio.location?.coordinates?.lat &&
-          negocio.location?.coordinates?.lng && (
-            <MapaNegocioDetalle
-              lat={negocio.location.coordinates.lat}
-              lng={negocio.location.coordinates.lng}
-              name={negocio.name}
-            />
           )}
-
-        {/* Etiquetas */}
-        {negocio.tags?.length > 0 && (
-          <div className="flex flex-wrap gap-2">
-            {negocio.tags.map((tag, i) => (
-              <span
-                key={i}
-                className="bg-gray-100 text-gray-800 px-3 py-1 text-xs rounded-full"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
+          {negocio.location?.coordinates?.lat &&
+            negocio.location?.coordinates?.lng && (
+              <MapaNegocioDetalle
+                lat={negocio.location.coordinates.lat}
+                lng={negocio.location.coordinates.lng}
+                name={negocio.name}
+              />
+            )}
+        </div>
       </div>
     </div>
   );

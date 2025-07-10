@@ -1,6 +1,9 @@
+// src/pages/dashboard/CrearComunidad.jsx
 import { Helmet } from "react-helmet-async";
 import CrearEditarComunidadForm from "../../components/dashboard/formularios/comunidad/CrearEditarComunidadForm";
 import authBg from "../../../src/assets/authbg.png";
+import logo2 from "../../../src/assets/communidades_text.svg";
+import icono from "../../../src/assets/icono.svg";
 
 export default function CrearComunidad() {
   return (
@@ -10,26 +13,38 @@ export default function CrearComunidad() {
       </Helmet>
 
       <section
-        className="w-full max-w-5xl shadow rounded-2xl p-6 sm:p-16 space-y-6"
+        className="relative w-full max-w-5xl shadow-xl rounded-2xl p-6 sm:p-16 space-y-6 overflow-hidden"
         style={{
           backgroundImage: `url(${authBg})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
       >
-        <div className="space-y-2">
-          <h1 className="text-2xl font-bold text-[#141C24]">Crear Comunidad</h1>
-          <p className="text-gray-100 text-sm sm:text-base">
+        {/* Capa semitransparente */}
+        <div className="absolute inset-0 bg-white/50 backdrop-blur-sm rounded-xl h-full"></div>
+
+        {/* Contenido */}
+        <div className="relative space-y-6 grid gap-8">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <h1 className="text-2xl font-bold text-black flex items-center gap-2">
+              Crear Comunidad
+            </h1>
+            <img src={logo2} alt="Communities Logo" className="h-6 w-auto" />
+          </div>
+
+          <p className="text-gray-700 text-sm sm:text-base">
             Une a las personas, celebra tu cultura y comparte tu historia con el
             mundo 🌎
           </p>
-        </div>
 
-        <CrearEditarComunidadForm />
+          <CrearEditarComunidadForm />
+        </div>
       </section>
-      <div className="pt-6 text-center">
-        <p className="text-[#141C24] text-base font-medium">
-          ✨ Dale vida a tu comunidad y conecta a los latinos en EE. UU.
+
+      <div className="pt-6 text-center space-y-2">
+        <p className="text-[#141C24] text-base font-medium flex justify-center items-center gap-2">
+          <img src={icono} alt="Icono" className="h-8 md:h-12" />
+          Dale vida a tu comunidad y conecta a los latinos en EE. UU.
         </p>
         <p className="text-sm text-gray-600">
           Crea un espacio donde todos se sientan como en casa.

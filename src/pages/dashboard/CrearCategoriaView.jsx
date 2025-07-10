@@ -2,6 +2,8 @@
 import { Helmet } from "react-helmet-async";
 import CrearCategoria from "./CrearCategoria";
 import authBg from "../../assets/authbg.png";
+import logo2 from "../../assets/communidades_text.svg";
+import icono from "../../assets/icono.svg";
 
 export default function CrearCategoriaView() {
   return (
@@ -11,28 +13,43 @@ export default function CrearCategoriaView() {
       </Helmet>
 
       <section
-        className="w-full max-w-3xl shadow rounded-2xl p-6 sm:p-16 space-y-6"
+        className="relative w-full max-w-3xl shadow-xl rounded-2xl p-6 sm:p-16 space-y-6 overflow-hidden"
         style={{
           backgroundImage: `url(${authBg})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
       >
-        <div className="space-y-2">
-          <h1 className="text-2xl font-bold text-[#141C24]">Crear Categoría</h1>
-          <p className="text-gray-100 text-sm sm:text-base">
+        {/* Capa semitransparente */}
+        <div className="absolute inset-0 bg-white/50 backdrop-blur-sm rounded-xl h-full"></div>
+
+        {/* Contenido */}
+        <div className="relative space-y-6 grid gap-8">
+          {/* Título y Logo */}
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <h1 className="text-2xl font-bold text-black flex items-center gap-2">
+              Crear Categoría
+            </h1>
+            <img src={logo2} alt="Communities Logo" className="h-6 w-auto" />
+          </div>
+
+          {/* Descripción */}
+          <p className="text-gray-700 text-sm sm:text-base">
             Crea nuevas categorías para organizar mejor los negocios, eventos y
             promociones de tu comunidad latina ✨
           </p>
-        </div>
 
-        <CrearCategoria />
+          {/* Formulario */}
+          <CrearCategoria />
+        </div>
       </section>
 
-      <div className="pt-6 text-center">
-        <p className="text-[#141C24] text-base font-medium">
-          🗂️ Las categorías ayudan a que los usuarios encuentren fácilmente lo
-          que buscan.
+      {/* Mensaje inferior */}
+      <div className="pt-6 text-center space-y-2">
+        <p className="text-[#141C24] text-base font-medium flex justify-center items-center gap-2">
+          <img src={icono} alt="Icono" className="h-8 md:h-12" />
+          Las categorías ayudan a que los usuarios encuentren fácilmente lo que
+          buscan.
         </p>
         <p className="text-sm text-gray-600">
           Cada categoría es una oportunidad de dar visibilidad a la cultura y
