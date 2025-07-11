@@ -40,3 +40,42 @@
 body {
   font-family: 'Inter', sans-serif;
 }
+.orbit-sphere {
+  position: absolute;
+  top: 45%;
+  left: 40%;
+  width: 12px;
+  height: 15px;
+  border-radius: 9999px;
+  transform-origin: center center;
+}
+
+
+.sphere1 {
+  animation: orbit1 4s linear infinite;
+  background: #FCD116;
+
+}
+.sphere2 {
+  animation: orbit2 6s linear infinite;
+  background: #0038A8;
+
+}
+.sphere3 {
+  animation: orbit3 8s linear infinite;
+  background: #CE1126;
+
+}
+
+@keyframes orbit1 {
+  0%   { transform: rotate(0deg) translateX(60px) rotate(0deg); }
+  100% { transform: rotate(360deg) translateX(60px) rotate(-360deg); }
+}
+@keyframes orbit2 {
+  0%   { transform: rotate(0deg) translateX(60px) rotate(0deg); }
+  100% { transform: rotate(360deg) translateX(60px) rotate(-360deg); }
+}
+@keyframes orbit3 {
+  0%   { transform: rotate(0deg) translateX(60px) rotate(0deg); }
+  100% { transform: rotate(360deg) translateX(60px) rotate(-360deg); }
+}

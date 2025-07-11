@@ -102,16 +102,28 @@ export default function MapaComunidad({ negocios, coords }) {
 
   return (
     <div className="relative overflow-hidden rounded-xl shadow h-full">
+      {/* Loader encima mientras no cargue */}
       {!isLoaded && (
-        <div className="w-full h-full flex items-center justify-center max-h-[500px]">
+        <div
+          className="
+          absolute inset-0 z-10 flex items-center justify-center
+          bg-white/70 backdrop-blur
+        "
+        >
           <Loading />
         </div>
       )}
+
+      {/* Mapa siempre presente */}
       <div
         ref={mapRef}
-        className={`w-full h-full transition-opacity duration-300 ${
-          isLoaded ? "opacity-100" : "opacity-0"
-        }`}
+        className="
+        w-full
+        h-full
+        min-h-[500px]
+        md:min-h-[500px]
+        lg:min-h-0
+      "
       />
     </div>
   );

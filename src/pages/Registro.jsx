@@ -4,18 +4,20 @@ import * as Yup from "yup";
 import { Helmet } from "react-helmet-async";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../store/authSlice";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Select from "react-select";
 import authbg from "../assets/authbg.png";
 import { registerUser } from "../api/authApi";
 import { fetchComunidades } from "../store/comunidadesSlice";
+import icono from "../assets/logo_icono.svg"; // ⬅️ Aquí importas tu SVG
 
 const steps = [
-  "Datos Básicos",
-  "Selecciona tu Rol",
-  "Información Opcional",
-  "Confirmar",
+  "Cuéntanos sobre ti",
+  "Elige tu rol en la comunidad",
+  "Comparte un poco más",
+  "Revisa y confirma",
 ];
+
 const customSelectStyles = {
   control: (provided, state) => ({
     ...provided,
@@ -131,7 +133,7 @@ export default function RegistroMultiStep() {
       </Helmet>
 
       <div
-        className="min-h-screen flex items-center justify-center bg-cover bg-center relative"
+        className="min-h-screen flex flex-col items-center justify-center bg-cover bg-center relative gap-2 py-7 px-2"
         style={{ backgroundImage: `url(${authbg})` }}
       >
         <div className="relative w-full max-w-lg mx-auto p-8 bg-black/40 backdrop-blur-lg rounded-2xl shadow-2xl text-white m-4">
@@ -474,6 +476,30 @@ export default function RegistroMultiStep() {
               </Form>
             )}
           </Formik>
+          <div className="text-center mt-4">
+            <p className="text-gray-400 text-sm mb-2">¿Ya tienes cuenta?</p>
+            <Link
+              to="/login"
+              className="block text-center bg-white/10 border border-white/20 text-white py-3 rounded-lg font-semibold hover:bg-white/20 transition"
+            >
+              Volver al inicio de sesión
+            </Link>
+          </div>
+        </div>
+        {/* Icono de la app */}
+        <div className=" flex justify-center  relative z-10">
+          <div className=" flex justify-center relative z-10">
+            <div className="relative inline-block">
+              <img
+                src={icono}
+                alt="Logo Communities"
+                className="h-24 opacity-80 relative z-20"
+              />
+              <span className="orbit-sphere sphere1"></span>
+              <span className="orbit-sphere sphere2"></span>
+              <span className="orbit-sphere sphere3"></span>
+            </div>
+          </div>
         </div>
       </div>
     </>

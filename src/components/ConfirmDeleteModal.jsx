@@ -1,62 +1,75 @@
-// src/components/ConfirmDeleteModal.jsx
 import { useState } from "react";
-import { MdClose } from "react-icons/md";
 
 export default function ConfirmDeleteModal({
   open,
   onClose,
   onConfirm,
   entityName,
-  title = "Confirmar eliminación",
-  description = "Para confirmar, escribe el nombre exacto:",
 }) {
-  const [input, setInput] = useState("");
+  const [inputValue, setInputValue] = useState("");
 
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
-      <div className="bg-white w-full max-w-md rounded-xl shadow-lg p-6 relative">
-        <button
-          onClick={onClose}
-          className="absolute top-3 right-3 text-gray-400 hover:text-black transition"
-        >
-          <MdClose className="w-5 h-5" />
-        </button>
-        <h2 className="text-lg font-bold text-gray-800">{title}</h2>
-        <p className="text-sm text-gray-600 mt-2">{description}</p>
-        <p className="text-sm font-semibold mt-1 text-gray-800 italic">
-          "{entityName}"
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+      onClick={onClose}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="bg-white max-w-md w-full rounded-xl shadow-xl p-6 flex flex-col gap-5"
+      >
+        {/* Título */}
+        <h2 className="text-xl font-bold text-[#141C24] leading-snug">
+          ¿Quieres eliminar <span className="text-red-600">{entityName}</span>?
+        </h2>
+
+        {/* Descripción */}
+        <p className="text-sm text-gray-600">
+          Para confirmar, escribe el nombre exactamente como aparece.
         </p>
 
+        {/* Nombre de referencia */}
+        <div className="text-sm font-medium text-gray-800 border border-gray-200 bg-gray-50 rounded px-3 py-1 w-fit">
+          {entityName}
+        </div>
+
+        {/* Campo de entrada */}
         <input
           type="text"
-          className="mt-4 w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
-          placeholder="Escribe el nombre exacto"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
+          placeholder="Escribe aquí el nombre completo"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
         />
 
-        <div className="mt-4 flex justify-end gap-2">
+        {inputValue.trim() && inputValue.trim() !== entityName && (
+          <p className="text-xs text-red-500 mt-1">
+            El nombre no coincide exactamente.
+          </p>
+        )}
+
+        {/* Botones */}
+        <div className="flex flex-col sm:flex-row justify-end gap-2 mt-2">
           <button
             onClick={onClose}
-            className="text-sm px-4 py-2 rounded border border-gray-300 hover:bg-gray-100 transition"
+            className="w-full sm:w-auto px-4 py-2 rounded border border-gray-300 text-gray-700 hover:bg-gray-100 transition text-sm"
           >
             Cancelar
           </button>
           <button
             onClick={() => {
-              if (
-                input.trim().toLowerCase() === entityName.trim().toLowerCase()
-              ) {
-                onConfirm();
-              } else {
-                alert("El nombre no coincide. Revisa e inténtalo de nuevo.");
-              }
+              onConfirm();
+              setInputValue("");
             }}
-            className="text-sm px-4 py-2 rounded bg-red-500 text-white hover:bg-red-600 transition"
+            disabled={inputValue.trim() !== entityName}
+            className={`w-full sm:w-auto px-4 py-2 rounded text-sm font-semibold transition ${
+              inputValue.trim() === entityName
+                ? "bg-red-600 text-white hover:bg-red-700"
+                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+            }`}
           >
-            Eliminar
+            Sí, eliminar
           </button>
         </div>
       </div>

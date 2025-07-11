@@ -5,16 +5,15 @@ import ConfirmDeleteModal from "../../ConfirmDeleteModal";
 
 export default function CardEvento({ evento, onDelete }) {
   const { _id, title = "Sin título", date, location, featuredImage } = evento;
-
   const [showModal, setShowModal] = useState(false);
 
   const imagenUrl =
     featuredImage || `https://cdn.usegalileo.ai/sdxl10/${_id || "default"}.png`;
 
   return (
-    <div className="group relative bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden border border-gray-200">
+    <div className="group relative bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden border border-gray-200 min-h-[13rem] flex flex-col">
       {/* Imagen */}
-      <div className="w-full h-28 overflow-hidden">
+      <div className="w-full h-28 overflow-hidden bg-gray-50">
         <img
           src={imagenUrl}
           alt={title}
@@ -22,47 +21,52 @@ export default function CardEvento({ evento, onDelete }) {
         />
       </div>
 
-      <div className="flex flex-col gap-2 p-4">
+      {/* Contenido */}
+      <div className="flex flex-col gap-2 p-1 md:p-4 flex-grow">
         {/* Título */}
-        <h3 className="text-sm font-semibold text-gray-700 truncate">
+        <h3 className="text-sm font-semibold text-gray-700 min-h-[2.5rem] flex items-start md:items-center">
           {title}
         </h3>
 
-        {/* Fecha */}
-        <span className="inline-block bg-black text-white text-xs font-medium px-2 py-0.5 rounded-full w-fit">
-          {date ? new Date(date).toLocaleDateString() : "Sin fecha"}
-        </span>
-
-        {/* Ubicación */}
-        {location?.city && (
-          <span className="text-xs text-gray-500">
-            {location.city}, {location.state}
+        {/* Solo visible en desktop */}
+        <div className="hidden md:flex flex-col gap-2 mt-auto">
+          {/* Fecha */}
+          <span className="inline-block bg-black text-white text-xs font-medium px-2 py-0.5 rounded-full w-fit">
+            {date ? new Date(date).toLocaleDateString() : "Sin fecha"}
           </span>
-        )}
 
-        {/* Acciones */}
-        <div className="flex justify-between items-center mt-3">
-          <Link
-            to={`/eventos/${_id}`}
-            className="text-sm font-medium text-blue-300 hover:text-blue-800 transition"
-          >
-            Ver más
-          </Link>
+          {/* Ubicación */}
+          {location?.city && (
+            <span className="text-xs text-gray-500">
+              {location.city}, {location.state}
+            </span>
+          )}
 
-          <div className="flex gap-2">
+          {/* Botón ver detalle */}
+          <div className="flex justify-end">
             <Link
-              to={`/dashboard/mis-eventos/${_id}/editar`}
-              className="p-1 text-gray-500 hover:text-black transition"
-              title="Editar"
+              to={`/eventos/${_id}`}
+              className="text-sm font-medium text-orange-600 hover:text-orange-800 transition"
             >
-              <MdEdit className="w-5 h-5" />
+              Ver detalle
+            </Link>
+          </div>
+
+          {/* Acciones */}
+          <div className="flex flex-col gap-1 mt-2">
+            <Link
+              to={`/dashboard/eventos/${_id}/editar`}
+              className="flex items-center justify-center gap-2 px-3 py-2 rounded bg-black text-white hover:bg-[#f4c753] hover:text-black transition text-sm font-semibold w-full"
+            >
+              <MdEdit className="text-lg" />
+              Editar evento
             </Link>
             <button
               onClick={() => setShowModal(true)}
-              className="p-1 text-gray-500 hover:text-red-600 transition"
-              title="Eliminar"
+              className="flex items-center justify-center gap-2 px-3 py-2 rounded bg-red-600 text-white hover:bg-red-700 transition text-sm font-semibold w-full"
             >
-              <MdDelete className="w-5 h-5" />
+              <MdDelete className="text-lg" />
+              Eliminar
             </button>
           </div>
         </div>
@@ -77,7 +81,7 @@ export default function CardEvento({ evento, onDelete }) {
           onDelete(_id);
         }}
         entityName={title}
-        title="Eliminar evento"
+        title={`¿Quieres eliminar "${title}"?`}
         description="Para confirmar, escribe el nombre exacto del evento:"
       />
     </div>

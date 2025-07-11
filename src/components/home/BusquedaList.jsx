@@ -85,7 +85,6 @@ export default function BusquedaList() {
             onChange={setInput}
             onBuscar={handleBuscar}
             onLimpiar={handleLimpiar}
-            placeholder="Buscar negocios, eventos, comunidades"
           />
         )}
       />

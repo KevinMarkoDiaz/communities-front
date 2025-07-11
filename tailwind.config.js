@@ -7,6 +7,15 @@ export default {
       fontFamily: {
         sans: ["Inter", "sans-serif"],
       },
+      keyframes: {
+        pulseSlow: {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: ".5" },
+        },
+      },
+      animation: {
+        "pulse-slow": "pulseSlow 4s ease-in-out infinite",
+      },
     },
   },
   plugins: [],

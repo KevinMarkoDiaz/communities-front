@@ -3,9 +3,10 @@ import * as Yup from "yup";
 import { Helmet } from "react-helmet-async";
 import { useDispatch } from "react-redux";
 import { login } from "../store/authSlice";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { loginUser, getCurrentUser } from "../api/authApi";
 import authbg from "../assets/authbg.png";
+import icono from "../assets/logo_icono.svg"; // ⬅️ Aquí importas tu SVG
 
 const esquemaValidacion = Yup.object().shape({
   email: Yup.string().email("Correo inválido").required("Campo obligatorio"),
@@ -44,7 +45,6 @@ export default function Login() {
     );
 
     const handleMessage = async (event) => {
-      // Verifica origen si quieres más seguridad
       if (!event.data) return;
       if (event.data === "failure") {
         console.error("Error al autenticar con Google.");
@@ -52,7 +52,6 @@ export default function Login() {
       }
 
       try {
-        // Aquí la cookie HttpOnly ya quedó seteada
         const { usuario } = await getCurrentUser();
         dispatch(login(usuario));
         navigate("/dashboard/perfil");
@@ -72,18 +71,18 @@ export default function Login() {
   return (
     <>
       <Helmet>
-        <title>Communities | Iniciar sesión</title>
+        <title>Communidades | Iniciar sesión</title>
       </Helmet>
 
       <div
-        className="min-h-screen flex items-center justify-center bg-cover bg-center relative"
+        className="min-h-screen flex flex-col items-center justify-center bg-cover bg-center relative px-2 py-10 gap-2"
         style={{
           backgroundImage: `url(${authbg})`,
         }}
       >
-        <div className="relative w-full max-w-md mx-auto p-8 bg-black/40 backdrop-blur-lg rounded-2xl shadow-2xl text-white m-10">
-          <h2 className="text-3xl font-bold text-center mb-6 tracking-wide">
-            Bienvenido de nuevo
+        <div className="relative w-full max-w-md mx-auto p-8 bg-black/40 backdrop-blur-lg rounded-2xl shadow-2xl text-white ">
+          <h2 className="text-2xl font-bold text-center mb-6 tracking-wide">
+            ¡Qué alegría tenerte de vuelta!
           </h2>
 
           <Formik
@@ -177,15 +176,30 @@ export default function Login() {
                   ¿No tienes cuenta?
                 </div>
 
-                <a
-                  href="/registro"
+                <Link
+                  to="/registro"
                   className="block text-center bg-white/10 border border-white/20 text-white py-3 rounded-lg font-semibold hover:bg-white/20 transition"
                 >
                   Regístrate
-                </a>
+                </Link>
               </Form>
             )}
           </Formik>
+        </div>
+        {/* Icono de la app */}
+        <div className=" flex justify-center  relative z-10">
+          <div className=" flex justify-center relative z-10">
+            <div className="relative inline-block">
+              <img
+                src={icono}
+                alt="Logo Communities"
+                className="h-24 opacity-80 relative z-20"
+              />
+              <span className="orbit-sphere sphere1"></span>
+              <span className="orbit-sphere sphere2"></span>
+              <span className="orbit-sphere sphere3"></span>
+            </div>
+          </div>
         </div>
       </div>
     </>

@@ -23,7 +23,16 @@ export default function VistaComunidad() {
   return (
     <section className="space-y-4 relative h-full rounded-xl shadow">
       {loading && (
-        <div className="w-full  h-full flex items-center justify-center max-h-[500px]">
+        <div
+          className="
+      w-full
+      h-full
+      min-h-[500px]
+      md:min-h-[500px]
+      lg:min-h-0
+      flex items-center justify-center
+    "
+        >
           <Loading />
         </div>
       )}

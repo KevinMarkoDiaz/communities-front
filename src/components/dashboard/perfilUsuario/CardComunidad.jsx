@@ -3,52 +3,63 @@ import { MdEdit, MdDelete } from "react-icons/md";
 import { useState } from "react";
 import ConfirmDeleteModal from "../../ConfirmDeleteModal";
 
-export default function CardComunidad({
-  id,
-  name = "Nombre comunidad",
-  description = "Descripción de la comunidad.",
-  flagImage,
-  language = "es",
-  owner,
-  usuario,
-  onDelete,
-  slug,
-}) {
+export default function CardComunidad({ comunidad, usuario, onDelete }) {
+  const {
+    _id,
+    name = "Nombre comunidad",
+    description = "Descripción de la comunidad.",
+    flagImage,
+    bannerImage,
+    language = "es",
+    slug,
+    owner,
+  } = comunidad;
+
   const puedeEditar = usuario?.role === "admin" || usuario?._id === owner?._id;
   const [showModal, setShowModal] = useState(false);
 
   return (
-    <div className="group relative bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden border border-gray-200">
+    <div className="group relative bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden border border-gray-200 min-h-[10rem] flex flex-col">
       {/* Imagen */}
-      <div className="w-full h-28 overflow-hidden">
+      <div className="w-full h-28 overflow-hidden bg-gray-50">
         <img
-          src={
-            flagImage ||
-            `https://cdn.usegalileo.ai/sdxl10/${id || "default"}.png`
-          }
+          src={bannerImage || flagImage}
           alt={name}
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
       </div>
 
       {/* Contenido */}
-      <div className="flex flex-col gap-2 p-4">
-        <h3 className="text-sm font-semibold text-gray-700 truncate">{name}</h3>
+      <div className="flex flex-col gap-2 p-1 md:p-4 flex-grow">
+        {/* Título */}
+        <h3
+          className="
+            text-sm font-semibold text-gray-700
+            min-h-[2.5rem]
+            flex items-start md:items-center
+          "
+        >
+          {name}
+        </h3>
 
-        <p className="text-gray-500 text-xs truncate">{description}</p>
-
-        <span className="inline-block bg-black text-white text-xs font-medium px-2 py-0.5 rounded-full w-fit">
-          {language.toUpperCase()}
-        </span>
+        {/* Descripción y etiqueta (solo desktop) */}
+        <div className="hidden md:flex flex-col gap-1">
+          <p className="text-gray-500 text-xs line-clamp-2">
+            {description || "Sin descripción disponible"}
+          </p>
+          <span className="inline-block bg-black text-white text-xs font-medium px-2 py-0.5 rounded-full w-fit">
+            {language.toUpperCase()}
+          </span>
+        </div>
 
         {/* Acciones */}
         {puedeEditar && (
-          <div className="flex justify-between items-center mt-3">
+          <div className="hidden md:flex justify-between items-center mt-auto">
             <Link
               to={`/comunidades/${slug}`}
-              className="text-sm font-medium text-blue-300 hover:text-blue-800 transition"
+              className="text-sm font-medium text-orange-600 hover:text-orange-800 transition"
             >
-              Ver más
+              Ver perfil
             </Link>
 
             <div className="flex gap-2">
@@ -77,7 +88,7 @@ export default function CardComunidad({
         onClose={() => setShowModal(false)}
         onConfirm={() => {
           setShowModal(false);
-          onDelete?.(id);
+          onDelete?.(_id);
         }}
         entityName={name}
         title="Eliminar comunidad"

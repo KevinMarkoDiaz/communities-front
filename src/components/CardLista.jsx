@@ -79,7 +79,10 @@ export default function CardGrid({
       <div className="flex flex-col gap-0.5 px-3 py-3 flex-1">
         <div className="flex items-center gap-1">
           <h3
-            className="text-base font-semibold text-gray-900 tracking-tight"
+            className="
+              text-base font-semibold text-gray-900 tracking-tight leading-tight
+              min-h-[2.8em] sm:min-h-0
+            "
             style={{ letterSpacing: "0.02em" }}
           >
             {title}

@@ -29,7 +29,7 @@ export default function DashboardLayout() {
           <SidebarDashboard usuario={usuario} handleLogout={handleLogout} />
         </div>
 
-        <main className="flex-grow overflow-y-auto p-6 pb-24 md:pb-6  md:pl-84">
+        <main className="flex-grow pt-4 overflow-y-auto md:p-6 pb-24 md:pb-6  md:pl-84">
           <Outlet />
         </main>
 

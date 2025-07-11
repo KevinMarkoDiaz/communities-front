@@ -11,11 +11,15 @@ export default function Footer() {
   return (
     <footer className="bg-[#FB8500] text-white mt-auto">
       <div
-        className="max-w-7xl mx-auto px-6 py-12 grid gap-8 sm:gap-12"
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-        }}
+        className="
+    max-w-7xl mx-auto px-6 py-12 
+    grid 
+    grid-cols-1 
+    sm:grid-cols-2 
+    md:grid-cols-2 
+    lg:grid-cols-4 
+    gap-8 sm:gap-12
+  "
       >
         {/* Navegación */}
         <div className="space-y-3 lg:border-r lg:border-white/20 lg:pr-6">

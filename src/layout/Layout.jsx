@@ -46,8 +46,8 @@ export default function Layout() {
         </div>
       )}
 
-      <main className="flex w-full max-w-full xl:max-w-[80%] mx-auto gap-4 flex-grow px-4">
-        <div className="flex-1 flex flex-col gap-12 py-8 overflow-hidden">
+      <main className="flex w-full max-w-full xl:max-w-[80%] mx-auto gap-4 flex-grow px-2 md:px-4">
+        <div className="flex-1 flex flex-col md:gap-12 py-8 overflow-hidden">
           <Outlet />
         </div>
 

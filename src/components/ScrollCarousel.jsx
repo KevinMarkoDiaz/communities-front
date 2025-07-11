@@ -24,16 +24,18 @@ export default function ScrollCarousel({
     }
   };
 
-  // Autoplay con cambio de dirección
+  // Autoplay con cambio de dirección solo en desktop
   useEffect(() => {
     if (!autoplay || !scrollRef.current) return;
+
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
+    if (isMobile) return; // 🚫 No autoplay en mobile
 
     const container = scrollRef.current;
 
     const scrollStep = () => {
       if (currentDirection === "right") {
         container.scrollLeft += speed;
-        // Si llegamos al final, cambiar dirección
         if (
           container.scrollLeft + container.clientWidth >=
           container.scrollWidth
@@ -42,7 +44,6 @@ export default function ScrollCarousel({
         }
       } else {
         container.scrollLeft -= speed;
-        // Si llegamos al principio, cambiar dirección
         if (container.scrollLeft <= 0) {
           setCurrentDirection("right");
         }
@@ -55,7 +56,21 @@ export default function ScrollCarousel({
 
   return (
     <div className="relative w-full">
-      {/* Botón izquierdo */}
+      {/* Flechitas decorativas solo mobile (más visibles) */}
+      <div className="absolute left-1 top-1/2 -translate-y-1/2 z-10 md:hidden pointer-events-none">
+        <FiChevronLeft
+          size={20}
+          className="text-white opacity-90 drop-shadow"
+        />
+      </div>
+      <div className="absolute right-1 top-1/2 -translate-y-1/2 z-10 md:hidden pointer-events-none">
+        <FiChevronRight
+          size={20}
+          className="text-white opacity-90 drop-shadow"
+        />
+      </div>
+
+      {/* Botón izquierdo desktop */}
       <button
         onClick={() => scroll("left")}
         className="hidden md:flex absolute left-2 text-black top-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow hover:bg-gray-100 transition"
@@ -63,7 +78,7 @@ export default function ScrollCarousel({
         <FiChevronLeft size={20} />
       </button>
 
-      {/* Botón derecho */}
+      {/* Botón derecho desktop */}
       <button
         onClick={() => scroll("right")}
         className="hidden md:flex absolute right-2 text-black top-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow hover:bg-gray-100 transition"
