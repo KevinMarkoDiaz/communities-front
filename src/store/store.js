@@ -6,6 +6,8 @@ import comunidadesReducer from "./comunidadesSlice";
 import busquedaGlobalReducer from "./busquedaGlobalSlice"; // 🆕
 import categoriasReducer from "./categoriasSlice"; // nuevo
 import promocionesReducer from "./promocionesSlice";
+import notificacionesReducer from "./notificacionesSlice";
+import followReducer from "./followSlice";
 
 export const store = configureStore({
   reducer: {
@@ -13,8 +15,10 @@ export const store = configureStore({
     eventos: eventosReducer,
     auth: authReducer,
     comunidades: comunidadesReducer,
-    busquedaGlobal: busquedaGlobalReducer, // 🆕 agregado
+    busquedaGlobal: busquedaGlobalReducer,
     categorias: categoriasReducer,
     promociones: promocionesReducer,
+    notificaciones: notificacionesReducer,
+    follow: followReducer,
   },
 });

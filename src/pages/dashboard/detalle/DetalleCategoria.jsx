@@ -57,7 +57,7 @@ export default function DetalleCategoria({ categoria, onClose, onDelete }) {
           {/* Acciones */}
           <div className="flex flex-col sm:flex-row gap-2 mt-4">
             <Link
-              to={`/dashboard/categorias/${categoria._id}/editar`}
+              to={`/dashboard/mis-categorias/${categoria._id}/editar`}
               className="flex items-center justify-center gap-2 px-3 py-2 rounded bg-black text-white hover:bg-[#f4c753] hover:text-black transition text-sm font-semibold"
             >
               <MdEdit className="text-lg" />

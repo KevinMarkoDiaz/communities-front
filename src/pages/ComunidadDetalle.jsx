@@ -1,7 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import Compartir from "../components/Compartir";
 import MapaNegocioDetalle from "../components/bussines/MapaNegocioDetalle";
 import CardNegocioHome from "../components/communities/CardNegocioHome";
@@ -16,6 +16,10 @@ import {
   FaYoutube,
 } from "react-icons/fa";
 
+// 🚀 Importamos axiosInstance y el botón follow
+import UniversalFollowButton from "../components/badges/UniversalFollowButton";
+import axiosInstance from "../api/axiosInstance";
+
 export default function ComunidadDetalle() {
   const { id } = useParams();
   const { lista, loading, error } = useSelector((state) => state.comunidades);
@@ -24,9 +28,27 @@ export default function ComunidadDetalle() {
   const negocios = useSelector((state) => state.negocios.lista);
   const negociosLoading = useSelector((state) => state.negocios.loading);
 
+  const [yaSigue, setYaSigue] = useState(false);
+
   const comunidad = lista.find(
     (c) => String(c.id) === id || String(c._id) === id
   );
+
+  useEffect(() => {
+    const fetchFollow = async () => {
+      if (!comunidad?._id) return;
+      try {
+        const res = await axiosInstance.get(
+          "/users/me/following?type=community"
+        );
+        const ids = res.data.items.map((c) => String(c._id));
+        setYaSigue(ids.includes(String(comunidad._id)));
+      } catch (err) {
+        console.warn("No se pudo cargar el estado de seguimiento:", err);
+      }
+    };
+    fetchFollow();
+  }, [comunidad?._id]);
 
   if (loading) {
     return (
@@ -119,6 +141,14 @@ export default function ComunidadDetalle() {
                 </span>
               )}
             </div>
+
+            {/* 🚀 Botón Follow */}
+            <UniversalFollowButton
+              entityType="community"
+              entityId={comunidad._id}
+              initialFollowed={yaSigue}
+            />
+
             {comunidad.region && (
               <p className="text-sm text-gray-500">
                 Región: {comunidad.region}

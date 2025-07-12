@@ -14,6 +14,7 @@ import {
 import Icon from "../assets/logo_icono.svg";
 import IconMobile from "../assets/logo_negro.svg";
 import Icono from "../assets/icono.svg";
+import NotificationButton from "./badges/NotificationButton";
 
 export default function Header() {
   const usuario = useSelector((state) => state.auth.usuario);
@@ -101,7 +102,7 @@ export default function Header() {
               }`}
             />
           </Link>
-
+          <NotificationButton />
           {/* Links desktop */}
           <nav className="hidden md:flex gap-6 items-center">
             {navLinks.map((link) => (

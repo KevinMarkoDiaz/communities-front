@@ -46,6 +46,9 @@ import LegalTerminos from "../pages/LegalTerminos";
 import NotFound from "../pages/NotFound";
 import RegistroMultiStep from "../pages/Registro";
 import CrearNegocio from "../pages/dashboard/CrearNegocio";
+import Notificaciones from "../pages/dashboard/Notificaciones";
+
+// ✅ IMPORTA TU VISTA DE NOTIFICACIONES
 
 const router = createBrowserRouter([
   {
@@ -93,6 +96,7 @@ const router = createBrowserRouter([
         children: [
           { path: "perfil", element: <Perfil /> },
           { path: "perfil/editar", element: <EditarPerfil /> },
+          { path: "notificaciones", element: <Notificaciones /> }, // ✅ NUEVA RUTA
 
           {
             path: "mis-negocios",

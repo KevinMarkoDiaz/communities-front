@@ -55,7 +55,7 @@ export default function CardEvento({ evento, onDelete }) {
           {/* Acciones */}
           <div className="flex flex-col gap-1 mt-2">
             <Link
-              to={`/dashboard/eventos/${_id}/editar`}
+              to={`/dashboard/mis-eventos/${_id}/editar`}
               className="flex items-center justify-center gap-2 px-3 py-2 rounded bg-black text-white hover:bg-[#f4c753] hover:text-black transition text-sm font-semibold w-full"
             >
               <MdEdit className="text-lg" />

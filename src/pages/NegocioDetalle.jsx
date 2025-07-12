@@ -19,17 +19,35 @@ import MapaNegocioDetalle from "../components/bussines/MapaNegocioDetalle";
 import Compartir from "../components/Compartir";
 import DetalleSkeleton from "../components/Skeleton/DetalleSkeleton";
 
+// 🚀 Importa axiosInstance y el botón Follow
+import UniversalFollowButton from "../components/badges/UniversalFollowButton";
+import axiosInstance from "../api/axiosInstance";
+
 export default function NegocioDetalle() {
   const { id } = useParams();
   const [negocio, setNegocio] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState("horarios"); // tab activo
+  const [tab, setTab] = useState("horarios");
+  const [yaSigue, setYaSigue] = useState(false);
 
   useEffect(() => {
     const fetchNegocio = async () => {
       try {
+        // 1. Cargar negocio
         const data = await getBusinessById(id);
         setNegocio(data.business);
+
+        // 2. Consultar si ya sigue este negocio
+        try {
+          const resFollows = await axiosInstance.get(
+            "/users/me/following?type=business"
+          );
+          const ids = resFollows.data.items.map((b) => b._id);
+          setYaSigue(ids.includes(id));
+        } catch (err) {
+          console.warn("No se pudo cargar el estado de seguimiento:", err);
+          // No pasa nada si falla
+        }
       } catch (error) {
         console.error("Error al cargar el negocio:", error);
         setNegocio(null);
@@ -79,6 +97,14 @@ export default function NegocioDetalle() {
               </span>
             )}
           </div>
+
+          {/* 🚀 Botón Follow */}
+          <UniversalFollowButton
+            entityType="business"
+            entityId={id}
+            initialFollowed={yaSigue}
+          />
+
           {/* Dirección */}
           {negocio.location?.address && (
             <p className="flex items-center text-sm text-gray-600 gap-2">
@@ -130,7 +156,7 @@ export default function NegocioDetalle() {
           </p>
         )}
 
-        {/* Navegación de tabs */}
+        {/* Tabs */}
         <div className="flex flex-wrap gap-2 border-b border-gray-200 pt-4">
           {[
             { id: "horarios", label: "Horarios" },

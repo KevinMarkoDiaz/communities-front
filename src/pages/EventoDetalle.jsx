@@ -7,6 +7,10 @@ import MapaNegocioDetalle from "../components/bussines/MapaNegocioDetalle";
 import Compartir from "../components/Compartir";
 import DetalleSkeleton from "../components/Skeleton/DetalleSkeleton";
 
+// 🚀 Importamos axiosInstance y el botón Follow
+import UniversalFollowButton from "../components/badges/UniversalFollowButton";
+import axiosInstance from "../api/axiosInstance";
+
 export default function EventoDetalle() {
   const { id } = useParams();
   const [evento, setEvento] = useState(null);
@@ -14,6 +18,7 @@ export default function EventoDetalle() {
   const [error, setError] = useState(null);
   const [sponsorsData, setSponsorsData] = useState([]);
   const [communitiesData, setCommunitiesData] = useState([]);
+  const [yaSigue, setYaSigue] = useState(false);
 
   useEffect(() => {
     const cargarEvento = async () => {
@@ -52,6 +57,21 @@ export default function EventoDetalle() {
     };
     cargarEvento();
   }, [id]);
+
+  // 🚀 Cargar estado de seguimiento
+  useEffect(() => {
+    const fetchFollow = async () => {
+      if (!evento?.id) return;
+      try {
+        const res = await axiosInstance.get("/users/me/following?type=event");
+        const ids = res.data.items.map((e) => String(e._id));
+        setYaSigue(ids.includes(String(evento.id)));
+      } catch (err) {
+        console.warn("No se pudo cargar el estado de seguimiento:", err);
+      }
+    };
+    fetchFollow();
+  }, [evento?.id]);
 
   useEffect(() => {
     const cargarSponsors = async () => {
@@ -124,6 +144,13 @@ export default function EventoDetalle() {
               </span>
             )}
           </div>
+
+          {/* 🚀 Botón Follow */}
+          <UniversalFollowButton
+            entityType="event"
+            entityId={evento.id}
+            initialFollowed={yaSigue}
+          />
 
           <p className="text-sm text-gray-500">
             {new Date(evento.date).toLocaleDateString()} - {evento.time}

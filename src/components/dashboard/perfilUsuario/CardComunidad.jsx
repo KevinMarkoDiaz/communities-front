@@ -64,7 +64,7 @@ export default function CardComunidad({ comunidad, usuario, onDelete }) {
 
             <div className="flex gap-2">
               <Link
-                to={`/dashboard/comunidades/${slug}/editar`}
+                to={`/dashboard/mis-comunidades/${slug}/editar`}
                 className="p-1 text-gray-500 hover:text-black transition"
                 title="Editar"
               >

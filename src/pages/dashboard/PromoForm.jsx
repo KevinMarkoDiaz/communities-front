@@ -16,11 +16,12 @@ const schema = Yup.object().shape({
   endDate: Yup.date().required("Fecha de fin obligatoria"),
   image: Yup.mixed().required("Imagen obligatoria"),
   community: Yup.string().required("Comunidad obligatoria"),
+  business: Yup.string().required("Negocio obligatorio"),
 });
 
 export default function PromoForm() {
   useCargarCategorias();
-  const { id: negocioId } = useParams();
+  const { negocioId } = useParams();
   const navigate = useNavigate();
   const usuario = useSelector((state) => state.auth.usuario);
   const comunidades = useSelector((state) => state.comunidades.lista);
@@ -35,6 +36,7 @@ export default function PromoForm() {
     image: null,
     category: "",
     community: "",
+    business: negocioId, //
   };
 
   const handleSubmit = async (values, actions) => {
@@ -46,7 +48,7 @@ export default function PromoForm() {
         type: values.type,
         startDate: values.startDate,
         endDate: values.endDate,
-        business: negocioId,
+        business: values.business,
         category: values.category,
         community: values.community,
         createdBy: usuario._id,
@@ -73,6 +75,7 @@ export default function PromoForm() {
       onSubmit={handleSubmit}
       validateOnBlur={false}
       validateOnChange={false}
+      enableReinitialize
     >
       {({ values, setFieldValue, isSubmitting }) => (
         <Form className="flex flex-col md:flex-row gap-8 w-full max-w-5xl mx-auto p-8 bg-black/40 backdrop-blur-lg rounded-2xl shadow-2xl text-white">
