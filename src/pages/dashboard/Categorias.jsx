@@ -146,10 +146,7 @@ export default function Categorias() {
                   : "border-none"
               }`}
             >
-              <CardCategoria
-                categoria={cat}
-                onDelete={() => handleDelete(cat._id)}
-              />
+              <CardCategoria categoria={cat} />
             </div>
           ))}
         </div>

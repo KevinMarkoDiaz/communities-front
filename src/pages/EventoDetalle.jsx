@@ -7,9 +7,12 @@ import MapaNegocioDetalle from "../components/bussines/MapaNegocioDetalle";
 import Compartir from "../components/Compartir";
 import DetalleSkeleton from "../components/Skeleton/DetalleSkeleton";
 
-// 🚀 Importamos axiosInstance y el botón Follow
 import UniversalFollowButton from "../components/badges/UniversalFollowButton";
 import axiosInstance from "../api/axiosInstance";
+import StartConversationButton from "../components/mensajes/StartConversationButton";
+import CommentsSection from "../components/mensajes/CommentsSection";
+import StarRating from "../components/badges/StarRating";
+import LikeButton from "../components/badges/LikeButton";
 
 export default function EventoDetalle() {
   const { id } = useParams();
@@ -47,6 +50,7 @@ export default function EventoDetalle() {
           communities: event.communities || [],
           businesses: event.businesses || [],
           createdAt: event.createdAt,
+          likes: event.likes || [],
         });
       } catch (err) {
         console.error("Error cargando evento:", err);
@@ -58,7 +62,6 @@ export default function EventoDetalle() {
     cargarEvento();
   }, [id]);
 
-  // 🚀 Cargar estado de seguimiento
   useEffect(() => {
     const fetchFollow = async () => {
       if (!evento?.id) return;
@@ -123,7 +126,7 @@ export default function EventoDetalle() {
 
   return (
     <div className="px-4 sm:px-8 lg:px-8 xl:px-40 py-5 flex justify-center">
-      <div className="w-full max-w-[960px] flex flex-col gap-16">
+      <div className="w-full max-w-[960px] flex flex-col gap-12">
         {/* Imagen destacada */}
         <div
           className="w-full h-56 sm:h-72 rounded-xl bg-cover bg-center shadow-md"
@@ -131,7 +134,7 @@ export default function EventoDetalle() {
         />
 
         {/* Encabezado */}
-        <div className="space-y-1">
+        <div className="space-y-2">
           <div className="flex justify-between items-center w-full">
             <h1 className="text-2xl font-bold text-gray-900">{evento.title}</h1>
             {evento.status && (
@@ -145,13 +148,7 @@ export default function EventoDetalle() {
             )}
           </div>
 
-          {/* 🚀 Botón Follow */}
-          <UniversalFollowButton
-            entityType="event"
-            entityId={evento.id}
-            initialFollowed={yaSigue}
-          />
-
+          {/* Fecha y ubicación */}
           <p className="text-sm text-gray-500">
             {new Date(evento.date).toLocaleDateString()} - {evento.time}
             {evento.location?.address && (
@@ -172,8 +169,37 @@ export default function EventoDetalle() {
           </p>
         </div>
 
-        {/* Botones */}
+        {/* Botones de interacción */}
         <div className="flex flex-col gap-3">
+          <div className="flex gap-4 items-start">
+            <div className="flex gap-4">
+              <LikeButton
+                targetType="event"
+                targetId={id}
+                initialLikes={Array.isArray(evento.likes) ? evento.likes : []}
+              />
+              <UniversalFollowButton
+                entityType="event"
+                entityId={evento.id}
+                initialFollowed={yaSigue}
+              />
+
+              <StartConversationButton entityType="event" entityId={id} />
+            </div>
+            <StarRating targetType="event" targetId={id} />
+          </div>
+
+          <Compartir
+            url={window.location.href}
+            title={`Participá en "${evento.title}" en Communities`}
+            text={`Mirá este evento: ${
+              evento.title
+            } - ${evento.description?.slice(0, 100)}...`}
+          />
+        </div>
+
+        {/* Botones de acción */}
+        <div className="flex gap-4">
           {evento.registrationLink && (
             <a
               href={evento.registrationLink}
@@ -194,16 +220,7 @@ export default function EventoDetalle() {
               Ingresar al evento virtual
             </a>
           )}
-          <Compartir
-            url={window.location.href}
-            title={`Participá en "${evento.title}" en Communities`}
-            text={`Mirá este evento: ${
-              evento.title
-            } - ${evento.description?.slice(0, 100)}...`}
-          />
         </div>
-
-        <hr className="border-t border-gray-200" />
 
         {/* Descripción */}
         <div className="border-l-4 border-gray-200 pl-4">
@@ -238,8 +255,6 @@ export default function EventoDetalle() {
             ))}
           </div>
         )}
-
-        <hr className="border-t border-gray-200" />
 
         {/* Sponsors */}
         {sponsorsData.length > 0 && (
@@ -296,8 +311,6 @@ export default function EventoDetalle() {
           </div>
         )}
 
-        <hr className="border-t border-gray-200" />
-
         {/* Mapa */}
         {evento?.location?.coordinates?.lat &&
           evento?.location?.coordinates?.lng && (
@@ -307,6 +320,8 @@ export default function EventoDetalle() {
               name={evento.title}
             />
           )}
+        {/* Comentarios */}
+        <CommentsSection targetType="event" targetId={id} />
       </div>
     </div>
   );

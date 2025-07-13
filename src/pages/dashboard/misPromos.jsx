@@ -130,7 +130,7 @@ export default function MisPromos() {
                   : "border-gray-200 hover:border-gray-400"
               }`}
             >
-              <CardPromo promo={promo} onDelete={handleDelete} />
+              <CardPromo promo={promo} />
             </div>
           ))}
         </div>

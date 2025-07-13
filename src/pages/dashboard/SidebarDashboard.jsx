@@ -15,7 +15,7 @@ const SidebarDashboard = ({ usuario, handleLogout }) => {
     { to: "perfil", label: "Mi perfil", icon: <MdPerson /> },
     { to: "mis-negocios", label: "Mis negocios", icon: <MdStore /> },
     { to: "mis-eventos", label: "Mis eventos", icon: <MdEvent /> },
-    { to: "comunidades", label: "Mis comunidades", icon: <MdGroups /> },
+    { to: "mis-comunidades", label: "Mis comunidades", icon: <MdGroups /> },
     { to: "mis-promos", label: "Mis promos", icon: <MdLocalOffer /> },
   ];
 

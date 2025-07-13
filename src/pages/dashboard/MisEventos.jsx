@@ -133,10 +133,7 @@ export default function MisEventos() {
                   : "border-gray-200 hover:border-gray-400"
               }`}
             >
-              <CardEvento
-                evento={evento}
-                onDelete={() => setConfirmDeleteId(evento._id)}
-              />
+              <CardEvento evento={evento} />
             </div>
           ))}
         </div>

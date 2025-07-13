@@ -38,14 +38,14 @@ export default function DetalleCategoria({ categoria, onClose, onDelete }) {
 
         {/* Info */}
         <div className="flex-1 flex flex-col gap-4 justify-center">
-          <h2 className="text-xl md:text-2xl font-extrabold text-[#141C24] tracking-tight leading-snug">
+          <h2 className="text-2xl font-extrabold text-[#141C24] tracking-tight leading-snug">
             {categoria.name}
           </h2>
           <p className="text-gray-700 text-sm md:text-base leading-relaxed whitespace-pre-line">
             {categoria.description}
           </p>
 
-          <div className="flex flex-wrap gap-4 text-xs md:text-sm text-gray-500 mt-2">
+          <div className="flex flex-wrap gap-4 text-xs  text-gray-500 mt-2">
             <span>
               Creado: {new Date(categoria.createdAt).toLocaleDateString()}
             </span>
@@ -55,17 +55,17 @@ export default function DetalleCategoria({ categoria, onClose, onDelete }) {
           </div>
 
           {/* Acciones */}
-          <div className="flex flex-col sm:flex-row gap-2 mt-4">
+          <div className="flex flex-row flex-wrap gap-2 mt-4">
             <Link
               to={`/dashboard/mis-categorias/${categoria._id}/editar`}
-              className="flex items-center justify-center gap-2 px-3 py-2 rounded bg-black text-white hover:bg-[#f4c753] hover:text-black transition text-sm font-semibold"
+              className="flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 transition text-xs font-medium no-underline"
             >
               <MdEdit className="text-lg" />
               Editar categoría
             </Link>
             <button
               onClick={() => setShowConfirm(true)}
-              className="flex items-center justify-center gap-2 px-3 py-2 rounded bg-red-600 text-white hover:bg-red-700 transition text-sm font-semibold"
+              className="flex shadow-md hover:shadow-lg text-white items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-red-500 hover:bg-red-700 transition text-xs font-medium"
             >
               <MdDelete className="text-lg" />
               Eliminar categoría
@@ -85,6 +85,8 @@ export default function DetalleCategoria({ categoria, onClose, onDelete }) {
             if (onClose) onClose();
           }}
           entityName={categoria.name}
+          title="Eliminar categoría"
+          description="Para confirmar, escribe el nombre exacto de la categoría:"
         />
       )}
     </>

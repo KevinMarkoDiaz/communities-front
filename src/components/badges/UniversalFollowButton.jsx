@@ -2,6 +2,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchFollowings } from "../../store/followSlice";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../api/axiosInstance";
+import { MdStar, MdStarBorder } from "react-icons/md";
 
 export default function UniversalFollowButton({ entityType, entityId }) {
   const dispatch = useDispatch();
@@ -24,7 +25,6 @@ export default function UniversalFollowButton({ entityType, entityId }) {
       } else {
         await axiosInstance.post("/follow", { entityType, entityId });
       }
-      // Volver a traer todos los seguimientos
       await dispatch(fetchFollowings());
     } catch (err) {
       console.error(err);
@@ -34,7 +34,6 @@ export default function UniversalFollowButton({ entityType, entityId }) {
     }
   };
 
-  // Opcional: Cargar al montar
   useEffect(() => {
     if (items.length === 0) {
       dispatch(fetchFollowings());
@@ -45,11 +44,30 @@ export default function UniversalFollowButton({ entityType, entityId }) {
     <button
       onClick={toggleFollow}
       disabled={loading || loadingFollows}
-      className={`px-4 py-2 rounded ${
-        isFollowed ? "bg-gray-300 text-black" : "bg-blue-600 text-white"
-      }`}
+      className={`flex items-center justify-center gap-1 shadow-md hover:shadow-lg px-2 py-1 rounded border border-gray-300 transition text-xs font-medium
+    ${
+      isFollowed
+        ? "bg-gray-200 text-gray-700 hover:bg-gray-300"
+        : "bg-white text-orange-600 hover:bg-gray-50"
+    }
+  `}
+      title={isFollowed ? "Siguiendo" : "Seguir"}
     >
-      {loading ? "..." : isFollowed ? "Siguiendo" : "Seguir"}
+      {loading ? (
+        "..."
+      ) : (
+        <>
+          {isFollowed ? (
+            <MdStar className="text-base" />
+          ) : (
+            <MdStarBorder className="text-base" />
+          )}
+          {/* Texto visible solo en escritorio */}
+          <span className="sm:inline">
+            {isFollowed ? "Siguiendo" : "Seguir"}
+          </span>
+        </>
+      )}
     </button>
   );
 }

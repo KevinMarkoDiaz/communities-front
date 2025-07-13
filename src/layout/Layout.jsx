@@ -28,6 +28,8 @@ export default function Layout() {
     "/suscribirse",
     "/suscripcion-exitosa",
     "/suscripcion-cancelada",
+    "/inbox", // ✅ Inbox listado
+    "/inbox/conversation", // ✅ Conversaciones individuales
   ];
   const hideAds = hiddenAdsRoutes.some((route) =>
     location.pathname.startsWith(route)

@@ -1,9 +1,14 @@
-export default function CardCategoria({ categoria }) {
+export default function CardCategoria({ categoria, onSelect }) {
   const { name, description, icon } = categoria;
 
   return (
-    <div className="group relative bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden border border-gray-200 min-h-[10rem] flex flex-col">
-      {/* Imagen de portada */}
+    <div
+      onClick={() => onSelect(categoria)}
+      className="
+        group relative bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden border border-gray-200 min-h-[10rem] flex flex-col cursor-pointer
+      "
+    >
+      {/* Imagen */}
       <div className="w-full h-28 overflow-hidden bg-gray-50">
         {icon ? (
           <img
@@ -19,22 +24,17 @@ export default function CardCategoria({ categoria }) {
       </div>
 
       {/* Contenido */}
-      <div className="flex flex-col gap-2 p-1 md:p-4 flex-grow">
+      <div className="flex flex-col gap-2 p-2 md:p-4 flex-grow">
         {/* Nombre */}
         <h3
           className="
             text-sm font-semibold text-gray-700
-            min-h-[2.5rem]
+            min-h-[2rem]
             flex items-start md:items-center
           "
         >
           {name}
         </h3>
-
-        {/* Descripción */}
-        <p className="text-xs text-gray-500 line-clamp-2 hidden lg:block min-h-[3rem]">
-          {description || "Sin descripción disponible."}
-        </p>
       </div>
     </div>
   );

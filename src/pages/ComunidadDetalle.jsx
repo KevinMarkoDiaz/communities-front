@@ -16,7 +16,6 @@ import {
   FaYoutube,
 } from "react-icons/fa";
 
-// 🚀 Importamos axiosInstance y el botón follow
 import UniversalFollowButton from "../components/badges/UniversalFollowButton";
 import axiosInstance from "../api/axiosInstance";
 
@@ -99,6 +98,7 @@ export default function ComunidadDetalle() {
     website: <FaGlobe />,
     youtube: <FaYoutube />,
   };
+
   return (
     <>
       <Helmet>
@@ -112,7 +112,7 @@ export default function ComunidadDetalle() {
       </Helmet>
 
       <div className="px-4 sm:px-8 lg:px-8 xl:px-40 py-5 flex justify-center">
-        <div className="w-full max-w-[1400px] flex flex-col gap-16">
+        <div className="w-full max-w-[1400px] flex flex-col gap-12">
           {/* Banner */}
           <div
             className="w-full h-56 sm:h-72 rounded-xl bg-cover bg-center shadow-md"
@@ -120,8 +120,8 @@ export default function ComunidadDetalle() {
           />
 
           {/* Encabezado */}
-          <div className="space-y-1">
-            <div className="flex justify-between items-center w-full">
+          <div className="space-y-3">
+            <div className="flex justify-between items-center w-full flex-wrap gap-2">
               <h1 className="text-2xl font-bold text-gray-900">
                 {comunidad.name}
               </h1>
@@ -142,13 +142,7 @@ export default function ComunidadDetalle() {
               )}
             </div>
 
-            {/* 🚀 Botón Follow */}
-            <UniversalFollowButton
-              entityType="community"
-              entityId={comunidad._id}
-              initialFollowed={yaSigue}
-            />
-
+            {/* Info básica */}
             {comunidad.region && (
               <p className="text-sm text-gray-500">
                 Región: {comunidad.region}
@@ -167,6 +161,14 @@ export default function ComunidadDetalle() {
               {new Date(comunidad.updatedAt).toLocaleDateString()}
             </p>
 
+            {/* Botón Follow */}
+            <UniversalFollowButton
+              entityType="community"
+              entityId={comunidad._id}
+              initialFollowed={yaSigue}
+            />
+
+            {/* Compartir */}
             <Compartir
               url={window.location.href}
               title={`Descubrí la comunidad "${comunidad.name}" en Communities`}
@@ -182,6 +184,33 @@ export default function ComunidadDetalle() {
               {comunidad.description}
             </p>
           </div>
+
+          {/* Redes Sociales */}
+          {comunidad.socialMediaLinks &&
+            Object.keys(comunidad.socialMediaLinks).length > 0 && (
+              <div>
+                <h2 className="text-lg font-semibold text-gray-800 mb-2">
+                  Redes sociales
+                </h2>
+                <div className="flex gap-3 flex-wrap">
+                  {Object.entries(comunidad.socialMediaLinks).map(
+                    ([key, value]) =>
+                      value && (
+                        <a
+                          key={key}
+                          href={value}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="flex items-center gap-2 px-3 py-1 bg-gray-100 text-sm text-gray-700 rounded-full hover:bg-gray-200"
+                        >
+                          {socialIcons[key.toLowerCase()] || <FaGlobe />}
+                          <span className="capitalize">{key}</span>
+                        </a>
+                      )
+                  )}
+                </div>
+              </div>
+            )}
 
           {/* Negocios */}
           <section>
@@ -234,33 +263,6 @@ export default function ComunidadDetalle() {
               </p>
             )}
           </section>
-
-          {/* Redes sociales */}
-          {comunidad.socialMediaLinks &&
-            Object.keys(comunidad.socialMediaLinks).length > 0 && (
-              <div>
-                <h2 className="text-lg font-semibold text-gray-800 mb-2">
-                  Redes sociales
-                </h2>
-                <div className="flex gap-3 flex-wrap">
-                  {Object.entries(comunidad.socialMediaLinks).map(
-                    ([key, value]) =>
-                      value && (
-                        <a
-                          key={key}
-                          href={value}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="flex items-center gap-2 px-3 py-1 bg-gray-100 text-sm text-gray-700 rounded-full hover:bg-gray-200"
-                        >
-                          {socialIcons[key.toLowerCase()] || <FaGlobe />}
-                          <span className="capitalize">{key}</span>
-                        </a>
-                      )
-                  )}
-                </div>
-              </div>
-            )}
 
           {/* Mapa */}
           {comunidad.mapCenter?.lat && comunidad.mapCenter?.lng && (

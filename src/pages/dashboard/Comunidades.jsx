@@ -155,11 +155,7 @@ export default function Comunidades() {
                   : "border-none"
               }`}
             >
-              <CardComunidad
-                comunidad={com}
-                usuario={usuario}
-                onDelete={() => handleDelete(com._id)}
-              />
+              <CardComunidad comunidad={com} />
             </div>
           ))}
         </div>

@@ -3,11 +3,14 @@ import negociosReducer from "./negociosSlice";
 import eventosReducer from "./eventosSlice";
 import authReducer from "./authSlice";
 import comunidadesReducer from "./comunidadesSlice";
-import busquedaGlobalReducer from "./busquedaGlobalSlice"; // 🆕
-import categoriasReducer from "./categoriasSlice"; // nuevo
+import busquedaGlobalReducer from "./busquedaGlobalSlice";
+import categoriasReducer from "./categoriasSlice";
 import promocionesReducer from "./promocionesSlice";
 import notificacionesReducer from "./notificacionesSlice";
 import followReducer from "./followSlice";
+import conversationsReducer from "./conversationsSlice";
+import messagesReducer from "./messagesSlice";
+import metricsReducer from "./metricsSlice";
 
 export const store = configureStore({
   reducer: {
@@ -20,5 +23,8 @@ export const store = configureStore({
     promociones: promocionesReducer,
     notificaciones: notificacionesReducer,
     follow: followReducer,
+    conversations: conversationsReducer,
+    messages: messagesReducer,
+    metrics: metricsReducer,
   },
 });

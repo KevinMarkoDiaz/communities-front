@@ -1,6 +1,5 @@
-// src/redux/slices/notificacionesSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axiosInstance from "../api/axiosInstance";
+import axiosInstance from "../../src/api/axiosInstance";
 
 // 🚀 Thunk para cargar notificaciones
 export const cargarNotificaciones = createAsyncThunk(
@@ -17,7 +16,7 @@ export const cargarNotificaciones = createAsyncThunk(
   }
 );
 
-// 🚀 Thunk para marcar como leída
+// 🚀 Thunk para marcar una como leída
 export const marcarNotificacionLeida = createAsyncThunk(
   "notificaciones/marcarLeida",
   async (id, thunkAPI) => {
@@ -26,6 +25,21 @@ export const marcarNotificacionLeida = createAsyncThunk(
       return id;
     } catch (error) {
       return thunkAPI.rejectWithValue("Error al marcar notificación");
+    }
+  }
+);
+
+// 🚀 Nuevo Thunk: marcar todas como leídas
+export const marcarTodasNotificacionesLeidas = createAsyncThunk(
+  "notificaciones/marcarTodasLeidas",
+  async (_, thunkAPI) => {
+    try {
+      await axiosInstance.patch("/notifications/read-all");
+      return true;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        "Error al marcar todas las notificaciones"
+      );
     }
   }
 );
@@ -53,11 +67,15 @@ const notificacionesSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      // Marcar como leída
+      // Marcar una como leída
       .addCase(marcarNotificacionLeida.fulfilled, (state, action) => {
         state.items = state.items.map((n) =>
           n._id === action.payload ? { ...n, read: true } : n
         );
+      })
+      // 🟢 NUEVO: Marcar todas como leídas
+      .addCase(marcarTodasNotificacionesLeidas.fulfilled, (state) => {
+        state.items = state.items.map((n) => ({ ...n, read: true }));
       });
   },
 });

@@ -17,7 +17,7 @@ export default function MobileFooterDashboard({ usuario }) {
   const navItems = [
     { to: "mis-negocios", icon: <LuStore size={24} /> },
     { to: "mis-eventos", icon: <LuCalendarDays size={24} /> },
-    { to: "comunidades", icon: <LuUsers size={24} /> },
+    { to: "mis-comunidades", icon: <LuUsers size={24} /> },
     { to: "mis-promos", icon: <LuTags size={24} /> },
   ];
 

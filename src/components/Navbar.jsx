@@ -28,6 +28,11 @@ export default function Header() {
   }, [mobileOpen]);
 
   useEffect(() => {
+    if (window.innerWidth >= 768) {
+      // Si es desktop, no hacer nada
+      return;
+    }
+
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       const diff = currentScrollY - lastScrollY.current;
@@ -102,7 +107,7 @@ export default function Header() {
               }`}
             />
           </Link>
-          <NotificationButton />
+
           {/* Links desktop */}
           <nav className="hidden md:flex gap-6 items-center">
             {navLinks.map((link) => (
@@ -119,7 +124,9 @@ export default function Header() {
                 {link.label}
               </Link>
             ))}
-
+            <div className="hidden md:block">
+              <NotificationButton />
+            </div>
             {/* Perfil */}
             <Link
               to={usuario ? "/dashboard/perfil" : "/login"}
@@ -133,15 +140,21 @@ export default function Header() {
             </Link>
           </nav>
 
-          {/* Botón Mobile */}
-          <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className={`md:hidden text-2xl p-2 rounded transition ${
-              mobileOpen ? "text-white" : "text-black"
-            }`}
-          >
-            {mobileOpen ? <FiX /> : <FiMenu />}
-          </button>
+          <div className="flex items-center gap-2 md:hidden">
+            <NotificationButton
+              className={` transition ${
+                mobileOpen ? "text-white" : "text-black"
+              }`}
+            />
+            <button
+              onClick={() => setMobileOpen(!mobileOpen)}
+              className={`text-2xl p-2 rounded transition ${
+                mobileOpen ? "text-white" : "text-black"
+              }`}
+            >
+              {mobileOpen ? <FiX /> : <FiMenu />}
+            </button>
+          </div>
         </div>
 
         {/* Subnav */}

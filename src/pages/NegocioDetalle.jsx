@@ -9,18 +9,19 @@ import {
   FaWhatsapp,
 } from "react-icons/fa";
 import BusinessHero from "../components/bussines/BusinessHero";
-import { CommunityTags } from "../components/bussines/CommunityTags";
 import { ContactCard } from "../components/bussines/ContactCard";
 import { OpeningHoursList } from "../components/bussines/OpeningHoursList";
-import { OwnerCard } from "../components/bussines/OwnerCard";
 import { BusinessCard } from "../components/bussines/BusinessCard";
 import { PhotoGallery } from "../components/bussines/PhotoGallery";
 import MapaNegocioDetalle from "../components/bussines/MapaNegocioDetalle";
 import Compartir from "../components/Compartir";
 import DetalleSkeleton from "../components/Skeleton/DetalleSkeleton";
 
-// 🚀 Importa axiosInstance y el botón Follow
 import UniversalFollowButton from "../components/badges/UniversalFollowButton";
+import StartConversationButton from "../components/mensajes/StartConversationButton";
+import CommentsSection from "../components/mensajes/CommentsSection";
+import LikeButton from "../components/badges/LikeButton";
+import StarRating from "../components/badges/StarRating";
 import axiosInstance from "../api/axiosInstance";
 
 export default function NegocioDetalle() {
@@ -33,11 +34,15 @@ export default function NegocioDetalle() {
   useEffect(() => {
     const fetchNegocio = async () => {
       try {
-        // 1. Cargar negocio
         const data = await getBusinessById(id);
         setNegocio(data.business);
 
-        // 2. Consultar si ya sigue este negocio
+        try {
+          await axiosInstance.post(`/business-views/${id}/views`);
+        } catch (err) {
+          console.warn("⚠️ Error al registrar la vista:", err);
+        }
+
         try {
           const resFollows = await axiosInstance.get(
             "/users/me/following?type=business"
@@ -46,7 +51,6 @@ export default function NegocioDetalle() {
           setYaSigue(ids.includes(id));
         } catch (err) {
           console.warn("No se pudo cargar el estado de seguimiento:", err);
-          // No pasa nada si falla
         }
       } catch (error) {
         console.error("Error al cargar el negocio:", error);
@@ -84,8 +88,8 @@ export default function NegocioDetalle() {
         />
 
         {/* Encabezado */}
-        <div className="space-y-2">
-          <div className="flex justify-between items-center w-full">
+        <div className="space-y-3">
+          <div className="flex justify-between items-center flex-wrap gap-2">
             <h1 className="text-2xl font-bold text-gray-900">{negocio.name}</h1>
             {negocio.isVerified && (
               <span className="flex items-center gap-2 w-fit px-2 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-medium">
@@ -98,16 +102,9 @@ export default function NegocioDetalle() {
             )}
           </div>
 
-          {/* 🚀 Botón Follow */}
-          <UniversalFollowButton
-            entityType="business"
-            entityId={id}
-            initialFollowed={yaSigue}
-          />
-
           {/* Dirección */}
           {negocio.location?.address && (
-            <p className="flex items-center text-sm text-gray-600 gap-2">
+            <p className="flex items-center text-sm text-gray-500 gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-4 w-4 text-gray-400"
@@ -126,6 +123,24 @@ export default function NegocioDetalle() {
               {negocio.location.state}
             </p>
           )}
+
+          {/* Botones principales */}
+          <div className="flex flex-wrap gap-2 mt-2">
+            <UniversalFollowButton
+              entityType="business"
+              entityId={id}
+              initialFollowed={yaSigue}
+            />
+            <StartConversationButton entityType="business" entityId={id} />
+            <LikeButton
+              targetType="business"
+              targetId={id}
+              initialLikes={negocio.likes}
+            />
+            <StarRating targetType="business" targetId={id} />
+          </div>
+
+          {/* Compartir */}
           <Compartir
             url={window.location.href}
             title={`Descubre ${negocio.name} en Communities`}
@@ -285,6 +300,9 @@ export default function NegocioDetalle() {
               />
             )}
         </div>
+
+        {/* Comentarios */}
+        <CommentsSection targetType="business" targetId={id} />
       </div>
     </div>
   );

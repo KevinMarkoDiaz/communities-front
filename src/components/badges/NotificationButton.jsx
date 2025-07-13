@@ -2,15 +2,18 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
-import { cargarNotificaciones } from "../../store/notificacionesSlice";
+import { FiBell } from "react-icons/fi";
+import {
+  cargarNotificaciones,
+  marcarTodasNotificacionesLeidas,
+} from "../../store/notificacionesSlice";
 
-export default function NotificationButton() {
+export default function NotificationButton({ className = "" }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { items } = useSelector((state) => state.notificaciones);
   const [open, setOpen] = useState(false);
 
-  // Detecta si es desktop
   const isDesktop = useMediaQuery({ minWidth: 768 });
 
   useEffect(() => {
@@ -19,7 +22,6 @@ export default function NotificationButton() {
 
   const unreadCount = items.filter((n) => !n.read).length;
 
-  // Click handler
   const handleClick = () => {
     if (isDesktop) {
       setOpen(!open);
@@ -28,23 +30,30 @@ export default function NotificationButton() {
     }
   };
 
+  const handleMarkAllRead = () => {
+    dispatch(marcarTodasNotificacionesLeidas());
+  };
+
   return (
     <div className="relative inline-block text-left">
-      <button onClick={handleClick} className="relative">
-        🔔
+      <button
+        onClick={handleClick}
+        className={`relative p-2 hover:text-orange-500 transition-colors duration-200 ${className}`}
+        aria-label="Notificaciones"
+      >
+        <FiBell className="w-6 h-6" />
         {unreadCount > 0 && (
-          <span className="absolute top-0 right-0 bg-red-500 text-white text-xs px-1 rounded-full">
+          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1 rounded-full">
             {unreadCount}
           </span>
         )}
       </button>
 
-      {/* Dropdown en desktop */}
       {isDesktop && open && (
-        <div className="absolute right-0 mt-2 w-72 bg-white border border-gray-200 rounded shadow-lg z-50">
+        <div className="absolute right-0 mt-2 w-80 bg-white border border-gray-200 rounded-xl shadow-xl z-50">
           <div className="max-h-80 overflow-y-auto">
             {items.length === 0 && (
-              <p className="p-4 text-gray-500 text-sm">
+              <p className="p-4 text-gray-500 text-sm text-center">
                 No tienes notificaciones.
               </p>
             )}
@@ -52,22 +61,28 @@ export default function NotificationButton() {
               <Link
                 key={n._id}
                 to={n.link}
-                className={`block px-4 py-2 text-sm border-b border-gray-100 hover:bg-gray-50 ${
-                  n.read ? "text-gray-500" : "text-black font-medium"
-                }`}
                 onClick={() => setOpen(false)}
+                className={`flex items-start gap-2 px-4 py-3 text-sm transition-colors duration-200 border-b border-gray-100 ${
+                  n.read ? "text-gray-500" : "text-gray-700 font-extralight"
+                } hover:bg-gray-50 hover:text-gray-800`}
               >
-                {n.message}
+                <span className="flex-1">{n.message}</span>
               </Link>
             ))}
           </div>
-          <div className="p-2 border-t border-gray-200">
+          <div className="p-3 border-t border-gray-200 flex justify-between items-center">
+            <button
+              onClick={handleMarkAllRead}
+              className="text-xs text-gray-600 hover:text-orange-500 transition"
+            >
+              Marcar todas como leídas
+            </button>
             <Link
               to="/dashboard/notificaciones"
-              className="text-blue-600 text-sm font-semibold block text-center"
+              className="text-orange-500 text-sm font-semibold"
               onClick={() => setOpen(false)}
             >
-              Ver todas las notificaciones
+              Ver todas
             </Link>
           </div>
         </div>
