@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { Link, Navigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { FiMenu, FiX, FiChevronDown, FiChevronRight } from "react-icons/fi";
 import {
   MdStore,
@@ -10,11 +10,13 @@ import {
   MdCategory,
   MdPerson,
   MdAddCircle,
+  MdLogout,
 } from "react-icons/md";
 import Icon from "../assets/logo_icono.svg";
 import IconMobile from "../assets/logo_negro.svg";
 import Icono from "../assets/icono.svg";
 import NotificationButton from "./badges/NotificationButton";
+import { logout } from "../store/authSlice";
 
 export default function Header() {
   const usuario = useSelector((state) => state.auth.usuario);
@@ -22,6 +24,7 @@ export default function Header() {
   const [accionesOpen, setAccionesOpen] = useState(false);
   const [show, setShow] = useState(true);
   const lastScrollY = useRef(0);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? "hidden" : "auto";
@@ -76,6 +79,10 @@ export default function Header() {
     { to: "/legal-terms", label: "TÉRMINOS" },
   ];
 
+  const handleLogout = () => {
+    dispatch(logout());
+    Navigate("/");
+  };
   return (
     <>
       {/* 🟠 Banner superior SOLO DESKTOP */}
@@ -229,9 +236,11 @@ export default function Header() {
       >
         {/* Menú lateral full width */}
         <div
-          className={`absolute left-0 top-0 w-full h-full bg-orange-600 text-white p-6 py-20 transform transition-transform duration-300 ${
-            mobileOpen ? "translate-x-0" : "-translate-x-full"
-          } flex flex-col justify-between font-sans`}
+          className={`absolute left-0 top-0 w-full h-full
+    bg-gradient-to-br from-orange-400 via-orange-500 to-red-700
+    text-white p-6 py-20 transform transition-transform duration-300
+    ${mobileOpen ? "translate-x-0" : "-translate-x-full"}
+    flex flex-col justify-between font-sans`}
         >
           {/* Top: Logo y Links */}
           <div className="flex flex-col gap-6">
@@ -321,7 +330,15 @@ export default function Header() {
               </div>
             </div>
           </div>
-
+          <div className="  w-full px-3 py-4">
+            <button
+              onClick={handleLogout}
+              className="w-full flex gap-2 text-sm text-white relative z-10 transition rounded-full py-2"
+            >
+              <MdLogout className="text-lg text-white" />
+              <span>Cerrar sesión</span>
+            </button>
+          </div>
           {/* Acción principal abajo */}
           <Link
             to="/dashboard/mis-negocios/crear"

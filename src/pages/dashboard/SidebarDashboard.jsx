@@ -10,6 +10,7 @@ import {
 import { NavLink } from "react-router-dom";
 import authBg from "../../assets/authbg.png";
 import { FaRocket } from "react-icons/fa";
+
 const SidebarDashboard = ({ usuario, handleLogout }) => {
   const navItems = [
     { to: "perfil", label: "Mi perfil", icon: <MdPerson /> },
@@ -27,7 +28,7 @@ const SidebarDashboard = ({ usuario, handleLogout }) => {
 
   return (
     <aside
-      className="fixed top-0 left-0 h-screen w-20 md:w-64 lg:w-80 px-2 md:pt-45 md:px-0 flex-shrink-0 z-10 shadow-[4px_0_10px_-2px_rgba(0,0,0,0.3)]"
+      className="fixed top-0 left-0 h-screen w-20 md:w-54 lg:w-80 px-2 md:pt-45 md:px-0 flex-shrink-0 z-10 shadow-[4px_0_10px_-2px_rgba(0,0,0,0.3)]"
       style={{
         backgroundImage: `url(${authBg})`,
         backgroundSize: "cover",

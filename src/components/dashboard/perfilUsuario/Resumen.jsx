@@ -45,64 +45,60 @@ export default function Resumen() {
     {
       label: "Tus comunidades",
       value: resumenData.comunidades,
-      path: "/dashboard/comunidades",
+      path: "/dashboard/mis-comunidades",
       icon: FiUsers,
-      color: "text-orange-500",
+      color: "text-orange-500 ",
     },
     {
       label: "Tus categorías",
       value: resumenData.categorias,
       path: "/dashboard/categorias",
       icon: FiFolder,
-      color: "text-purple-500",
+      color: "text-orange-500 ",
     },
     {
       label: "Tus negocios",
       value: resumenData.negocios,
       path: "/dashboard/mis-negocios",
       icon: FiShoppingBag,
-      color: "text-green-500",
+      color: "text-orange-500 ",
     },
     {
       label: "Tus eventos",
       value: resumenData.eventos,
       path: "/dashboard/mis-eventos",
       icon: FiCalendar,
-      color: "text-blue-500",
+      color: "text-orange-500 ",
     },
   ];
 
   return (
-    <div className="bg-[#F7F7F7] p-4 md:p-6 rounded-2xl  h-full">
-      <h3 className="text-[#141C24] text-lg font-bold leading-tight tracking-[-0.015em] pb-4">
+    <div className="bg-[#F7F7F7] px-2 py-3 md:p-3 lg:p-6 rounded-2xl h-full">
+      <h3 className="text-gray-600 text-md font-semibold leading-tight tracking-[-0.015em] pb-4">
         Resumen
       </h3>
-      <div className=" grid gap-2">
+      <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-2 gap-3">
         {resumen.map((item, index) => {
           const Icon = item.icon;
           return (
-            <div key={index}>
+            <div
+              key={index}
+              onClick={() => navigate(item.path)}
+              className="cursor-pointer flex flex-col bg-white border border-gray-200 rounded-lg p-2 hover:shadow-md hover:-translate-y-0.5 transition"
+            >
               <div
-                onClick={() => navigate(item.path)}
-                className="flex items-center gap-3 p-3 cursor-pointer hover:bg-white hover:shadow-sm rounded-xl transition"
+                className={`w-7 h-7 flex items-center justify-center rounded-sm ${item.color}`}
               >
-                <div
-                  className={`w-10 h-10 flex items-center justify-center bg-white border border-gray-200 rounded-xl ${item.color}`}
-                >
-                  <Icon className="w-5 h-5" />
-                </div>
-                <div className="flex justify-between items-center w-full">
-                  <p className="text-sm font-medium text-[#3F5374]">
-                    {item.label}
-                  </p>
-                  <p className="text-xl font-semibold text-[#141C24]">
-                    {item.value}
-                  </p>
-                </div>
+                <Icon className="w-5 h-5" />
               </div>
-              {index !== resumen.length - 1 && (
-                <hr className="border-t border-gray-200 mx-2" />
-              )}
+              <div className="flex xl:flex-col items-center justify-between gap-1">
+                <p className="text-xs font-normal text-[#3F5374] whitespace-nowrap truncate">
+                  {item.label}
+                </p>
+                <p className="text-md font-semibold mr-1  text-gray-500 whitespace-nowrap">
+                  {item.value}
+                </p>
+              </div>
             </div>
           );
         })}

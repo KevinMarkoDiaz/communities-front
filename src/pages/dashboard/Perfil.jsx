@@ -15,7 +15,7 @@ export default function PerfilPage() {
   const loadingComunidades = useSelector((state) => state.comunidades.loading);
   const loadingNegocios = useSelector((state) => state.negocios.loading);
   const loadingEventos = useSelector((state) => state.eventos.loading);
-  console.log(usuario);
+
   const dispatch = useDispatch();
   const [tab, setTab] = useState("negocios"); // ✅ Por defecto "Mis negocios"
 
@@ -30,13 +30,13 @@ export default function PerfilPage() {
   }
 
   return (
-    <div className="max-w-[1200px] w-full mx-auto flex flex-col gap-8 p-4 md:p-6">
-      <div className="bg-white border border-gray-200 rounded-2xl shadow-sm">
+    <div className="max-w-[1200px] w-full mx-auto flex flex-col gap-8 p-2">
+      <div className="border border-gray-100 rounded-2xl shadow-md">
         <HeaderPerfil usuario={usuario} />
       </div>
 
       {/* Tabs */}
-      <div className="flex flex-wrap gap-2 border-b border-gray-200 pt-2">
+      <div className="flex flex-wrap rounded-t-xl bg-gray-100 gap-2 border-gray-200 pt-2 px-4 shadow-md">
         {[
           { id: "comunidades", label: "Mis comunidades" },
           { id: "negocios", label: "Mis negocios" },
@@ -45,7 +45,7 @@ export default function PerfilPage() {
           <button
             key={t.id}
             onClick={() => setTab(t.id)}
-            className={`text-sm px-3 py-2 rounded-t font-medium transition ${
+            className={`text-xs px-3 py-2 rounded-t-xl font-medium transition ${
               tab === t.id
                 ? "bg-white border border-b-0 border-gray-200 text-gray-800"
                 : "text-gray-600 hover:text-gray-800"
@@ -57,18 +57,18 @@ export default function PerfilPage() {
       </div>
 
       {/* Una sola fila con dos columnas */}
-      <div className="flex flex-col md:flex-row gap-4">
+      <div className="flex flex-col md:flex-row gap-4 items-stretch">
         {/* Columna izquierda */}
-        <div className="w-full md:w-1/3">
+        <div className="w-full md:w-1/3 flex flex-col">
           <div className="bg-white border border-gray-200 rounded-2xl shadow-sm h-full">
             <Resumen />
           </div>
         </div>
 
         {/* Columna derecha con contenido dinámico */}
-        <div className="w-full md:flex-1">
+        <div className="w-full md:w-2/3 flex flex-col gap-4">
           {tab === "comunidades" && (
-            <div className="bg-white border border-gray-200 rounded-2xl shadow-sm  h-full">
+            <div className="bg-white border border-gray-200 rounded-2xl shadow-sm h-full">
               <ResumenComunidades />
             </div>
           )}
@@ -78,7 +78,7 @@ export default function PerfilPage() {
             </div>
           )}
           {tab === "eventos" && (
-            <div className="bg-white border border-gray-200 rounded-2xl shadow-sm  h-full">
+            <div className="bg-white border border-gray-200 rounded-2xl shadow-sm h-full">
               <ResumenEventos />
             </div>
           )}
