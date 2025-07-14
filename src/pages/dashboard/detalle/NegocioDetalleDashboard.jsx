@@ -17,7 +17,7 @@ export default function NegocioDetalleDashboard({
        
         bg-gradient-to-br from-gray-50 via-white to-gray-100
         rounded-2xl shadow-lg
-        p-6 md:p-8 xl:p-10
+        p-4 lg:p-8 xl:p-10
         border border-gray-200
         min-h-[260px]
         max-h-[80vh]
@@ -37,13 +37,13 @@ export default function NegocioDetalleDashboard({
         className="
         relative
         w-full
-        flex flex-col md:flex-row
+        flex flex-col xl:flex-row
         gap-6
     
       "
       >
         {/* Imagen */}
-        <div className="w-full md:w-60 flex-shrink-0">
+        <div className="w-full xl:w-60 flex-shrink-0">
           <img
             src={negocio.featuredImage}
             alt={negocio.name}

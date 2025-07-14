@@ -4,6 +4,8 @@ import CardNegocio from "../../components/dashboard/negocios/CardNegocio";
 import { deleteBusiness, getMyBusinesses } from "../../api/businessApi";
 import { MdAddBusiness } from "react-icons/md";
 import ilusta from "../../assets/ilusta.svg";
+import ilust2 from "../../assets/ilust2.svg";
+
 import NegocioDetalleDashboard from "./detalle/NegocioDetalleDashboard";
 import SkeletonDashboardList from "../../components/Skeleton/SkeletonDashboardList";
 import DashboardSectionHeader from "../../components/dashboard/negocios/DashboardSectionHeader";
@@ -55,9 +57,9 @@ export default function MisNegocios() {
   if (error) return <div className="p-4 text-red-600">{error}</div>;
 
   return (
-    <div className="max-w-[1200px] w-full mx-auto flex flex-col gap-8 md:gap-12 xl:gap-16 px-2 md:px-4 md:px-6">
+    <div className="max-w-[1200px] w-full mx-auto flex flex-col gap-8 md:gap-12 xl:gap-16 px-2 ">
       {/* Header y Detalle */}
-      <div className="flex flex-col md:flex-row gap-6 md:gap-8 xl:gap-10 md:mt-16">
+      <div className="flex flex-col lg:flex-row gap-6 md:gap-8 xl:gap-10 lg:mt-16">
         <div className="flex-1">
           <DashboardSectionHeader
             icon="🏪"
@@ -69,15 +71,17 @@ export default function MisNegocios() {
         </div>
 
         {/* Detalle en desktop */}
-        <div className="hidden md:flex flex-3 flex-col justify-center">
-          <NegocioDetalleDashboard
-            negocio={selectedNegocio}
-            onAskDelete={(neg) => {
-              setSelectedNegocio(neg);
-              setShowDeleteModal(true);
-            }}
-          />
-        </div>
+        {selectedNegocio && (
+          <div className="hidden md:flex flex-3 flex-col justify-center">
+            <NegocioDetalleDashboard
+              negocio={selectedNegocio}
+              onAskDelete={(neg) => {
+                setSelectedNegocio(neg);
+                setShowDeleteModal(true);
+              }}
+            />
+          </div>
+        )}
       </div>
 
       {/* Divider */}
@@ -104,17 +108,20 @@ export default function MisNegocios() {
       </div>
 
       {negocios.length === 0 ? (
-        <div className="flex flex-col items-center text-center gap-4 py-12">
-          <img
-            src="/empty-state.svg"
-            alt="Sin negocios"
-            className="w-32 opacity-80"
-          />
-          <p className="text-gray-500">
-            Aún no has creado ningún negocio.
+        <div className="flex flex-col items-center text-center gap-5 py-16">
+          <img src={ilust2} alt="Sin negocios" className="w-40 opacity-90" />
+          <p className="text-gray-600 text-sm md:text-base max-w-xs">
+            Aún no tienes ningún negocio creado.
             <br />
-            ¡Anímate a compartir tu proyecto!
+            Comparte tu proyecto con tu comunidad y haz que te encuentren
+            fácilmente.
           </p>
+          <Link
+            to="/dashboard/mis-negocios/crear"
+            className="inline-block bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium px-4 py-2 rounded transition"
+          >
+            Crear mi primer negocio
+          </Link>
         </div>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-y-5 gap-x-3 md:gap-6 xl:gap-8">

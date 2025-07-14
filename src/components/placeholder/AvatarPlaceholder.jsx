@@ -1,9 +1,9 @@
 export default function AvatarPlaceholder({ size = "md" }) {
   // Tailwind sizes por defecto
   const sizeClasses = {
-    sm: "w-10 h-10",
-    md: "w-14 h-14",
-    lg: "w-20 h-20",
+    sm: "w-70 h-70",
+    md: "w-10 h-10",
+    lg: "w-10 h-10",
   };
 
   return (

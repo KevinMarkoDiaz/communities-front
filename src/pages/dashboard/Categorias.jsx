@@ -64,9 +64,9 @@ export default function Categorias() {
   if (error) return <div className="p-4 text-red-600">{error}</div>;
 
   return (
-    <div className="max-w-[1200px] w-full mx-auto flex flex-col gap-8 md:gap-12 xl:gap-16 px-4 md:px-6">
+    <div className="max-w-[1200px] w-full mx-auto flex flex-col gap-8 md:gap-12 xl:gap-16 px-2">
       {/* Header y detalle */}
-      <div className="flex flex-col md:flex-row gap-6 md:gap-8 xl:gap-10 md:mt-16">
+      <div className="flex flex-col lg:flex-row gap-6 md:gap-8 xl:gap-10 lg:mt-16">
         <div className="flex-1">
           <DashboardSectionHeader
             icon="🏷️"

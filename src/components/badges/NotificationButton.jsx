@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
@@ -13,6 +13,7 @@ export default function NotificationButton({ className = "" }) {
   const navigate = useNavigate();
   const { items } = useSelector((state) => state.notificaciones);
   const [open, setOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   const isDesktop = useMediaQuery({ minWidth: 768 });
 
@@ -20,11 +21,30 @@ export default function NotificationButton({ className = "" }) {
     dispatch(cargarNotificaciones());
   }, [dispatch]);
 
+  // Cierra si haces clic fuera
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setOpen(false);
+      }
+    }
+
+    if (isDesktop && open) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [open, isDesktop]);
+
   const unreadCount = items.filter((n) => !n.read).length;
 
   const handleClick = () => {
     if (isDesktop) {
-      setOpen(!open);
+      setOpen((prev) => !prev);
     } else {
       navigate("/dashboard/notificaciones");
     }
@@ -35,7 +55,7 @@ export default function NotificationButton({ className = "" }) {
   };
 
   return (
-    <div className="relative inline-block text-left">
+    <div className="relative inline-block text-left" ref={dropdownRef}>
       <button
         onClick={handleClick}
         className={`relative p-2 hover:text-orange-500 transition-colors duration-200 ${className}`}

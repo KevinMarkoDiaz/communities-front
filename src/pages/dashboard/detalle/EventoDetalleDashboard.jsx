@@ -12,8 +12,9 @@ export default function EventoDetalleDashboard({ evento, onClose, onDelete }) {
         bg-gradient-to-br from-gray-50 via-white to-gray-100
         rounded-2xl
         shadow-lg
-        p-6 md:p-8 xl:p-10
+        p-4 lg:p-8 xl:p-10
         border border-gray-200
+        min-h-[260px]
         max-h-[80vh]
         overflow-y-auto
       "
@@ -22,31 +23,31 @@ export default function EventoDetalleDashboard({ evento, onClose, onDelete }) {
       {onClose && (
         <button
           onClick={onClose}
-          className="md:hidden absolute top-2 right-4 text-gray-700 hover:text-black text-sm font-medium"
+          className="md:hidden absolute top-1 right-4 text-gray-900 hover:text-black text-sm"
         >
           Cerrar
         </button>
       )}
 
-      <div className="w-full flex flex-col md:flex-row gap-6">
+      <div className="relative w-full flex flex-col xl:flex-row gap-6">
         {/* Imagen */}
-        <div className="w-full md:w-60 flex-shrink-0">
+        <div className="w-full xl:w-60 flex-shrink-0">
           <img
             src={evento.featuredImage}
             alt={evento.title}
-            className="w-full h-40 md:h-60 object-cover rounded-xl"
+            className="w-full h-20 md:h-60 object-cover rounded-xl"
           />
         </div>
 
         {/* Info */}
-        <div className="flex-1 flex flex-col gap-4 justify-start">
+        <div className="flex-1 flex flex-col gap-4 justify-between">
           {/* Título */}
           <h2 className="text-2xl font-extrabold text-[#141C24] tracking-tight leading-snug">
             {evento.title}
           </h2>
 
           {/* Descripción */}
-          <p className="text-gray-700 text-sm md:text-base leading-relaxed whitespace-pre-line">
+          <p className="text-gray-700 text-xs md:text-md leading-relaxed whitespace-pre-line">
             {evento.description}
           </p>
 
@@ -65,7 +66,7 @@ export default function EventoDetalleDashboard({ evento, onClose, onDelete }) {
           )}
 
           {/* Metadatos */}
-          <div className="flex flex-wrap gap-2 md:gap-4 text-xs md:text-sm text-gray-500 mt-2">
+          <div className="flex flex-wrap gap-1 md:gap-4 text-xs text-gray-500 mt-2">
             <span>
               Fecha:{" "}
               {evento.date
@@ -96,7 +97,7 @@ export default function EventoDetalleDashboard({ evento, onClose, onDelete }) {
             {/* Ver detalle privado */}
             <Link
               to={`/dashboard/mis-eventos/${evento._id}`}
-              className="flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 transition text-xs font-medium no-underline w-fit"
+              className="flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 transition text-xs font-medium no-underline"
             >
               <MdPublic className="text-lg" />
               Ver detalle privado
@@ -105,7 +106,7 @@ export default function EventoDetalleDashboard({ evento, onClose, onDelete }) {
             {/* Ver detalle público */}
             <Link
               to={`/eventos/${evento._id}`}
-              className="flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 transition text-xs font-medium no-underline w-fit"
+              className="flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 transition text-xs font-medium no-underline"
             >
               <MdPublic className="text-lg" />
               Detalle del evento

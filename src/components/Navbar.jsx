@@ -1,7 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { FiMenu, FiX, FiChevronDown, FiChevronRight } from "react-icons/fi";
+import {
+  FiMenu,
+  FiX,
+  FiChevronDown,
+  FiChevronRight,
+  FiMessageCircle,
+} from "react-icons/fi";
 import {
   MdStore,
   MdEvent,
@@ -17,6 +23,7 @@ import IconMobile from "../assets/logo_negro.svg";
 import Icono from "../assets/icono.svg";
 import NotificationButton from "./badges/NotificationButton";
 import { logout } from "../store/authSlice";
+import BotonPublicar from "./nav/BotonPublicar";
 
 export default function Header() {
   const usuario = useSelector((state) => state.auth.usuario);
@@ -66,17 +73,17 @@ export default function Header() {
   }, []);
 
   const navLinks = [
-    { to: "/negocios", icon: <MdStore />, label: "NEGOCIOS" },
-    { to: "/eventos", icon: <MdEvent />, label: "EVENTOS" },
-    { to: "/comunidades", icon: <MdGroups />, label: "COMUNIDADES" },
-    { to: "/promociones", icon: <MdLocalOffer />, label: "PROMOCIONES" },
+    { to: "/negocios", icon: <MdStore />, label: "Negocios" },
+    { to: "/eventos", icon: <MdEvent />, label: "Eventos" },
+    { to: "/comunidades", icon: <MdGroups />, label: "Comunidades" },
+    { to: "/promociones", icon: <MdLocalOffer />, label: "Promociones" },
   ];
 
   const subNavLinks = [
-    { to: "/about", label: "SOBRE NOSOTROS" },
-    { to: "/contact", label: "CONTÁCTANOS" },
-    { to: "/legal-privacy", label: "PRIVACIDAD" },
-    { to: "/legal-terms", label: "TÉRMINOS" },
+    { to: "/about", label: "Sobre nosotros" },
+    { to: "/contact", label: "Contáctanos" },
+    { to: "/legal-privacy", label: "Privacidad" },
+    { to: "/legal-terms", label: "Términos" },
   ];
 
   const handleLogout = () => {
@@ -124,14 +131,21 @@ export default function Header() {
                 className={`flex items-center gap-1 text-sm font-semibold transition ${
                   mobileOpen
                     ? "text-white hover:text-yellow-200"
-                    : "text-black hover:text-orange-500"
+                    : "text-gray-800 hover:text-orange-500"
                 }`}
               >
                 {link.icon}
                 {link.label}
               </Link>
             ))}
-            <div className="hidden md:block">
+
+            <div className=" md:flex ">
+              <Link
+                to="/inbox"
+                className="flex  p-2 hover:text-orange-600   transition  font-medium no-underline"
+              >
+                <FiMessageCircle className="text-2xl" />
+              </Link>
               <NotificationButton />
             </div>
             {/* Perfil */}
@@ -148,11 +162,20 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center gap-2 md:hidden">
+            <Link
+              to="/inbox"
+              className={` transition  p-2  ${
+                mobileOpen ? "text-white" : "text-black"
+              }`}
+            >
+              <FiMessageCircle className="text-2xl" />
+            </Link>
             <NotificationButton
               className={` transition ${
                 mobileOpen ? "text-white" : "text-black"
               }`}
             />
+
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
               className={`text-2xl p-2 rounded transition ${
@@ -188,40 +211,9 @@ export default function Header() {
           ))}
 
           {/* Dropdown Acciones */}
-          <div className="relative">
-            <button
-              onClick={() => setAccionesOpen(!accionesOpen)}
-              className={`flex items-center gap-1 text-xs font-semibold transition px-3 py-2 rounded ml-4 ${
-                mobileOpen
-                  ? "text-orange-600 bg-white hover:bg-yellow-100"
-                  : "text-white bg-yellow-400 hover:bg-yellow-500"
-              }`}
-            >
-              + PUBLICAR
-              <FiChevronDown className="text-base" />
-            </button>
-            {accionesOpen && (
-              <div className="absolute right-0 mt-2 bg-white border border-gray-200 shadow-lg rounded w-48 z-50">
-                <Link
-                  to="/dashboard/mis-negocios/crear"
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 "
-                >
-                  Crear Negocio
-                </Link>
-                <Link
-                  to="/dashboard/mis-eventos/crear"
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                >
-                  Crear Evento
-                </Link>
-                <Link
-                  to="/dashboard/comunidades/crear"
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                >
-                  Crear Comunidad
-                </Link>
-              </div>
-            )}
+          <div className="flex items-center gap-2">
+            {/* Otros botones */}
+            <BotonPublicar isOpen={accionesOpen} setIsOpen={setAccionesOpen} />
           </div>
         </div>
       </header>

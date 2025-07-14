@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { contarCategorias } from "../../../api/categoryApi";
 import { contarNegocios } from "../../../api/businessApi";
 import { contarEventos } from "../../../api/eventApi";
@@ -10,6 +11,7 @@ import { FiUsers, FiFolder, FiShoppingBag, FiCalendar } from "react-icons/fi";
 
 export default function Resumen() {
   const navigate = useNavigate();
+  const { user } = useSelector((state) => state.auth);
   const [resumenData, setResumenData] = useState({
     categorias: 0,
     negocios: 0,
@@ -41,36 +43,43 @@ export default function Resumen() {
     cargarDatos();
   }, []);
 
-  const resumen = [
+  // Array base
+  const resumenBase = [
     {
       label: "Tus comunidades",
       value: resumenData.comunidades,
       path: "/dashboard/mis-comunidades",
       icon: FiUsers,
-      color: "text-orange-500 ",
+      color: "text-orange-500",
     },
     {
       label: "Tus categorías",
       value: resumenData.categorias,
       path: "/dashboard/categorias",
       icon: FiFolder,
-      color: "text-orange-500 ",
+      color: "text-orange-500",
+      requireAdmin: true, // <<< Esto indica que es solo para admin
     },
     {
       label: "Tus negocios",
       value: resumenData.negocios,
       path: "/dashboard/mis-negocios",
       icon: FiShoppingBag,
-      color: "text-orange-500 ",
+      color: "text-orange-500",
     },
     {
       label: "Tus eventos",
       value: resumenData.eventos,
       path: "/dashboard/mis-eventos",
       icon: FiCalendar,
-      color: "text-orange-500 ",
+      color: "text-orange-500",
     },
   ];
+
+  // Filtrar según el rol
+  const resumen = resumenBase.filter(
+    (item) => !item.requireAdmin || user?.role === "admin"
+  );
 
   return (
     <div className="bg-[#F7F7F7] px-2 py-3 md:p-3 lg:p-6 rounded-2xl h-full">
@@ -95,7 +104,7 @@ export default function Resumen() {
                 <p className="text-xs font-normal text-[#3F5374] whitespace-nowrap truncate">
                   {item.label}
                 </p>
-                <p className="text-md font-semibold mr-1  text-gray-500 whitespace-nowrap">
+                <p className="text-md font-semibold mr-1 text-gray-500 whitespace-nowrap">
                   {item.value}
                 </p>
               </div>

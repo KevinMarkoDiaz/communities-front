@@ -9,6 +9,8 @@ import { fetchMisComunidades } from "../../store/comunidadesSlice";
 import { fetchMisNegocios } from "../../store/negociosSlice";
 import { fetchMisEventos } from "../../store/eventosSlice";
 import PerfilSkeleton from "../../components/Skeleton/PerfilSkeleton";
+import ilust3 from "../../assets/ilust3.svg";
+import { Link } from "react-router-dom";
 
 export default function PerfilPage() {
   const usuario = useSelector((state) => state.auth.usuario);
@@ -83,6 +85,19 @@ export default function PerfilPage() {
             </div>
           )}
         </div>
+      </div>
+      <div className="flex flex-col items-center text-center gap-5 py-16">
+        <img src={ilust3} alt="Perfil" className="w-40 opacity-90" />
+        <p className="text-gray-500 text-xs max-w-xs">
+          Mantener tu información actualizada hace más fácil que la comunidad
+          conecte contigo y conozca mejor tu proyecto.
+        </p>
+        <Link
+          to="/dashboard/perfil/editar"
+          className="inline-block  bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium px-4 py-2 rounded-full transition shadow-lg"
+        >
+          Editar mi perfil
+        </Link>
       </div>
     </div>
   );
