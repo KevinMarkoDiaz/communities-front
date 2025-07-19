@@ -7,22 +7,22 @@ import spin5 from "../assets/spin5.svg";
 
 const icons = [spin1, spin2, spin3, spin4, spin5];
 
-export default function Loading() {
+export default function Loading({ className = "" }) {
   const [current, setCurrent] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrent((prev) => (prev + 1) % icons.length);
-    }, 150); // cambia cada 300ms
+    }, 300); // cambia cada 300ms
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div className="flex items-center justify-center">
+    <div className={`flex items-center justify-center ${className}`}>
       <img
         src={icons[current]}
-        alt="Loading..."
-        className="w-26 h-26 animate-pulse"
+        alt="Cargando..."
+        className="w-24 h-24 animate-pulse"
       />
     </div>
   );

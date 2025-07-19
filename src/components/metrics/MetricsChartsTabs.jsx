@@ -42,33 +42,32 @@ export default function MetricsChartsTabs({
     { key: "top", label: "Usuarios Recurrentes", icon: <FiUsers /> },
     { key: "growth", label: "Seguidores/Comentarios", icon: <FiActivity /> },
   ];
-  console.log("✅ dailyViews:", dailyViews);
-  console.log("✅ ratingsDistribution:", ratingsDistribution);
-  console.log("✅ visitsSummary:", visitsSummary);
-  console.log("✅ topViewers:", topViewers);
-  console.log("✅ followersComments:", followersComments);
-  console.log("✅ Active Tab:", activeTab);
 
   return (
     <div className="border border-gray-200 rounded-xl p-4 space-y-4 bg-blue-50 h-full">
       <h3 className="text-lg font-bold text-gray-700">Métricas Visuales</h3>
 
       {/* Tabs */}
-      <div className="flex gap-2 border-b flex-wrap">
+      {/* Tabs */}
+      <div className="flex flex-wrap gap-2 border-b pb-2">
         {tabs.map((tab) => (
           <button
             key={tab.key}
             onClick={() => setActiveTab(tab.key)}
-            className={`flex items-center gap-1 px-3 py-1 text-xs font-medium border-b-2 transition ${
+            className={`flex items-center justify-center p-2 rounded transition ${
               activeTab === tab.key
-                ? "border-orange-500 text-orange-600"
-                : "border-transparent text-gray-500 hover:text-gray-700"
+                ? "text-orange-600"
+                : "text-gray-500 hover:text-gray-700"
             }`}
           >
             {tab.icon}
-            {tab.label}
           </button>
         ))}
+      </div>
+
+      {/* Texto del tab activo */}
+      <div className="mt-1 text-xs font-medium text-gray-600 text-center">
+        {tabs.find((t) => t.key === activeTab)?.label}
       </div>
 
       <div className="w-full h-82 bg-white border border-gray-100 rounded-lg p-4">

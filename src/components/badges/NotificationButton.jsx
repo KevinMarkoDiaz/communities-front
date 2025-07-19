@@ -8,7 +8,7 @@ import {
   marcarTodasNotificacionesLeidas,
 } from "../../store/notificacionesSlice";
 
-export default function NotificationButton({ className = "" }) {
+export default function NotificationButton({ className = "", onClick }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { items } = useSelector((state) => state.notificaciones);
@@ -47,6 +47,10 @@ export default function NotificationButton({ className = "" }) {
       setOpen((prev) => !prev);
     } else {
       navigate("/dashboard/notificaciones");
+    }
+
+    if (onClick) {
+      onClick();
     }
   };
 

@@ -164,14 +164,16 @@ export default function Header() {
           <div className="flex items-center gap-2 md:hidden">
             <Link
               to="/inbox"
-              className={` transition  p-2  ${
+              onClick={() => setMobileOpen(false)}
+              className={`transition p-2 ${
                 mobileOpen ? "text-white" : "text-black"
               }`}
             >
               <FiMessageCircle className="text-2xl" />
             </Link>
             <NotificationButton
-              className={` transition ${
+              onClick={() => setMobileOpen(false)}
+              className={`transition ${
                 mobileOpen ? "text-white" : "text-black"
               }`}
             />

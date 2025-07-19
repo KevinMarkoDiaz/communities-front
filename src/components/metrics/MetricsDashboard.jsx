@@ -43,6 +43,13 @@ export default function MetricsDashboard({
   const { data, dailyData, topViewers, loading, error } = useSelector(
     (state) => state.metrics
   );
+  console.log({
+    data,
+    dailyData,
+    topViewers,
+    loading,
+    error,
+  });
   const [dateRange, setDateRange] = useState(() => {
     const today = new Date();
     const last7 = new Date();
@@ -161,11 +168,11 @@ export default function MetricsDashboard({
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
             {dailyData.map((day) => (
               <div
-                key={day._id}
+                key={day.date}
                 className="flex flex-col items-center bg-white border border-gray-200 rounded-md p-2 text-xs text-gray-600 hover:shadow transition"
               >
                 <span className="font-semibold text-gray-700">
-                  {new Date(day._id).toLocaleDateString()}
+                  {new Date(day.date).toLocaleDateString()}
                 </span>
                 <span className="text-xs">👁 {day.count} visitas</span>
               </div>

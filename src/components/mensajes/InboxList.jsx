@@ -6,6 +6,7 @@ import ilustrb from "../../assets/ilustb.svg";
 import ilust3 from "../../assets/ilust3.svg";
 
 import { RiMessage2Line, RiMessage3Line } from "react-icons/ri";
+import Loading from "../Loading";
 
 // Utilidad para mostrar tiempo aproximado
 function formatTimeAgo(dateString) {
@@ -28,11 +29,7 @@ const InboxList = () => {
   }, [dispatch]);
 
   if (loading) {
-    return (
-      <p className="text-center text-gray-500 py-4">
-        Cargando conversaciones...
-      </p>
-    );
+    return <Loading className="h-screen" />;
   }
 
   if (error) {

@@ -263,7 +263,7 @@ export default function DashboardBusinessDetail() {
 
       {/* SECCIÓN DE MÉTRICAS */}
       <section className="bg-white border border-gray-200 rounded-2xl p-6 shadow space-y-4">
-        <h3 className="text-xl font-semibold text-gray-800">Métricas</h3>
+        <h3 className="text-lg font-semibold text-gray-700">Métricas</h3>
         <p className="text-sm text-gray-500">
           Aquí puedes ver las estadísticas de visitas, seguidores y
           calificaciones.
