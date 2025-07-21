@@ -1,13 +1,20 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchBusquedaGlobal } from "../api/busquedaApi";
+import { mostrarFeedback } from "./feedbackSlice";
 
 export const buscarGlobalThunk = createAsyncThunk(
   "busquedaGlobal/fetch",
-  async (termino, { rejectWithValue }) => {
+  async (termino, { rejectWithValue, dispatch }) => {
     try {
       const resultados = await fetchBusquedaGlobal(termino);
       return { termino, resultados };
     } catch (error) {
+      dispatch(
+        mostrarFeedback({
+          message: "Ocurrió un error al realizar la búsqueda",
+          type: "error",
+        })
+      );
       return rejectWithValue(error.message || "Error al buscar globalmente");
     }
   }
@@ -48,5 +55,4 @@ const busquedaGlobalSlice = createSlice({
 });
 
 export const { limpiarBusquedaGlobal } = busquedaGlobalSlice.actions;
-
 export default busquedaGlobalSlice.reducer;

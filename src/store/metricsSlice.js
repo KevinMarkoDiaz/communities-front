@@ -13,8 +13,8 @@ import {
   getEventDailyViews,
   getEventTopViewers,
 } from "../api/metricsApi";
+import { mostrarFeedback } from "./feedbackSlice";
 
-// Mapeo de entidades a sus funciones
 const apiMap = {
   community: {
     getMetrics: getCommunityMetrics,
@@ -41,9 +41,19 @@ const apiMap = {
  */
 export const fetchMetrics = createAsyncThunk(
   "metrics/fetchMetrics",
-  async ({ entityType, entityId }) => {
-    const data = await apiMap[entityType].getMetrics(entityId);
-    return { entityId, data: data.data };
+  async ({ entityType, entityId }, { rejectWithValue, dispatch }) => {
+    try {
+      const data = await apiMap[entityType].getMetrics(entityId);
+      return { entityId, data: data.data };
+    } catch (err) {
+      dispatch(
+        mostrarFeedback({
+          message: "No se pudieron cargar las métricas generales",
+          type: "error",
+        })
+      );
+      return rejectWithValue(err.message || "Error al obtener métricas");
+    }
   }
 );
 
@@ -52,13 +62,26 @@ export const fetchMetrics = createAsyncThunk(
  */
 export const fetchMetricsByDate = createAsyncThunk(
   "metrics/fetchMetricsByDate",
-  async ({ entityType, entityId, startDate, endDate }) => {
-    const data = await apiMap[entityType].getMetricsByDate(
-      entityId,
-      startDate,
-      endDate
-    );
-    return { entityId, startDate, endDate, data: data.data };
+  async (
+    { entityType, entityId, startDate, endDate },
+    { rejectWithValue, dispatch }
+  ) => {
+    try {
+      const data = await apiMap[entityType].getMetricsByDate(
+        entityId,
+        startDate,
+        endDate
+      );
+      return { entityId, startDate, endDate, data: data.data };
+    } catch (err) {
+      dispatch(
+        mostrarFeedback({
+          message: "No se pudieron cargar las métricas filtradas",
+          type: "error",
+        })
+      );
+      return rejectWithValue(err.message || "Error al obtener métricas");
+    }
   }
 );
 
@@ -67,13 +90,26 @@ export const fetchMetricsByDate = createAsyncThunk(
  */
 export const fetchDailyViews = createAsyncThunk(
   "metrics/fetchDailyViews",
-  async ({ entityType, entityId, startDate, endDate }) => {
-    const data = await apiMap[entityType].getDailyViews(
-      entityId,
-      startDate,
-      endDate
-    );
-    return { entityId, startDate, endDate, data: data.data };
+  async (
+    { entityType, entityId, startDate, endDate },
+    { rejectWithValue, dispatch }
+  ) => {
+    try {
+      const data = await apiMap[entityType].getDailyViews(
+        entityId,
+        startDate,
+        endDate
+      );
+      return { entityId, startDate, endDate, data: data.data };
+    } catch (err) {
+      dispatch(
+        mostrarFeedback({
+          message: "No se pudieron cargar las vistas diarias",
+          type: "error",
+        })
+      );
+      return rejectWithValue(err.message || "Error al obtener vistas diarias");
+    }
   }
 );
 
@@ -82,21 +118,34 @@ export const fetchDailyViews = createAsyncThunk(
  */
 export const fetchTopViewers = createAsyncThunk(
   "metrics/fetchTopViewers",
-  async ({ entityType, entityId, startDate, endDate, limit }) => {
-    const res = await apiMap[entityType].getTopViewers(
-      entityId,
-      startDate,
-      endDate,
-      limit
-    );
-    return { entityId, startDate, endDate, data: res.data };
+  async (
+    { entityType, entityId, startDate, endDate, limit },
+    { rejectWithValue, dispatch }
+  ) => {
+    try {
+      const res = await apiMap[entityType].getTopViewers(
+        entityId,
+        startDate,
+        endDate,
+        limit
+      );
+      return { entityId, startDate, endDate, data: res.data };
+    } catch (err) {
+      dispatch(
+        mostrarFeedback({
+          message: "No se pudo cargar el ranking de visitantes",
+          type: "error",
+        })
+      );
+      return rejectWithValue(err.message || "Error al obtener ranking");
+    }
   }
 );
 
 const metricsSlice = createSlice({
   name: "metrics",
   initialState: {
-    entities: {}, // { [entityId]: { general, daily, topViewers, filteredData } }
+    entities: {},
     loading: false,
     error: null,
   },
@@ -121,7 +170,7 @@ const metricsSlice = createSlice({
       })
       .addCase(fetchMetrics.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
       })
 
       // Filtered metrics
@@ -140,7 +189,7 @@ const metricsSlice = createSlice({
       })
       .addCase(fetchMetricsByDate.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
       })
 
       // Daily views
@@ -159,7 +208,7 @@ const metricsSlice = createSlice({
       })
       .addCase(fetchDailyViews.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
       })
 
       // Top viewers
@@ -178,11 +227,10 @@ const metricsSlice = createSlice({
       })
       .addCase(fetchTopViewers.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
       });
   },
 });
 
 export const { clearMetrics } = metricsSlice.actions;
-
 export default metricsSlice.reducer;

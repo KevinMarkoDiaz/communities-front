@@ -1,15 +1,22 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../../src/api/axiosInstance";
+import { mostrarFeedback } from "./feedbackSlice";
 
 // 🚀 Thunk para cargar notificaciones
 export const cargarNotificaciones = createAsyncThunk(
   "notificaciones/cargar",
-  async (_, thunkAPI) => {
+  async (_, { rejectWithValue, dispatch }) => {
     try {
       const res = await axiosInstance.get("/notifications");
       return Array.isArray(res.data) ? res.data : res.data.notifications || [];
     } catch (error) {
-      return thunkAPI.rejectWithValue("Error al cargar notificaciones");
+      dispatch(
+        mostrarFeedback({
+          message: "No se pudieron cargar tus notificaciones",
+          type: "error",
+        })
+      );
+      return rejectWithValue("Error al cargar notificaciones");
     }
   },
   {
@@ -23,12 +30,18 @@ export const cargarNotificaciones = createAsyncThunk(
 // 🚀 Thunk para marcar una como leída
 export const marcarNotificacionLeida = createAsyncThunk(
   "notificaciones/marcarLeida",
-  async (id, thunkAPI) => {
+  async (id, { rejectWithValue, dispatch }) => {
     try {
       await axiosInstance.patch(`/notifications/${id}/read`);
       return id;
     } catch (error) {
-      return thunkAPI.rejectWithValue("Error al marcar notificación");
+      dispatch(
+        mostrarFeedback({
+          message: "No se pudo marcar la notificación como leída",
+          type: "error",
+        })
+      );
+      return rejectWithValue("Error al marcar notificación");
     }
   }
 );
@@ -36,14 +49,18 @@ export const marcarNotificacionLeida = createAsyncThunk(
 // 🚀 Nuevo Thunk: marcar todas como leídas
 export const marcarTodasNotificacionesLeidas = createAsyncThunk(
   "notificaciones/marcarTodasLeidas",
-  async (_, thunkAPI) => {
+  async (_, { rejectWithValue, dispatch }) => {
     try {
       await axiosInstance.patch("/notifications/read-all");
       return true;
     } catch (error) {
-      return thunkAPI.rejectWithValue(
-        "Error al marcar todas las notificaciones"
+      dispatch(
+        mostrarFeedback({
+          message: "No se pudieron marcar todas las notificaciones",
+          type: "error",
+        })
       );
+      return rejectWithValue("Error al marcar todas las notificaciones");
     }
   }
 );
@@ -54,7 +71,7 @@ const notificacionesSlice = createSlice({
     items: [],
     loading: false,
     error: null,
-    loaded: false, // ✅ nuevo flag
+    loaded: false,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -67,7 +84,7 @@ const notificacionesSlice = createSlice({
       .addCase(cargarNotificaciones.fulfilled, (state, action) => {
         state.items = action.payload;
         state.loading = false;
-        state.loaded = true; // ✅ marcamos como cargado
+        state.loaded = true;
       })
       .addCase(cargarNotificaciones.rejected, (state, action) => {
         state.loading = false;

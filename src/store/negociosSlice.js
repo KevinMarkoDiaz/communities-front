@@ -4,15 +4,22 @@ import {
   getMyBusinesses,
   deleteBusiness,
 } from "../api/businessApi";
+import { mostrarFeedback } from "./feedbackSlice";
 
 // 🔁 Todos los negocios
 export const obtenerNegocios = createAsyncThunk(
   "negocios/fetch",
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, dispatch }) => {
     try {
       const data = await getAllBusinesses();
       return Array.isArray(data) ? data : data.businesses || [];
     } catch (error) {
+      dispatch(
+        mostrarFeedback({
+          message: "No se pudieron cargar los negocios",
+          type: "error",
+        })
+      );
       return rejectWithValue(error.message || "Error al cargar negocios");
     }
   },
@@ -27,11 +34,17 @@ export const obtenerNegocios = createAsyncThunk(
 // 🔁 Solo mis negocios
 export const fetchMisNegocios = createAsyncThunk(
   "negocios/fetchMine",
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, dispatch }) => {
     try {
       const data = await getMyBusinesses();
       return Array.isArray(data) ? data : data.businesses || [];
     } catch (error) {
+      dispatch(
+        mostrarFeedback({
+          message: "No se pudieron cargar tus negocios",
+          type: "error",
+        })
+      );
       return rejectWithValue(error.message || "Error al cargar tus negocios");
     }
   },
@@ -46,11 +59,23 @@ export const fetchMisNegocios = createAsyncThunk(
 // ❌ Eliminar un negocio
 export const deleteNegocio = createAsyncThunk(
   "negocios/delete",
-  async (id, { rejectWithValue }) => {
+  async (id, { rejectWithValue, dispatch }) => {
     try {
       await deleteBusiness(id);
+      dispatch(
+        mostrarFeedback({
+          message: "Negocio eliminado con éxito",
+          type: "success",
+        })
+      );
       return id;
     } catch (error) {
+      dispatch(
+        mostrarFeedback({
+          message: "No se pudo eliminar el negocio",
+          type: "error",
+        })
+      );
       return rejectWithValue(error.message || "Error al eliminar el negocio");
     }
   }
@@ -59,10 +84,10 @@ export const deleteNegocio = createAsyncThunk(
 const negociosSlice = createSlice({
   name: "negocios",
   initialState: {
-    lista: [], // Todos los negocios
-    misNegocios: [], // ✅ Mis negocios
+    lista: [],
+    misNegocios: [],
     loading: false,
-    misLoading: false, // ✅ Carga de mis negocios
+    misLoading: false,
     error: null,
     busqueda: "",
     categoria: "todas",

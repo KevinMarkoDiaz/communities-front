@@ -1,16 +1,22 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../api/axiosInstance";
+import { mostrarFeedback } from "./feedbackSlice";
 
 export const fetchFollowings = createAsyncThunk(
   "follow/fetchFollowings",
-  async (type = null, thunkAPI) => {
+  async (type = null, { rejectWithValue, dispatch }) => {
     try {
       const query = type ? `?type=${type}` : "";
       const res = await axiosInstance.get(`/users/me/following${query}`);
       return res.data.items; // El backend devuelve { items: [...] }
     } catch (err) {
-      console.error("Error fetching followings:", err);
-      return thunkAPI.rejectWithValue("Error fetching followings");
+      dispatch(
+        mostrarFeedback({
+          message: "No se pudieron cargar tus seguimientos",
+          type: "error",
+        })
+      );
+      return rejectWithValue("Error fetching followings");
     }
   }
 );

@@ -7,15 +7,22 @@ import {
   deletePromotion,
   getAllPromotions,
 } from "../api/promotionApi";
+import { mostrarFeedback } from "./feedbackSlice";
 
 // 🔁 Obtener promociones por comunidad
 export const fetchPromosPorComunidad = createAsyncThunk(
   "promociones/fetchPorComunidad",
-  async (communityId, { rejectWithValue }) => {
+  async (communityId, { rejectWithValue, dispatch }) => {
     try {
       const data = await getPromotionsByCommunity(communityId);
       return data;
     } catch (error) {
+      dispatch(
+        mostrarFeedback({
+          message: "No se pudieron cargar las promociones",
+          type: "error",
+        })
+      );
       return rejectWithValue(error.message || "Error al cargar promociones");
     }
   }
@@ -24,11 +31,17 @@ export const fetchPromosPorComunidad = createAsyncThunk(
 // 👤 Obtener promociones del usuario autenticado
 export const fetchMisPromos = createAsyncThunk(
   "promociones/fetchMisPromos",
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, dispatch }) => {
     try {
       const data = await getMyPromotions();
       return data;
     } catch (error) {
+      dispatch(
+        mostrarFeedback({
+          message: "No se pudieron cargar tus promociones",
+          type: "error",
+        })
+      );
       return rejectWithValue(
         error.message || "Error al cargar mis promociones"
       );
@@ -37,7 +50,7 @@ export const fetchMisPromos = createAsyncThunk(
   {
     condition: (_, { getState }) => {
       const { promociones } = getState();
-      return !promociones.loaded; // ❗️Evita la llamada si ya están cargadas
+      return !promociones.loaded;
     },
   }
 );
@@ -45,11 +58,23 @@ export const fetchMisPromos = createAsyncThunk(
 // ➕ Crear promoción
 export const createPromo = createAsyncThunk(
   "promociones/create",
-  async (formData, { rejectWithValue }) => {
+  async (formData, { rejectWithValue, dispatch }) => {
     try {
       const data = await createPromotion(formData);
+      dispatch(
+        mostrarFeedback({
+          message: "Promoción creada con éxito",
+          type: "success",
+        })
+      );
       return data;
     } catch (error) {
+      dispatch(
+        mostrarFeedback({
+          message: "No se pudo crear la promoción",
+          type: "error",
+        })
+      );
       return rejectWithValue(error.message || "Error al crear promoción");
     }
   }
@@ -58,11 +83,23 @@ export const createPromo = createAsyncThunk(
 // ✏️ Actualizar promoción
 export const updatePromo = createAsyncThunk(
   "promociones/update",
-  async ({ id, formData }, { rejectWithValue }) => {
+  async ({ id, formData }, { rejectWithValue, dispatch }) => {
     try {
       const data = await updatePromotion(id, formData);
+      dispatch(
+        mostrarFeedback({
+          message: "Promoción actualizada con éxito",
+          type: "success",
+        })
+      );
       return data;
     } catch (error) {
+      dispatch(
+        mostrarFeedback({
+          message: "No se pudo actualizar la promoción",
+          type: "error",
+        })
+      );
       return rejectWithValue(error.message || "Error al actualizar promoción");
     }
   }
@@ -71,11 +108,23 @@ export const updatePromo = createAsyncThunk(
 // ❌ Eliminar promoción
 export const deletePromo = createAsyncThunk(
   "promociones/delete",
-  async (id, { rejectWithValue }) => {
+  async (id, { rejectWithValue, dispatch }) => {
     try {
       await deletePromotion(id);
+      dispatch(
+        mostrarFeedback({
+          message: "Promoción eliminada con éxito",
+          type: "success",
+        })
+      );
       return id;
     } catch (error) {
+      dispatch(
+        mostrarFeedback({
+          message: "No se pudo eliminar la promoción",
+          type: "error",
+        })
+      );
       return rejectWithValue(error.message || "Error al eliminar promoción");
     }
   }
@@ -84,11 +133,17 @@ export const deletePromo = createAsyncThunk(
 // 🌐 Obtener todas las promociones
 export const fetchAllPromos = createAsyncThunk(
   "promociones/fetchAll",
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, dispatch }) => {
     try {
       const data = await getAllPromotions();
       return data;
     } catch (error) {
+      dispatch(
+        mostrarFeedback({
+          message: "No se pudieron cargar las promociones",
+          type: "error",
+        })
+      );
       return rejectWithValue(
         error.message || "Error al cargar todas las promociones"
       );
@@ -102,7 +157,7 @@ const promocionesSlice = createSlice({
     lista: [],
     loading: false,
     error: null,
-    loaded: false, // ✅ bandera para evitar doble carga
+    loaded: false,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -129,7 +184,7 @@ const promocionesSlice = createSlice({
       .addCase(fetchMisPromos.fulfilled, (state, action) => {
         state.loading = false;
         state.lista = action.payload;
-        state.loaded = true; // ✅ se marca como ya cargado
+        state.loaded = true;
       })
       .addCase(fetchMisPromos.rejected, (state, action) => {
         state.loading = false;

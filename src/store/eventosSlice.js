@@ -1,14 +1,21 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getAllEvents, getMyEvents, deleteEvent } from "../api/eventApi";
+import { mostrarFeedback } from "./feedbackSlice";
 
 // 🔁 Todos los eventos
 export const obtenerEventos = createAsyncThunk(
   "eventos/fetch",
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, dispatch }) => {
     try {
       const data = await getAllEvents();
       return Array.isArray(data) ? data : data.events || [];
     } catch (error) {
+      dispatch(
+        mostrarFeedback({
+          message: "No se pudieron cargar los eventos",
+          type: "error",
+        })
+      );
       return rejectWithValue(error.message || "Error al cargar eventos");
     }
   },
@@ -23,11 +30,17 @@ export const obtenerEventos = createAsyncThunk(
 // 🔁 Solo mis eventos
 export const fetchMisEventos = createAsyncThunk(
   "eventos/fetchMine",
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, dispatch }) => {
     try {
       const data = await getMyEvents();
       return Array.isArray(data) ? data : data.events || [];
     } catch (error) {
+      dispatch(
+        mostrarFeedback({
+          message: "No se pudieron cargar tus eventos",
+          type: "error",
+        })
+      );
       return rejectWithValue(error.message || "Error al cargar tus eventos");
     }
   },
@@ -41,11 +54,23 @@ export const fetchMisEventos = createAsyncThunk(
 // 🗑️ Eliminar evento
 export const deleteEvento = createAsyncThunk(
   "eventos/deleteEvento",
-  async (id, { rejectWithValue }) => {
+  async (id, { rejectWithValue, dispatch }) => {
     try {
       await deleteEvent(id);
+      dispatch(
+        mostrarFeedback({
+          message: "Evento eliminado con éxito",
+          type: "success",
+        })
+      );
       return id;
     } catch (error) {
+      dispatch(
+        mostrarFeedback({
+          message: "No se pudo eliminar el evento",
+          type: "error",
+        })
+      );
       return rejectWithValue(error.message || "Error al eliminar evento");
     }
   }
@@ -54,10 +79,10 @@ export const deleteEvento = createAsyncThunk(
 const eventosSlice = createSlice({
   name: "eventos",
   initialState: {
-    lista: [], // Eventos generales
-    misEventos: [], // ✅ Mis eventos
+    lista: [],
+    misEventos: [],
     loading: false,
-    misLoading: false, // ✅ Cargando mis eventos
+    misLoading: false,
     error: null,
     busqueda: "",
     loaded: false,
@@ -98,7 +123,7 @@ const eventosSlice = createSlice({
         state.error = action.payload;
       })
 
-      // 🗑️ Eliminar evento (de ambos arrays si hace falta)
+      // 🗑️ Eliminar evento
       .addCase(deleteEvento.fulfilled, (state, action) => {
         state.lista = state.lista.filter((e) => e._id !== action.payload);
         state.misEventos = state.misEventos.filter(

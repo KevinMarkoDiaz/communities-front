@@ -1,14 +1,21 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../../src/api/axiosInstance";
+import { mostrarFeedback } from "./feedbackSlice";
 
 export const fetchConversations = createAsyncThunk(
   "conversations/fetchAll",
-  async (_, thunkAPI) => {
+  async (_, { rejectWithValue, dispatch }) => {
     try {
       const res = await axiosInstance.get("/conversations/me");
       return res.data;
     } catch (err) {
-      return thunkAPI.rejectWithValue(
+      dispatch(
+        mostrarFeedback({
+          message: "No se pudieron cargar tus conversaciones",
+          type: "error",
+        })
+      );
+      return rejectWithValue(
         err.response?.data?.msg || "Error al cargar conversaciones"
       );
     }

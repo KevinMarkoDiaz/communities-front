@@ -4,15 +4,22 @@ import {
   getCommunityBySlug,
   getMyCommunities,
 } from "../api/communityApi";
+import { mostrarFeedback } from "./feedbackSlice";
 
 // 🔁 Todas las comunidades
 export const fetchComunidades = createAsyncThunk(
   "comunidades/fetchAll",
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, dispatch }) => {
     try {
       const data = await getAllCommunities();
       return data.communities;
     } catch (error) {
+      dispatch(
+        mostrarFeedback({
+          message: "No se pudieron cargar las comunidades",
+          type: "error",
+        })
+      );
       return rejectWithValue(error.message || "Error desconocido");
     }
   },
@@ -27,11 +34,17 @@ export const fetchComunidades = createAsyncThunk(
 // 🔁 Mis comunidades
 export const fetchMisComunidades = createAsyncThunk(
   "comunidades/fetchMine",
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, dispatch }) => {
     try {
       const data = await getMyCommunities();
       return data.communities;
     } catch (error) {
+      dispatch(
+        mostrarFeedback({
+          message: "No se pudieron cargar tus comunidades",
+          type: "error",
+        })
+      );
       return rejectWithValue(error.message || "Error desconocido");
     }
   },
@@ -45,11 +58,17 @@ export const fetchMisComunidades = createAsyncThunk(
 // 🔁 Comunidad por slug
 export const fetchCommunityBySlug = createAsyncThunk(
   "comunidades/fetchBySlug",
-  async (slug, { rejectWithValue }) => {
+  async (slug, { rejectWithValue, dispatch }) => {
     try {
       const data = await getCommunityBySlug(slug);
       return data.community;
     } catch (error) {
+      dispatch(
+        mostrarFeedback({
+          message: "No se pudo cargar la comunidad",
+          type: "error",
+        })
+      );
       return rejectWithValue(error.message || "No se pudo cargar la comunidad");
     }
   }
@@ -58,11 +77,11 @@ export const fetchCommunityBySlug = createAsyncThunk(
 const comunidadesSlice = createSlice({
   name: "comunidades",
   initialState: {
-    lista: [], // ✅ todas
-    misComunidades: [], // ✅ solo mías
+    lista: [],
+    misComunidades: [],
     comunidadActual: null,
     loadingLista: false,
-    loadingMis: false, // ✅ nuevo loading
+    loadingMis: false,
     loadingDetalle: false,
     error: null,
     busqueda: "",
