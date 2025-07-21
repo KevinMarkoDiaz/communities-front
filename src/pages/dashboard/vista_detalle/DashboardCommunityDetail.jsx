@@ -1,25 +1,32 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { MdEdit, MdDelete, MdPublic } from "react-icons/md";
+import { FaLanguage } from "react-icons/fa";
 import axiosInstance from "../../../api/axiosInstance";
 import MetricsDashboard from "../../../components/metrics/MetricsDashboard";
 import ConfirmDeleteModal from "../../../components/ConfirmDeleteModal";
-import { FaCity, FaLanguage } from "react-icons/fa";
 
 export default function DashboardCommunityDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [comunidad, setComunidad] = useState(null);
+  const [summaryData, setSummaryData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [summaryData, setSummaryData] = useState(null);
 
   useEffect(() => {
+    if (!id || typeof id !== "string" || id.length !== 24) {
+      setError("ID de comunidad inválido");
+      setLoading(false);
+      return;
+    }
+
     const fetchCommunity = async () => {
       try {
         const { data } = await axiosInstance.get(`/communities/${id}`);
-        setComunidad(data.community);
+        setComunidad(data?.community);
+
         const { data: summaryRes } = await axiosInstance.get(
           `/community-views/${id}/summary`
         );
@@ -47,23 +54,13 @@ export default function DashboardCommunityDetail() {
 
   if (loading) return <p className="p-4">Cargando comunidad...</p>;
   if (error) return <p className="p-4 text-red-600">{error}</p>;
-  if (!comunidad) return null;
+  if (!comunidad)
+    return <p className="p-4 text-gray-600">Comunidad no encontrada.</p>;
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 px-4 pb-12">
       {/* CARD PRINCIPAL */}
-      <div
-        className="
-          w-full
-          flex flex-col md:flex-row
-          gap-6
-          bg-white
-          rounded-3xl
-          border border-gray-200
-          shadow
-          p-6 md:p-8 xl:p-10
-        "
-      >
+      <div className="w-full flex flex-col md:flex-row gap-6 bg-white rounded-3xl border border-gray-200 shadow p-6 md:p-8 xl:p-10">
         {/* Imagen */}
         <div className="w-full md:w-60 flex-shrink-0">
           <img
@@ -79,26 +76,24 @@ export default function DashboardCommunityDetail() {
 
         {/* Info */}
         <div className="flex-1 flex flex-col gap-4">
-          {/* Encabezado */}
           <div className="flex flex-col md:flex-row md:items-center gap-3 flex-wrap">
             <h2 className="text-2xl font-extrabold text-[#141C24] leading-snug">
               {comunidad.name}
             </h2>
           </div>
-          {/* Descripción */}
-          <p className="text-gray-700 text-sm md:text-base leading-relaxed whitespace-pre-line">
-            {comunidad.description}
-          </p>
-          {/* Metadata */}
+
+          {comunidad.description && (
+            <p className="text-gray-700 text-sm md:text-base leading-relaxed whitespace-pre-line">
+              {comunidad.description}
+            </p>
+          )}
 
           <div className="flex flex-col gap-2 text-xs text-gray-600 mt-1">
             {comunidad.region && (
               <span className="flex items-center gap-1">
-                <MdPublic className="text-gray-500 text-base" />
-                <span>Región: {comunidad.region}</span>
+                🌎 <span>Región: {comunidad.region}</span>
               </span>
             )}
-
             {comunidad.language && (
               <span className="flex items-center gap-1">
                 <FaLanguage className="text-gray-500 text-sm" />
@@ -106,29 +101,31 @@ export default function DashboardCommunityDetail() {
               </span>
             )}
           </div>
-          {/* Link público */}
-          {/* Fechas */}
+
           <div className="flex flex-wrap gap-4 text-xs text-gray-500">
             <span>
               Actualizado: {new Date(comunidad.updatedAt).toLocaleDateString()}
             </span>
           </div>
+
           {/* Acciones */}
           <div className="flex flex-col sm:flex-row gap-2 mt-4">
             <Link
               to={`/dashboard/comunidades/${comunidad._id}/editar`}
-              className="flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white  hover:bg-gray-50 transition text-xs font-medium no-underline"
+              className="flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 transition text-xs font-medium no-underline"
             >
               <MdEdit className="text-lg" />
               Editar comunidad
             </Link>
+
             <Link
               to={`/comunidades/${comunidad.slug || comunidad._id}`}
-              className="flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white  hover:bg-gray-50 transition text-xs font-medium no-underline"
+              className="flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 transition text-xs font-medium no-underline"
             >
               <MdPublic className="text-lg" />
               Ver perfil público
             </Link>
+
             <button
               onClick={() => setShowModal(true)}
               className="flex shadow-md hover:shadow-lg text-white items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-red-500 hover:bg-red-700 transition text-xs font-medium"
@@ -155,7 +152,7 @@ export default function DashboardCommunityDetail() {
         />
       </section>
 
-      {/* Modal de confirmación */}
+      {/* MODAL */}
       <ConfirmDeleteModal
         open={showModal}
         onClose={() => setShowModal(false)}

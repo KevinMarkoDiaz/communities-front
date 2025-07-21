@@ -1,51 +1,61 @@
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import CardNegocio from "../../components/dashboard/negocios/CardNegocio";
-import { deleteBusiness, getMyBusinesses } from "../../api/businessApi";
 import { MdAddBusiness } from "react-icons/md";
+
+import { fetchMisNegocios, deleteNegocio } from "../../store/negociosSlice";
+
+import CardNegocio from "../../components/dashboard/negocios/CardNegocio";
+import DashboardSectionHeader from "../../components/dashboard/negocios/DashboardSectionHeader";
+import NegocioDetalleDashboard from "./detalle/NegocioDetalleDashboard";
+import SkeletonDashboardList from "../../components/Skeleton/SkeletonDashboardList";
+import ConfirmDeleteModal from "../../components/ConfirmDeleteModal";
+
 import ilusta from "../../assets/ilusta.svg";
 import ilust2 from "../../assets/ilust2.svg";
 
-import NegocioDetalleDashboard from "./detalle/NegocioDetalleDashboard";
-import SkeletonDashboardList from "../../components/Skeleton/SkeletonDashboardList";
-import DashboardSectionHeader from "../../components/dashboard/negocios/DashboardSectionHeader";
-import ConfirmDeleteModal from "../../components/ConfirmDeleteModal";
-
 export default function MisNegocios() {
-  const [negocios, setNegocios] = useState([]);
-  const [selectedNegocio, setSelectedNegocio] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const dispatch = useDispatch();
 
+  const { misNegocios, misLoading, error } = useSelector(
+    (state) => state.negocios
+  );
+
+  const [selectedNegocio, setSelectedNegocio] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   useEffect(() => {
-    const cargarNegocios = async () => {
-      try {
-        const data = await getMyBusinesses();
-        setNegocios(data.businesses);
-        if (data.businesses.length > 0) {
-          setSelectedNegocio(data.businesses[0]);
-        }
-      } catch (err) {
-        console.error(err);
-        setError("No se pudieron cargar los negocios");
-      } finally {
-        setLoading(false);
+    if (misNegocios.length === 0) {
+      dispatch(fetchMisNegocios())
+        .unwrap()
+        .then((data) => {
+          if (data?.length > 0) {
+            setSelectedNegocio(data[0]);
+          }
+        })
+        .catch((err) => {
+          console.error("Error al cargar negocios:", err);
+        });
+    } else {
+      // Ya hay datos, seleccionamos el primero si aún no hay uno seleccionado
+      if (!selectedNegocio && misNegocios.length > 0) {
+        setSelectedNegocio(misNegocios[0]);
       }
-    };
-    cargarNegocios();
-  }, []);
+    }
+  }, [dispatch, misNegocios, selectedNegocio]);
+
+  useEffect(() => {
+    if (misNegocios.length > 0 && !selectedNegocio) {
+      setSelectedNegocio(misNegocios[0]);
+    }
+  }, [misNegocios, selectedNegocio]);
 
   const handleDelete = async (id) => {
     try {
-      await deleteBusiness(id);
-      const nuevos = negocios.filter((n) => n._id !== id);
-      setNegocios(nuevos);
-      if (selectedNegocio?._id === id) {
-        setSelectedNegocio(nuevos[0] || null);
-      }
+      await dispatch(deleteNegocio(id)).unwrap();
+      const nuevos = misNegocios.filter((n) => n._id !== id);
+      setSelectedNegocio(nuevos[0] || null);
       setShowDeleteModal(false);
     } catch (error) {
       console.error("Error al eliminar negocio:", error);
@@ -53,11 +63,11 @@ export default function MisNegocios() {
     }
   };
 
-  if (loading) return <SkeletonDashboardList />;
+  if (misLoading) return <SkeletonDashboardList />;
   if (error) return <div className="p-4 text-red-600">{error}</div>;
 
   return (
-    <div className="max-w-[1200px] w-full mx-auto flex flex-col gap-8 md:gap-12 xl:gap-16 px-2 ">
+    <div className="max-w-[1200px] w-full mx-auto flex flex-col gap-8 md:gap-12 xl:gap-16 px-2">
       {/* Header y Detalle */}
       <div className="flex flex-col lg:flex-row gap-6 md:gap-8 xl:gap-10 lg:mt-16">
         <div className="flex-1">
@@ -107,7 +117,7 @@ export default function MisNegocios() {
         </Link>
       </div>
 
-      {negocios.length === 0 ? (
+      {misNegocios.length === 0 ? (
         <div className="flex flex-col items-center text-center gap-5 py-16">
           <img src={ilust2} alt="Sin negocios" className="w-40 opacity-90" />
           <p className="text-gray-600 text-sm md:text-base max-w-xs">
@@ -125,7 +135,7 @@ export default function MisNegocios() {
         </div>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-y-5 gap-x-3 md:gap-6 xl:gap-8">
-          {negocios.map((negocio) => (
+          {misNegocios.map((negocio) => (
             <div
               key={negocio._id}
               onClick={() => {

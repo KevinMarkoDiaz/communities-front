@@ -1,56 +1,38 @@
-import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { MdEdit, MdDelete, MdPublic } from "react-icons/md";
-import MetricsDashboard from "../../../components/metrics/MetricsDashboard";
-import axiosInstance from "../../../api/axiosInstance";
 import { HiOutlineClock, HiOutlineDocumentText } from "react-icons/hi";
 import { HiOutlineCalendarDays, HiOutlineMapPin } from "react-icons/hi2";
+import MetricsDashboard from "../../../components/metrics/MetricsDashboard";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchMetrics } from "../../../store/metricsSlice";
+import { deleteEvento } from "../../../store/eventosSlice";
 
 export default function DashboardEventDetail() {
   const { id } = useParams();
-  const [evento, setEvento] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [summaryData, setSummaryData] = useState(null);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const evento = useSelector((state) =>
+    state.eventos.misEventos.find((e) => e._id === id)
+  );
+
+  const summaryData = useSelector(
+    (state) => state.metrics.entities[id]?.general || null
+  );
 
   useEffect(() => {
-    const fetchEvent = async () => {
-      try {
-        const { data } = await axiosInstance.get(`/events/${id}`);
-        setEvento(data.event);
-        const { data: summaryRes } = await axiosInstance.get(
-          `/event-views/${id}/summary`
-        );
-        setSummaryData(summaryRes);
-      } catch (err) {
-        console.error(err);
-        setError("Error al cargar el evento");
-      } finally {
-        setLoading(false);
-      }
-    };
+    if (!summaryData) {
+      dispatch(fetchMetrics({ entityType: "event", entityId: id }));
+    }
+  }, [dispatch, id, summaryData]);
 
-    fetchEvent();
-  }, [id]);
-
-  if (loading) return <p className="p-4">Cargando evento...</p>;
-  if (error) return <p className="p-4 text-red-600">{error}</p>;
-  if (!evento) return null;
+  if (!evento) return <p className="p-4">Cargando evento...</p>;
 
   return (
     <div className="flex flex-col gap-6">
       {/* Card principal */}
-      <div
-        className="
-          w-full
-          flex flex-col md:flex-row
-          gap-6
-          bg-gradient-to-br from-gray-50 via-white to-gray-100
-          rounded-2xl shadow-lg
-          p-6 md:p-8 xl:p-10
-          border border-gray-200
-        "
-      >
+      <div className="w-full flex flex-col md:flex-row gap-6 bg-gradient-to-br from-gray-50 via-white to-gray-100 rounded-2xl shadow-lg p-6 md:p-8 xl:p-10 border border-gray-200">
         {/* Imagen destacada */}
         <div className="w-full md:w-60 flex-shrink-0">
           <img
@@ -62,12 +44,10 @@ export default function DashboardEventDetail() {
 
         {/* Info */}
         <div className="flex-1 flex flex-col gap-4">
-          {/* Título */}
           <h2 className="text-2xl font-extrabold text-[#141C24] leading-snug">
             {evento.title}
           </h2>
 
-          {/* Descripción */}
           <p className="text-gray-700 text-sm md:text-base leading-relaxed whitespace-pre-line">
             {evento.description}
           </p>
@@ -86,7 +66,6 @@ export default function DashboardEventDetail() {
             </div>
           )}
 
-          {/* Link al detalle público */}
           <Link
             to={`/eventos/${evento._id}`}
             className="inline-flex items-center gap-2 mt-2 text-sm font-semibold text-orange-600 hover:text-orange-800 transition"
@@ -97,7 +76,7 @@ export default function DashboardEventDetail() {
           {/* Metadatos */}
           <div className="flex flex-wrap gap-4 text-xs text-gray-500 mt-1">
             <span className="flex items-center gap-1">
-              <HiOutlineCalendarDays className="w-4 h-4 text-gray-500" />
+              <HiOutlineCalendarDays className="w-4 h-4" />
               <span>
                 {evento.date
                   ? new Date(evento.date).toLocaleDateString()
@@ -105,19 +84,19 @@ export default function DashboardEventDetail() {
               </span>
             </span>
             <span className="flex items-center gap-1">
-              <HiOutlineClock className="w-4 h-4 text-gray-500" />
+              <HiOutlineClock className="w-4 h-4" />
               <span>{evento.time || "Sin hora"}</span>
             </span>
             {evento.location && (
               <span className="flex items-center gap-1">
-                <HiOutlineMapPin className="w-4 h-4 text-gray-500" />
+                <HiOutlineMapPin className="w-4 h-4" />
                 <span>
                   {evento.location.address}, {evento.location.city}
                 </span>
               </span>
             )}
             <span className="flex items-center gap-1">
-              <HiOutlineDocumentText className="w-4 h-4 text-gray-500" />
+              <HiOutlineDocumentText className="w-4 h-4" />
               <span>
                 Creado: {new Date(evento.createdAt).toLocaleDateString()}
               </span>
@@ -141,10 +120,10 @@ export default function DashboardEventDetail() {
               Ver detalle del evento
             </Link>
             <button
-              onClick={() => {
+              onClick={async () => {
                 if (window.confirm("¿Estás seguro de eliminar este evento?")) {
-                  // Aquí puedes disparar tu lógica de borrado
-                  alert("Evento eliminado (aquí pones la lógica real)");
+                  await dispatch(deleteEvento(evento._id));
+                  navigate("/dashboard/mis-eventos");
                 }
               }}
               className="flex shadow-md hover:shadow-lg text-white items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-red-500 hover:bg-red-700 transition text-xs font-medium"
@@ -162,7 +141,6 @@ export default function DashboardEventDetail() {
         <p className="text-sm text-gray-500">
           Aquí podrás visualizar estadísticas de visitas y engagement.
         </p>
-        {/* 🚀 Aquí integras MetricsDashboard */}
 
         <MetricsDashboard
           entityId={id}

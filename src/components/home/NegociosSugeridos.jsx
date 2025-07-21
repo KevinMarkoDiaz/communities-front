@@ -1,13 +1,10 @@
 import { Link } from "react-router-dom";
 import CardDestacado from "../Card";
 import ScrollCarousel from "../ScrollCarousel";
-import { useNegocios } from "../../hooks/useNegocios";
 import BannerTituloSugeridos from "../BannerTituloSugeridos";
 import SugeridosSkeleton from "../Skeleton/SugeridosSkeleton";
 
-export default function NegociosSugeridos({ imagen }) {
-  const { lista: negocios, loading } = useNegocios();
-
+export default function NegociosSugeridos({ negocios = [], loading, imagen }) {
   if (loading) return <SugeridosSkeleton />;
 
   const destacados = negocios.slice(0, 6); // Limita para un mejor scroll
@@ -32,8 +29,8 @@ export default function NegociosSugeridos({ imagen }) {
             <CardDestacado
               title={n.name}
               image={n.featuredImage}
-              isNew={false} // o lógica si quieres detectar "nuevo"
-              hasDiscount={false} // futura lógica de descuentos
+              isNew={false} // Lógica futura para marcar nuevos
+              hasDiscount={false} // Lógica futura para descuentos
               isVerified={n.isVerified}
               modo="vertical"
             />

@@ -5,7 +5,6 @@ import CardPromo from "../../components/dashboard/promo/CardPromo";
 import DashboardSectionHeader from "../../components/dashboard/negocios/DashboardSectionHeader";
 import ilusta from "../../assets/ilusta.svg";
 import ilust5 from "../../assets/ilust5.svg";
-
 import { MdLocalOffer } from "react-icons/md";
 import SkeletonDashboardList from "../../components/Skeleton/SkeletonDashboardList";
 import ModalCrearPromo from "../../components/promo/ModalCrearPromo";
@@ -13,25 +12,31 @@ import DetallePromo from "./detalle/DetallePromo";
 
 export default function MisPromos() {
   const dispatch = useDispatch();
+
   const {
     lista: promos,
     loading,
     error,
+    loaded,
   } = useSelector((state) => state.promociones);
 
   const [mostrarModalCrear, setMostrarModalCrear] = useState(false);
   const [selectedPromo, setSelectedPromo] = useState(null);
   const [showModalDetalle, setShowModalDetalle] = useState(false);
 
+  // Solo carga las promos si no están cargadas
   useEffect(() => {
-    dispatch(fetchMisPromos())
-      .unwrap()
-      .then((data) => {
-        if (data?.length > 0) {
-          setSelectedPromo(data[0]);
-        }
-      });
-  }, [dispatch]);
+    if (!loaded) {
+      dispatch(fetchMisPromos());
+    }
+  }, [dispatch, loaded]);
+
+  // Solo selecciona una promo si no hay una seleccionada
+  useEffect(() => {
+    if (promos.length > 0 && !selectedPromo) {
+      setSelectedPromo(promos[0]);
+    }
+  }, [promos, selectedPromo]);
 
   const handleDelete = async (id) => {
     const confirmar = window.confirm("¿Quieres eliminar esta promoción?");

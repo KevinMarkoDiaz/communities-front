@@ -25,8 +25,10 @@ export default function Promociones() {
   } = useSelector((state) => state.promociones);
 
   useEffect(() => {
-    dispatch(fetchAllPromos());
-  }, [dispatch]);
+    if (!promociones || promociones.length === 0) {
+      dispatch(fetchAllPromos());
+    }
+  }, [dispatch, promociones]);
 
   const lista = Array.isArray(promociones) ? promociones : [];
 

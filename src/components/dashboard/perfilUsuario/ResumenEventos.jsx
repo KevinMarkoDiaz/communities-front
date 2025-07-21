@@ -1,11 +1,9 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { FiEdit2, FiTrash2, FiChevronUp } from "react-icons/fi";
 
-export default function ResumenEventos() {
+export default function ResumenEventos({ eventos = [] }) {
   const navigate = useNavigate();
-  const eventos = useSelector((state) => state.eventos.lista);
   const [visibleCount, setVisibleCount] = useState(5);
 
   const handleEditar = (slug) => {

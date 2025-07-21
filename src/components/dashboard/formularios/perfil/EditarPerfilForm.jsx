@@ -22,9 +22,23 @@ const esquemaValidacion = [
     description: Yup.string().min(10, "Muy corta").required("Requerida"),
   }),
   Yup.object({
-    profileImage: Yup.string()
-      .url("Debe ser una URL válida")
-      .required("Requerida"),
+    profileImage: Yup.mixed()
+      .test(
+        "is-valid-profile-image",
+        "Debe ser una URL válida o un archivo de imagen",
+        (value) => {
+          if (!value) return false;
+          if (typeof value === "string") {
+            // valida si es una URL
+            return /^https?:\/\/.+/.test(value);
+          }
+          if (typeof value === "object" && value instanceof File) {
+            return true;
+          }
+          return false;
+        }
+      )
+      .required("Imagen requerida"),
     location: Yup.string().required("Requerida"),
     country: Yup.string().required("Selecciona un país"),
   }),

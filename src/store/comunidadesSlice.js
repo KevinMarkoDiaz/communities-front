@@ -5,7 +5,7 @@ import {
   getMyCommunities,
 } from "../api/communityApi";
 
-// 🔁 Thunk para obtener todas las comunidades
+// 🔁 Todas las comunidades
 export const fetchComunidades = createAsyncThunk(
   "comunidades/fetchAll",
   async (_, { rejectWithValue }) => {
@@ -15,10 +15,16 @@ export const fetchComunidades = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.message || "Error desconocido");
     }
+  },
+  {
+    condition: (_, { getState }) => {
+      const state = getState().comunidades;
+      return !state.loaded;
+    },
   }
 );
 
-// 🔁 Thunk para obtener las comunidades del usuario autenticado
+// 🔁 Mis comunidades
 export const fetchMisComunidades = createAsyncThunk(
   "comunidades/fetchMine",
   async (_, { rejectWithValue }) => {
@@ -28,10 +34,15 @@ export const fetchMisComunidades = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.message || "Error desconocido");
     }
+  },
+  {
+    condition: (_, { getState }) => {
+      return getState().comunidades.misComunidades.length === 0;
+    },
   }
 );
 
-// 🔁 Thunk para obtener una comunidad por slug
+// 🔁 Comunidad por slug
 export const fetchCommunityBySlug = createAsyncThunk(
   "comunidades/fetchBySlug",
   async (slug, { rejectWithValue }) => {
@@ -47,12 +58,15 @@ export const fetchCommunityBySlug = createAsyncThunk(
 const comunidadesSlice = createSlice({
   name: "comunidades",
   initialState: {
-    lista: [],
+    lista: [], // ✅ todas
+    misComunidades: [], // ✅ solo mías
     comunidadActual: null,
     loadingLista: false,
+    loadingMis: false, // ✅ nuevo loading
     loadingDetalle: false,
     error: null,
     busqueda: "",
+    loaded: false,
   },
   reducers: {
     setBusqueda: (state, action) => {
@@ -72,6 +86,7 @@ const comunidadesSlice = createSlice({
       .addCase(fetchComunidades.fulfilled, (state, action) => {
         state.loadingLista = false;
         state.lista = action.payload;
+        state.loaded = true;
       })
       .addCase(fetchComunidades.rejected, (state, action) => {
         state.loadingLista = false;
@@ -80,15 +95,15 @@ const comunidadesSlice = createSlice({
 
       // 🔁 fetchMisComunidades
       .addCase(fetchMisComunidades.pending, (state) => {
-        state.loading = true;
+        state.loadingMis = true;
         state.error = null;
       })
       .addCase(fetchMisComunidades.fulfilled, (state, action) => {
-        state.loading = false;
-        state.lista = action.payload;
+        state.loadingMis = false;
+        state.misComunidades = action.payload;
       })
       .addCase(fetchMisComunidades.rejected, (state, action) => {
-        state.loading = false;
+        state.loadingMis = false;
         state.error = action.payload;
       })
 

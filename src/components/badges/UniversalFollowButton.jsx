@@ -3,9 +3,12 @@ import { fetchFollowings } from "../../store/followSlice";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../api/axiosInstance";
 import { MdStar, MdStarBorder } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 export default function UniversalFollowButton({ entityType, entityId }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const usuario = useSelector((state) => state.auth.usuario);
   const { items, loading: loadingFollows } = useSelector(
     (state) => state.follow
   );
@@ -16,6 +19,10 @@ export default function UniversalFollowButton({ entityType, entityId }) {
   );
 
   const toggleFollow = async () => {
+    if (!usuario) {
+      return navigate("/login", { state: { redirectTo: location.pathname } });
+    }
+
     setLoading(true);
     try {
       if (isFollowed) {
@@ -35,10 +42,10 @@ export default function UniversalFollowButton({ entityType, entityId }) {
   };
 
   useEffect(() => {
-    if (items.length === 0) {
+    if (usuario && items.length === 0) {
       dispatch(fetchFollowings());
     }
-  }, [dispatch, items.length]);
+  }, [dispatch, items.length, usuario]);
 
   return (
     <button
@@ -62,7 +69,6 @@ export default function UniversalFollowButton({ entityType, entityId }) {
           ) : (
             <MdStarBorder className="text-base" />
           )}
-          {/* Texto visible solo en escritorio */}
           <span className="sm:inline">
             {isFollowed ? "Siguiendo" : "Seguir"}
           </span>

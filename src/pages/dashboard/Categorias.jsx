@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { getAllCategories, deleteCategory } from "../../api/categoryApi";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteCategory } from "../../api/categoryApi";
 import { Link } from "react-router-dom";
 import CardCategoria from "../../components/categoria/CardCategoria";
 import { MdCategory } from "react-icons/md";
@@ -8,39 +8,36 @@ import SkeletonDashboardList from "../../components/Skeleton/SkeletonDashboardLi
 import DashboardSectionHeader from "../../components/dashboard/negocios/DashboardSectionHeader";
 import ilusta from "../../assets/ilusta.svg";
 import DetalleCategoria from "./detalle/DetalleCategoria";
-import { MdGroups } from "react-icons/md";
-export default function Categorias() {
-  const [categorias, setCategorias] = useState([]);
-  const [selectedCategoria, setSelectedCategoria] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [showModal, setShowModal] = useState(false);
+import { fetchCategorias } from "../../store/categoriasSlice";
 
+export default function Categorias() {
+  const [selectedCategoria, setSelectedCategoria] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const dispatch = useDispatch();
   const usuario = useSelector((state) => state.auth.usuario);
+  const {
+    data: categorias = [],
+    loading,
+    error,
+    loaded,
+  } = useSelector((state) => state.categorias);
 
   useEffect(() => {
-    if (!usuario || usuario.role !== "admin") {
-      setError("Acceso no autorizado");
-      setLoading(false);
-      return;
+    if (usuario?.role === "admin" && !loaded) {
+      dispatch(fetchCategorias());
     }
+  }, [usuario, loaded, dispatch]);
 
-    const cargar = async () => {
-      try {
-        const res = await getAllCategories();
-        const cats = res.categories || res;
-        setCategorias(cats);
-        if (cats.length > 0) setSelectedCategoria(cats[0]);
-      } catch (err) {
-        console.error(err);
-        setError("No se pudieron cargar las categorías");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    cargar();
-  }, [usuario]);
+  // Selecciona la primera si no hay ninguna seleccionada
+  useEffect(() => {
+    if (
+      Array.isArray(categorias) &&
+      categorias.length > 0 &&
+      !selectedCategoria
+    ) {
+      setSelectedCategoria(categorias[0]);
+    }
+  }, [categorias, selectedCategoria]);
 
   const handleDelete = async (id) => {
     const confirmar = window.confirm("¿Eliminar esta categoría?");
@@ -49,11 +46,10 @@ export default function Categorias() {
     try {
       await deleteCategory(id);
       const nuevas = categorias.filter((c) => c._id !== id);
-      setCategorias(nuevas);
-      if (selectedCategoria?._id === id) {
-        setSelectedCategoria(nuevas[0] || null);
-        setShowModal(false);
-      }
+      setSelectedCategoria(nuevas[0] || null);
+      setShowModal(false);
+      // Opcional: Actualizar desde backend si querés sincronizar
+      // dispatch(fetchCategorias());
     } catch (err) {
       console.error("Error al eliminar categoría:", err);
       alert("No se pudo eliminar la categoría");

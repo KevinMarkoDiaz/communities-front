@@ -11,15 +11,17 @@ import {
 export default function NotificationButton({ className = "", onClick }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { items } = useSelector((state) => state.notificaciones);
+  const { items, loaded } = useSelector((state) => state.notificaciones);
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef(null);
 
   const isDesktop = useMediaQuery({ minWidth: 768 });
 
   useEffect(() => {
-    dispatch(cargarNotificaciones());
-  }, [dispatch]);
+    if (!loaded) {
+      dispatch(cargarNotificaciones());
+    }
+  }, [dispatch, loaded]);
 
   // Cierra si haces clic fuera
   useEffect(() => {

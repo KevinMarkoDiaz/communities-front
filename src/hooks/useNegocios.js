@@ -17,7 +17,7 @@ export function useNegocios() {
     if (!lista || lista.length === 0) {
       dispatch(obtenerNegocios());
     }
-  }, [dispatch]);
+  }, [dispatch, lista.length]);
 
   // Aplicar filtros locales
   const negociosFiltrados = lista.filter((negocio) => {

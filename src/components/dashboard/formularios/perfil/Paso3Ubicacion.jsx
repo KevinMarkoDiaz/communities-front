@@ -1,20 +1,19 @@
-// src/components/dashboard/formularios/perfil/Paso3Ubicacion.jsx
-import { Field, ErrorMessage } from "formik";
+import { useFormikContext, ErrorMessage, Field } from "formik";
+import DropzoneImagen from "../../../DropzoneImagen";
 
 export default function Paso3Ubicacion() {
+  const { values, setFieldValue } = useFormikContext();
+
   return (
     <div className="space-y-6">
       <h3 className="text-white text-lg font-semibold">Imagen y ubicación</h3>
 
-      {/* Imagen */}
+      {/* Imagen con Dropzone */}
       <div>
-        <label className="block text-sm font-medium text-white mb-1">
-          Imagen de perfil (URL)
-        </label>
-        <Field
-          name="profileImage"
-          placeholder="https://..."
-          className="w-full px-4 py-3 border border-white/30 bg-white/10 rounded-lg placeholder:text-gray-300 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+        <DropzoneImagen
+          value={values.profileImage}
+          onChange={(file) => setFieldValue("profileImage", file)}
+          label="Imagen de perfil"
         />
         <ErrorMessage
           name="profileImage"

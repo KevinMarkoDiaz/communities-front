@@ -1,13 +1,10 @@
 import { Link } from "react-router-dom";
 import ScrollCarousel from "../ScrollCarousel";
-import { useEventos } from "../../hooks/useEventos";
 import BannerTituloSugeridos from "../BannerTituloSugeridos";
 import CardDestacado from "../Card";
 import SugeridosSkeleton from "../Skeleton/SugeridosSkeleton";
 
-export default function EventosProximos({ imagen }) {
-  const { lista: eventos, loading } = useEventos();
-
+export default function EventosProximos({ eventos = [], loading, imagen }) {
   if (loading) return <SugeridosSkeleton />;
 
   const eventosProximos = eventos

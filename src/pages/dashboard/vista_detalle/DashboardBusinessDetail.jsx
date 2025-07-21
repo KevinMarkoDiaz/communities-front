@@ -15,12 +15,10 @@ export default function DashboardBusinessDetail() {
   const [tab, setTab] = useState("info");
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
+  // 🔴 Manejo de eliminación
   const handleDelete = async () => {
     try {
-      // 1️⃣ Aquí llamas a tu API real para borrar el negocio
       await axiosInstance.delete(`/businesses/${id}`);
-
-      // 2️⃣ Opcional: redirige al usuario
       window.location.href = "/dashboard/mis-negocios";
     } catch (error) {
       console.error("Error al eliminar el negocio:", error);
@@ -30,6 +28,7 @@ export default function DashboardBusinessDetail() {
     }
   };
 
+  // 🔵 Carga de datos del negocio + resumen
   useEffect(() => {
     const fetchBusinessAndSummary = async () => {
       try {
@@ -59,19 +58,8 @@ export default function DashboardBusinessDetail() {
 
   return (
     <div className="flex flex-col gap-6">
-      {/* CARD PRINCIPAL */}
-      <div
-        className="
-          w-full
-          flex flex-col md:flex-row
-          gap-6
-          bg-gradient-to-br from-gray-50 via-white to-gray-100
-          rounded-2xl shadow-lg
-          p-6 md:p-8 xl:p-10
-          border border-gray-200
-        "
-      >
-        {/* Imagen destacada */}
+      {/* Tarjeta principal */}
+      <div className="w-full flex flex-col md:flex-row gap-6 bg-gradient-to-br from-gray-50 via-white to-gray-100 rounded-2xl shadow-lg p-6 md:p-8 xl:p-10 border border-gray-200">
         <div className="w-full md:w-60 flex-shrink-0">
           <img
             src={
@@ -83,7 +71,6 @@ export default function DashboardBusinessDetail() {
           />
         </div>
 
-        {/* Info */}
         <div className="flex-1 flex flex-col gap-4">
           {/* Encabezado */}
           <div className="flex flex-col md:flex-row md:items-center gap-3 flex-wrap">
@@ -231,21 +218,21 @@ export default function DashboardBusinessDetail() {
           <div className="flex flex-col sm:flex-row gap-2 mt-2">
             <Link
               to={`/negocios/${negocio._id}`}
-              className="flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white  hover:bg-gray-50 transition text-xs font-medium no-underline"
+              className="flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 transition text-xs font-medium no-underline"
             >
               <MdPublic className="text-lg" />
               Ver perfil público
             </Link>
             <Link
               to={`/dashboard/mis-negocios/${negocio._id}/promos/nueva`}
-              className="flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white  hover:bg-gray-50 transition text-xs font-medium no-underline"
+              className="flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 transition text-xs font-medium no-underline"
             >
               <MdLocalOffer className="text-lg" />
               Crear promoción
             </Link>
             <Link
               to={`/dashboard/mis-negocios/${negocio._id}/editar`}
-              className="flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white  hover:bg-gray-50 transition text-xs font-medium no-underline"
+              className="flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 transition text-xs font-medium no-underline"
             >
               <MdEdit className="text-lg" />
               Editar negocio
@@ -261,7 +248,7 @@ export default function DashboardBusinessDetail() {
         </div>
       </div>
 
-      {/* SECCIÓN DE MÉTRICAS */}
+      {/* Sección de métricas */}
       <section className="bg-white border border-gray-200 rounded-2xl p-6 shadow space-y-4">
         <h3 className="text-lg font-semibold text-gray-700">Métricas</h3>
         <p className="text-sm text-gray-500">
@@ -274,6 +261,7 @@ export default function DashboardBusinessDetail() {
           summary={summaryData}
         />
       </section>
+
       <ConfirmDeleteModal
         open={deleteModalOpen}
         onClose={() => setDeleteModalOpen(false)}

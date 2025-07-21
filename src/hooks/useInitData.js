@@ -1,3 +1,4 @@
+// src/hooks/useInitData.js
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { obtenerNegocios } from "../store/negociosSlice";
@@ -6,19 +7,26 @@ import { fetchComunidades } from "../store/comunidadesSlice";
 
 export function useInitData() {
   const dispatch = useDispatch();
-  const negocios = useSelector((s) => s.negocios.lista);
-  const eventos = useSelector((s) => s.eventos.lista);
-  const comunidades = useSelector((s) => s.comunidades.lista);
+
+  const negociosLoaded = useSelector((state) => state.negocios.loaded);
+  const eventosLoaded = useSelector((state) => state.eventos.loaded);
+  const comunidadesLoaded = useSelector((state) => state.comunidades.loaded);
 
   useEffect(() => {
-    if (!negocios || negocios.length === 0) {
+    if (!negociosLoaded) {
       dispatch(obtenerNegocios());
     }
-    if (!eventos || eventos.length === 0) {
+  }, []); // Solo al montar
+
+  useEffect(() => {
+    if (!eventosLoaded) {
       dispatch(obtenerEventos());
     }
-    if (!comunidades || comunidades.length === 0) {
+  }, []); // Solo al montar
+
+  useEffect(() => {
+    if (!comunidadesLoaded) {
       dispatch(fetchComunidades());
     }
-  }, [dispatch, negocios, eventos, comunidades]);
+  }, []); // Solo al montar
 }

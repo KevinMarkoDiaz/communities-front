@@ -1,12 +1,8 @@
 import { Link } from "react-router-dom";
-import {
-  FaFacebookF,
-  FaInstagram,
-  FaXTwitter,
-  FaAngleRight,
-} from "react-icons/fa6";
+import { FaFacebookF, FaInstagram, FaAngleRight } from "react-icons/fa6";
 import logo3 from "../assets/logo3.svg";
 import icono_logo2 from "../assets/icono_logo2.svg";
+import { FaTiktok } from "react-icons/fa";
 
 export default function Footer() {
   return (
@@ -91,7 +87,7 @@ export default function Footer() {
           </p>
           <div className="flex gap-3 flex-wrap pt-1">
             <a
-              href="https://facebook.com"
+              href="https://www.facebook.com/profile.php?id=61576800572394"
               target="_blank"
               rel="noreferrer"
               aria-label="Facebook"
@@ -100,16 +96,16 @@ export default function Footer() {
               <FaFacebookF className="text-white text-xl" />
             </a>
             <a
-              href="https://x.com"
+              href="https://www.tiktok.com/@comunnidades_latino?lang=en"
               target="_blank"
               rel="noreferrer"
-              aria-label="Twitter"
+              aria-label="TikTok"
               className="hover:opacity-80"
             >
-              <FaXTwitter className="text-white text-xl" />
+              <FaTiktok className="text-white text-xl" />
             </a>
             <a
-              href="https://instagram.com"
+              href="https://www.instagram.com/communidades_/"
               target="_blank"
               rel="noreferrer"
               aria-label="Instagram"

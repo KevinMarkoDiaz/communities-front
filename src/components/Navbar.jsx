@@ -24,6 +24,7 @@ import Icono from "../assets/icono.svg";
 import NotificationButton from "./badges/NotificationButton";
 import { logout } from "../store/authSlice";
 import BotonPublicar from "./nav/BotonPublicar";
+import useDeviceSize from "../hooks/useDeviceSize";
 
 export default function Header() {
   const usuario = useSelector((state) => state.auth.usuario);
@@ -32,6 +33,8 @@ export default function Header() {
   const [show, setShow] = useState(true);
   const lastScrollY = useRef(0);
   const dispatch = useDispatch();
+
+  const { isMobile, isDesktop } = useDeviceSize();
 
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? "hidden" : "auto";
@@ -128,14 +131,21 @@ export default function Header() {
               <Link
                 key={link.to}
                 to={link.to}
-                className={`flex items-center gap-1 text-sm font-semibold transition ${
+                className={`flex md:flex-col lg:flex-row items-center justify-center gap-0 md:gap-0.5 lg:gap-1 transition font-medium ${
                   mobileOpen
                     ? "text-white hover:text-yellow-200"
                     : "text-gray-800 hover:text-orange-500"
                 }`}
               >
-                {link.icon}
-                {link.label}
+                {/* Ícono: cambia tamaño por breakpoint */}
+                <span className="text-xl md:text-xl lg:text-base">
+                  {link.icon}
+                </span>
+
+                {/* Texto: se adapta por tamaño también */}
+                <span className="text-[10px] md:text-xs lg:text-sm">
+                  {link.label}
+                </span>
               </Link>
             ))}
 
@@ -146,7 +156,7 @@ export default function Header() {
               >
                 <FiMessageCircle className="text-2xl" />
               </Link>
-              <NotificationButton />
+              {usuario && isDesktop && <NotificationButton />}
             </div>
             {/* Perfil */}
             <Link
@@ -171,12 +181,12 @@ export default function Header() {
             >
               <FiMessageCircle className="text-2xl" />
             </Link>
-            <NotificationButton
-              onClick={() => setMobileOpen(false)}
-              className={`transition ${
-                mobileOpen ? "text-white" : "text-black"
-              }`}
-            />
+            {usuario && isMobile && (
+              <NotificationButton
+                onClick={() => setMobileOpen(false)}
+                className={mobileOpen ? "text-white" : "text-black"}
+              />
+            )}
 
             <button
               onClick={() => setMobileOpen(!mobileOpen)}

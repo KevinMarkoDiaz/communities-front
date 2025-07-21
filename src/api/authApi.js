@@ -45,6 +45,14 @@ export async function getCurrentUser() {
  * Actualizar datos de usuario
  */
 export async function updateUserApi(userId, data) {
-  const response = await axiosInstance.put(`/users/${userId}`, data);
+  const isFormData = data instanceof FormData;
+
+  const response = await axiosInstance.put(`/users/${userId}`, data, {
+    headers: isFormData
+      ? { "Content-Type": "multipart/form-data" }
+      : { "Content-Type": "application/json" },
+    withCredentials: true,
+  });
+
   return response.data.user;
 }

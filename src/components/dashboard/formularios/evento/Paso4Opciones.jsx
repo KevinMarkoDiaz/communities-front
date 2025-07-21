@@ -27,7 +27,7 @@ export default function Paso4Opciones() {
     if (!categorias?.length) dispatch(fetchCategorias());
     if (!comunidades?.length) dispatch(fetchComunidades());
     if (!negocios?.length) dispatch(obtenerNegocios());
-  }, [dispatch]);
+  }, [dispatch, categorias.length, comunidades.length, negocios.length]);
 
   if (loading) {
     return <p className="text-sm text-gray-500">Cargando opciones...</p>;

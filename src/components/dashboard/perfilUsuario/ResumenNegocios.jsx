@@ -1,11 +1,9 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { FiEdit2, FiTrash2, FiChevronUp } from "react-icons/fi";
 
-export default function ResumenNegocios() {
+export default function ResumenNegocios({ negocios = [] }) {
   const navigate = useNavigate();
-  const negocios = useSelector((state) => state.negocios.lista);
   const [visibleCount, setVisibleCount] = useState(5);
 
   const handleEditar = (slug) => {
@@ -41,6 +39,7 @@ export default function ResumenNegocios() {
   return (
     <div className="bg-[#F7F7F7] px-2 py-3 md:p-3 lg:p-6 rounded-2xl flex flex-col justify-start gap-1 h-full">
       <h3 className="text-gray-600 text-lg font-semibold pb-4">Tus negocios</h3>
+
       {negociosMostrados.map((negocio, index) => (
         <div key={negocio._id}>
           <div
@@ -48,7 +47,7 @@ export default function ResumenNegocios() {
             className="flex items-center gap-3 p-1 cursor-pointer hover:bg-white hover:shadow-md rounded-lg transition"
           >
             <div className="w-12 h-12 flex-shrink-0">
-              {negocio.featuredImage ? (
+              {negocio.profileImage ? (
                 <img
                   src={negocio.profileImage}
                   alt={negocio.name}

@@ -1,4 +1,3 @@
-// store/promocionesSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   getPromotionsByCommunity,
@@ -34,6 +33,12 @@ export const fetchMisPromos = createAsyncThunk(
         error.message || "Error al cargar mis promociones"
       );
     }
+  },
+  {
+    condition: (_, { getState }) => {
+      const { promociones } = getState();
+      return !promociones.loaded; // ❗️Evita la llamada si ya están cargadas
+    },
   }
 );
 
@@ -97,11 +102,12 @@ const promocionesSlice = createSlice({
     lista: [],
     loading: false,
     error: null,
+    loaded: false, // ✅ bandera para evitar doble carga
   },
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // 🔁 Promociones por comunidad
+      // 🔁 Promos por comunidad
       .addCase(fetchPromosPorComunidad.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -123,18 +129,19 @@ const promocionesSlice = createSlice({
       .addCase(fetchMisPromos.fulfilled, (state, action) => {
         state.loading = false;
         state.lista = action.payload;
+        state.loaded = true; // ✅ se marca como ya cargado
       })
       .addCase(fetchMisPromos.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
 
-      // ➕ Crear promoción
+      // ➕ Crear
       .addCase(createPromo.fulfilled, (state, action) => {
         state.lista.push(action.payload);
       })
 
-      // ✏️ Actualizar promoción
+      // ✏️ Actualizar
       .addCase(updatePromo.fulfilled, (state, action) => {
         const index = state.lista.findIndex(
           (p) => p._id === action.payload._id
@@ -144,7 +151,7 @@ const promocionesSlice = createSlice({
         }
       })
 
-      // ❌ Eliminar promoción
+      // ❌ Eliminar
       .addCase(deletePromo.fulfilled, (state, action) => {
         state.lista = state.lista.filter((p) => p._id !== action.payload);
       })

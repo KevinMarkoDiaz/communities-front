@@ -9,13 +9,15 @@ import { FiCheckCircle } from "react-icons/fi";
 
 export default function NotificationCenter() {
   const dispatch = useDispatch();
-  const { items, loading } = useSelector((state) => state.notificaciones);
+  const { items, loaded, loading } = useSelector(
+    (state) => state.notificaciones
+  );
 
   useEffect(() => {
-    if (items.length === 0) {
+    if (!loaded) {
       dispatch(cargarNotificaciones());
     }
-  }, [dispatch, items.length]);
+  }, [dispatch, loaded]);
 
   const markAsRead = (id) => {
     dispatch(marcarNotificacionLeida(id));

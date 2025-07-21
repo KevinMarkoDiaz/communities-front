@@ -11,6 +11,7 @@ import followReducer from "./followSlice";
 import conversationsReducer from "./conversationsSlice";
 import messagesReducer from "./messagesSlice";
 import metricsReducer from "./metricsSlice";
+import feedbackReducer from "./feedbackSlice";
 
 export const store = configureStore({
   reducer: {
@@ -26,5 +27,6 @@ export const store = configureStore({
     conversations: conversationsReducer,
     messages: messagesReducer,
     metrics: metricsReducer,
+    feedback: feedbackReducer,
   },
 });

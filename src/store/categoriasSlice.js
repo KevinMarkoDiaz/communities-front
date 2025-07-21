@@ -1,12 +1,18 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getAllCategories } from "../api/categoryApi";
 
-// Thunk para cargar desde la API
+// 🔁 Thunk para cargar desde la API con condición
 export const fetchCategorias = createAsyncThunk(
   "categorias/fetchCategorias",
   async () => {
     const res = await getAllCategories();
     return res.categories;
+  },
+  {
+    condition: (_, { getState }) => {
+      const { categorias } = getState();
+      return !categorias.loaded;
+    },
   }
 );
 
@@ -16,6 +22,7 @@ const categoriasSlice = createSlice({
     data: [],
     loading: false,
     error: null,
+    loaded: false, // ✅ nuevo flag
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -27,6 +34,7 @@ const categoriasSlice = createSlice({
       .addCase(fetchCategorias.fulfilled, (state, action) => {
         state.loading = false;
         state.data = action.payload;
+        state.loaded = true; // ✅ lo marcamos como cargado
       })
       .addCase(fetchCategorias.rejected, (state, action) => {
         state.loading = false;

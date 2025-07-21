@@ -1,13 +1,14 @@
 import { Link } from "react-router-dom";
 import ScrollCarousel from "../ScrollCarousel";
-import { useComunidades } from "../../hooks/useComunidades";
 import BannerTituloSugeridos from "../BannerTituloSugeridos";
 import CardDestacado from "../Card";
 import SugeridosSkeleton from "../Skeleton/SugeridosSkeleton";
 
-export default function ComunidadesDestacadas({ imagen }) {
-  const { lista: comunidades, loading } = useComunidades();
-
+export default function ComunidadesDestacadas({
+  comunidades = [],
+  loading,
+  imagen,
+}) {
   if (loading) return <SugeridosSkeleton />;
 
   const destacadas = comunidades.slice(0, 6);
@@ -25,8 +26,8 @@ export default function ComunidadesDestacadas({ imagen }) {
       <ScrollCarousel>
         {destacadas.map((comunidad) => (
           <Link
-            to={`/comunidades/${comunidad.id || comunidad._id}`}
-            key={comunidad.id || comunidad._id}
+            to={`/comunidades/${comunidad._id || comunidad.id}`}
+            key={comunidad._id || comunidad.id}
             className="flex-shrink-0 snap-start min-w-[280px] sm:min-w-[250px] md:min-w-[250px] lg:min-w-[320px]"
           >
             <CardDestacado

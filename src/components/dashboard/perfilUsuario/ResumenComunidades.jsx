@@ -1,11 +1,9 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { FiEdit2, FiTrash2, FiChevronUp } from "react-icons/fi";
 
-export default function ResumenComunidades() {
+export default function ResumenComunidades({ comunidades = [] }) {
   const navigate = useNavigate();
-  const comunidades = useSelector((state) => state.comunidades.lista);
   const [visibleCount, setVisibleCount] = useState(5);
 
   const handleEditar = (slug) => {
@@ -43,6 +41,7 @@ export default function ResumenComunidades() {
       <h3 className="text-gray-600 text-lg font-semibold pb-4">
         Tus comunidades
       </h3>
+
       {comunidadesMostradas.map((comunidad, index) => (
         <div key={comunidad._id}>
           <div

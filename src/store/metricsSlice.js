@@ -43,7 +43,7 @@ export const fetchMetrics = createAsyncThunk(
   "metrics/fetchMetrics",
   async ({ entityType, entityId }) => {
     const data = await apiMap[entityType].getMetrics(entityId);
-    return data.data;
+    return { entityId, data: data.data };
   }
 );
 
@@ -58,7 +58,7 @@ export const fetchMetricsByDate = createAsyncThunk(
       startDate,
       endDate
     );
-    return data.data;
+    return { entityId, startDate, endDate, data: data.data };
   }
 );
 
@@ -73,7 +73,7 @@ export const fetchDailyViews = createAsyncThunk(
       startDate,
       endDate
     );
-    return data.data;
+    return { entityId, startDate, endDate, data: data.data };
   }
 );
 
@@ -89,27 +89,20 @@ export const fetchTopViewers = createAsyncThunk(
       endDate,
       limit
     );
-    console.log("🔵 fetchTopViewers RAW RESPONSE", res);
-    return res.data;
+    return { entityId, startDate, endDate, data: res.data };
   }
 );
 
 const metricsSlice = createSlice({
   name: "metrics",
   initialState: {
-    data: null,
-    filteredData: null,
-    dailyData: [],
-    topViewers: [],
+    entities: {}, // { [entityId]: { general, daily, topViewers, filteredData } }
     loading: false,
     error: null,
   },
   reducers: {
     clearMetrics(state) {
-      state.data = null;
-      state.filteredData = null;
-      state.dailyData = [];
-      state.topViewers = [];
+      state.entities = {};
       state.error = null;
     },
   },
@@ -122,25 +115,34 @@ const metricsSlice = createSlice({
       })
       .addCase(fetchMetrics.fulfilled, (state, action) => {
         state.loading = false;
-        state.data = action.payload;
+        const { entityId, data } = action.payload;
+        if (!state.entities[entityId]) state.entities[entityId] = {};
+        state.entities[entityId].general = data;
       })
       .addCase(fetchMetrics.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       })
-      // Metrics by date
+
+      // Filtered metrics
       .addCase(fetchMetricsByDate.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(fetchMetricsByDate.fulfilled, (state, action) => {
         state.loading = false;
-        state.filteredData = action.payload;
+        const { entityId, data, startDate, endDate } = action.payload;
+        if (!state.entities[entityId]) state.entities[entityId] = {};
+        const key = `${startDate}_${endDate}`;
+        if (!state.entities[entityId].filtered)
+          state.entities[entityId].filtered = {};
+        state.entities[entityId].filtered[key] = data;
       })
       .addCase(fetchMetricsByDate.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       })
+
       // Daily views
       .addCase(fetchDailyViews.pending, (state) => {
         state.loading = true;
@@ -148,12 +150,18 @@ const metricsSlice = createSlice({
       })
       .addCase(fetchDailyViews.fulfilled, (state, action) => {
         state.loading = false;
-        state.dailyData = action.payload;
+        const { entityId, data, startDate, endDate } = action.payload;
+        if (!state.entities[entityId]) state.entities[entityId] = {};
+        const key = `${startDate}_${endDate}`;
+        if (!state.entities[entityId].daily)
+          state.entities[entityId].daily = {};
+        state.entities[entityId].daily[key] = data;
       })
       .addCase(fetchDailyViews.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       })
+
       // Top viewers
       .addCase(fetchTopViewers.pending, (state) => {
         state.loading = true;
@@ -161,7 +169,12 @@ const metricsSlice = createSlice({
       })
       .addCase(fetchTopViewers.fulfilled, (state, action) => {
         state.loading = false;
-        state.topViewers = action.payload;
+        const { entityId, data, startDate, endDate } = action.payload;
+        if (!state.entities[entityId]) state.entities[entityId] = {};
+        const key = `${startDate}_${endDate}`;
+        if (!state.entities[entityId].topViewers)
+          state.entities[entityId].topViewers = {};
+        state.entities[entityId].topViewers[key] = data;
       })
       .addCase(fetchTopViewers.rejected, (state, action) => {
         state.loading = false;

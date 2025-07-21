@@ -73,17 +73,17 @@ export default function Contacto() {
     {
       nombre: "Instagram",
       icono: <FaInstagram />,
-      url: "https://www.instagram.com/communidades",
+      url: "https://www.instagram.com/communidades_/",
     },
     {
       nombre: "Facebook",
       icono: <FaFacebook />,
-      url: "https://www.facebook.com/communidades",
+      url: "https://www.facebook.com/profile.php?id=61576800572394",
     },
     {
       nombre: "TikTok",
       icono: <FaTiktok />,
-      url: "https://www.tiktok.com/@communidades",
+      url: "https://www.tiktok.com/@comunnidades_latino?lang=en",
     },
   ];
 

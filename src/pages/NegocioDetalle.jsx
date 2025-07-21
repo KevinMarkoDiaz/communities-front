@@ -23,8 +23,11 @@ import CommentsSection from "../components/mensajes/CommentsSection";
 import LikeButton from "../components/badges/LikeButton";
 import StarRating from "../components/badges/StarRating";
 import axiosInstance from "../api/axiosInstance";
+import { useSelector } from "react-redux";
 
 export default function NegocioDetalle() {
+  const usuario = useSelector((state) => state.auth.usuario);
+
   const { id } = useParams();
   const [negocio, setNegocio] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -37,20 +40,22 @@ export default function NegocioDetalle() {
         const data = await getBusinessById(id);
         setNegocio(data.business);
 
-        try {
-          await axiosInstance.post(`/business-views/${id}/views`);
-        } catch (err) {
-          console.warn("⚠️ Error al registrar la vista:", err);
-        }
+        if (usuario) {
+          try {
+            await axiosInstance.post(`/business-views/${id}/views`);
+          } catch (err) {
+            console.warn("⚠️ Error al registrar la vista:", err);
+          }
 
-        try {
-          const resFollows = await axiosInstance.get(
-            "/users/me/following?type=business"
-          );
-          const ids = resFollows.data.items.map((b) => b._id);
-          setYaSigue(ids.includes(id));
-        } catch (err) {
-          console.warn("No se pudo cargar el estado de seguimiento:", err);
+          try {
+            const resFollows = await axiosInstance.get(
+              "/users/me/following?type=business"
+            );
+            const ids = resFollows.data.items.map((b) => b._id);
+            setYaSigue(ids.includes(id));
+          } catch (err) {
+            console.warn("No se pudo cargar el estado de seguimiento:", err);
+          }
         }
       } catch (error) {
         console.error("Error al cargar el negocio:", error);
@@ -59,8 +64,9 @@ export default function NegocioDetalle() {
         setLoading(false);
       }
     };
+
     fetchNegocio();
-  }, [id]);
+  }, [id, usuario]);
 
   if (loading) {
     return (

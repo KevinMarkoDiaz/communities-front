@@ -13,19 +13,42 @@ import ilust3 from "../../assets/ilust3.svg";
 import { Link } from "react-router-dom";
 
 export default function PerfilPage() {
-  const usuario = useSelector((state) => state.auth.usuario);
-  const loadingComunidades = useSelector((state) => state.comunidades.loading);
-  const loadingNegocios = useSelector((state) => state.negocios.loading);
-  const loadingEventos = useSelector((state) => state.eventos.loading);
-
   const dispatch = useDispatch();
-  const [tab, setTab] = useState("negocios"); // ✅ Por defecto "Mis negocios"
+
+  const usuario = useSelector((state) => state.auth.usuario);
+  const categorias = useSelector((state) => state.categorias.data || []);
+
+  const comunidades = useSelector((state) => state.comunidades.misComunidades);
+  const negocios = useSelector((state) => state.negocios.misNegocios || []);
+  const eventos = useSelector((state) => state.eventos.misEventos || []);
+
+  const loadingComunidades = useSelector(
+    (state) => state.comunidades.loadingMis
+  );
+  const loadingNegocios = useSelector((state) => state.negocios.misLoading);
+  const loadingEventos = useSelector((state) => state.eventos.misLoading);
+
+  const [tab, setTab] = useState("negocios");
 
   useEffect(() => {
-    dispatch(fetchMisComunidades());
-    dispatch(fetchMisNegocios());
-    dispatch(fetchMisEventos());
-  }, [dispatch]);
+    if (comunidades.length === 0 && !loadingComunidades) {
+      dispatch(fetchMisComunidades());
+    }
+    if (negocios.length === 0 && !loadingNegocios) {
+      dispatch(fetchMisNegocios());
+    }
+    if (eventos.length === 0 && !loadingEventos) {
+      dispatch(fetchMisEventos());
+    }
+  }, [
+    dispatch,
+    comunidades.length,
+    negocios.length,
+    eventos.length,
+    loadingComunidades,
+    loadingNegocios,
+    loadingEventos,
+  ]);
 
   if (loadingComunidades || loadingNegocios || loadingEventos) {
     return <PerfilSkeleton />;
@@ -58,34 +81,61 @@ export default function PerfilPage() {
         ))}
       </div>
 
-      {/* Una sola fila con dos columnas */}
+      {/* Contenido principal */}
       <div className="flex flex-col md:flex-row gap-4 items-stretch">
         {/* Columna izquierda */}
         <div className="w-full md:w-1/3 flex flex-col">
           <div className="bg-white border border-gray-200 rounded-2xl shadow-sm h-full">
-            <Resumen />
+            <Resumen
+              resumen={[
+                {
+                  label: "Tus comunidades",
+                  value: comunidades?.length || 0,
+                  path: "/dashboard/mis-comunidades",
+                },
+                {
+                  label: "Tus categorías",
+                  value: categorias?.length || 0,
+                  path: "/dashboard/categorias",
+                  requireAdmin: true,
+                },
+                {
+                  label: "Tus negocios",
+                  value: negocios?.length || 0,
+                  path: "/dashboard/mis-negocios",
+                },
+                {
+                  label: "Tus eventos",
+                  value: eventos?.length || 0,
+                  path: "/dashboard/mis-eventos",
+                },
+              ]}
+              user={usuario}
+            />
           </div>
         </div>
 
-        {/* Columna derecha con contenido dinámico */}
+        {/* Columna derecha dinámica */}
         <div className="w-full md:w-2/3 flex flex-col gap-4">
           {tab === "comunidades" && (
             <div className="bg-white border border-gray-200 rounded-2xl shadow-sm h-full">
-              <ResumenComunidades />
+              <ResumenComunidades comunidades={comunidades} />
             </div>
           )}
           {tab === "negocios" && (
             <div className="bg-white border border-gray-200 rounded-2xl shadow-sm h-full">
-              <ResumenNegocios />
+              <ResumenNegocios negocios={negocios} />
             </div>
           )}
           {tab === "eventos" && (
             <div className="bg-white border border-gray-200 rounded-2xl shadow-sm h-full">
-              <ResumenEventos />
+              <ResumenEventos eventos={eventos} />
             </div>
           )}
         </div>
       </div>
+
+      {/* Footer */}
       <div className="flex flex-col items-center text-center gap-5 py-16">
         <img src={ilust3} alt="Perfil" className="w-40 opacity-90" />
         <p className="text-gray-500 text-xs max-w-xs">
@@ -94,7 +144,7 @@ export default function PerfilPage() {
         </p>
         <Link
           to="/dashboard/perfil/editar"
-          className="inline-block  bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium px-4 py-2 rounded-full transition shadow-lg"
+          className="inline-block bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium px-4 py-2 rounded-full transition shadow-lg"
         >
           Editar mi perfil
         </Link>

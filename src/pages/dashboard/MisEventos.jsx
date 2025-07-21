@@ -16,7 +16,7 @@ import { MdAdd } from "react-icons/md";
 export default function MisEventos() {
   const dispatch = useDispatch();
   const {
-    lista: eventos,
+    misEventos: eventos,
     loading,
     error,
   } = useSelector((state) => state.eventos);
@@ -26,14 +26,12 @@ export default function MisEventos() {
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
 
   useEffect(() => {
-    dispatch(fetchMisEventos());
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (eventos?.length) {
+    if (eventos.length === 0) {
+      dispatch(fetchMisEventos());
+    } else if (!selectedEvento) {
       setSelectedEvento(eventos[0]);
     }
-  }, [eventos]);
+  }, [dispatch, eventos, selectedEvento]);
 
   const handleDelete = async (id) => {
     try {

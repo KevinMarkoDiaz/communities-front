@@ -1,28 +1,19 @@
+// useEventos.js
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { obtenerEventos, setBusqueda } from "../store/eventosSlice";
+import { useSelector, useDispatch } from "react-redux";
+import { obtenerEventos } from "../store/eventosSlice";
 
 export function useEventos() {
   const dispatch = useDispatch();
-  const { lista, loading, error, busqueda } = useSelector(
-    (state) => state.eventos
-  );
+  const lista = useSelector((state) => state.eventos.lista);
+  const loading = useSelector((state) => state.eventos.loadingLista);
+  const error = useSelector((state) => state.eventos.error);
 
   useEffect(() => {
-    if (!lista || lista.length === 0) {
+    if (lista.length === 0) {
       dispatch(obtenerEventos());
     }
-  }, [dispatch, lista]);
+  }, [dispatch, lista.length]);
 
-  const eventosFiltrados = (lista || []).filter((evento) =>
-    evento.title.toLowerCase().includes(busqueda.toLowerCase())
-  );
-
-  return {
-    lista: eventosFiltrados,
-    loading,
-    error,
-    busqueda,
-    setBusqueda: (texto) => dispatch(setBusqueda(texto)),
-  };
+  return { lista, loading, error };
 }

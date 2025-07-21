@@ -3,10 +3,10 @@ import * as Yup from "yup";
 import { Helmet } from "react-helmet-async";
 import { useDispatch } from "react-redux";
 import { login } from "../store/authSlice";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { loginUser, getCurrentUser } from "../api/authApi";
 import authbg from "../assets/authbg.png";
-import icono from "../assets/logo_icono.svg"; // ⬅️ Aquí importas tu SVG
+import icono from "../assets/logo_icono.svg";
 
 const esquemaValidacion = Yup.object().shape({
   email: Yup.string().email("Correo inválido").required("Campo obligatorio"),
@@ -18,12 +18,14 @@ const esquemaValidacion = Yup.object().shape({
 export default function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const redirectTo = location.state?.redirectTo || "/dashboard/perfil";
 
   const handleSubmit = async (valores, { setSubmitting, setErrors }) => {
     try {
       const usuario = await loginUser(valores);
       dispatch(login(usuario));
-      navigate("/dashboard/perfil");
+      navigate(redirectTo);
     } catch (error) {
       console.error("Error en login:", error);
       setErrors({ email: "Correo o contraseña incorrectos" });
@@ -54,7 +56,7 @@ export default function Login() {
       try {
         const { usuario } = await getCurrentUser();
         dispatch(login(usuario));
-        navigate("/dashboard/perfil");
+        navigate(redirectTo);
       } catch (err) {
         console.error(
           "Error al obtener usuario después de login con Google:",
@@ -76,11 +78,9 @@ export default function Login() {
 
       <div
         className="min-h-screen flex flex-col items-center justify-center bg-cover bg-center relative px-2 py-10 gap-2"
-        style={{
-          backgroundImage: `url(${authbg})`,
-        }}
+        style={{ backgroundImage: `url(${authbg})` }}
       >
-        <div className="relative w-full max-w-md mx-auto p-8 bg-black/40 backdrop-blur-lg rounded-2xl shadow-2xl text-white ">
+        <div className="relative w-full max-w-md mx-auto p-8 bg-black/40 backdrop-blur-lg rounded-2xl shadow-2xl text-white">
           <h2 className="text-2xl font-bold text-center mb-6 tracking-wide">
             ¡Qué alegría tenerte de vuelta!
           </h2>
@@ -132,7 +132,6 @@ export default function Login() {
                 >
                   Entrar
                 </button>
-
                 <button
                   type="button"
                   onClick={handleGoogleLogin}
@@ -186,19 +185,18 @@ export default function Login() {
             )}
           </Formik>
         </div>
+
         {/* Icono de la app */}
-        <div className=" flex justify-center  relative z-10">
-          <div className=" flex justify-center relative z-10">
-            <div className="relative inline-block">
-              <img
-                src={icono}
-                alt="Logo Communities"
-                className="h-24 opacity-80 relative z-20"
-              />
-              <span className="orbit-sphere sphere1"></span>
-              <span className="orbit-sphere sphere2"></span>
-              <span className="orbit-sphere sphere3"></span>
-            </div>
+        <div className="flex justify-center relative z-10">
+          <div className="relative inline-block">
+            <img
+              src={icono}
+              alt="Logo Communities"
+              className="h-24 opacity-80 relative z-20"
+            />
+            <span className="orbit-sphere sphere1"></span>
+            <span className="orbit-sphere sphere2"></span>
+            <span className="orbit-sphere sphere3"></span>
           </div>
         </div>
       </div>

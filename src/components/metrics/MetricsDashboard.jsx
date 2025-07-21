@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchMetrics,
@@ -13,7 +13,6 @@ import { ensureLastDays } from "../../utils/ensureLastDays";
 function transformGrowthData(summary) {
   if (!summary) return [];
 
-  // Ejemplo: Generar días recientes con datos ficticios
   const days = 7;
   const today = new Date();
   const result = [];
@@ -25,7 +24,7 @@ function transformGrowthData(summary) {
 
     result.push({
       date: isoDate,
-      followers: Math.floor(Math.random() * 10), // Aquí puedes poner tu lógica real
+      followers: Math.floor(Math.random() * 10),
       comments: Math.floor(Math.random() * 5),
     });
   }
@@ -36,20 +35,11 @@ function transformGrowthData(summary) {
 export default function MetricsDashboard({
   entityId,
   entityType,
-  summary,
+  summary, // opcional: para SummaryDashboard y Charts
   className = "",
 }) {
   const dispatch = useDispatch();
-  const { data, dailyData, topViewers, loading, error } = useSelector(
-    (state) => state.metrics
-  );
-  console.log({
-    data,
-    dailyData,
-    topViewers,
-    loading,
-    error,
-  });
+
   const [dateRange, setDateRange] = useState(() => {
     const today = new Date();
     const last7 = new Date();
@@ -60,30 +50,43 @@ export default function MetricsDashboard({
     };
   });
 
+  // 🔁 KEY de caché
+  const cacheKey = useMemo(
+    () => `${dateRange.startDate}_${dateRange.endDate}`,
+    [dateRange]
+  );
+
+  // 🧠 Datos desde Redux cacheados
+  const metrics =
+    useSelector((state) => state.metrics.entities[entityId]) || {};
+  const general = metrics.general || null;
+  const daily = metrics.daily?.[cacheKey] || null;
+  const topViewers = metrics.topViewers?.[cacheKey] || null;
+  const loading = useSelector((state) => state.metrics.loading);
+  const error = useSelector((state) => state.metrics.error);
+
+  // 📦 Lógica de fetch defensiva
   useEffect(() => {
-    if (entityId && entityType) {
+    if (!entityId || !entityType) return;
+
+    if (!general) {
       dispatch(fetchMetrics({ entityId, entityType }));
+    }
+
+    if (!daily) {
+      dispatch(fetchDailyViews({ entityId, entityType, ...dateRange }));
+    }
+
+    if (!topViewers) {
       dispatch(
-        fetchDailyViews({
-          entityId,
-          entityType,
-          startDate: dateRange.startDate,
-          endDate: dateRange.endDate,
-        })
-      );
-      dispatch(
-        fetchTopViewers({
-          entityId,
-          entityType,
-          startDate: dateRange.startDate,
-          endDate: dateRange.endDate,
-          limit: 5,
-        })
+        fetchTopViewers({ entityId, entityType, ...dateRange, limit: 5 })
       );
     }
-  }, [entityId, entityType, dispatch, dateRange]);
+  }, [entityId, entityType, cacheKey]);
 
-  if (loading) return <p className="p-2 text-sm">Cargando métricas...</p>;
+  if (loading && !general && !daily && !topViewers)
+    return <p className="p-2 text-sm">Cargando métricas...</p>;
+
   if (error) return <p className="text-red-600 p-2 text-sm">Error: {error}</p>;
 
   return (
@@ -115,24 +118,26 @@ export default function MetricsDashboard({
       </div>
 
       {/* Resumen de visitas */}
-      {data && (
+      {general && (
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           <div className="bg-blue-50 border border-gray-200 rounded-lg p-3 text-center hover:shadow transition">
             <FaEye className="mx-auto text-gray-500 mb-1" />
-            <p className="text-lg font-bold text-gray-700">{data.totalViews}</p>
+            <p className="text-lg font-bold text-gray-700">
+              {general.totalViews}
+            </p>
             <p className="text-xs text-gray-500">Visitas totales</p>
           </div>
           <div className="bg-blue-50 border border-gray-200 rounded-lg p-3 text-center hover:shadow transition">
             <FaEye className="mx-auto text-gray-500 mb-1" />
             <p className="text-lg font-bold text-gray-700">
-              {data.anonymousViews}
+              {general.anonymousViews}
             </p>
             <p className="text-xs text-gray-500">Visitas anónimas</p>
           </div>
           <div className="bg-blue-50 border border-gray-200 rounded-lg p-3 text-center hover:shadow transition">
             <FaUsers className="mx-auto text-gray-500 mb-1" />
             <p className="text-lg font-bold text-gray-700">
-              {data.uniqueLoggedInViews}
+              {general.uniqueLoggedInViews}
             </p>
             <p className="text-xs text-gray-500">Visitas únicas</p>
           </div>
@@ -160,13 +165,13 @@ export default function MetricsDashboard({
       )}
 
       {/* Visitas diarias */}
-      {dailyData && dailyData.length > 0 && (
+      {daily && daily.length > 0 && (
         <div className="bg-blue-50 border border-gray-200 rounded-lg p-4">
           <h4 className="text-sm font-semibold mb-3 text-gray-600">
             Visitas diarias
           </h4>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-            {dailyData.map((day) => (
+            {daily.map((day) => (
               <div
                 key={day.date}
                 className="flex flex-col items-center bg-white border border-gray-200 rounded-md p-2 text-xs text-gray-600 hover:shadow transition"
@@ -188,20 +193,17 @@ export default function MetricsDashboard({
             Resumen de actividad
           </h4>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* SummaryDashboard ocupa 1/3 en desktop */}
             <div className="col-span-1">
               <SummaryDashboard summary={summary} />
             </div>
-
-            {/* MetricsChartsTabs ocupa 2/3 en desktop */}
             <div className="col-span-1 lg:col-span-2">
               <MetricsChartsTabs
                 summary={summary}
-                dailyViews={ensureLastDays(dailyData, 5)}
+                dailyViews={ensureLastDays(daily || [], 5)}
                 ratingsDistribution={summary.ratings}
                 visitsSummary={{
-                  anonymous: data?.anonymousViews || 0,
-                  logged: data?.uniqueLoggedInViews || 0,
+                  anonymous: general?.anonymousViews || 0,
+                  logged: general?.uniqueLoggedInViews || 0,
                 }}
                 topViewers={topViewers}
                 followersComments={transformGrowthData(summary)}

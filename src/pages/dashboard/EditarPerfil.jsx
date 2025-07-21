@@ -10,12 +10,37 @@ import authBg from "../../../src/assets/authbg.png";
 export default function EditarPerfil() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const usuario = useSelector((state) => state.auth.usuario);
+  const { usuario, loading, error } = useSelector((state) => state.auth);
+
+  if (loading || !usuario || !usuario.id) {
+    return (
+      <div className="flex items-center justify-center min-h-screen text-white">
+        Cargando perfil...
+      </div>
+    );
+  }
 
   const handleSubmit = async (valores) => {
     try {
-      const updatedUser = await updateUserApi(usuario.id, valores);
-      dispatch(updateUser(updatedUser.user || updatedUser));
+      const formData = new FormData();
+
+      // Agrega campos de texto
+      Object.entries({
+        name: valores.name,
+        lastName: valores.lastName,
+        title: valores.title,
+        description: valores.description,
+        location: valores.location,
+        country: valores.country,
+      }).forEach(([key, value]) => formData.append(key, value));
+
+      // Imagen (si es nueva)
+      if (valores.profileImage && typeof valores.profileImage !== "string") {
+        formData.append("profileImage", valores.profileImage);
+      }
+
+      const updatedUser = await updateUserApi(usuario.id, formData);
+      dispatch(updateUser.fulfilled(updatedUser)); // usa fulfilled directamente para evitar otro fetch
       navigate("/dashboard/perfil");
     } catch (err) {
       console.error("Error actualizando perfil", err);
@@ -28,7 +53,7 @@ export default function EditarPerfil() {
         <title>Editar Perfil | Communities</title>
       </Helmet>
 
-      <div className="flex flex-col items-center justify-center min-h-screen px-4 ">
+      <div className="flex flex-col items-center justify-center min-h-screen px-4">
         <section
           className="w-full max-w-2xl shadow rounded-2xl p-6 sm:p-12 space-y-6 bg-black/40 backdrop-blur-lg"
           style={{

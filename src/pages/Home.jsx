@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
+import { useSelector } from "react-redux";
+
 import NegociosSugeridos from "../components/home/NegociosSugeridos";
 import EventosProximos from "../components/home/EventosProximos";
 import ComunidadesDestacadas from "../components/home/ComunidadesDestacadas";
@@ -9,7 +11,15 @@ import PromocionesDestacadas from "../components/home/PromocionesDestacadas";
 import bannerBTN from "../assets/bannerBTN.mp4";
 
 export default function Home() {
-  const [activePanel, setActivePanel] = useState("map"); // 'map' o 'search'
+  const [activePanel, setActivePanel] = useState("map");
+  const negocios = useSelector((state) => state.negocios.lista);
+  const negociosLoading = useSelector((state) => state.negocios.loading);
+
+  const eventos = useSelector((state) => state.eventos.lista);
+  const eventosLoading = useSelector((state) => state.eventos.loading);
+
+  const comunidades = useSelector((state) => state.comunidades.lista);
+  const comunidadesLoading = useSelector((state) => state.comunidades.loading);
 
   return (
     <div className="flex flex-col gap-12 md:gap-16 xl:gap-24 md:mt-12">
@@ -21,9 +31,8 @@ export default function Home() {
         />
       </Helmet>
 
-      {/* Distribución */}
+      {/* Mapa + Buscador */}
       <div className="relative flex flex-col lg:flex-row gap-4 min-h-[500px]">
-        {/* Mapa */}
         <div
           onFocus={() => setActivePanel("map")}
           className={`
@@ -36,7 +45,6 @@ export default function Home() {
           <VistaComunidad />
         </div>
 
-        {/* Buscador */}
         <div
           onFocus={() => setActivePanel("search")}
           className={`
@@ -49,16 +57,15 @@ export default function Home() {
           <BusquedaList />
         </div>
       </div>
-      {/* Para mobile: botones de alternar */}
+
+      {/* Botones mobile para alternar */}
       <div className="sm:hidden mb-4 px-2 w-full">
         <div className="relative flex bg-orange-50 rounded-lg p-1">
-          {/* Fondo animado */}
           <span
             className={`absolute inset-y-0 left-0 w-1/2 bg-orange-500 rounded-md transition-transform duration-300 ease-in-out ${
               activePanel === "search" ? "translate-x-full" : "translate-x-0"
             }`}
           />
-          {/* Botones */}
           <button
             onClick={() => setActivePanel("map")}
             className={`flex-1 z-10 text-center py-2 text-sm font-semibold rounded-md transition-colors duration-200 ${
@@ -77,12 +84,16 @@ export default function Home() {
           </button>
         </div>
       </div>
+
       {/* Secciones principales */}
       <div className="flex flex-col gap-12 md:gap-16 xl:gap-24 mt-12">
         <PromocionesDestacadas />
-        <NegociosSugeridos />
-        <EventosProximos />
-        <ComunidadesDestacadas />
+        <NegociosSugeridos negocios={negocios} loading={negociosLoading} />
+        <EventosProximos eventos={eventos} loading={eventosLoading} />
+        <ComunidadesDestacadas
+          comunidades={comunidades}
+          loading={comunidadesLoading}
+        />
 
         <div className="w-full hidden sm:flex justify-center px-4 py-10">
           <video

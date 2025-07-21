@@ -7,12 +7,16 @@ export const cargarNotificaciones = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const res = await axiosInstance.get("/notifications");
-      console.log("🚀 Respuesta de /notifications:", res.data);
-      if (Array.isArray(res.data)) return res.data;
-      return res.data.notifications || [];
+      return Array.isArray(res.data) ? res.data : res.data.notifications || [];
     } catch (error) {
       return thunkAPI.rejectWithValue("Error al cargar notificaciones");
     }
+  },
+  {
+    condition: (_, { getState }) => {
+      const { notificaciones } = getState();
+      return !notificaciones.loaded;
+    },
   }
 );
 
@@ -50,6 +54,7 @@ const notificacionesSlice = createSlice({
     items: [],
     loading: false,
     error: null,
+    loaded: false, // ✅ nuevo flag
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -62,18 +67,21 @@ const notificacionesSlice = createSlice({
       .addCase(cargarNotificaciones.fulfilled, (state, action) => {
         state.items = action.payload;
         state.loading = false;
+        state.loaded = true; // ✅ marcamos como cargado
       })
       .addCase(cargarNotificaciones.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
+
       // Marcar una como leída
       .addCase(marcarNotificacionLeida.fulfilled, (state, action) => {
         state.items = state.items.map((n) =>
           n._id === action.payload ? { ...n, read: true } : n
         );
       })
-      // 🟢 NUEVO: Marcar todas como leídas
+
+      // Marcar todas como leídas
       .addCase(marcarTodasNotificacionesLeidas.fulfilled, (state) => {
         state.items = state.items.map((n) => ({ ...n, read: true }));
       });
