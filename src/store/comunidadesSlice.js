@@ -1,8 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   getAllCommunities,
-  getCommunityBySlug,
   getMyCommunities,
+  createCommunity,
+  updateCommunity,
+  getCommunityById,
 } from "../api/communityApi";
 import { mostrarFeedback } from "./feedbackSlice";
 
@@ -55,12 +57,12 @@ export const fetchMisComunidades = createAsyncThunk(
   }
 );
 
-// 🔁 Comunidad por slug
-export const fetchCommunityBySlug = createAsyncThunk(
-  "comunidades/fetchBySlug",
-  async (slug, { rejectWithValue, dispatch }) => {
+// 🔁 Comunidad por ID
+export const fetchCommunityById = createAsyncThunk(
+  "comunidades/fetchById",
+  async (id, { rejectWithValue, dispatch }) => {
     try {
-      const data = await getCommunityBySlug(slug);
+      const data = await getCommunityById(id);
       return data.community;
     } catch (error) {
       dispatch(
@@ -74,6 +76,37 @@ export const fetchCommunityBySlug = createAsyncThunk(
   }
 );
 
+// Crear comunidad
+export const createCommunityThunk = createAsyncThunk(
+  "comunidades/create",
+  async (formData, thunkAPI) => {
+    try {
+      const res = await createCommunity(formData);
+      return res;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err?.response?.data?.message || err.message
+      );
+    }
+  }
+);
+
+// Actualizar comunidad
+export const updateCommunityThunk = createAsyncThunk(
+  "comunidades/update",
+  async ({ id, formData }, thunkAPI) => {
+    try {
+      const res = await updateCommunity(id, formData);
+      return res;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err?.response?.data?.message || err.message
+      );
+    }
+  }
+);
+
+// Slice
 const comunidadesSlice = createSlice({
   name: "comunidades",
   initialState: {
@@ -126,17 +159,17 @@ const comunidadesSlice = createSlice({
         state.error = action.payload;
       })
 
-      // 🔁 fetchCommunityBySlug
-      .addCase(fetchCommunityBySlug.pending, (state) => {
+      // 🔁 fetchCommunityById
+      .addCase(fetchCommunityById.pending, (state) => {
         state.loadingDetalle = true;
         state.error = null;
         state.comunidadActual = null;
       })
-      .addCase(fetchCommunityBySlug.fulfilled, (state, action) => {
+      .addCase(fetchCommunityById.fulfilled, (state, action) => {
         state.loadingDetalle = false;
         state.comunidadActual = action.payload;
       })
-      .addCase(fetchCommunityBySlug.rejected, (state, action) => {
+      .addCase(fetchCommunityById.rejected, (state, action) => {
         state.loadingDetalle = false;
         state.error = action.payload;
         state.comunidadActual = null;

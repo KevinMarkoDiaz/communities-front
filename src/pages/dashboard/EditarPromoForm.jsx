@@ -1,12 +1,13 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { updatePromotion } from "../../api/promotionApi";
 import DropzoneImagen from "../../components/DropzoneImagen";
 import Select from "react-select";
 import { customSelectStylesForm } from "../../styles/customSelectStylesForm";
 import { useCargarCategorias } from "../../hooks/useCargarCategorias";
+import { mostrarFeedback } from "../../store/feedbackSlice";
 
 const schema = Yup.object().shape({
   name: Yup.string().required("Nombre obligatorio"),
@@ -23,7 +24,7 @@ export default function EditarPromoForm({ promo }) {
   const usuario = useSelector((state) => state.auth.usuario);
   const comunidades = useSelector((state) => state.comunidades.lista);
   const categorias = useSelector((state) => state.categorias.data) || [];
-
+  const dispatch = useDispatch();
   if (!promo) return <p className="p-4">Cargando promoción...</p>;
 
   const initialValues = {
@@ -51,19 +52,34 @@ export default function EditarPromoForm({ promo }) {
         updatedBy: usuario._id,
       };
 
-      formData.append("data", JSON.stringify(data));
-
-      // Si la imagen cambió y no es string (es File)
-      if (values.image && typeof values.image !== "string") {
-        formData.append("featuredImage", values.image);
+      if (values.image) {
+        if (typeof values.image === "string") {
+          data.featuredImage = values.image;
+        } else {
+          formData.append("featuredImage", values.image);
+        }
       }
 
+      formData.append("data", JSON.stringify(data));
+
       await updatePromotion(promo._id, formData);
-      alert("✅ Promoción actualizada correctamente");
+
+      dispatch(
+        mostrarFeedback({
+          message: "✅ Promoción actualizada correctamente",
+          type: "success",
+        })
+      );
+
       navigate("/dashboard/mis-negocios");
     } catch (err) {
       console.error("❌ Error al actualizar promoción:", err);
-      alert("Error al guardar la promoción");
+      dispatch(
+        mostrarFeedback({
+          message: "❌ Error al guardar la promoción",
+          type: "error",
+        })
+      );
     } finally {
       actions.setSubmitting(false);
     }

@@ -5,6 +5,7 @@ import { Helmet } from "react-helmet-async";
 import authBg from "../../assets/authbg.png";
 import logo2 from "../../assets/communidades_text.svg";
 import icono from "../../assets/icono.svg";
+import ilust2 from "../../assets/ilust2.svg";
 import PromoForm from "./PromoForm";
 import EditarPromoForm from "./EditarPromoForm";
 import { getPromotionById } from "../../api/promotionApi";
@@ -50,7 +51,7 @@ export default function CrearPromo() {
   }, [dispatch, promociones.length]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen px-4 gap-8">
+    <div className="flex flex-col items-center justify-center min-h-screen px-4 gap-8 mt-8 lg:mt-16">
       <Helmet>
         <title>
           {esEdicion ? "Editar Promoción" : "Crear Promoción"} | Communities
@@ -70,18 +71,25 @@ export default function CrearPromo() {
 
         {/* Contenido */}
         <div className="relative space-y-6 grid gap-8">
-          <div className="flex items-center justify-between flex-wrap gap-2">
-            <h1 className="text-2xl font-bold text-black flex items-center gap-2">
-              {esEdicion ? "Editar Promoción" : "Crear Promoción"}
-            </h1>
-            <img src={logo2} alt="Communities Logo" className="h-6 w-auto" />
+          <div className="flex items-center justify-between gap-2">
+            <div className="grid gap-6">
+              <h1 className="text-2xl font-bold text-black flex items-center gap-2">
+                {esEdicion
+                  ? "Hazla aún más irresistible"
+                  : "Comparte tu próxima gran oferta"}
+              </h1>
+              <p className="text-gray-700 text-sm sm:text-base max-w-xl">
+                {esEdicion
+                  ? "Modifica los detalles de tu promoción para mantenerla actualizada y relevante."
+                  : "Comparte ofertas especiales y promociones exclusivas que ayuden a tu negocio a conectar con la comunidad latina 💫"}
+              </p>
+            </div>
+            <img
+              src={ilust2}
+              alt="Ilustración promoción"
+              className="w-40 xl:w-60 opacity-90"
+            />
           </div>
-
-          <p className="text-gray-700 text-sm sm:text-base">
-            {esEdicion
-              ? "Modifica los detalles de tu promoción para mantenerla actualizada y relevante."
-              : "Comparte ofertas especiales y promociones exclusivas que ayuden a tu negocio a conectar con la comunidad latina 💫"}
-          </p>
 
           {esEdicion ? (
             loading ? (

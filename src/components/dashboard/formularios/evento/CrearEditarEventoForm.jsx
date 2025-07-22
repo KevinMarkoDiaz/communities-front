@@ -3,27 +3,26 @@ import { Formik, Form } from "formik";
 import { AnimatePresence, motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { customSelectStylesForm } from "../../../../../src/styles/customSelectStylesForm.js";
+import * as Yup from "yup";
 
+import { customSelectStylesForm } from "../../../../../src/styles/customSelectStylesForm.js";
 import Paso1Info from "./Paso1Info";
 import PasoUbicacion from "../PasoUbicacion";
 import Paso2Detalles from "./Paso2Detalles";
 import Paso3Imagen from "./Paso3Imagen";
 import Paso4Opciones from "./Paso4Opciones";
 
-import { obtenerEventos } from "../../../../store/eventosSlice";
-import { createEvent } from "../../../../api/eventApi";
+import { createEventThunk } from "../../../../store/eventosSlice";
+import { mostrarFeedback } from "../../../../store/feedbackSlice";
 
-// Nombres de los pasos
 const nombresPasos = [
   "Información Básica",
   "Ubicación",
-  "Detalles del Evento",
+  "Detalles",
   "Imágenes",
   "Opciones Finales",
 ];
 
-// Pasos en orden
 const pasos = [
   Paso1Info,
   PasoUbicacion,
@@ -32,8 +31,6 @@ const pasos = [
   Paso4Opciones,
 ];
 
-// Validaciones
-import * as Yup from "yup";
 const esquemaValidacion = [
   Yup.object({
     title: Yup.string().required("Título obligatorio"),
@@ -130,7 +127,6 @@ const valoresIniciales = {
   isPublished: false,
   organizer: "",
   organizerModel: "",
-  organizerLabel: "",
 };
 
 export default function CrearEditarEventoForm({
@@ -148,42 +144,59 @@ export default function CrearEditarEventoForm({
     try {
       const formData = new FormData();
 
+      // Imagen destacada
       if (values.image && typeof values.image !== "string") {
         formData.append("featuredImage", values.image);
       }
 
+      // Galería de imágenes
       if (Array.isArray(values.images)) {
         values.images.forEach((img) => {
           if (img instanceof File) formData.append("images", img);
         });
       }
 
+      // Convertir tags a array
       const tagsArray = values.tags
         ? values.tags.split(",").map((tag) => tag.trim())
         : [];
 
-      const organizerId = values.organizer?.value || usuario._id;
-      const organizerModel =
-        values.organizer?.model ||
-        (usuario.role === "business_owner" ? "Business" : "User");
-
+      // Construcción base de datos (sin image ni images)
       const data = {
         ...values,
         tags: tagsArray,
         price: Number(values.price),
-        organizer: organizerId,
-        organizerModel,
       };
+
+      // Limpiar image e images (ya se mandan por FormData)
+      delete data.image;
+      delete data.images;
+
+      // Si el usuario es admin y seleccionó organizador, usarlo
+      if (usuario.role === "admin" && values.organizer?.value) {
+        data.organizer = values.organizer.value;
+        data.organizerModel = values.organizer.model;
+      }
 
       formData.append("data", JSON.stringify(data));
 
-      await createEvent(formData);
-      dispatch(obtenerEventos());
-      alert("✅ Evento creado correctamente");
+      // Enviar al backend
+      await dispatch(createEventThunk(formData)).unwrap();
+
+      dispatch(
+        mostrarFeedback({
+          message: "✅ Evento creado correctamente",
+          type: "success",
+        })
+      );
       navigate("/dashboard/mis-eventos");
     } catch (err) {
-      console.error("❌ Error al guardar evento:", err);
-      alert("Ocurrió un error al guardar el evento");
+      dispatch(
+        mostrarFeedback({
+          message: err?.message || "❌ Ocurrió un error al crear el evento",
+          type: "error",
+        })
+      );
     } finally {
       actions.setSubmitting(false);
     }
@@ -209,14 +222,22 @@ export default function CrearEditarEventoForm({
       {({ values, setErrors }) => (
         <Form className="flex flex-col md:flex-row gap-8 w-full max-w-5xl mx-auto p-8 bg-black/40 backdrop-blur-lg rounded-2xl shadow-2xl text-white">
           {/* Sidebar de pasos */}
-          <div className="flex flex-col space-y-8 w-full md:w-36">
+          <div className="flex flex-row md:flex-col w-full md:w-20 lg:w-36 space-x-4 md:space-x-0 md:space-y-8">
             {nombresPasos.map((nombre, index) => (
-              <div key={index} className="flex items-start relative">
+              <div
+                key={index}
+                className="relative flex flex-col md:flex-row md:items-start items-center"
+              >
                 {index !== nombresPasos.length - 1 && (
-                  <span
-                    className="absolute left-2.5 top-7 h-full w-px bg-white/20"
-                    style={{ minHeight: "1.5rem" }}
-                  />
+                  <>
+                    {/* Línea horizontal para mobile */}
+                    <span className="absolute hidden md:hidden left-1/2 top-6 w-10 h-px bg-white/20 translate-x-1/2" />
+                    {/* Línea vertical para md+ */}
+                    <span
+                      className="absolute hidden md:block left-2.5 top-7 h-full w-px bg-white/20"
+                      style={{ minHeight: "1.5rem" }}
+                    />
+                  </>
                 )}
                 <div
                   className={`flex items-center justify-center w-6 h-6 rounded-full border-2 ${
@@ -229,12 +250,14 @@ export default function CrearEditarEventoForm({
                 >
                   {paso > index ? "✓" : index + 1}
                 </div>
-                <div className="ml-3 text-sm leading-tight">{nombre}</div>
+                <div className="ml-2 text-xs lg:text-sm hidden md:block">
+                  {nombre}
+                </div>{" "}
               </div>
             ))}
           </div>
 
-          {/* Contenido */}
+          {/* Contenido dinámico */}
           <div className="flex-1 space-y-6">
             <div className="flex items-center justify-between mb-2">
               <div className="text-sm font-medium">

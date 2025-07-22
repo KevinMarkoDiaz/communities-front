@@ -18,6 +18,7 @@ export default function Paso6Extras() {
         value={values.featuredImage}
         onChange={(file) => setFieldValue("featuredImage", file)}
         label="Imagen destacada del negocio"
+        className="text-white"
       />
       <ErrorMessage
         name="featuredImage"
@@ -30,6 +31,7 @@ export default function Paso6Extras() {
         value={values.profileImage}
         onChange={(file) => setFieldValue("profileImage", file)}
         label="Logo o imagen de perfil"
+        className="text-white"
       />
       <ErrorMessage
         name="profileImage"
@@ -82,6 +84,7 @@ export default function Paso6Extras() {
         onChange={(files) => setFieldValue("images", files)}
         label="Galería de imágenes del negocio"
         maxImages={5}
+        className="text-white"
       />
       <ErrorMessage
         name="images"

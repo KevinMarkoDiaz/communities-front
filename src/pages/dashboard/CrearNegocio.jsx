@@ -1,12 +1,12 @@
 import { Helmet } from "react-helmet-async";
 import NegocioForm from "./NegocioForm";
 import authBg from "../../../src/assets/authbg.png";
-import logo2 from "../../../src/assets/communidades_text.svg";
 import icono from "../../../src/assets/icono.svg";
+import ilust2 from "../../assets/ilust2.svg";
 
 export default function CrearNegocio() {
   return (
-    <div className="flex-col flex items-center justify-center min-h-screen px-4 gap-8">
+    <div className="flex-col flex items-center justify-center min-h-screen px-4 gap-8 lg:mt-16">
       <Helmet>
         <title>Crear Negocio | Communities</title>
       </Helmet>
@@ -24,17 +24,22 @@ export default function CrearNegocio() {
 
         {/* Contenido */}
         <div className="relative space-y-6 grid gap-8">
-          <div className="flex items-center justify-between flex-wrap gap-2">
-            <h1 className="text-2xl font-bold text-black flex items-center gap-2">
-              Crear Negocio
-            </h1>
-            <img src={logo2} alt="Communities Logo" className="h-6 w-auto" />
+          <div className="flex items-center justify-between gap-2">
+            <div className="grid gap-8">
+              <h1 className="text-2xl font-bold text-black flex items-center gap-2">
+                Empezá a dar a conocer tu negocio
+              </h1>
+              <p className="text-gray-700 text-sm sm:text-base">
+                Comparte tu emprendimiento con la comunidad, atrae clientes y
+                haz crecer tu negocio en EE. UU. 🚀
+              </p>
+            </div>
+            <img
+              src={ilust2}
+              alt="Perfil"
+              className="w-40 xl:w-60 opacity-90"
+            />
           </div>
-
-          <p className="text-gray-700 text-sm sm:text-base">
-            Comparte tu emprendimiento con la comunidad, atrae clientes y haz
-            crecer tu negocio en EE. UU. 🚀
-          </p>
 
           <NegocioForm />
         </div>

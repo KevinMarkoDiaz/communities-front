@@ -41,7 +41,7 @@ export default function Paso1Info() {
           name="description"
           placeholder="Breve descripción del evento"
           rows={3}
-          className="w-full px-4 py-3 border border-white/40 bg-white/10 rounded-lg placeholder:text-gray-300 focus:outline-none"
+          className="w-full h-42 lg:h-62 px-4 py-3 border border-white/40 bg-white/10 rounded-lg placeholder:text-gray-300 focus:outline-none"
         />
         <ErrorMessage
           name="description"

@@ -6,12 +6,14 @@ export default function DropzoneImagen({
   value,
   onChange,
   label = "Imagen destacada",
+  className = "", // estilo del área de drop
+  infoTextClassName = "text-xs text-gray-400", // estilo del texto de formatos
 }) {
   const onDrop = useCallback(
     (acceptedFiles) => {
       const file = acceptedFiles[0];
       if (file) {
-        onChange(file); // ⬅️ Guarda archivo tipo File
+        onChange(file); // guarda el archivo tipo File
       }
     },
     [onChange]
@@ -34,7 +36,8 @@ export default function DropzoneImagen({
             isDragActive
               ? "bg-blue-50 border-blue-400 text-blue-600"
               : "border-gray-300 text-gray-500 hover:border-blue-400 hover:bg-blue-50"
-          }`}
+          }
+          ${className}`}
       >
         <input {...getInputProps()} />
 
@@ -44,24 +47,16 @@ export default function DropzoneImagen({
             ? "Suelta la imagen aquí..."
             : "Toca o arrastra una imagen desde tu galería"}
         </p>
-        <p className="text-xs text-gray-400">Formatos: JPG, PNG, WEBP</p>
+        <p className={infoTextClassName}>Formatos: JPG, PNG, WEBP</p>
       </div>
 
       {value && (
         <div className="mt-2">
-          {typeof value === "string" ? (
-            <img
-              src={value}
-              alt="Vista previa"
-              className="rounded-lg border w-full max-w-xs shadow"
-            />
-          ) : (
-            <img
-              src={URL.createObjectURL(value)}
-              alt="Vista previa"
-              className="rounded-lg border w-full max-w-xs shadow"
-            />
-          )}
+          <img
+            src={typeof value === "string" ? value : URL.createObjectURL(value)}
+            alt="Vista previa"
+            className="rounded-lg border  w-full max-w-[160px]  shadow-lg"
+          />
         </div>
       )}
     </div>

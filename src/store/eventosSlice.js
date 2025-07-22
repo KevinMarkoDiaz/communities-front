@@ -1,5 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getAllEvents, getMyEvents, deleteEvent } from "../api/eventApi";
+import {
+  getAllEvents,
+  getMyEvents,
+  deleteEvent,
+  updateEvent,
+  createEvent,
+} from "../api/eventApi";
 import { mostrarFeedback } from "./feedbackSlice";
 
 // 🔁 Todos los eventos
@@ -48,6 +54,35 @@ export const fetchMisEventos = createAsyncThunk(
     condition: (_, { getState }) => {
       return getState().eventos.misEventos.length === 0;
     },
+  }
+);
+
+// THUNK para crear evento
+export const createEventThunk = createAsyncThunk(
+  "eventos/createEvent",
+  async (formData, thunkAPI) => {
+    try {
+      const res = await createEvent(formData);
+      return res; // Podés ajustar según lo que retorne createEvent
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err?.response?.data?.message || err.message
+      );
+    }
+  }
+);
+
+export const updateEventThunk = createAsyncThunk(
+  "eventos/updateEvent",
+  async ({ id, formData, token }, thunkAPI) => {
+    try {
+      const response = await updateEvent(id, formData, token);
+      return response;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err?.response?.data?.message || err.message
+      );
+    }
   }
 );
 

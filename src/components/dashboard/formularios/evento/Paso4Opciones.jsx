@@ -24,10 +24,17 @@ export default function Paso4Opciones() {
     useSelector((state) => state.negocios.loading);
 
   useEffect(() => {
-    if (!categorias?.length) dispatch(fetchCategorias());
-    if (!comunidades?.length) dispatch(fetchComunidades());
-    if (!negocios?.length) dispatch(obtenerNegocios());
-  }, [dispatch, categorias.length, comunidades.length, negocios.length]);
+    if (Array.isArray(categorias) === false || categorias.length === 0) {
+      dispatch(fetchCategorias());
+    }
+    if (Array.isArray(comunidades) === false || comunidades.length === 0) {
+      dispatch(fetchComunidades());
+    }
+    if (Array.isArray(negocios) === false || negocios.length === 0) {
+      dispatch(obtenerNegocios());
+    }
+    // solo se ejecuta una vez, no depende de cambios
+  }, []);
 
   if (loading) {
     return <p className="text-sm text-gray-500">Cargando opciones...</p>;
@@ -45,7 +52,11 @@ export default function Paso4Opciones() {
             label: cat.name,
           }))}
           value={categorias
-            .filter((c) => values.categories?.includes(c._id))
+            .filter(
+              (c) =>
+                Array.isArray(values.categories) &&
+                values.categories.includes(c._id)
+            )
             .map((c) => ({
               value: c._id,
               label: c.name,
@@ -76,7 +87,11 @@ export default function Paso4Opciones() {
             label: com.name,
           }))}
           value={comunidades
-            .filter((c) => values.communities?.includes(c._id))
+            .filter(
+              (c) =>
+                Array.isArray(values.communities) &&
+                values.communities.includes(c._id)
+            )
             .map((c) => ({
               value: c._id,
               label: c.name,
@@ -109,7 +124,11 @@ export default function Paso4Opciones() {
             label: n.name,
           }))}
           value={negocios
-            .filter((n) => values.sponsors?.includes(n._id))
+            .filter(
+              (n) =>
+                Array.isArray(values.sponsors) &&
+                values.sponsors.includes(n._id)
+            )
             .map((n) => ({
               value: n._id,
               label: n.name,

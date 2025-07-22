@@ -1,12 +1,12 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useNavigate, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { createPromotion } from "../../api/promotionApi";
+import { useDispatch, useSelector } from "react-redux";
+import { customSelectStylesForm } from "../../styles/customSelectStylesForm";
 import DropzoneImagen from "../../components/DropzoneImagen";
 import { useCargarCategorias } from "../../hooks/useCargarCategorias";
 import Select from "react-select";
-import { customSelectStylesForm } from "../../styles/customSelectStylesForm";
+import { createPromo } from "../../store/promocionesSlice";
 
 const schema = Yup.object().shape({
   name: Yup.string().required("Nombre obligatorio"),
@@ -20,6 +20,7 @@ const schema = Yup.object().shape({
 });
 
 export default function PromoForm() {
+  const dispatch = useDispatch();
   useCargarCategorias();
   const { negocioId } = useParams();
   const navigate = useNavigate();
@@ -36,7 +37,7 @@ export default function PromoForm() {
     image: null,
     category: "",
     community: "",
-    business: negocioId, //
+    business: negocioId,
   };
 
   const handleSubmit = async (values, actions) => {
@@ -57,12 +58,10 @@ export default function PromoForm() {
       formData.append("data", JSON.stringify(data));
       formData.append("featuredImage", values.image);
 
-      await createPromotion(formData);
-      alert("✅ Promoción creada correctamente");
+      await dispatch(createPromo(formData)).unwrap();
       navigate("/dashboard/mis-negocios");
     } catch (err) {
-      console.error("❌ Error al crear promoción:", err);
-      alert("Error al guardar la promoción");
+      // El feedback ya se maneja desde el thunk con mostrarFeedback
     } finally {
       actions.setSubmitting(false);
     }

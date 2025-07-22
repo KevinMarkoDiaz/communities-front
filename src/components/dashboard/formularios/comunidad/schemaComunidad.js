@@ -6,7 +6,6 @@ export const initialValuesComunidad = {
   description: "",
   language: "es",
   tipo: "migrante",
-  slug: "",
 
   // Paso 2 – Información cultural
   originCountryInfo: {
@@ -29,8 +28,8 @@ export const initialValuesComunidad = {
   // Paso 4 – Ubicación
   region: "",
   mapCenter: {
-    lat: "", // antes: null
-    lng: "", // antes: null
+    lat: "",
+    lng: "",
   },
   location: {
     address: "",
@@ -39,8 +38,8 @@ export const initialValuesComunidad = {
     zipCode: "",
     country: "",
     coordinates: {
-      lat: "", // antes: null
-      lng: "", // antes: null
+      lat: "",
+      lng: "",
     },
   },
 
@@ -52,22 +51,18 @@ export const initialValuesComunidad = {
   metaTitle: "",
   metaDescription: "",
   status: "Publicada",
-  isVerified: false,
-  tags: [],
-  tagsString: "",
+  verified: false,
 };
 
 export const validationSchemaComunidad = [
-  // Paso 1 – Información básica
+  // Paso 1
   Yup.object({
     name: Yup.string().required("El nombre es obligatorio"),
     description: Yup.string().required("La descripción es obligatoria"),
     language: Yup.string().required("El idioma es obligatorio"),
     tipo: Yup.string().required("El tipo es obligatorio"),
-    slug: Yup.string().nullable(),
   }),
-
-  // Paso 2 – Información cultural
+  // Paso 2
   Yup.object({
     originCountryInfo: Yup.object({
       name: Yup.string().required("El país de origen es obligatorio"),
@@ -85,8 +80,7 @@ export const validationSchemaComunidad = [
       })
     ),
   }),
-
-  // Paso 3 – Recursos útiles y redes
+  // Paso 3
   Yup.object({
     resources: Yup.array().of(
       Yup.object({
@@ -104,21 +98,16 @@ export const validationSchemaComunidad = [
       youtube: Yup.string().url("URL inválida").nullable(),
     }),
   }),
-
-  // Paso 4 – Ubicación
+  // Paso 4
   Yup.object({
     region: Yup.string().required("La región es obligatoria"),
     mapCenter: Yup.object({
       lat: Yup.number()
         .nullable()
-        .transform((value, originalValue) =>
-          originalValue === "" ? null : value
-        ),
+        .transform((v, o) => (o === "" ? null : v)),
       lng: Yup.number()
         .nullable()
-        .transform((value, originalValue) =>
-          originalValue === "" ? null : value
-        ),
+        .transform((v, o) => (o === "" ? null : v)),
     }),
     location: Yup.object({
       address: Yup.string().required("Dirección obligatoria"),
@@ -129,18 +118,13 @@ export const validationSchemaComunidad = [
       coordinates: Yup.object({
         lat: Yup.number()
           .nullable()
-          .transform((value, originalValue) =>
-            originalValue === "" || isNaN(originalValue) ? null : value
-          ),
+          .transform((v, o) => (o === "" || isNaN(o) ? null : v)),
         lng: Yup.number()
           .nullable()
-          .transform((value, originalValue) =>
-            originalValue === "" || isNaN(originalValue) ? null : value
-          ),
+          .transform((v, o) => (o === "" || isNaN(o) ? null : v)),
       }),
     }),
   }),
-
   // Paso 5 – SEO y estado
   Yup.object({
     metaTitle: Yup.string().required("El meta título es obligatorio"),
@@ -150,8 +134,7 @@ export const validationSchemaComunidad = [
     status: Yup.string()
       .oneOf(["Publicada", "Pendiente", "Inactiva"])
       .required("El estado es obligatorio"),
-    isVerified: Yup.boolean(),
-    tags: Yup.array().of(Yup.string().trim()).nullable(),
+    verified: Yup.boolean(),
   }),
   // Paso 6 – Imágenes
   Yup.object({
@@ -166,10 +149,10 @@ export const validationSchemaComunidad = [
       .required("La imagen de banner es obligatoria")
       .test(
         "is-valid",
-        "La imagen de banner es obligatoria",
+        "La imagen es inválida",
         (val) => typeof val === "string" || typeof val === "object"
       ),
   }),
-  // Paso 7 – Confirmación (sin validación)
+  // Paso 7 – Confirmación
   Yup.object(),
 ];

@@ -6,7 +6,8 @@ import { useNavigate } from "react-router-dom";
 import DropzoneImagen from "../../components/DropzoneImagen";
 import { createCategory } from "../../api/categoryApi";
 import { Helmet } from "react-helmet-async";
-import authBg from "../../../src/assets/authbg.png";
+import { useDispatch } from "react-redux";
+import { mostrarFeedback } from "../../store/feedbackSlice"; // ajustá el path si cambia
 
 const esquemaCategoria = Yup.object().shape({
   name: Yup.string().required("Nombre obligatorio"),
@@ -18,6 +19,7 @@ export default function CrearCategoria() {
   const token = useSelector((state) => state.auth.token);
   const usuario = useSelector((state) => state.auth.usuario);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   if (usuario.role !== "admin") {
     return <div className="p-4 text-red-600">Acceso no autorizado</div>;
@@ -40,11 +42,22 @@ export default function CrearCategoria() {
       }
 
       await createCategory(formData, token);
-      alert("✅ Categoría creada correctamente");
+
+      dispatch(
+        mostrarFeedback({
+          type: "success",
+          message: "✅ Categoría creada correctamente",
+        })
+      );
+
       navigate("/dashboard/categorias");
     } catch (err) {
-      console.error("❌ Error al crear categoría:", err);
-      alert("Ocurrió un error");
+      dispatch(
+        mostrarFeedback({
+          type: "error",
+          message: "❌ Ocurrió un error al crear la categoría",
+        })
+      );
     } finally {
       setSubmitting(false);
     }

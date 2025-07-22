@@ -1,5 +1,5 @@
-// src/components/dashboard/formularios/perfil/EditarPerfilForm.jsx
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { AnimatePresence, motion } from "framer-motion";
@@ -7,11 +7,12 @@ import Paso1Datos from "./Paso1Datos";
 import Paso2Descripcion from "./Paso2Descripcion";
 import Paso3Ubicacion from "./Paso3Ubicacion";
 
-// Pasos y nombres
+import { fetchComunidades } from "../../../../store/comunidadesSlice";
+import { mostrarFeedback } from "../../../../store/feedbackSlice";
+
 const pasos = [Paso1Datos, Paso2Descripcion, Paso3Ubicacion];
 const nombresPasos = ["Datos Básicos", "Descripción", "Ubicación"];
 
-// Validaciones
 const esquemaValidacion = [
   Yup.object({
     name: Yup.string().min(2, "Muy corto").required("Nombre requerido"),
@@ -28,14 +29,8 @@ const esquemaValidacion = [
         "Debe ser una URL válida o un archivo de imagen",
         (value) => {
           if (!value) return false;
-          if (typeof value === "string") {
-            // valida si es una URL
-            return /^https?:\/\/.+/.test(value);
-          }
-          if (typeof value === "object" && value instanceof File) {
-            return true;
-          }
-          return false;
+          if (typeof value === "string") return /^https?:\/\/.+/.test(value);
+          return value instanceof File;
         }
       )
       .required("Imagen requerida"),
@@ -47,8 +42,17 @@ const esquemaValidacion = [
 export default function EditarPerfilForm({ initialValues, onSubmit }) {
   const [paso, setPaso] = useState(0);
   const PasoActual = pasos[paso];
+  const dispatch = useDispatch();
 
-  // Valores iniciales
+  const comunidades = useSelector((state) => state.comunidades.list);
+  const comunidadesLoaded = useSelector((state) => state.comunidades.loaded);
+
+  useEffect(() => {
+    if (!comunidadesLoaded) {
+      dispatch(fetchComunidades());
+    }
+  }, [comunidadesLoaded, dispatch]);
+
   const valoresIniciales = {
     name: initialValues?.name || "",
     lastName: initialValues?.lastName || "",
@@ -63,9 +67,24 @@ export default function EditarPerfilForm({ initialValues, onSubmit }) {
     <Formik
       initialValues={valoresIniciales}
       validationSchema={esquemaValidacion[paso]}
-      onSubmit={(values, actions) => {
+      onSubmit={async (values, actions) => {
         if (paso === pasos.length - 1) {
-          onSubmit(values);
+          try {
+            await onSubmit(values); // ✅ ejecuta handler externo
+            dispatch(
+              mostrarFeedback({
+                message: "Perfil actualizado exitosamente",
+                type: "success",
+              })
+            );
+          } catch (err) {
+            dispatch(
+              mostrarFeedback({
+                message: "Error al actualizar el perfil",
+                type: "error",
+              })
+            );
+          }
           actions.setSubmitting(false);
         } else {
           setPaso((prev) => prev + 1);
@@ -78,15 +97,12 @@ export default function EditarPerfilForm({ initialValues, onSubmit }) {
     >
       {() => (
         <Form className="flex flex-col md:flex-row gap-8 w-full max-w-3xl mx-auto p-8 bg-black/40 backdrop-blur-lg rounded-2xl shadow-2xl text-white">
-          {/* Sidebar de pasos */}
+          {/* Sidebar */}
           <div className="flex flex-col space-y-8 w-full md:w-36">
             {nombresPasos.map((nombre, index) => (
               <div key={index} className="flex items-start relative">
                 {index !== nombresPasos.length - 1 && (
-                  <span
-                    className="absolute left-3 top-7 h-full w-px bg-white/20"
-                    style={{ minHeight: "1.5rem" }}
-                  />
+                  <span className="absolute left-3 top-7 h-full w-px bg-white/20" />
                 )}
                 <div
                   className={`flex items-center justify-center w-6 h-6 rounded-full border-2 ${
@@ -104,9 +120,8 @@ export default function EditarPerfilForm({ initialValues, onSubmit }) {
             ))}
           </div>
 
-          {/* Contenido */}
+          {/* Contenido dinámico */}
           <div className="flex-1 space-y-6">
-            {/* Barra de progreso */}
             <div className="flex items-center justify-between mb-2">
               <div className="text-sm font-medium">
                 Paso {paso + 1} de {pasos.length}:{" "}
@@ -115,14 +130,11 @@ export default function EditarPerfilForm({ initialValues, onSubmit }) {
               <div className="w-1/3 h-2 bg-white/10 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-orange-500 transition-all"
-                  style={{
-                    width: `${((paso + 1) / pasos.length) * 100}%`,
-                  }}
+                  style={{ width: `${((paso + 1) / pasos.length) * 100}%` }}
                 />
               </div>
             </div>
 
-            {/* Contenido del paso */}
             <AnimatePresence mode="wait">
               <motion.div
                 key={paso}
@@ -131,11 +143,10 @@ export default function EditarPerfilForm({ initialValues, onSubmit }) {
                 exit={{ opacity: 0, x: -40 }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
               >
-                <PasoActual />
+                <PasoActual comunidades={comunidades} />
               </motion.div>
             </AnimatePresence>
 
-            {/* Botones de navegación */}
             <div className="flex justify-between gap-2 mt-6">
               {paso > 0 && (
                 <button

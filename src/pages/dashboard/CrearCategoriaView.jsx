@@ -2,12 +2,12 @@
 import { Helmet } from "react-helmet-async";
 import CrearCategoria from "./CrearCategoria";
 import authBg from "../../assets/authbg.png";
-import logo2 from "../../assets/communidades_text.svg";
+import ilust2 from "../../assets/ilust2.svg";
 import icono from "../../assets/icono.svg";
 
 export default function CrearCategoriaView() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen px-4 gap-8">
+    <div className="flex flex-col items-center justify-center min-h-screen px-4 gap-8 mt-8 lg:mt-16">
       <Helmet>
         <title>Crear Categoría | Communities</title>
       </Helmet>
@@ -25,19 +25,21 @@ export default function CrearCategoriaView() {
 
         {/* Contenido */}
         <div className="relative space-y-6 grid gap-8">
-          {/* Título y Logo */}
-          <div className="flex items-center justify-between flex-wrap gap-2">
-            <h1 className="text-2xl font-bold text-black flex items-center gap-2">
-              Crear Categoría
-            </h1>
-            <img src={logo2} alt="Communities Logo" className="h-6 w-auto" />
+          {/* Título, descripción e ilustración */}
+          <div className="flex items-start justify-between gap-4 flex-wrap sm:flex-nowrap">
+            <div className="flex-1 space-y-2">
+              <h1 className="text-2xl font-bold text-black">Crear Categoría</h1>
+              <p className="text-gray-700 text-sm sm:text-base">
+                Crea nuevas categorías para organizar mejor los negocios,
+                eventos y promociones de tu comunidad latina ✨
+              </p>
+            </div>
+            <img
+              src={ilust2}
+              alt="Ilustración comunidad"
+              className="w-36 xl:w-52 opacity-90"
+            />
           </div>
-
-          {/* Descripción */}
-          <p className="text-gray-700 text-sm sm:text-base">
-            Crea nuevas categorías para organizar mejor los negocios, eventos y
-            promociones de tu comunidad latina ✨
-          </p>
 
           {/* Formulario */}
           <CrearCategoria />

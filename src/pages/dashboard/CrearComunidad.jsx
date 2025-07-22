@@ -1,13 +1,21 @@
-// src/pages/dashboard/CrearComunidad.jsx
+import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import CrearEditarComunidadForm from "../../components/dashboard/formularios/comunidad/CrearEditarComunidadForm";
 import authBg from "../../../src/assets/authbg.png";
-import logo2 from "../../../src/assets/communidades_text.svg";
+import ilust2 from "../../assets/ilust2.svg";
 import icono from "../../../src/assets/icono.svg";
+import SkeletonNegocioForm from "../../components/Skeleton/SkeletonNegocioForm";
 
 export default function CrearComunidad() {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => setLoading(false), 100); // fluidez suave
+    return () => clearTimeout(timeout);
+  }, []);
+
   return (
-    <div className="flex-col flex items-center justify-center min-h-screen px-4 gap-8">
+    <div className="flex flex-col items-center justify-center min-h-screen px-4 gap-8">
       <Helmet>
         <title>Crear Comunidad | Communities</title>
       </Helmet>
@@ -20,24 +28,27 @@ export default function CrearComunidad() {
           backgroundPosition: "center",
         }}
       >
-        {/* Capa semitransparente */}
-        <div className="absolute inset-0 bg-white/50 backdrop-blur-sm rounded-xl h-full"></div>
+        <div className="absolute inset-0 bg-white/50 backdrop-blur-sm rounded-xl h-full" />
 
-        {/* Contenido */}
-        <div className="relative space-y-6 grid gap-8">
-          <div className="flex items-center justify-between flex-wrap gap-2">
-            <h1 className="text-2xl font-bold text-black flex items-center gap-2">
-              Crear Comunidad
-            </h1>
-            <img src={logo2} alt="Communities Logo" className="h-6 w-auto" />
+        <div className="relative z-10 space-y-6 grid gap-8">
+          <div className="flex items-center justify-between gap-2">
+            <div className="grid gap-8">
+              <h1 className="text-2xl font-bold text-black flex items-center gap-2">
+                Crea tu espacio cultural
+              </h1>
+              <p className="text-gray-700 text-sm sm:text-base">
+                Une a las personas, celebra tu cultura y comparte tu historia
+                con el mundo 🌎
+              </p>
+            </div>
+            <img
+              src={ilust2}
+              alt="Ilustración comunidad"
+              className="w-40 xl:w-60 opacity-90"
+            />
           </div>
 
-          <p className="text-gray-700 text-sm sm:text-base">
-            Une a las personas, celebra tu cultura y comparte tu historia con el
-            mundo 🌎
-          </p>
-
-          <CrearEditarComunidadForm />
+          {loading ? <SkeletonNegocioForm /> : <CrearEditarComunidadForm />}
         </div>
       </section>
 

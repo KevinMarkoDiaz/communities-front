@@ -3,14 +3,14 @@ import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import EditarPerfilForm from "../../components/dashboard/formularios/perfil/EditarPerfilForm";
-import { updateUserApi } from "../../api/authApi";
 import { updateUser } from "../../store/authSlice";
+import { mostrarFeedback } from "../../store/feedbackSlice";
 import authBg from "../../../src/assets/authbg.png";
 
 export default function EditarPerfil() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { usuario, loading, error } = useSelector((state) => state.auth);
+  const { usuario, loading } = useSelector((state) => state.auth);
 
   if (loading || !usuario || !usuario.id) {
     return (
@@ -39,11 +39,26 @@ export default function EditarPerfil() {
         formData.append("profileImage", valores.profileImage);
       }
 
-      const updatedUser = await updateUserApi(usuario.id, formData);
-      dispatch(updateUser.fulfilled(updatedUser)); // usa fulfilled directamente para evitar otro fetch
+      // Dispatch con unwrap
+      await dispatch(
+        updateUser({ userId: usuario.id, userData: formData })
+      ).unwrap();
+
+      dispatch(
+        mostrarFeedback({
+          message: "✅ Perfil actualizado exitosamente",
+          type: "success",
+        })
+      );
+
       navigate("/dashboard/perfil");
     } catch (err) {
-      console.error("Error actualizando perfil", err);
+      dispatch(
+        mostrarFeedback({
+          message: err?.message || "❌ Error al actualizar el perfil",
+          type: "error",
+        })
+      );
     }
   };
 

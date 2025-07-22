@@ -154,9 +154,11 @@ const router = createBrowserRouter([
           // Promos
           {
             path: "mis-promos",
-            children: [{ path: "", element: <MisPromos /> }],
+            children: [
+              { path: "", element: <MisPromos /> },
+              { path: ":promoId/editar", element: <CrearPromo /> },
+            ],
           },
-          { path: "promociones/:promoId/editar", element: <CrearPromo /> },
 
           // Categorías
           {

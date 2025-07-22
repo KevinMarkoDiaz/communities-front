@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
 import { AnimatePresence, motion } from "framer-motion";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { customSelectStylesForm } from "../../../../../src/styles/customSelectStylesForm.js";
 
 import Paso1Info from "./pasos/Paso1Info";
@@ -13,12 +13,16 @@ import Paso5SEO from "./pasos/Paso5SEO";
 import Paso6Imagenes from "./pasos/Paso6Imagenes";
 import Paso7Resumen from "./pasos/Paso7Resumen";
 
-import { createCommunity, updateCommunity } from "../../../../api/communityApi";
 import {
   initialValuesComunidad,
   validationSchemaComunidad,
 } from "./schemaComunidad";
-// Títulos de cada paso
+import {
+  createCommunityThunk,
+  updateCommunityThunk,
+} from "../../../../store/comunidadesSlice.js";
+import { mostrarFeedback } from "../../../../store/feedbackSlice.js";
+
 const nombresPasos = [
   "Información Básica",
   "Cultura y Origen",
@@ -47,12 +51,12 @@ export default function CrearEditarComunidadForm({
   const navigate = useNavigate();
   const usuario = useSelector((state) => state.auth.usuario);
   const PasoActual = pasos[paso];
+  const dispatch = useDispatch();
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
       const { flagImage, bannerImage, food, originCountryInfo, ...resto } =
         values;
-
       const formData = new FormData();
 
       if (flagImage instanceof File) formData.append("flagImage", flagImage);
@@ -80,7 +84,7 @@ export default function CrearEditarComunidadForm({
         food: food.map((item) => ({
           name: item.name,
           description: item.description || "",
-          image: item.image instanceof File ? "" : item.image,
+          ...(item.image instanceof File ? {} : { image: item.image }),
         })),
         owner: usuario.id,
       };
@@ -106,13 +110,34 @@ export default function CrearEditarComunidadForm({
       formData.append("data", JSON.stringify(payload));
 
       if (modoEdicion && comunidadInicial?._id) {
-        await updateCommunity(comunidadInicial._id, formData);
+        await dispatch(
+          updateCommunityThunk({ id: comunidadInicial._id, formData })
+        ).unwrap();
+        dispatch(
+          mostrarFeedback({
+            message: "✅ Comunidad actualizada correctamente",
+            type: "success",
+          })
+        );
       } else {
-        await createCommunity(formData);
+        await dispatch(createCommunityThunk(formData)).unwrap();
+        dispatch(
+          mostrarFeedback({
+            message: "✅ Comunidad creada correctamente",
+            type: "success",
+          })
+        );
       }
-      navigate("/dashboard/comunidades");
+
+      navigate("/dashboard/mis-comunidades");
     } catch (err) {
-      console.error("❌ Error al crear comunidad:", err);
+      dispatch(
+        mostrarFeedback({
+          message:
+            err?.message || "❌ Ocurrió un error al guardar la comunidad",
+          type: "error",
+        })
+      );
     } finally {
       setSubmitting(false);
     }
@@ -145,24 +170,30 @@ export default function CrearEditarComunidadForm({
       initialValues={initialValuesFinales}
       enableReinitialize
       validationSchema={validationSchemaComunidad[paso]}
-      onSubmit={handleSubmit}
-      validateOnBlur
-      validateOnChange
+      onSubmit={(values, actions) => {
+        if (paso === pasos.length - 1) {
+          handleSubmit(values, actions);
+        } else {
+          setPaso((p) => p + 1);
+        }
+      }}
+      validateOnBlur={false}
+      validateOnChange={false}
     >
       {({ validateForm, values, setErrors }) => (
-        <Form className="flex flex-col md:flex-row gap-8 w-full max-w-5xl mx-auto p-8 bg-black/40 backdrop-blur-lg rounded-2xl shadow-2xl text-white">
-          {/* Sidebar de pasos */}
+        <Form
+          className="flex flex-col md:flex-row gap-8 w-full max-w-5xl mx-auto p-8 bg-black/40 backdrop-blur-lg rounded-2xl shadow-2xl text-white"
+          onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
+        >
           <div className="flex flex-col space-y-8 w-full md:w-36">
             {nombresPasos.map((nombre, index) => (
               <div key={index} className="flex items-start relative">
-                {/* Línea vertical */}
                 {index !== nombresPasos.length - 1 && (
                   <span
                     className="absolute left-2.5 top-7 h-full w-px bg-white/20"
                     style={{ minHeight: "1.5rem" }}
                   />
                 )}
-                {/* Círculo con número */}
                 <div
                   className={`flex items-center justify-center w-6 h-6 rounded-full border-2 ${
                     paso === index
@@ -174,15 +205,12 @@ export default function CrearEditarComunidadForm({
                 >
                   {paso > index ? "✓" : index + 1}
                 </div>
-                {/* Nombre del paso */}
                 <div className="ml-3 text-sm leading-tight">{nombre}</div>
               </div>
             ))}
           </div>
 
-          {/* Contenido del paso */}
           <div className="flex-1 space-y-6">
-            {/* Encabezado de progreso */}
             <div className="flex items-center justify-between mb-2">
               <div className="text-sm font-medium">
                 Paso {paso + 1} de {pasos.length}:{" "}
@@ -191,9 +219,7 @@ export default function CrearEditarComunidadForm({
               <div className="w-1/3 h-2 bg-white/10 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-orange-500 transition-all"
-                  style={{
-                    width: `${((paso + 1) / pasos.length) * 100}%`,
-                  }}
+                  style={{ width: `${((paso + 1) / pasos.length) * 100}%` }}
                 />
               </div>
             </div>
@@ -210,7 +236,6 @@ export default function CrearEditarComunidadForm({
               </motion.div>
             </AnimatePresence>
 
-            {/* Botones */}
             <div className="flex justify-between gap-2 mt-6">
               {paso > 0 && (
                 <button
@@ -222,14 +247,7 @@ export default function CrearEditarComunidadForm({
                 </button>
               )}
 
-              {paso === pasos.length - 1 ? (
-                <button
-                  type="submit"
-                  className="w-full bg-orange-600 hover:bg-orange-700 text-white py-3 rounded-lg font-semibold transition"
-                >
-                  {modoEdicion ? "Actualizar comunidad" : "Crear comunidad"}
-                </button>
-              ) : (
+              {paso < pasos.length - 1 && (
                 <button
                   type="button"
                   onClick={async () => {
@@ -252,6 +270,15 @@ export default function CrearEditarComunidadForm({
                   className="w-full bg-orange-600 hover:bg-orange-700 text-white py-3 rounded-lg font-semibold transition"
                 >
                   Siguiente
+                </button>
+              )}
+
+              {paso === pasos.length - 1 && (
+                <button
+                  type="submit"
+                  className="w-full bg-orange-600 hover:bg-orange-700 text-white py-3 rounded-lg font-semibold transition"
+                >
+                  {modoEdicion ? "Actualizar comunidad" : "Crear comunidad"}
                 </button>
               )}
             </div>

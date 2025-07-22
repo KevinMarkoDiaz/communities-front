@@ -3,6 +3,8 @@ import {
   getAllBusinesses,
   getMyBusinesses,
   deleteBusiness,
+  updateBusiness,
+  createBusiness,
 } from "../api/businessApi";
 import { mostrarFeedback } from "./feedbackSlice";
 
@@ -77,6 +79,30 @@ export const deleteNegocio = createAsyncThunk(
         })
       );
       return rejectWithValue(error.message || "Error al eliminar el negocio");
+    }
+  }
+);
+
+export const createBusinessThunk = createAsyncThunk(
+  "negocios/create",
+  async (formData, { rejectWithValue }) => {
+    try {
+      const res = await createBusiness(formData);
+      return res;
+    } catch (error) {
+      return rejectWithValue(error.message || "Error al crear negocio");
+    }
+  }
+);
+
+export const updateBusinessThunk = createAsyncThunk(
+  "negocios/update",
+  async ({ id, formData }, { rejectWithValue }) => {
+    try {
+      const res = await updateBusiness(id, formData);
+      return res;
+    } catch (error) {
+      return rejectWithValue(error.message || "Error al actualizar negocio");
     }
   }
 );

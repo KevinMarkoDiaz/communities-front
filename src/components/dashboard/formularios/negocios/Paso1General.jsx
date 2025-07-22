@@ -38,8 +38,9 @@ export default function Paso1General({ categorias = [], comunidades = [] }) {
           as="textarea"
           name="description"
           placeholder="Describe tu negocio"
-          className="form-textarea w-full bg-white/10 border border-white/30 rounded-lg px-4 py-3 placeholder:text-gray-300 focus:outline-none"
+          className="form-textarea cursor-default w-full h-42 xl:h-82 bg-white/10 border border-white/30 rounded-lg px-4 py-3 placeholder:text-gray-300 focus:outline-none resize-none overflow-y-auto custom-scroll"
         />
+
         <ErrorMessage
           name="description"
           component="div"
