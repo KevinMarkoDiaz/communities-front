@@ -35,7 +35,7 @@ export default function Paso1Info() {
           name="description"
           as="textarea"
           placeholder="Una comunidad para compartir eventos, negocios y cultura colombiana en Dallas."
-          className="w-full px-4 py-3 border border-white/40 bg-white/10 rounded-lg placeholder:text-gray-300 focus:outline-none min-h-[100px]"
+          className="w-full h-40 lg:h-70 px-4 py-3 border border-white/40 bg-white/10 rounded-lg placeholder:text-gray-300 focus:outline-none min-h-[100px] "
         />
         <ErrorMessage
           name="description"

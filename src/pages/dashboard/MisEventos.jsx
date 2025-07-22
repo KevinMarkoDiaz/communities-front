@@ -1,12 +1,10 @@
-// src/pages/dashboard/MisEventos.jsx
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import CardEvento from "../../components/dashboard/evento/CardEvento";
 import DashboardSectionHeader from "../../components/dashboard/negocios/DashboardSectionHeader";
 import { fetchMisEventos, deleteEvento } from "../../store/eventosSlice";
 import ilusta from "../../assets/ilusta.svg";
 import ilust4 from "../../assets/ilust4.svg";
-
 import SkeletonDashboardList from "../../components/Skeleton/SkeletonDashboardList";
 import EventoDetalleDashboard from "./detalle/EventoDetalleDashboard";
 import ConfirmDeleteModal from "../../components/ConfirmDeleteModal";
@@ -24,6 +22,8 @@ export default function MisEventos() {
   const [selectedEvento, setSelectedEvento] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
+
+  const detalleRef = useRef(null); // 🧭 Referencia al detalle
 
   useEffect(() => {
     if (eventos.length === 0) {
@@ -46,6 +46,21 @@ export default function MisEventos() {
     }
   };
 
+  const handleSelectEvento = (evento) => {
+    setSelectedEvento(evento);
+    if (window.innerWidth < 768) {
+      setShowModal(true);
+    } else {
+      // 🧭 Hacer scroll al detalle solo en desktop
+      setTimeout(() => {
+        detalleRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }, 100);
+    }
+  };
+
   if (loading) return <SkeletonDashboardList />;
   if (error) return <div className="p-4 text-red-600">{error}</div>;
 
@@ -62,15 +77,18 @@ export default function MisEventos() {
             illustration={ilusta}
           />
         </div>
+
         {selectedEvento && (
-          <div className="hidden md:flex flex-3 flex-col justify-center">
+          <div
+            ref={detalleRef}
+            className="hidden md:flex flex-3 flex-col justify-center"
+          >
             <EventoDetalleDashboard
               evento={selectedEvento}
               onDelete={(id) => setConfirmDeleteId(id)}
             />
           </div>
         )}
-        <div className="hidden md:flex flex-3 flex-col justify-center"></div>
       </div>
 
       {/* Divider */}
@@ -113,14 +131,11 @@ export default function MisEventos() {
           </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-y-5 gap-x-3 md:gap-6 xl:gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-y-5 gap-x-3 md:gap-6 xl:gap-8">
           {eventos.map((evento) => (
             <div
               key={evento._id}
-              onClick={() => {
-                setSelectedEvento(evento);
-                if (window.innerWidth < 768) setShowModal(true);
-              }}
+              onClick={() => handleSelectEvento(evento)}
               className={`transition rounded-lg cursor-pointer ${
                 selectedEvento?._id === evento._id
                   ? "border-blue-400 ring-2 ring-blue-200"

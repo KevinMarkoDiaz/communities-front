@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { MdAddBusiness } from "react-icons/md";
@@ -16,6 +16,7 @@ import ilust2 from "../../assets/ilust2.svg";
 
 export default function MisNegocios() {
   const dispatch = useDispatch();
+  const detalleRef = useRef(null); // <- ref para hacer scroll
 
   const { misNegocios, misLoading, error } = useSelector(
     (state) => state.negocios
@@ -37,19 +38,10 @@ export default function MisNegocios() {
         .catch((err) => {
           console.error("Error al cargar negocios:", err);
         });
-    } else {
-      // Ya hay datos, seleccionamos el primero si aún no hay uno seleccionado
-      if (!selectedNegocio && misNegocios.length > 0) {
-        setSelectedNegocio(misNegocios[0]);
-      }
-    }
-  }, [dispatch, misNegocios, selectedNegocio]);
-
-  useEffect(() => {
-    if (misNegocios.length > 0 && !selectedNegocio) {
+    } else if (!selectedNegocio && misNegocios.length > 0) {
       setSelectedNegocio(misNegocios[0]);
     }
-  }, [misNegocios, selectedNegocio]);
+  }, [dispatch, misNegocios, selectedNegocio]);
 
   const handleDelete = async (id) => {
     try {
@@ -82,7 +74,10 @@ export default function MisNegocios() {
 
         {/* Detalle en desktop */}
         {selectedNegocio && (
-          <div className="hidden md:flex flex-3 flex-col justify-center">
+          <div
+            ref={detalleRef}
+            className="hidden md:flex flex-3 flex-col justify-center"
+          >
             <NegocioDetalleDashboard
               negocio={selectedNegocio}
               onAskDelete={(neg) => {
@@ -134,13 +129,20 @@ export default function MisNegocios() {
           </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-y-5 gap-x-3 md:gap-6 xl:gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-y-5 gap-x-3 md:gap-6 xl:gap-8">
           {misNegocios.map((negocio) => (
             <div
               key={negocio._id}
               onClick={() => {
                 setSelectedNegocio(negocio);
-                if (window.innerWidth < 768) setShowModal(true);
+                if (window.innerWidth < 768) {
+                  setShowModal(true);
+                } else if (detalleRef.current) {
+                  detalleRef.current.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                  });
+                }
               }}
               className={`transition rounded-lg cursor-pointer ${
                 selectedNegocio?._id === negocio._id

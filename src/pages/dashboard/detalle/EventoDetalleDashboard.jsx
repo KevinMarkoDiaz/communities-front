@@ -1,5 +1,10 @@
+import {
+  HiOutlineGlobeAlt,
+  HiOutlineLockClosed,
+  HiOutlineTrash,
+} from "react-icons/hi";
+import { HiOutlinePencilSquare } from "react-icons/hi2";
 import { Link } from "react-router-dom";
-import { MdEdit, MdDelete, MdPublic } from "react-icons/md";
 
 export default function EventoDetalleDashboard({ evento, onClose, onDelete }) {
   if (!evento) return null;
@@ -88,36 +93,36 @@ export default function EventoDetalleDashboard({ evento, onClose, onDelete }) {
             {/* Editar */}
             <Link
               to={`/dashboard/mis-eventos/${evento._id}/editar`}
-              className="flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 transition text-xs font-medium no-underline"
+              className="whitespace-nowrap flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 transition text-xs font-medium no-underline"
             >
-              <MdEdit className="text-lg" />
+              <HiOutlinePencilSquare className="text-lg" />
               Editar evento
             </Link>
 
             {/* Ver detalle privado */}
             <Link
               to={`/dashboard/mis-eventos/${evento._id}`}
-              className="flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 transition text-xs font-medium no-underline"
+              className="whitespace-nowrap flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 transition text-xs font-medium no-underline"
             >
-              <MdPublic className="text-lg" />
+              <HiOutlineLockClosed className="text-lg" />
               Ver detalle privado
             </Link>
 
             {/* Ver detalle público */}
             <Link
               to={`/eventos/${evento._id}`}
-              className="flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 transition text-xs font-medium no-underline"
+              className="whitespace-nowrap flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 transition text-xs font-medium no-underline"
             >
-              <MdPublic className="text-lg" />
+              <HiOutlineGlobeAlt className="text-lg" />
               Detalle del evento
             </Link>
 
             {/* Eliminar */}
             <button
               onClick={() => onDelete(evento._id)}
-              className="flex shadow-md hover:shadow-lg text-white items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-red-500 hover:bg-red-700 transition text-xs font-medium"
+              className="whitespace-nowrap flex shadow-md hover:shadow-lg text-white items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-red-500 hover:bg-red-700 transition text-xs font-medium"
             >
-              <MdDelete className="text-lg" />
+              <HiOutlineTrash className="text-lg" />
               Eliminar evento
             </button>
           </div>

@@ -24,7 +24,7 @@ export default function CardCategoria({ categoria, onSelect }) {
       </div>
 
       {/* Contenido */}
-      <div className="flex flex-col gap-2 p-2 md:p-4 flex-grow">
+      <div className="flex flex-col gap-2 p-2 flex-grow">
         {/* Nombre */}
         <h3
           className="

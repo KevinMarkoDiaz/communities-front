@@ -8,11 +8,11 @@ export default function CardEvento({ evento, onSelect }) {
     <div
       onClick={() => onSelect(evento)}
       className="
-        group relative bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden border border-gray-200 min-h-[10rem] flex flex-col cursor-pointer
+        group relative bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden border border-gray-200 h-50 flex flex-col cursor-pointer
       "
     >
       {/* Imagen */}
-      <div className="w-full h-28 overflow-hidden bg-gray-50">
+      <div className="w-full min-h-28 overflow-hidden bg-gray-50">
         <img
           src={imagenUrl}
           alt={title}
@@ -21,15 +21,9 @@ export default function CardEvento({ evento, onSelect }) {
       </div>
 
       {/* Contenido */}
-      <div className="flex flex-col gap-2 p-2 md:p-4 flex-grow">
+      <div className="flex flex-col gap-2 p-2  flex-grow">
         {/* Título */}
-        <h3
-          className="
-            text-sm font-semibold text-gray-700
-            min-h-[2rem]
-            flex items-start md:items-center
-          "
-        >
+        <h3 className="text-sm font-semibold text-gray-700 line-clamp-2">
           {title}
         </h3>
 

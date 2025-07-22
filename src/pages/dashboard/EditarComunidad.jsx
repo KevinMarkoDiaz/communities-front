@@ -25,7 +25,7 @@ export default function EditarComunidad() {
   if (!comunidad) return null;
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen px-4 gap-8">
+    <div className="flex flex-col items-center justify-center min-h-screen px-4 gap-8 mt-8 lg:mt-16">
       <Helmet>
         <title>Editar Comunidad | Communities</title>
       </Helmet>
@@ -68,7 +68,7 @@ export default function EditarComunidad() {
       </section>
 
       <div className="pt-6 text-center space-y-2">
-        <p className="text-[#141C24] text-base font-medium flex justify-center items-center gap-2">
+        <p className="text-[#141C24] text-base font-medium flex justify-center items-center gap-2 ">
           <img src={icono} alt="Icono" className="h-8 md:h-12" />
           Dale vida a tu comunidad y conecta a los latinos en EE. UU.
         </p>

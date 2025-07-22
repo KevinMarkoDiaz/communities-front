@@ -12,6 +12,7 @@ import conversationsReducer from "./conversationsSlice";
 import messagesReducer from "./messagesSlice";
 import metricsReducer from "./metricsSlice";
 import feedbackReducer from "./feedbackSlice";
+import mobileMenuReducer from "./mobileMenuSlice";
 
 export const store = configureStore({
   reducer: {
@@ -28,5 +29,6 @@ export const store = configureStore({
     messages: messagesReducer,
     metrics: metricsReducer,
     feedback: feedbackReducer,
+    mobileMenu: mobileMenuReducer,
   },
 });

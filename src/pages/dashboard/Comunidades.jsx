@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMisComunidades } from "../../store/comunidadesSlice";
 import CardComunidad from "../../components/dashboard/perfilUsuario/CardComunidad";
@@ -20,6 +20,8 @@ export default function Comunidades() {
   const [selectedComunidad, setSelectedComunidad] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
+  const detalleRef = useRef(null); // 🧭 Ref al detalle
+
   useEffect(() => {
     if (!["admin", "business_owner"].includes(usuario?.role)) return;
     if (misComunidades.length === 0) {
@@ -33,12 +35,25 @@ export default function Comunidades() {
     }
   }, [misComunidades, selectedComunidad]);
 
+  const handleSelect = (com) => {
+    setSelectedComunidad(com);
+    if (window.innerWidth < 768) {
+      setShowModal(true);
+    } else {
+      setTimeout(() => {
+        detalleRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }, 100);
+    }
+  };
+
   const handleDelete = async (id) => {
     const confirmar = window.confirm("¿Eliminar esta comunidad?");
     if (!confirmar) return;
 
     try {
-      // Puedes despachar un deleteCommunity si lo implementás en redux
       alert("Implementa la lógica de eliminación con Redux si es necesario");
     } catch (err) {
       console.error("Error al eliminar comunidad:", err);
@@ -66,8 +81,12 @@ export default function Comunidades() {
             illustration={ilusta}
           />
         </div>
+
         {selectedComunidad && (
-          <div className="hidden md:flex flex-3 flex-col justify-center">
+          <div
+            ref={detalleRef}
+            className="hidden md:flex flex-3 flex-col justify-center"
+          >
             <DetalleComunidad
               comunidad={selectedComunidad}
               onDelete={handleDelete}
@@ -85,6 +104,7 @@ export default function Comunidades() {
         <hr className="flex-grow border-gray-200" />
       </div>
 
+      {/* Cabecera acciones */}
       <div className="flex justify-between items-center mb-4 md:mb-6">
         <h3 className="text-lg font-semibold text-[#141C24]">
           Lista de comunidades
@@ -115,14 +135,11 @@ export default function Comunidades() {
           </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-y-5 gap-x-3 md:gap-6 xl:gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-y-5 gap-x-3 md:gap-6 xl:gap-8">
           {misComunidades.map((com) => (
             <div
               key={com._id}
-              onClick={() => {
-                setSelectedComunidad(com);
-                if (window.innerWidth < 768) setShowModal(true);
-              }}
+              onClick={() => handleSelect(com)}
               className={`transition rounded-lg cursor-pointer ${
                 selectedComunidad?._id === com._id
                   ? "border-blue-400 ring-2 ring-blue-200"

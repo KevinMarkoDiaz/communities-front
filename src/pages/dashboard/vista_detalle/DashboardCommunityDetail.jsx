@@ -58,11 +58,11 @@ export default function DashboardCommunityDetail() {
     return <p className="p-4 text-gray-600">Comunidad no encontrada.</p>;
 
   return (
-    <div className="flex flex-col gap-6 px-4 pb-12">
+    <div className="flex flex-col gap-6 px-4 pb-12 max-w-[1200px] w-full mx-auto">
       {/* CARD PRINCIPAL */}
-      <div className="w-full flex flex-col md:flex-row gap-6 bg-white rounded-3xl border border-gray-200 shadow p-6 md:p-8 xl:p-10">
+      <div className="w-full flex flex-col lg:flex-row gap-6 bg-white rounded-3xl border border-gray-200 shadow p-6 lg:p-8 xl:p-10">
         {/* Imagen */}
-        <div className="w-full md:w-60 flex-shrink-0">
+        <div className="w-full lg:w-60 flex-shrink-0">
           <img
             src={
               comunidad.bannerImage ||
@@ -70,20 +70,20 @@ export default function DashboardCommunityDetail() {
               `https://cdn.usegalileo.ai/sdxl10/${comunidad._id}.png`
             }
             alt={comunidad.name}
-            className="w-full h-40 md:h-60 object-cover rounded-xl"
+            className="w-full h-40 lg:h-60 object-cover rounded-xl"
           />
         </div>
 
         {/* Info */}
         <div className="flex-1 flex flex-col gap-4">
-          <div className="flex flex-col md:flex-row md:items-center gap-3 flex-wrap">
+          <div className="flex flex-col lg:flex-row lg:items-center gap-3 flex-wrap">
             <h2 className="text-2xl font-extrabold text-[#141C24] leading-snug">
               {comunidad.name}
             </h2>
           </div>
 
           {comunidad.description && (
-            <p className="text-gray-700 text-sm md:text-base leading-relaxed whitespace-pre-line">
+            <p className="text-gray-700 text-sm lg:text-base leading-relaxed whitespace-pre-line">
               {comunidad.description}
             </p>
           )}
@@ -107,34 +107,34 @@ export default function DashboardCommunityDetail() {
               Actualizado: {new Date(comunidad.updatedAt).toLocaleDateString()}
             </span>
           </div>
-
-          {/* Acciones */}
-          <div className="flex flex-col sm:flex-row gap-2 mt-4">
-            <Link
-              to={`/dashboard/comunidades/${comunidad._id}/editar`}
-              className="flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 transition text-xs font-medium no-underline"
-            >
-              <MdEdit className="text-lg" />
-              Editar comunidad
-            </Link>
-
-            <Link
-              to={`/comunidades/${comunidad.slug || comunidad._id}`}
-              className="flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 transition text-xs font-medium no-underline"
-            >
-              <MdPublic className="text-lg" />
-              Ver perfil público
-            </Link>
-
-            <button
-              onClick={() => setShowModal(true)}
-              className="flex shadow-md hover:shadow-lg text-white items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-red-500 hover:bg-red-700 transition text-xs font-medium"
-            >
-              <MdDelete className="text-lg" />
-              Eliminar comunidad
-            </button>
-          </div>
         </div>
+      </div>
+
+      {/* ✅ BOTONES - SIEMPRE DEBAJO */}
+      <div className="flex flex-col sm:flex-row flex-wrap gap-2 mt-2">
+        <Link
+          to={`/dashboard/comunidades/${comunidad._id}/editar`}
+          className="whitespace-nowrap flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 transition text-xs font-medium no-underline"
+        >
+          <MdEdit className="text-lg" />
+          Editar comunidad
+        </Link>
+
+        <Link
+          to={`/comunidades/${comunidad.slug || comunidad._id}`}
+          className="whitespace-nowrap flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 transition text-xs font-medium no-underline"
+        >
+          <MdPublic className="text-lg" />
+          Ver perfil público
+        </Link>
+
+        <button
+          onClick={() => setShowModal(true)}
+          className="whitespace-nowrap flex shadow-md hover:shadow-lg text-white items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-red-500 hover:bg-red-700 transition text-xs font-medium"
+        >
+          <MdDelete className="text-lg" />
+          Eliminar comunidad
+        </button>
       </div>
 
       {/* SECCIÓN DE MÉTRICAS */}

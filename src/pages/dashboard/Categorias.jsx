@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteCategory } from "../../api/categoryApi";
 import { Link } from "react-router-dom";
@@ -14,6 +14,8 @@ export default function Categorias() {
   const [selectedCategoria, setSelectedCategoria] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
+  const detalleRef = useRef(null); // 👈 para scroll
+
   const usuario = useSelector((state) => state.auth.usuario);
   const {
     data: categorias = [],
@@ -39,6 +41,20 @@ export default function Categorias() {
     }
   }, [categorias, selectedCategoria]);
 
+  const handleSelect = (cat) => {
+    setSelectedCategoria(cat);
+    if (window.innerWidth < 768) {
+      setShowModal(true);
+    } else {
+      setTimeout(() => {
+        detalleRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }, 100);
+    }
+  };
+
   const handleDelete = async (id) => {
     const confirmar = window.confirm("¿Eliminar esta categoría?");
     if (!confirmar) return;
@@ -48,8 +64,6 @@ export default function Categorias() {
       const nuevas = categorias.filter((c) => c._id !== id);
       setSelectedCategoria(nuevas[0] || null);
       setShowModal(false);
-      // Opcional: Actualizar desde backend si querés sincronizar
-      // dispatch(fetchCategorias());
     } catch (err) {
       console.error("Error al eliminar categoría:", err);
       alert("No se pudo eliminar la categoría");
@@ -74,9 +88,15 @@ export default function Categorias() {
         </div>
 
         {/* Detalle */}
-        <div className="hidden md:flex flex-3 flex-col justify-center">
+        <div
+          ref={detalleRef}
+          className="hidden md:flex flex-3 flex-col justify-center"
+        >
           {selectedCategoria ? (
-            <DetalleCategoria categoria={selectedCategoria} />
+            <DetalleCategoria
+              categoria={selectedCategoria}
+              onDelete={handleDelete}
+            />
           ) : (
             <div className="flex flex-col items-center justify-center bg-gradient-to-br from-gray-50 via-white to-gray-100 rounded-2xl shadow-lg p-6 md:p-8 xl:p-10 border border-gray-200 min-h-[260px] text-center">
               <p className="text-gray-600 text-sm">
@@ -109,7 +129,6 @@ export default function Categorias() {
           className="flex items-center gap-2 bg-black text-white px-3 py-2 rounded hover:bg-[#f4c753] hover:text-black transition text-sm font-semibold"
         >
           <MdCategory className="text-lg" />
-
           <p className="hidden md:block">Crear categoría</p>
         </Link>
       </div>
@@ -128,14 +147,11 @@ export default function Categorias() {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-y-5 gap-x-3 md:gap-6 xl:gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-y-5 gap-x-3 md:gap-6 xl:gap-8">
           {categorias.map((cat) => (
             <div
               key={cat._id}
-              onClick={() => {
-                setSelectedCategoria(cat);
-                if (window.innerWidth < 768) setShowModal(true);
-              }}
+              onClick={() => handleSelect(cat)}
               className={`transition rounded-lg cursor-pointer ${
                 selectedCategoria?._id === cat._id
                   ? "border-blue-400 ring-2 ring-blue-200"

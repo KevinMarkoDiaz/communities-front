@@ -20,7 +20,7 @@ export default function CardPromo({ promo, onSelect }) {
         />
       </div>
 
-      <div className="flex flex-col gap-2 p-2 md:p-4 flex-grow">
+      <div className="flex flex-col gap-2 p-2  flex-grow">
         {/* Nombre */}
         <h3
           className="

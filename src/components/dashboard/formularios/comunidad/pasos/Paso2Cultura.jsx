@@ -8,7 +8,7 @@ export default function Paso2Cultura() {
     <div className="space-y-6">
       <h3 className="text-lg font-semibold text-[#141C24]">País de origen</h3>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div>
           <label className="block text-sm font-medium mb-1">Nombre</label>
           <Field
@@ -91,7 +91,7 @@ export default function Paso2Cultura() {
             {values.food?.map((item, index) => (
               <div
                 key={index}
-                className="grid grid-cols-1 sm:grid-cols-3 gap-4 border-b pb-6"
+                className="grid grid-cols-1 lg:grid-cols-3 gap-4 border-b pb-6"
               >
                 <div>
                   <label className="text-sm font-medium">Nombre</label>

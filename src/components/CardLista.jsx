@@ -76,13 +76,15 @@ export default function CardGrid({
       </div>
 
       {/* Contenido */}
-      <div className="flex flex-col gap-0.5 px-3 py-3 flex-1">
+      {/* Contenido */}
+      <div className="flex flex-col gap-0.5 px-3 py-3 flex-1 min-h-[64px] max-h-[64px]">
         <div className="flex items-center gap-1">
           <h3
             className="
-              text-base font-semibold text-gray-900 tracking-tight leading-tight
-              min-h-[2.8em] sm:min-h-0
-            "
+        text-base font-semibold text-gray-900 tracking-tight leading-tight
+        overflow-hidden text-ellipsis
+        [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical]
+      "
             style={{ letterSpacing: "0.02em" }}
           >
             {title}
@@ -90,12 +92,11 @@ export default function CardGrid({
           {isVerified && <BadgeIconVerified />}
         </div>
 
-        {/* Ubicación */}
         {location && (
           <div className="flex items-center gap-1 mt-0.5">
             <HiOutlineLocationMarker className="text-gray-500 w-4 h-4 flex-shrink-0" />
             <p
-              className="text-xs font-medium text-gray-700 tracking-wide"
+              className="text-xs font-medium text-gray-700 tracking-wide truncate"
               style={{ letterSpacing: "0.02em" }}
             >
               {location

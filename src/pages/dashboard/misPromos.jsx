@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMisPromos, deletePromo } from "../../store/promocionesSlice";
 import CardPromo from "../../components/dashboard/promo/CardPromo";
@@ -24,6 +24,8 @@ export default function MisPromos() {
   const [selectedPromo, setSelectedPromo] = useState(null);
   const [showModalDetalle, setShowModalDetalle] = useState(false);
 
+  const detalleRef = useRef(null); // 🧭 Ref para scroll al detalle
+
   // Solo carga las promos si no están cargadas
   useEffect(() => {
     if (!loaded) {
@@ -37,6 +39,20 @@ export default function MisPromos() {
       setSelectedPromo(promos[0]);
     }
   }, [promos, selectedPromo]);
+
+  const handleSelect = (promo) => {
+    setSelectedPromo(promo);
+    if (window.innerWidth < 768) {
+      setShowModalDetalle(true);
+    } else {
+      setTimeout(() => {
+        detalleRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }, 100);
+    }
+  };
 
   const handleDelete = async (id) => {
     const confirmar = window.confirm("¿Quieres eliminar esta promoción?");
@@ -71,7 +87,12 @@ export default function MisPromos() {
         </div>
 
         {selectedPromo && (
-          <DetallePromo promo={selectedPromo} onDelete={handleDelete} />
+          <div
+            ref={detalleRef}
+            className="hidden md:flex flex-3 flex-col justify-center"
+          >
+            <DetallePromo promo={selectedPromo} onDelete={handleDelete} />
+          </div>
         )}
       </div>
 
@@ -114,14 +135,11 @@ export default function MisPromos() {
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-y-5 gap-x-3 md:gap-6 xl:gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-y-5 gap-x-3 md:gap-6 xl:gap-8">
           {promos.map((promo) => (
             <div
               key={promo._id}
-              onClick={() => {
-                setSelectedPromo(promo);
-                if (window.innerWidth < 768) setShowModalDetalle(true);
-              }}
+              onClick={() => handleSelect(promo)}
               className={`transition rounded-lg cursor-pointer ${
                 selectedPromo?._id === promo._id
                   ? "border-blue-400 ring-2 ring-blue-200"

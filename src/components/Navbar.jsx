@@ -25,10 +25,11 @@ import NotificationButton from "./badges/NotificationButton";
 import { logout } from "../store/authSlice";
 import BotonPublicar from "./nav/BotonPublicar";
 import useDeviceSize from "../hooks/useDeviceSize";
+import { toggleMenu } from "../store/mobileMenuSlice";
 
 export default function Header() {
   const usuario = useSelector((state) => state.auth.usuario);
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const mobileOpen = useSelector((state) => state.mobileMenu.isOpen);
   const [accionesOpen, setAccionesOpen] = useState(false);
   const [show, setShow] = useState(true);
   const lastScrollY = useRef(0);
@@ -174,7 +175,7 @@ export default function Header() {
           <div className="flex items-center gap-2 md:hidden">
             <Link
               to="/inbox"
-              onClick={() => setMobileOpen(false)}
+              onClick={() => dispatch(toggleMenu())}
               className={`transition p-2 ${
                 mobileOpen ? "text-white" : "text-black"
               }`}
@@ -183,13 +184,13 @@ export default function Header() {
             </Link>
             {usuario && isMobile && (
               <NotificationButton
-                onClick={() => setMobileOpen(false)}
+                onClick={() => dispatch(toggleMenu())}
                 className={mobileOpen ? "text-white" : "text-black"}
               />
             )}
 
             <button
-              onClick={() => setMobileOpen(!mobileOpen)}
+              onClick={() => dispatch(toggleMenu())}
               className={`text-2xl p-2 rounded transition ${
                 mobileOpen ? "text-white" : "text-black"
               }`}
@@ -254,7 +255,7 @@ export default function Header() {
             <nav className="flex flex-col gap-4 ">
               <Link
                 to={usuario ? "/dashboard/perfil" : "/login"}
-                onClick={() => setMobileOpen(false)}
+                onClick={() => dispatch(toggleMenu())}
                 className="flex items-center gap-3 text-base font-medium hover:text-yellow-300 transition  relative z-10"
               >
                 <MdPerson className="text-2xl" />
@@ -262,7 +263,7 @@ export default function Header() {
               </Link>
               <Link
                 to="/negocios"
-                onClick={() => setMobileOpen(false)}
+                onClick={() => dispatch(toggleMenu())}
                 className="flex items-center gap-3 text-base font-medium hover:text-yellow-300 transition  relative z-10"
               >
                 <MdStore className="text-2xl" />
@@ -270,7 +271,7 @@ export default function Header() {
               </Link>
               <Link
                 to="/eventos"
-                onClick={() => setMobileOpen(false)}
+                onClick={() => dispatch(toggleMenu())}
                 className="flex items-center gap-3 text-base font-medium hover:text-yellow-300 transition  relative z-10"
               >
                 <MdEvent className="text-2xl" />
@@ -278,7 +279,7 @@ export default function Header() {
               </Link>
               <Link
                 to="/comunidades"
-                onClick={() => setMobileOpen(false)}
+                onClick={() => dispatch(toggleMenu())}
                 className="flex items-center gap-3 text-base font-medium hover:text-yellow-300 transition  relative z-10"
               >
                 <MdGroups className="text-2xl" />
@@ -286,7 +287,7 @@ export default function Header() {
               </Link>
               <Link
                 to="/promociones"
-                onClick={() => setMobileOpen(false)}
+                onClick={() => dispatch(toggleMenu())}
                 className="flex items-center gap-3 text-base font-medium hover:text-yellow-300 transition  relative z-10"
               >
                 <MdLocalOffer className="text-2xl" />
@@ -297,7 +298,7 @@ export default function Header() {
           <div className="flex flex-col gap-2 mt-6 border-t border-orange-300 pt-4  relative z-10">
             <Link
               to="/about"
-              onClick={() => setMobileOpen(false)}
+              onClick={() => dispatch(toggleMenu())}
               className="flex items-center gap-2 text-sm font-normal hover:text-yellow-300 transition"
             >
               <FiChevronRight className="text-base" />
@@ -305,7 +306,7 @@ export default function Header() {
             </Link>
             <Link
               to="/contact"
-              onClick={() => setMobileOpen(false)}
+              onClick={() => dispatch(toggleMenu())}
               className="flex items-center gap-2 text-sm font-normal hover:text-yellow-300 transition"
             >
               <FiChevronRight className="text-base" />
@@ -313,7 +314,7 @@ export default function Header() {
             </Link>
             <Link
               to="/premium"
-              onClick={() => setMobileOpen(false)}
+              onClick={() => dispatch(toggleMenu())}
               className="flex items-center gap-2 text-sm font-normal hover:text-yellow-300 transition"
             >
               <FiChevronRight className="text-base" />
@@ -346,7 +347,7 @@ export default function Header() {
           {/* Acción principal abajo */}
           <Link
             to="/dashboard/mis-negocios/crear"
-            onClick={() => setMobileOpen(false)}
+            onClick={() => dispatch(toggleMenu())}
             className="
              relative z-10
       flex items-center justify-center gap-2

@@ -1,19 +1,22 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FiEdit2, FiTrash2, FiChevronUp } from "react-icons/fi";
+import ConfirmDeleteModal from "../../ConfirmDeleteModal";
 
-export default function ResumenComunidades({ comunidades = [] }) {
+export default function ResumenComunidades({ comunidades = [], onDelete }) {
   const navigate = useNavigate();
   const [visibleCount, setVisibleCount] = useState(5);
 
-  const handleEditar = (slug) => {
-    navigate(`/dashboard/comunidades/${slug}/editar`);
+  const [showModal, setShowModal] = useState(false);
+  const [comunidadSeleccionada, setComunidadSeleccionada] = useState(null);
+
+  const handleEditar = (id) => {
+    navigate(`/dashboard/mis-comunidades/${id}/editar`);
   };
 
-  const handleEliminar = (slug) => {
-    if (confirm("¿Estás seguro de eliminar esta comunidad?")) {
-      console.log("Eliminar comunidad:", slug);
-    }
+  const handleEliminar = (comunidad) => {
+    setComunidadSeleccionada(comunidad);
+    setShowModal(true);
   };
 
   if (!comunidades || comunidades.length === 0) {
@@ -37,87 +40,103 @@ export default function ResumenComunidades({ comunidades = [] }) {
   const comunidadesMostradas = comunidades.slice(0, visibleCount);
 
   return (
-    <div className="bg-[#F7F7F7] px-2 py-3 md:p-3 lg:p-6 rounded-2xl flex flex-col justify-start gap-1 h-full">
-      <h3 className="text-gray-600 text-lg font-semibold pb-4">
-        Tus comunidades
-      </h3>
+    <>
+      <div className="bg-[#F7F7F7] px-2 py-3 md:p-3 lg:p-6 rounded-2xl flex flex-col justify-start gap-1 h-full">
+        <h3 className="text-gray-600 text-lg font-semibold pb-4">
+          Tus comunidades
+        </h3>
 
-      {comunidadesMostradas.map((comunidad, index) => (
-        <div key={comunidad._id}>
-          <div
-            onClick={() => navigate(`/comunidades/${comunidad.slug}`)}
-            className="flex items-center gap-3 p-1 cursor-pointer hover:bg-white hover:shadow-md rounded-lg transition"
-          >
-            <div className="w-12 h-12 flex-shrink-0">
-              {comunidad.flagImage ? (
-                <img
-                  src={comunidad.flagImage}
-                  alt={comunidad.name}
-                  className="w-full h-full rounded-lg object-cover border border-gray-200"
-                />
-              ) : (
-                <div className="w-full h-full bg-gray-200 rounded-lg flex items-center justify-center text-xs text-gray-500">
-                  Sin imagen
-                </div>
-              )}
+        {comunidadesMostradas.map((comunidad, index) => (
+          <div key={comunidad._id}>
+            <div
+              onClick={() => navigate(`/comunidades/${comunidad._id}`)}
+              className="flex items-center gap-3 p-1 cursor-pointer hover:bg-white hover:shadow-md rounded-lg transition"
+            >
+              <div className="w-12 h-12 flex-shrink-0">
+                {comunidad.flagImage ? (
+                  <img
+                    src={comunidad.flagImage}
+                    alt={comunidad.name}
+                    className="w-full h-full rounded-lg object-cover border border-gray-200"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gray-200 rounded-lg flex items-center justify-center text-xs text-gray-500">
+                    Sin imagen
+                  </div>
+                )}
+              </div>
+
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-[#3F5374] truncate">
+                  {comunidad.name}
+                </p>
+              </div>
+
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleEditar(comunidad._id);
+                  }}
+                  className="p-1 text-gray-500 hover:text-orange-500 transition"
+                >
+                  <FiEdit2 className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleEliminar(comunidad);
+                  }}
+                  className="p-1 text-gray-500 hover:text-red-500 transition"
+                >
+                  <FiTrash2 className="w-4 h-4" />
+                </button>
+              </div>
             </div>
 
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-[#3F5374] truncate">
-                {comunidad.name}
-              </p>
-            </div>
-
-            <div className="flex items-center gap-1">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleEditar(comunidad.slug);
-                }}
-                className="p-1 text-gray-500 hover:text-orange-500 transition"
-              >
-                <FiEdit2 className="w-4 h-4" />
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleEliminar(comunidad.slug);
-                }}
-                className="p-1 text-gray-500 hover:text-red-500 transition"
-              >
-                <FiTrash2 className="w-4 h-4" />
-              </button>
-            </div>
+            {index !== comunidadesMostradas.length - 1 && (
+              <hr className="border-t border-gray-200 mx-2" />
+            )}
           </div>
+        ))}
 
-          {index !== comunidadesMostradas.length - 1 && (
-            <hr className="border-t border-gray-200 mx-2" />
-          )}
-        </div>
-      ))}
+        {comunidades.length > 5 && (
+          <div className="mt-3 flex flex-wrap justify-center gap-3">
+            {visibleCount < comunidades.length && (
+              <button
+                onClick={() => setVisibleCount((prev) => prev + 5)}
+                className="inline-flex items-center gap-1 text-sm font-medium text-orange-600 hover:text-orange-700 transition"
+              >
+                Ver más
+              </button>
+            )}
+            {visibleCount > 5 && (
+              <button
+                onClick={() => setVisibleCount(5)}
+                className="inline-flex items-center gap-1 text-sm font-medium text-orange-600 hover:text-orange-700 transition"
+              >
+                <FiChevronUp className="w-4 h-4" />
+                Ver menos
+              </button>
+            )}
+          </div>
+        )}
+      </div>
 
-      {comunidades.length > 5 && (
-        <div className="mt-3 flex flex-wrap justify-center gap-3">
-          {visibleCount < comunidades.length && (
-            <button
-              onClick={() => setVisibleCount((prev) => prev + 5)}
-              className="inline-flex items-center gap-1 text-sm font-medium text-orange-600 hover:text-orange-700 transition"
-            >
-              Ver más
-            </button>
-          )}
-
-          {visibleCount > 5 && (
-            <button
-              onClick={() => setVisibleCount(5)}
-              className="inline-flex items-center gap-1 text-sm font-medium text-orange-600 hover:text-orange-700 transition"
-            >
-              <FiChevronUp className="w-4 h-4" />
-              Ver menos
-            </button>
-          )}
-        </div>
+      {/* ✅ Modal de confirmación */}
+      {comunidadSeleccionada && (
+        <ConfirmDeleteModal
+          open={showModal}
+          onClose={() => setShowModal(false)}
+          onConfirm={() => {
+            setShowModal(false);
+            onDelete(comunidadSeleccionada._id);
+          }}
+          entityName={comunidadSeleccionada.name}
+          title="Eliminar comunidad"
+          description="Para confirmar, escribe el nombre exacto de la comunidad:"
+        />
       )}
-    </div>
+    </>
   );
 }

@@ -1,5 +1,11 @@
+import {
+  HiOutlineGlobeAlt,
+  HiOutlineLockClosed,
+  HiOutlineTag,
+  HiOutlineTrash,
+} from "react-icons/hi";
+import { HiOutlinePencilSquare } from "react-icons/hi2";
 import { Link } from "react-router-dom";
-import { MdEdit, MdDelete, MdLocalOffer } from "react-icons/md";
 
 export default function NegocioDetalleDashboard({
   negocio,
@@ -13,8 +19,6 @@ export default function NegocioDetalleDashboard({
       className="
         relative
         w-full
-       
-       
         bg-gradient-to-br from-gray-50 via-white to-gray-100
         rounded-2xl shadow-lg
         p-4 lg:p-8 xl:p-10
@@ -39,7 +43,6 @@ export default function NegocioDetalleDashboard({
         w-full
         flex flex-col xl:flex-row
         gap-6
-    
       "
       >
         {/* Imagen */}
@@ -109,31 +112,33 @@ export default function NegocioDetalleDashboard({
       <div className="flex flex-row flex-wrap gap-2 mt-4">
         <Link
           to={`/dashboard/mis-negocios/${negocio._id}/promos/nueva`}
-          className="flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 transition text-xs font-medium no-underline"
+          className="whitespace-nowrap flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 transition text-xs font-medium no-underline"
         >
-          <MdLocalOffer className="text-lg" />
+          <HiOutlineTag className="text-lg" />
           Crear promoción
         </Link>
 
         <Link
           to={`/dashboard/mis-negocios/${negocio._id}/editar`}
-          className="flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 transition text-xs font-medium no-underline"
+          className="whitespace-nowrap flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 transition text-xs font-medium no-underline"
         >
-          <MdEdit className="text-lg" />
+          <HiOutlinePencilSquare className="text-lg" />
           Editar negocio
         </Link>
 
         <Link
           to={`/dashboard/mis-negocios/${negocio._id}`}
-          className="flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 transition text-xs font-medium no-underline"
+          className="whitespace-nowrap flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 transition text-xs font-medium no-underline"
         >
+          <HiOutlineLockClosed className="text-lg" />
           Ver detalle privado
         </Link>
 
         <Link
           to={`/negocios/${negocio._id}`}
-          className="flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 transition text-xs font-medium no-underline"
+          className="whitespace-nowrap flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 transition text-xs font-medium no-underline"
         >
+          <HiOutlineGlobeAlt className="text-lg" />
           Ver perfil público
         </Link>
 
@@ -142,9 +147,9 @@ export default function NegocioDetalleDashboard({
             if (onClose) onClose();
             if (onAskDelete) onAskDelete(negocio);
           }}
-          className="flex shadow-md hover:shadow-lg text-white items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-red-500 hover:bg-red-700 transition text-xs font-medium"
+          className="whitespace-nowrap flex shadow-md hover:shadow-lg text-white items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-red-500 hover:bg-red-700 transition text-xs font-medium"
         >
-          <MdDelete className="text-lg" />
+          <HiOutlineTrash className="text-lg" />
           Eliminar negocio
         </button>
       </div>

@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import { MdEdit, MdDelete, MdPublic } from "react-icons/md";
 import { useState } from "react";
 import ConfirmDeleteModal from "../../../components/ConfirmDeleteModal";
-import { HiOutlineGlobeAlt } from "react-icons/hi2";
+import { HiOutlineGlobeAlt, HiOutlinePencilSquare } from "react-icons/hi2";
 import { RiSpeakLine } from "react-icons/ri";
+import { HiOutlineLockClosed, HiOutlineTrash } from "react-icons/hi";
 
 export default function DetalleComunidad({ comunidad, onClose, onDelete }) {
   const [showModal, setShowModal] = useState(false);
@@ -99,30 +99,33 @@ export default function DetalleComunidad({ comunidad, onClose, onDelete }) {
           <div className="flex flex-row flex-wrap gap-2 mt-4">
             <Link
               to={`/dashboard/mis-comunidades/${comunidad._id}`}
-              className="flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 transition text-xs font-medium no-underline"
+              className="whitespace-nowrap flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 transition text-xs font-medium no-underline"
             >
-              <MdPublic className="text-lg" />
+              <HiOutlineLockClosed className="text-lg" />
               Ver detalle privado
             </Link>
+
             <Link
               to={`/dashboard/mis-comunidades/${comunidad._id}/editar`}
-              className="flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 transition text-xs font-medium no-underline"
+              className="whitespace-nowrap flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 transition text-xs font-medium no-underline"
             >
-              <MdEdit className="text-lg" />
+              <HiOutlinePencilSquare className="text-lg" />
               Editar comunidad
             </Link>
+
             <Link
               to={`/comunidades/${comunidad._id}`}
-              className="flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 transition text-xs font-medium no-underline"
+              className="whitespace-nowrap flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 transition text-xs font-medium no-underline"
             >
-              <MdPublic className="text-lg" />
+              <HiOutlineGlobeAlt className="text-lg" />
               Perfil público
             </Link>
+
             <button
               onClick={() => setShowModal(true)}
-              className="flex shadow-md hover:shadow-lg text-white items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-red-500 hover:bg-red-700 transition text-xs font-medium"
+              className="whitespace-nowrap flex shadow-md hover:shadow-lg text-white items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-red-500 hover:bg-red-700 transition text-xs font-medium"
             >
-              <MdDelete className="text-lg" />
+              <HiOutlineTrash className="text-lg" />
               Eliminar comunidad
             </button>
           </div>

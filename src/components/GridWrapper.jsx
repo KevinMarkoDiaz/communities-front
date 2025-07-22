@@ -7,11 +7,10 @@ const GridWrapper = forwardRef(
         ? "flex flex-col gap-4"
         : [
             "grid justify-center",
-            // Por defecto (móvil): 2 columnas
-            "grid-cols-2",
-            // A partir de md: auto-fit con minmax
-            "md:grid-cols-[repeat(auto-fit,minmax(280px,1fr))]",
-            "gap-y-8 gap-x-4 xl:gap-x-22",
+            "grid-cols-2", // mobile
+            "md:grid-cols-3", // md y lg
+            "xl:grid-cols-[repeat(auto-fit,minmax(200px,1fr))]", // xl+: dinámico
+            "gap-y-8 gap-x-4 xl:gap-x-6",
           ].join(" ");
 
     return (

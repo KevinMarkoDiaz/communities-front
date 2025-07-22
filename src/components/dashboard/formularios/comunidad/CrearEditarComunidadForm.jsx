@@ -182,20 +182,30 @@ export default function CrearEditarComunidadForm({
     >
       {({ validateForm, values, setErrors }) => (
         <Form
-          className="flex flex-col md:flex-row gap-8 w-full max-w-5xl mx-auto p-8 bg-black/40 backdrop-blur-lg rounded-2xl shadow-2xl text-white"
+          className="flex flex-col lg:flex-row gap-8 w-full max-w-5xl mx-auto p-8 bg-black/40 backdrop-blur-lg rounded-2xl shadow-2xl text-white"
           onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
         >
-          <div className="flex flex-col space-y-8 w-full md:w-36">
+          <div className="flex flex-row lg:flex-col w-full lg:w-36 space-x-4 lg:space-x-0 lg:space-y-8">
             {nombresPasos.map((nombre, index) => (
-              <div key={index} className="flex items-start relative">
+              <div
+                key={index}
+                className="relative flex flex-col lg:flex-row lg:items-start items-center"
+              >
                 {index !== nombresPasos.length - 1 && (
-                  <span
-                    className="absolute left-2.5 top-7 h-full w-px bg-white/20"
-                    style={{ minHeight: "1.5rem" }}
-                  />
+                  <>
+                    {/* Línea horizontal para mobile hasta lg */}
+                    <span className="absolute lg:hidden left-full top-3 w-4 h-px bg-white/20" />
+                    {/* Línea vertical para lg+ */}
+                    <span
+                      className="absolute hidden lg:block left-2.5 top-7 h-full w-px bg-white/20"
+                      style={{ minHeight: "1.5rem" }}
+                    />
+                  </>
                 )}
+
+                {/* Círculo con número o check */}
                 <div
-                  className={`flex items-center justify-center w-6 h-6 rounded-full border-2 ${
+                  className={`flex items-center justify-center w-6 h-6 rounded-full border-2 shrink-0 ${
                     paso === index
                       ? "border-orange-500 bg-orange-500 text-black"
                       : paso > index
@@ -205,7 +215,11 @@ export default function CrearEditarComunidadForm({
                 >
                   {paso > index ? "✓" : index + 1}
                 </div>
-                <div className="ml-3 text-sm leading-tight">{nombre}</div>
+
+                {/* Nombre del paso (solo en lg+) */}
+                <div className="mt-2 text-xs lg:text-sm hidden lg:block lg:ml-2">
+                  {nombre}
+                </div>
               </div>
             ))}
           </div>

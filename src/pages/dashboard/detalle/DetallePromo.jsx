@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
-import { MdEdit, MdDelete } from "react-icons/md";
 import { useState } from "react";
 import ConfirmDeleteModal from "../../../components/ConfirmDeleteModal";
+import { HiOutlinePencilSquare } from "react-icons/hi2";
+import { HiOutlineTrash } from "react-icons/hi";
 
 export default function DetallePromo({ promo, onClose, onDelete }) {
   const [showModal, setShowModal] = useState(false);
@@ -80,19 +81,21 @@ export default function DetallePromo({ promo, onClose, onDelete }) {
           </div>
 
           {/* Acciones */}
+
           <div className="flex flex-row flex-wrap gap-2 mt-4">
             <Link
               to={`/dashboard/mis-promos/${promo._id}/editar`}
-              className="flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 transition text-xs font-medium no-underline"
+              className="whitespace-nowrap flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 transition text-xs font-medium no-underline"
             >
-              <MdEdit className="text-lg" />
+              <HiOutlinePencilSquare className="text-lg" />
               Editar promoción
             </Link>
+
             <button
               onClick={() => setShowModal(true)}
-              className="flex shadow-md hover:shadow-lg text-white items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-red-500 hover:bg-red-700 transition text-xs font-medium"
+              className="whitespace-nowrap flex shadow-md hover:shadow-lg text-white items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-red-500 hover:bg-red-700 transition text-xs font-medium"
             >
-              <MdDelete className="text-lg" />
+              <HiOutlineTrash className="text-lg" />
               Eliminar promoción
             </button>
           </div>
