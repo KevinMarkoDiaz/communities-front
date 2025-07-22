@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import HeaderPerfil from "../../components/dashboard/perfilUsuario/HeaderPerfil";
 import Resumen from "../../components/dashboard/perfilUsuario/Resumen";
 import ResumenComunidades from "../../components/dashboard/perfilUsuario/ResumenComunidades";
@@ -14,7 +14,6 @@ import { Link } from "react-router-dom";
 
 export default function PerfilPage() {
   const dispatch = useDispatch();
-
   const usuario = useSelector((state) => state.auth.usuario);
   const categorias = useSelector((state) => state.categorias.data || []);
 
@@ -30,15 +29,29 @@ export default function PerfilPage() {
 
   const [tab, setTab] = useState("negocios");
 
+  // Referencias para evitar llamadas dobles
+  const fetchedComunidades = useRef(false);
+  const fetchedNegocios = useRef(false);
+  const fetchedEventos = useRef(false);
+
   useEffect(() => {
-    if (comunidades.length === 0 && !loadingComunidades) {
+    if (
+      !fetchedComunidades.current &&
+      comunidades.length === 0 &&
+      !loadingComunidades
+    ) {
       dispatch(fetchMisComunidades());
+      fetchedComunidades.current = true;
     }
-    if (negocios.length === 0 && !loadingNegocios) {
+
+    if (!fetchedNegocios.current && negocios.length === 0 && !loadingNegocios) {
       dispatch(fetchMisNegocios());
+      fetchedNegocios.current = true;
     }
-    if (eventos.length === 0 && !loadingEventos) {
+
+    if (!fetchedEventos.current && eventos.length === 0 && !loadingEventos) {
       dispatch(fetchMisEventos());
+      fetchedEventos.current = true;
     }
   }, [
     dispatch,

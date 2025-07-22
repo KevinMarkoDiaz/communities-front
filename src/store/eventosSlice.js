@@ -60,28 +60,48 @@ export const fetchMisEventos = createAsyncThunk(
 // THUNK para crear evento
 export const createEventThunk = createAsyncThunk(
   "eventos/createEvent",
-  async (formData, thunkAPI) => {
+  async (formData, { rejectWithValue, dispatch }) => {
     try {
       const res = await createEvent(formData);
-      return res; // Podés ajustar según lo que retorne createEvent
-    } catch (err) {
-      return thunkAPI.rejectWithValue(
-        err?.response?.data?.message || err.message
+      dispatch(
+        mostrarFeedback({
+          message: "Evento creado exitosamente",
+          type: "success",
+        })
       );
+      return res;
+    } catch (err) {
+      dispatch(
+        mostrarFeedback({
+          message: err?.response?.data?.message || err.message,
+          type: "error",
+        })
+      );
+      return rejectWithValue(err?.response?.data?.message || err.message);
     }
   }
 );
 
 export const updateEventThunk = createAsyncThunk(
   "eventos/updateEvent",
-  async ({ id, formData, token }, thunkAPI) => {
+  async ({ id, formData, token }, { rejectWithValue, dispatch }) => {
     try {
       const response = await updateEvent(id, formData, token);
+      dispatch(
+        mostrarFeedback({
+          message: "Evento actualizado correctamente",
+          type: "success",
+        })
+      );
       return response;
     } catch (err) {
-      return thunkAPI.rejectWithValue(
-        err?.response?.data?.message || err.message
+      dispatch(
+        mostrarFeedback({
+          message: err?.response?.data?.message || err.message,
+          type: "error",
+        })
       );
+      return rejectWithValue(err?.response?.data?.message || err.message);
     }
   }
 );

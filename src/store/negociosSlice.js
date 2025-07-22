@@ -83,25 +83,52 @@ export const deleteNegocio = createAsyncThunk(
   }
 );
 
+// ✅ Crear negocio
 export const createBusinessThunk = createAsyncThunk(
   "negocios/create",
-  async (formData, { rejectWithValue }) => {
+  async (formData, { rejectWithValue, dispatch }) => {
     try {
       const res = await createBusiness(formData);
+      dispatch(
+        mostrarFeedback({
+          message: "Negocio creado con éxito",
+          type: "success",
+        })
+      );
       return res;
     } catch (error) {
+      dispatch(
+        mostrarFeedback({
+          message: error?.response?.data?.message || "Error al crear negocio",
+          type: "error",
+        })
+      );
       return rejectWithValue(error.message || "Error al crear negocio");
     }
   }
 );
 
+// ✏️ Editar negocio
 export const updateBusinessThunk = createAsyncThunk(
   "negocios/update",
-  async ({ id, formData }, { rejectWithValue }) => {
+  async ({ id, formData }, { rejectWithValue, dispatch }) => {
     try {
       const res = await updateBusiness(id, formData);
+      dispatch(
+        mostrarFeedback({
+          message: "Negocio actualizado con éxito",
+          type: "success",
+        })
+      );
       return res;
     } catch (error) {
+      dispatch(
+        mostrarFeedback({
+          message:
+            error?.response?.data?.message || "Error al actualizar negocio",
+          type: "error",
+        })
+      );
       return rejectWithValue(error.message || "Error al actualizar negocio");
     }
   }
@@ -129,7 +156,6 @@ const negociosSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // 🔁 Todos los negocios
       .addCase(obtenerNegocios.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -144,7 +170,6 @@ const negociosSlice = createSlice({
         state.error = action.payload;
       })
 
-      // 🔁 Mis negocios
       .addCase(fetchMisNegocios.pending, (state) => {
         state.misLoading = true;
         state.error = null;
@@ -158,7 +183,6 @@ const negociosSlice = createSlice({
         state.error = action.payload;
       })
 
-      // ❌ Eliminar negocio
       .addCase(deleteNegocio.fulfilled, (state, action) => {
         state.misNegocios = state.misNegocios.filter(
           (n) => n._id !== action.payload

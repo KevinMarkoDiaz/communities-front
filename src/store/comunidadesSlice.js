@@ -8,7 +8,6 @@ import {
 } from "../api/communityApi";
 import { mostrarFeedback } from "./feedbackSlice";
 
-// 🔁 Todas las comunidades
 export const fetchComunidades = createAsyncThunk(
   "comunidades/fetchAll",
   async (_, { rejectWithValue, dispatch }) => {
@@ -26,14 +25,10 @@ export const fetchComunidades = createAsyncThunk(
     }
   },
   {
-    condition: (_, { getState }) => {
-      const state = getState().comunidades;
-      return !state.loaded;
-    },
+    condition: (_, { getState }) => !getState().comunidades.loaded,
   }
 );
 
-// 🔁 Mis comunidades
 export const fetchMisComunidades = createAsyncThunk(
   "comunidades/fetchMine",
   async (_, { rejectWithValue, dispatch }) => {
@@ -51,13 +46,10 @@ export const fetchMisComunidades = createAsyncThunk(
     }
   },
   {
-    condition: (_, { getState }) => {
-      return getState().comunidades.misComunidades.length === 0;
-    },
+    condition: (_, { getState }) => !getState().comunidades.misLoaded,
   }
 );
 
-// 🔁 Comunidad por ID
 export const fetchCommunityById = createAsyncThunk(
   "comunidades/fetchById",
   async (id, { rejectWithValue, dispatch }) => {
@@ -76,13 +68,11 @@ export const fetchCommunityById = createAsyncThunk(
   }
 );
 
-// Crear comunidad
 export const createCommunityThunk = createAsyncThunk(
   "comunidades/create",
   async (formData, thunkAPI) => {
     try {
-      const res = await createCommunity(formData);
-      return res;
+      return await createCommunity(formData);
     } catch (err) {
       return thunkAPI.rejectWithValue(
         err?.response?.data?.message || err.message
@@ -91,13 +81,11 @@ export const createCommunityThunk = createAsyncThunk(
   }
 );
 
-// Actualizar comunidad
 export const updateCommunityThunk = createAsyncThunk(
   "comunidades/update",
   async ({ id, formData }, thunkAPI) => {
     try {
-      const res = await updateCommunity(id, formData);
-      return res;
+      return await updateCommunity(id, formData);
     } catch (err) {
       return thunkAPI.rejectWithValue(
         err?.response?.data?.message || err.message
@@ -106,7 +94,6 @@ export const updateCommunityThunk = createAsyncThunk(
   }
 );
 
-// Slice
 const comunidadesSlice = createSlice({
   name: "comunidades",
   initialState: {
@@ -119,6 +106,7 @@ const comunidadesSlice = createSlice({
     error: null,
     busqueda: "",
     loaded: false,
+    misLoaded: false,
   },
   reducers: {
     setBusqueda: (state, action) => {
@@ -130,7 +118,6 @@ const comunidadesSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // 🔁 fetchComunidades
       .addCase(fetchComunidades.pending, (state) => {
         state.loadingLista = true;
         state.error = null;
@@ -144,8 +131,6 @@ const comunidadesSlice = createSlice({
         state.loadingLista = false;
         state.error = action.payload;
       })
-
-      // 🔁 fetchMisComunidades
       .addCase(fetchMisComunidades.pending, (state) => {
         state.loadingMis = true;
         state.error = null;
@@ -153,13 +138,12 @@ const comunidadesSlice = createSlice({
       .addCase(fetchMisComunidades.fulfilled, (state, action) => {
         state.loadingMis = false;
         state.misComunidades = action.payload;
+        state.misLoaded = true;
       })
       .addCase(fetchMisComunidades.rejected, (state, action) => {
         state.loadingMis = false;
         state.error = action.payload;
       })
-
-      // 🔁 fetchCommunityById
       .addCase(fetchCommunityById.pending, (state) => {
         state.loadingDetalle = true;
         state.error = null;
