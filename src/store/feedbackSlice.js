@@ -1,13 +1,16 @@
 // store/feedbackSlice.js
 import { createSlice } from "@reduxjs/toolkit";
+import { resetApp } from "./appActions"; // ✅ Importado resetApp
+
+const initialState = {
+  visible: false,
+  message: "",
+  type: "success", // 'success' | 'error'
+};
 
 const feedbackSlice = createSlice({
   name: "feedback",
-  initialState: {
-    visible: false,
-    message: "",
-    type: "success", // 'success' | 'error'
-  },
+  initialState,
   reducers: {
     mostrarFeedback: (state, action) => {
       state.visible = true;
@@ -18,6 +21,9 @@ const feedbackSlice = createSlice({
       state.visible = false;
       state.message = "";
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(resetApp, () => initialState); // ✅ Reset al cerrar sesión
   },
 });
 

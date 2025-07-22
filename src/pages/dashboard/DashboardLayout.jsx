@@ -1,23 +1,17 @@
-import { Outlet, NavLink, Link, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { useRef } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
-import { logout } from "../../store/authSlice";
 import Navbar from "../../components/Navbar";
 import SidebarDashboard from "./SidebarDashboard";
 import MobileFooterDashboard from "./MobileFooterDashboard";
+import useLogout from "../../hooks/useLogout";
 
 export default function DashboardLayout() {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
   const usuario = useSelector((state) => state.auth.usuario);
 
   const scrollRef = useRef(); // 👈 acá
-
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate("/");
-  };
+  const handleLogout = useLogout();
 
   return (
     <div className="flex flex-col min-h-screen">

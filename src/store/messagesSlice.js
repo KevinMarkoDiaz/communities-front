@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../../src/api/axiosInstance";
 import { mostrarFeedback } from "./feedbackSlice";
+import { resetApp } from "./appActions"; // ✅ Importación
 
 // Obtener todos los mensajes de una conversación
 export const fetchMessages = createAsyncThunk(
@@ -47,7 +48,7 @@ export const sendMessage = createAsyncThunk(
   }
 );
 
-// Marcar un mensaje como leído
+// Marcar mensaje como leído
 export const markMessageRead = createAsyncThunk(
   "messages/markRead",
   async (messageId, { rejectWithValue, dispatch }) => {
@@ -68,14 +69,17 @@ export const markMessageRead = createAsyncThunk(
   }
 );
 
+// ✅ Estado inicial separado
+const initialState = {
+  items: [],
+  loading: false,
+  error: null,
+  sending: false,
+};
+
 const messagesSlice = createSlice({
   name: "messages",
-  initialState: {
-    items: [],
-    loading: false,
-    error: null,
-    sending: false,
-  },
+  initialState,
   reducers: {
     clearMessages: (state) => {
       state.items = [];
@@ -83,6 +87,8 @@ const messagesSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(resetApp, () => initialState) // ✅ Reinicio global
+
       // Fetch
       .addCase(fetchMessages.pending, (state) => {
         state.loading = true;

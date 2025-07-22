@@ -1,11 +1,14 @@
 // store/mobileMenuSlice.js
 import { createSlice } from "@reduxjs/toolkit";
+import { resetApp } from "./appActions"; // ✅
+
+const initialState = {
+  isOpen: false,
+};
 
 const mobileMenuSlice = createSlice({
   name: "mobileMenu",
-  initialState: {
-    isOpen: false,
-  },
+  initialState,
   reducers: {
     abrirMenu: (state) => {
       state.isOpen = true;
@@ -16,6 +19,9 @@ const mobileMenuSlice = createSlice({
     toggleMenu: (state) => {
       state.isOpen = !state.isOpen;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(resetApp, () => initialState); // ✅
   },
 });
 

@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import CardEvento from "../../components/dashboard/evento/CardEvento";
 import DashboardSectionHeader from "../../components/dashboard/negocios/DashboardSectionHeader";
-import { fetchMisEventos, deleteEvento } from "../../store/eventosSlice";
+import { deleteEvento } from "../../store/eventosSlice";
 import ilusta from "../../assets/ilusta.svg";
 import ilust4 from "../../assets/ilust4.svg";
 import SkeletonDashboardList from "../../components/Skeleton/SkeletonDashboardList";
@@ -17,6 +17,7 @@ export default function MisEventos() {
     misEventos: eventos,
     loading,
     error,
+    loaded,
   } = useSelector((state) => state.eventos);
 
   const [selectedEvento, setSelectedEvento] = useState(null);
@@ -26,12 +27,10 @@ export default function MisEventos() {
   const detalleRef = useRef(null); // 🧭 Referencia al detalle
 
   useEffect(() => {
-    if (eventos.length === 0) {
-      dispatch(fetchMisEventos());
-    } else if (!selectedEvento) {
+    if (loaded && eventos.length > 0 && !selectedEvento) {
       setSelectedEvento(eventos[0]);
     }
-  }, [dispatch, eventos, selectedEvento]);
+  }, [loaded, eventos, selectedEvento]);
 
   const handleDelete = async (id) => {
     try {

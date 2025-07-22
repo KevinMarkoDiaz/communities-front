@@ -1,8 +1,17 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getAllCategories } from "../api/categoryApi";
 import { mostrarFeedback } from "./feedbackSlice";
+import { resetApp } from "./appActions"; // ✅ Acción global
 
-// 🔁 Thunk para cargar desde la API con condición
+// Estado inicial separado
+const initialState = {
+  data: [],
+  loading: false,
+  error: null,
+  loaded: false,
+};
+
+// 🔁 Thunk para cargar categorías
 export const fetchCategorias = createAsyncThunk(
   "categorias/fetchCategorias",
   async (_, { rejectWithValue, dispatch }) => {
@@ -29,15 +38,12 @@ export const fetchCategorias = createAsyncThunk(
 
 const categoriasSlice = createSlice({
   name: "categorias",
-  initialState: {
-    data: [],
-    loading: false,
-    error: null,
-    loaded: false,
-  },
+  initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(resetApp, () => initialState) // ✅ Reset global
+
       .addCase(fetchCategorias.pending, (state) => {
         state.loading = true;
         state.error = null;

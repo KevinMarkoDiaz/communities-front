@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../api/axiosInstance";
 import { mostrarFeedback } from "./feedbackSlice";
+import { resetApp } from "./appActions"; // ✅ Importación del reset global
 
 export const fetchFollowings = createAsyncThunk(
   "follow/fetchFollowings",
@@ -21,13 +22,16 @@ export const fetchFollowings = createAsyncThunk(
   }
 );
 
+// ✅ Estado inicial centralizado
+const initialState = {
+  items: [],
+  loading: false,
+  error: null,
+};
+
 const followSlice = createSlice({
   name: "follow",
-  initialState: {
-    items: [],
-    loading: false,
-    error: null,
-  },
+  initialState,
   reducers: {
     clearFollowings(state) {
       state.items = [];
@@ -37,6 +41,8 @@ const followSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(resetApp, () => initialState) // ✅ Reset al cerrar sesión
+
       .addCase(fetchFollowings.pending, (state) => {
         state.loading = true;
         state.error = null;

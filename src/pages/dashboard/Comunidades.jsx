@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { fetchMisComunidades } from "../../store/comunidadesSlice";
 import CardComunidad from "../../components/dashboard/perfilUsuario/CardComunidad";
 import DashboardSectionHeader from "../../components/dashboard/negocios/DashboardSectionHeader";
@@ -12,22 +13,30 @@ import { Link } from "react-router-dom";
 
 export default function Comunidades() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const { usuario } = useSelector((state) => state.auth);
   const { misComunidades, loadingMis, error } = useSelector(
     (state) => state.comunidades
   );
 
+  // Solo permite acceso a admin o business_owner
+  const isAdmin = ["admin", "business_owner"].includes(usuario?.role);
+  useEffect(() => {
+    if (!isAdmin) {
+      navigate("/"); // Redirige al home si no tiene permiso
+    }
+  }, [isAdmin, navigate]);
+
   const [selectedComunidad, setSelectedComunidad] = useState(null);
   const [showModal, setShowModal] = useState(false);
-
-  const detalleRef = useRef(null); // 🧭 Ref al detalle
+  const detalleRef = useRef(null);
 
   useEffect(() => {
-    if (!["admin", "business_owner"].includes(usuario?.role)) return;
-    if (misComunidades.length === 0) {
+    if (isAdmin && misComunidades.length === 0) {
       dispatch(fetchMisComunidades());
     }
-  }, [dispatch, usuario, misComunidades.length]);
+  }, [dispatch, isAdmin, misComunidades.length]);
 
   useEffect(() => {
     if (misComunidades.length > 0 && !selectedComunidad) {
@@ -61,10 +70,7 @@ export default function Comunidades() {
     }
   };
 
-  if (!["admin", "business_owner"].includes(usuario?.role)) {
-    return <div className="p-4 text-red-600">Acceso no autorizado</div>;
-  }
-
+  if (!isAdmin) return null; // Protección por si no se redirige aún
   if (loadingMis) return <SkeletonDashboardList />;
   if (error) return <div className="p-4 text-red-600">{error}</div>;
 

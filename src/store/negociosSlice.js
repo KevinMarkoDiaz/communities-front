@@ -7,8 +7,8 @@ import {
   createBusiness,
 } from "../api/businessApi";
 import { mostrarFeedback } from "./feedbackSlice";
+import { resetApp } from "./appActions"; // ✅
 
-// 🔁 Todos los negocios
 export const obtenerNegocios = createAsyncThunk(
   "negocios/fetch",
   async (_, { rejectWithValue, dispatch }) => {
@@ -33,7 +33,6 @@ export const obtenerNegocios = createAsyncThunk(
   }
 );
 
-// 🔁 Solo mis negocios
 export const fetchMisNegocios = createAsyncThunk(
   "negocios/fetchMine",
   async (_, { rejectWithValue, dispatch }) => {
@@ -53,12 +52,11 @@ export const fetchMisNegocios = createAsyncThunk(
   {
     condition: (_, { getState }) => {
       const { negocios } = getState();
-      return negocios.misNegocios.length === 0;
+      return !negocios.misLoaded;
     },
   }
 );
 
-// ❌ Eliminar un negocio
 export const deleteNegocio = createAsyncThunk(
   "negocios/delete",
   async (id, { rejectWithValue, dispatch }) => {
@@ -83,7 +81,6 @@ export const deleteNegocio = createAsyncThunk(
   }
 );
 
-// ✅ Crear negocio
 export const createBusinessThunk = createAsyncThunk(
   "negocios/create",
   async (formData, { rejectWithValue, dispatch }) => {
@@ -108,7 +105,6 @@ export const createBusinessThunk = createAsyncThunk(
   }
 );
 
-// ✏️ Editar negocio
 export const updateBusinessThunk = createAsyncThunk(
   "negocios/update",
   async ({ id, formData }, { rejectWithValue, dispatch }) => {
@@ -134,18 +130,21 @@ export const updateBusinessThunk = createAsyncThunk(
   }
 );
 
+const initialState = {
+  lista: [],
+  misNegocios: [],
+  loading: false,
+  misLoading: false,
+  error: null,
+  busqueda: "",
+  categoria: "todas",
+  loaded: false,
+  misLoaded: false,
+};
+
 const negociosSlice = createSlice({
   name: "negocios",
-  initialState: {
-    lista: [],
-    misNegocios: [],
-    loading: false,
-    misLoading: false,
-    error: null,
-    busqueda: "",
-    categoria: "todas",
-    loaded: false,
-  },
+  initialState,
   reducers: {
     setBusqueda: (state, action) => {
       state.busqueda = action.payload;
@@ -177,10 +176,12 @@ const negociosSlice = createSlice({
       .addCase(fetchMisNegocios.fulfilled, (state, action) => {
         state.misLoading = false;
         state.misNegocios = Array.isArray(action.payload) ? action.payload : [];
+        state.misLoaded = true;
       })
       .addCase(fetchMisNegocios.rejected, (state, action) => {
         state.misLoading = false;
         state.error = action.payload;
+        state.misLoaded = true;
       })
 
       .addCase(deleteNegocio.fulfilled, (state, action) => {
@@ -190,7 +191,9 @@ const negociosSlice = createSlice({
       })
       .addCase(deleteNegocio.rejected, (state, action) => {
         state.error = action.payload;
-      });
+      })
+
+      .addCase(resetApp, () => initialState); // ✅
   },
 });
 

@@ -12,13 +12,19 @@ import { NavLink } from "react-router-dom";
 import { FaRocket } from "react-icons/fa";
 
 const SidebarDashboard = ({ usuario, handleLogout }) => {
+  const isAdmin = ["admin"].includes(usuario?.role);
+
   const navItems = [
     { to: "perfil", label: "Mi perfil", icon: <MdPerson /> },
     { to: "mis-negocios", label: "Mis negocios", icon: <MdStore /> },
     { to: "mis-eventos", label: "Mis eventos", icon: <MdEvent /> },
-    { to: "mis-comunidades", label: "Mis comunidades", icon: <MdGroups /> },
+    isAdmin && {
+      to: "mis-comunidades",
+      label: "Mis comunidades",
+      icon: <MdGroups />,
+    },
     { to: "mis-promos", label: "Mis promos", icon: <MdLocalOffer /> },
-  ];
+  ].filter(Boolean); // Elimina falsos si el usuario no es admin
 
   const adminItem = {
     to: "categorias",

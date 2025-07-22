@@ -18,7 +18,7 @@ export default function MisNegocios() {
   const dispatch = useDispatch();
   const detalleRef = useRef(null); // <- ref para hacer scroll
 
-  const { misNegocios, misLoading, error } = useSelector(
+  const { misNegocios, misLoading, error, misLoaded } = useSelector(
     (state) => state.negocios
   );
 
@@ -27,7 +27,7 @@ export default function MisNegocios() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   useEffect(() => {
-    if (misNegocios.length === 0) {
+    if (!misLoaded && misNegocios.length === 0) {
       dispatch(fetchMisNegocios())
         .unwrap()
         .then((data) => {
@@ -41,7 +41,7 @@ export default function MisNegocios() {
     } else if (!selectedNegocio && misNegocios.length > 0) {
       setSelectedNegocio(misNegocios[0]);
     }
-  }, [dispatch, misNegocios, selectedNegocio]);
+  }, [dispatch, misNegocios, selectedNegocio, misLoaded]);
 
   const handleDelete = async (id) => {
     try {

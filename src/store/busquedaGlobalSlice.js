@@ -1,6 +1,15 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchBusquedaGlobal } from "../api/busquedaApi";
 import { mostrarFeedback } from "./feedbackSlice";
+import { resetApp } from "./appActions"; // ✅ Acción global
+
+// Estado inicial separado
+const initialState = {
+  termino: "",
+  resultados: [],
+  loading: false,
+  error: null,
+};
 
 export const buscarGlobalThunk = createAsyncThunk(
   "busquedaGlobal/fetch",
@@ -22,22 +31,14 @@ export const buscarGlobalThunk = createAsyncThunk(
 
 const busquedaGlobalSlice = createSlice({
   name: "busquedaGlobal",
-  initialState: {
-    termino: "",
-    resultados: [],
-    loading: false,
-    error: null,
-  },
+  initialState,
   reducers: {
-    limpiarBusquedaGlobal: (state) => {
-      state.termino = "";
-      state.resultados = [];
-      state.loading = false;
-      state.error = null;
-    },
+    limpiarBusquedaGlobal: () => initialState,
   },
   extraReducers: (builder) => {
     builder
+      .addCase(resetApp, () => initialState) // ✅ Reset global
+
       .addCase(buscarGlobalThunk.pending, (state) => {
         state.loading = true;
         state.error = null;

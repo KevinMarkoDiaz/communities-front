@@ -1,14 +1,22 @@
 // src/store/authSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { updateUserApi, getUserProfile } from "../api/authApi";
+import { resetApp } from "./appActions"; // ✅ acción global de reset
+
+// Estado inicial separado
+const initialState = {
+  usuario: null,
+  loading: false,
+  error: null,
+};
 
 // Thunk para obtener usuario desde cookie
 export const fetchCurrentUser = createAsyncThunk(
   "auth/fetchCurrentUser",
   async (_, thunkAPI) => {
     try {
-      const res = await getUserProfile(); // res = { user: {...} }
-      return res.user; // 👈 solucionado
+      const res = await getUserProfile();
+      return res.user;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data || error.message);
     }
@@ -30,21 +38,18 @@ export const updateUser = createAsyncThunk(
 
 const authSlice = createSlice({
   name: "auth",
-  initialState: {
-    usuario: null,
-    loading: false,
-    error: null,
-  },
+  initialState,
   reducers: {
     login: (state, action) => {
       state.usuario = action.payload;
     },
-    logout: (state) => {
-      state.usuario = null;
-    },
+    logout: () => initialState,
   },
   extraReducers: (builder) => {
     builder
+      // 🔁 Reset global del app
+      .addCase(resetApp, () => initialState)
+
       // fetchCurrentUser
       .addCase(fetchCurrentUser.pending, (state) => {
         state.loading = true;

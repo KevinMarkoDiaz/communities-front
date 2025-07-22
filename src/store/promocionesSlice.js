@@ -8,6 +8,7 @@ import {
   getAllPromotions,
 } from "../api/promotionApi";
 import { mostrarFeedback } from "./feedbackSlice";
+import { resetApp } from "./appActions"; // ✅
 
 // 🔁 Obtener promociones por comunidad
 export const fetchPromosPorComunidad = createAsyncThunk(
@@ -151,14 +152,17 @@ export const fetchAllPromos = createAsyncThunk(
   }
 );
 
+// ✅ Estado inicial para reset
+const initialState = {
+  lista: [],
+  loading: false,
+  error: null,
+  loaded: false,
+};
+
 const promocionesSlice = createSlice({
   name: "promociones",
-  initialState: {
-    lista: [],
-    loading: false,
-    error: null,
-    loaded: false,
-  },
+  initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
@@ -223,7 +227,10 @@ const promocionesSlice = createSlice({
       .addCase(fetchAllPromos.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      });
+      })
+
+      // 🔁 Reset global al cerrar sesión
+      .addCase(resetApp, () => initialState);
   },
 });
 

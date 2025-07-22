@@ -14,6 +14,7 @@ import {
   getEventTopViewers,
 } from "../api/metricsApi";
 import { mostrarFeedback } from "./feedbackSlice";
+import { resetApp } from "./appActions"; // ✅
 
 const apiMap = {
   community: {
@@ -36,9 +37,14 @@ const apiMap = {
   },
 };
 
-/**
- * Carga métricas generales
- */
+// ✅ Estado inicial separado
+const initialState = {
+  entities: {},
+  loading: false,
+  error: null,
+};
+
+// Métricas generales
 export const fetchMetrics = createAsyncThunk(
   "metrics/fetchMetrics",
   async ({ entityType, entityId }, { rejectWithValue, dispatch }) => {
@@ -57,9 +63,7 @@ export const fetchMetrics = createAsyncThunk(
   }
 );
 
-/**
- * Carga métricas filtradas por fecha
- */
+// Métricas por fecha
 export const fetchMetricsByDate = createAsyncThunk(
   "metrics/fetchMetricsByDate",
   async (
@@ -85,9 +89,7 @@ export const fetchMetricsByDate = createAsyncThunk(
   }
 );
 
-/**
- * Carga visitas diarias
- */
+// Visitas diarias
 export const fetchDailyViews = createAsyncThunk(
   "metrics/fetchDailyViews",
   async (
@@ -113,9 +115,7 @@ export const fetchDailyViews = createAsyncThunk(
   }
 );
 
-/**
- * Carga ranking de visitantes
- */
+// Top viewers
 export const fetchTopViewers = createAsyncThunk(
   "metrics/fetchTopViewers",
   async (
@@ -144,11 +144,7 @@ export const fetchTopViewers = createAsyncThunk(
 
 const metricsSlice = createSlice({
   name: "metrics",
-  initialState: {
-    entities: {},
-    loading: false,
-    error: null,
-  },
+  initialState,
   reducers: {
     clearMetrics(state) {
       state.entities = {};
@@ -157,6 +153,10 @@ const metricsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+
+      // ✅ Reinicio global
+      .addCase(resetApp, () => initialState)
+
       // General metrics
       .addCase(fetchMetrics.pending, (state) => {
         state.loading = true;

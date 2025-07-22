@@ -24,16 +24,14 @@ export default function MisPromos() {
   const [selectedPromo, setSelectedPromo] = useState(null);
   const [showModalDetalle, setShowModalDetalle] = useState(false);
 
-  const detalleRef = useRef(null); // 🧭 Ref para scroll al detalle
+  const detalleRef = useRef(null);
 
-  // Solo carga las promos si no están cargadas
   useEffect(() => {
     if (!loaded) {
       dispatch(fetchMisPromos());
     }
   }, [dispatch, loaded]);
 
-  // Solo selecciona una promo si no hay una seleccionada
   useEffect(() => {
     if (promos.length > 0 && !selectedPromo) {
       setSelectedPromo(promos[0]);
@@ -105,7 +103,7 @@ export default function MisPromos() {
         <hr className="flex-grow border-gray-200" />
       </div>
 
-      {/* Listado */}
+      {/* Header acciones */}
       <div className="flex justify-between items-center mb-4 md:mb-6">
         <h3 className="text-lg font-semibold text-[#141C24]">
           Lista de promociones
@@ -119,6 +117,7 @@ export default function MisPromos() {
         </button>
       </div>
 
+      {/* Lista o mensaje vacío */}
       {promos.length === 0 ? (
         <div className="flex flex-col items-center text-center gap-5 py-16">
           <img src={ilust5} alt="Sin promociones" className="w-40 opacity-90" />

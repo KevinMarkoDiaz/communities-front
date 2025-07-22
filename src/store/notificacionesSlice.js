@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../../src/api/axiosInstance";
 import { mostrarFeedback } from "./feedbackSlice";
+import { resetApp } from "./appActions"; // ✅
 
 // 🚀 Thunk para cargar notificaciones
 export const cargarNotificaciones = createAsyncThunk(
@@ -65,18 +66,20 @@ export const marcarTodasNotificacionesLeidas = createAsyncThunk(
   }
 );
 
+// ✅ Estado inicial reutilizable para reset
+const initialState = {
+  items: [],
+  loading: false,
+  error: null,
+  loaded: false,
+};
+
 const notificacionesSlice = createSlice({
   name: "notificaciones",
-  initialState: {
-    items: [],
-    loading: false,
-    error: null,
-    loaded: false,
-  },
+  initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // Cargar notificaciones
       .addCase(cargarNotificaciones.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -91,17 +94,17 @@ const notificacionesSlice = createSlice({
         state.error = action.payload;
       })
 
-      // Marcar una como leída
       .addCase(marcarNotificacionLeida.fulfilled, (state, action) => {
         state.items = state.items.map((n) =>
           n._id === action.payload ? { ...n, read: true } : n
         );
       })
 
-      // Marcar todas como leídas
       .addCase(marcarTodasNotificacionesLeidas.fulfilled, (state) => {
         state.items = state.items.map((n) => ({ ...n, read: true }));
-      });
+      })
+
+      .addCase(resetApp, () => initialState); // ✅ Reset global
   },
 });
 

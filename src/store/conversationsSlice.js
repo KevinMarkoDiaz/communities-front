@@ -1,6 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../../src/api/axiosInstance";
 import { mostrarFeedback } from "./feedbackSlice";
+import { resetApp } from "./appActions"; // ✅ Importación del reset global
+
+// ✅ Estado inicial separado
+const initialState = {
+  items: [],
+  loading: false,
+  error: null,
+};
 
 export const fetchConversations = createAsyncThunk(
   "conversations/fetchAll",
@@ -24,14 +32,12 @@ export const fetchConversations = createAsyncThunk(
 
 const conversationsSlice = createSlice({
   name: "conversations",
-  initialState: {
-    items: [],
-    loading: false,
-    error: null,
-  },
+  initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(resetApp, () => initialState) // ✅ Reset total
+
       .addCase(fetchConversations.pending, (state) => {
         state.loading = true;
         state.error = null;

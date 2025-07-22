@@ -7,6 +7,7 @@ import {
   getCommunityById,
 } from "../api/communityApi";
 import { mostrarFeedback } from "./feedbackSlice";
+import { resetApp } from "./appActions"; // ✅
 
 export const fetchComunidades = createAsyncThunk(
   "comunidades/fetchAll",
@@ -70,45 +71,72 @@ export const fetchCommunityById = createAsyncThunk(
 
 export const createCommunityThunk = createAsyncThunk(
   "comunidades/create",
-  async (formData, thunkAPI) => {
+  async (formData, { rejectWithValue, dispatch }) => {
     try {
-      return await createCommunity(formData);
-    } catch (err) {
-      return thunkAPI.rejectWithValue(
-        err?.response?.data?.message || err.message
+      const response = await createCommunity(formData);
+      dispatch(
+        mostrarFeedback({
+          message: "Comunidad creada exitosamente",
+          type: "success",
+        })
       );
+      return response;
+    } catch (err) {
+      dispatch(
+        mostrarFeedback({
+          message: err?.response?.data?.message || "Error al crear comunidad",
+          type: "error",
+        })
+      );
+      return rejectWithValue(err?.response?.data?.message || err.message);
     }
   }
 );
 
 export const updateCommunityThunk = createAsyncThunk(
   "comunidades/update",
-  async ({ id, formData }, thunkAPI) => {
+  async ({ id, formData }, { rejectWithValue, dispatch }) => {
     try {
-      return await updateCommunity(id, formData);
-    } catch (err) {
-      return thunkAPI.rejectWithValue(
-        err?.response?.data?.message || err.message
+      const response = await updateCommunity(id, formData);
+      dispatch(
+        mostrarFeedback({
+          message: "Comunidad actualizada exitosamente",
+          type: "success",
+        })
       );
+      return response;
+    } catch (err) {
+      dispatch(
+        mostrarFeedback({
+          message:
+            err?.response?.data?.message || "Error al actualizar comunidad",
+          type: "error",
+        })
+      );
+      return rejectWithValue(err?.response?.data?.message || err.message);
     }
   }
 );
 
+// ✅ Estado inicial
+const initialState = {
+  lista: [],
+  misComunidades: [],
+  comunidadActual: null,
+  loadingLista: false,
+  loadingMis: false,
+  loadingDetalle: false,
+  error: null,
+  busqueda: "",
+  loaded: false,
+  misLoaded: false,
+};
+
 const comunidadesSlice = createSlice({
   name: "comunidades",
-  initialState: {
-    lista: [],
-    misComunidades: [],
-    comunidadActual: null,
-    loadingLista: false,
-    loadingMis: false,
-    loadingDetalle: false,
-    error: null,
-    busqueda: "",
-    loaded: false,
-    misLoaded: false,
-  },
+  initialState,
   reducers: {
+    resetMisComunidades: () => initialState,
     setBusqueda: (state, action) => {
       state.busqueda = action.payload;
     },
@@ -118,6 +146,9 @@ const comunidadesSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(resetApp, () => initialState) // ✅ Reset global
+
+      // Todas
       .addCase(fetchComunidades.pending, (state) => {
         state.loadingLista = true;
         state.error = null;
@@ -131,6 +162,8 @@ const comunidadesSlice = createSlice({
         state.loadingLista = false;
         state.error = action.payload;
       })
+
+      // Mías
       .addCase(fetchMisComunidades.pending, (state) => {
         state.loadingMis = true;
         state.error = null;
@@ -144,6 +177,8 @@ const comunidadesSlice = createSlice({
         state.loadingMis = false;
         state.error = action.payload;
       })
+
+      // Por ID
       .addCase(fetchCommunityById.pending, (state) => {
         state.loadingDetalle = true;
         state.error = null;
@@ -161,5 +196,7 @@ const comunidadesSlice = createSlice({
   },
 });
 
-export const { setBusqueda, limpiarComunidadActual } = comunidadesSlice.actions;
+export const { setBusqueda, limpiarComunidadActual, resetMisComunidades } =
+  comunidadesSlice.actions;
+
 export default comunidadesSlice.reducer;

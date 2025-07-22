@@ -29,6 +29,8 @@ export default function PerfilPage() {
 
   const [tab, setTab] = useState("negocios");
 
+  const isAdmin = ["admin"].includes(usuario?.role);
+
   // Referencias para evitar llamadas dobles
   const fetchedComunidades = useRef(false);
   const fetchedNegocios = useRef(false);
@@ -76,22 +78,24 @@ export default function PerfilPage() {
       {/* Tabs */}
       <div className="flex flex-wrap rounded-t-xl bg-gray-100 gap-2 border-gray-200 pt-2 px-4 shadow-md">
         {[
-          { id: "comunidades", label: "Mis comunidades" },
+          isAdmin && { id: "comunidades", label: "Mis comunidades" },
           { id: "negocios", label: "Mis negocios" },
           { id: "eventos", label: "Mis eventos" },
-        ].map((t) => (
-          <button
-            key={t.id}
-            onClick={() => setTab(t.id)}
-            className={`text-xs px-3 py-2 rounded-t-xl font-medium transition ${
-              tab === t.id
-                ? "bg-white border border-b-0 border-gray-200 text-gray-800"
-                : "text-gray-600 hover:text-gray-800"
-            }`}
-          >
-            {t.label}
-          </button>
-        ))}
+        ]
+          .filter(Boolean)
+          .map((t) => (
+            <button
+              key={t.id}
+              onClick={() => setTab(t.id)}
+              className={`text-xs px-3 py-2 rounded-t-xl font-medium transition ${
+                tab === t.id
+                  ? "bg-white border border-b-0 border-gray-200 text-gray-800"
+                  : "text-gray-600 hover:text-gray-800"
+              }`}
+            >
+              {t.label}
+            </button>
+          ))}
       </div>
 
       {/* Contenido principal */}
@@ -105,6 +109,7 @@ export default function PerfilPage() {
                   label: "Tus comunidades",
                   value: comunidades?.length || 0,
                   path: "/dashboard/mis-comunidades",
+                  requireAdmin: true,
                 },
                 {
                   label: "Tus categorías",
@@ -130,7 +135,7 @@ export default function PerfilPage() {
 
         {/* Columna derecha dinámica */}
         <div className="w-full md:w-2/3 flex flex-col gap-4">
-          {tab === "comunidades" && (
+          {tab === "comunidades" && isAdmin && (
             <div className="bg-white border border-gray-200 rounded-2xl shadow-sm h-full">
               <ResumenComunidades comunidades={comunidades} />
             </div>

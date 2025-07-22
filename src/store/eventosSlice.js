@@ -7,6 +7,19 @@ import {
   createEvent,
 } from "../api/eventApi";
 import { mostrarFeedback } from "./feedbackSlice";
+import { resetApp } from "./appActions"; // ✅ Importar acción global
+
+// ✅ Estado inicial
+const initialState = {
+  lista: [],
+  misEventos: [],
+  loading: false,
+  misLoading: false,
+  error: null,
+  busqueda: "",
+  loaded: false,
+  misLoaded: false,
+};
 
 // 🔁 Todos los eventos
 export const obtenerEventos = createAsyncThunk(
@@ -26,10 +39,7 @@ export const obtenerEventos = createAsyncThunk(
     }
   },
   {
-    condition: (_, { getState }) => {
-      const state = getState().eventos;
-      return !state.loaded;
-    },
+    condition: (_, { getState }) => !getState().eventos.loaded,
   }
 );
 
@@ -51,13 +61,11 @@ export const fetchMisEventos = createAsyncThunk(
     }
   },
   {
-    condition: (_, { getState }) => {
-      return getState().eventos.misEventos.length === 0;
-    },
+    condition: (_, { getState }) => !getState().eventos.misLoaded,
   }
 );
 
-// THUNK para crear evento
+// Crear evento
 export const createEventThunk = createAsyncThunk(
   "eventos/createEvent",
   async (formData, { rejectWithValue, dispatch }) => {
@@ -82,6 +90,7 @@ export const createEventThunk = createAsyncThunk(
   }
 );
 
+// Actualizar evento
 export const updateEventThunk = createAsyncThunk(
   "eventos/updateEvent",
   async ({ id, formData, token }, { rejectWithValue, dispatch }) => {
@@ -106,7 +115,7 @@ export const updateEventThunk = createAsyncThunk(
   }
 );
 
-// 🗑️ Eliminar evento
+// Eliminar evento
 export const deleteEvento = createAsyncThunk(
   "eventos/deleteEvento",
   async (id, { rejectWithValue, dispatch }) => {
@@ -133,15 +142,7 @@ export const deleteEvento = createAsyncThunk(
 
 const eventosSlice = createSlice({
   name: "eventos",
-  initialState: {
-    lista: [],
-    misEventos: [],
-    loading: false,
-    misLoading: false,
-    error: null,
-    busqueda: "",
-    loaded: false,
-  },
+  initialState,
   reducers: {
     setBusqueda: (state, action) => {
       state.busqueda = action.payload;
@@ -149,6 +150,8 @@ const eventosSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(resetApp, () => initialState) // ✅ Reset global
+
       // 🔁 Todos los eventos
       .addCase(obtenerEventos.pending, (state) => {
         state.loading = true;
@@ -172,10 +175,12 @@ const eventosSlice = createSlice({
       .addCase(fetchMisEventos.fulfilled, (state, action) => {
         state.misLoading = false;
         state.misEventos = Array.isArray(action.payload) ? action.payload : [];
+        state.misLoaded = true;
       })
       .addCase(fetchMisEventos.rejected, (state, action) => {
         state.misLoading = false;
         state.error = action.payload;
+        state.misLoaded = true;
       })
 
       // 🗑️ Eliminar evento
