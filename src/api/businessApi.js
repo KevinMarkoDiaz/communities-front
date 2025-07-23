@@ -96,3 +96,8 @@ export async function contarNegocios() {
   const res = await axiosInstance.get("/businesses/mine"); // si es por usuario
   return res.data.businesses.length;
 }
+
+export const getAllBusinessesByCommunity = async (communityId) => {
+  const res = await axiosInstance.get(`/businesses/community/${communityId}`);
+  return res.data.businesses;
+};

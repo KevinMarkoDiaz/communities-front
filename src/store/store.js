@@ -13,6 +13,7 @@ import messagesReducer from "./messagesSlice";
 import metricsReducer from "./metricsSlice";
 import feedbackReducer from "./feedbackSlice";
 import mobileMenuReducer from "./mobileMenuSlice";
+import comunidadSeleccionadaReducer from "./comunidadSeleccionadaSlice";
 
 export const store = configureStore({
   reducer: {
@@ -30,5 +31,6 @@ export const store = configureStore({
     metrics: metricsReducer,
     feedback: feedbackReducer,
     mobileMenu: mobileMenuReducer,
+    comunidadSeleccionada: comunidadSeleccionadaReducer,
   },
 });

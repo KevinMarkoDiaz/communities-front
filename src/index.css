@@ -92,3 +92,23 @@ body {
   0%   { transform: rotate(0deg) translateX(60px) rotate(0deg); }
   100% { transform: rotate(360deg) translateX(60px) rotate(-360deg); }
 }
+
+
+.emoji-pin {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  background-color: rgb(0, 4, 255);
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  box-shadow: 0 12px 18px rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emoji-pin .emoji {
+  transform: rotate(15deg);
+  font-size: 22px;
+  line-height: 1;
+}

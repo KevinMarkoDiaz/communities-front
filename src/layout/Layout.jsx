@@ -6,6 +6,7 @@ import CookieConsentModal from "../components/CookieConsentModal";
 import { useEffect } from "react";
 import { useInitData } from "../hooks/useInitData";
 import AdBanner from "../components/ads/AdBanner";
+import SidebarComunidad from "./SidebarComunidad";
 
 export default function Layout() {
   const location = useLocation();
@@ -28,9 +29,10 @@ export default function Layout() {
     "/suscribirse",
     "/suscripcion-exitosa",
     "/suscripcion-cancelada",
-    "/inbox", // ✅ Inbox listado
-    "/inbox/conversation", // ✅ Conversaciones individuales
+    "/inbox",
+    "/inbox/conversation",
   ];
+
   const hideAds = hiddenAdsRoutes.some((route) =>
     location.pathname.startsWith(route)
   );
@@ -41,18 +43,24 @@ export default function Layout() {
 
       {!hideAds && (
         <div className="w-full bg-gray-100 text-center py-2">
-          <AdBanner
-            className="bg-gradient-to-r from-yellow-50 to-orange-100
-"
-          />
+          <AdBanner className="bg-gradient-to-r from-yellow-50 to-orange-100" />
         </div>
       )}
 
-      <main className="flex w-full max-w-full xl:max-w-[80%] mx-auto gap-4 flex-grow px-2 md:px-4">
+      <main className="flex w-full max-w-full xl:max-w-[99%] mx-auto gap-4 flex-grow px-2 md:px-4">
+        {/* Sidebar comunidad solo en desktop */}
+        {!hideAds && (
+          <div className="hidden lg:block w-[280px] shrink-0">
+            <SidebarComunidad />
+          </div>
+        )}
+
+        {/* Contenido principal */}
         <div className="flex-1 flex flex-col md:gap-12 py-8 overflow-hidden">
           <Outlet />
         </div>
 
+        {/* Anuncios sticky a la derecha en desktop */}
         {!hideAds && (
           <div className="hidden lg:block">
             <StickyAds />
@@ -62,12 +70,7 @@ export default function Layout() {
 
       {!hideAds && (
         <div className="w-full bg-gray-100 text-center py-2">
-          <AdBanner
-            // image="/anuncios/anunciante2.jpg"
-            // link="https://anunciante2.com"
-            className="bg-gradient-to-r from-yellow-50 to-orange-100
-"
-          />
+          <AdBanner className="bg-gradient-to-r from-yellow-50 to-orange-100" />
         </div>
       )}
 

@@ -5,10 +5,12 @@ import {
   deleteBusiness,
   updateBusiness,
   createBusiness,
+  getAllBusinessesByCommunity, // ✅ nuevo
 } from "../api/businessApi";
 import { mostrarFeedback } from "./feedbackSlice";
-import { resetApp } from "./appActions"; // ✅
+import { resetApp } from "./appActions";
 
+// ✅ Obtener todos los negocios (caché)
 export const obtenerNegocios = createAsyncThunk(
   "negocios/fetch",
   async (_, { rejectWithValue, dispatch }) => {
@@ -33,6 +35,32 @@ export const obtenerNegocios = createAsyncThunk(
   }
 );
 
+// ✅ Obtener negocios por comunidad
+export const fetchNegociosPorComunidad = createAsyncThunk(
+  "negocios/fetchPorComunidad",
+  async (communityId, { rejectWithValue, dispatch }) => {
+    try {
+      const data = await getAllBusinessesByCommunity(communityId);
+      return Array.isArray(data) ? data : data.businesses || [];
+    } catch (error) {
+      dispatch(
+        mostrarFeedback({
+          message: "No se pudieron cargar los negocios de la comunidad",
+          type: "error",
+        })
+      );
+      return rejectWithValue(error.message || "Error al cargar negocios");
+    }
+  },
+  {
+    condition: (communityId, { getState }) => {
+      const { negocios } = getState();
+      return !negocios.loaded || negocios.lista.length === 0;
+    },
+  }
+);
+
+// ✅ Obtener negocios del usuario autenticado
 export const fetchMisNegocios = createAsyncThunk(
   "negocios/fetchMine",
   async (_, { rejectWithValue, dispatch }) => {
@@ -57,6 +85,7 @@ export const fetchMisNegocios = createAsyncThunk(
   }
 );
 
+// ✅ Eliminar negocio
 export const deleteNegocio = createAsyncThunk(
   "negocios/delete",
   async (id, { rejectWithValue, dispatch }) => {
@@ -81,6 +110,7 @@ export const deleteNegocio = createAsyncThunk(
   }
 );
 
+// ✅ Crear negocio
 export const createBusinessThunk = createAsyncThunk(
   "negocios/create",
   async (formData, { rejectWithValue, dispatch }) => {
@@ -105,6 +135,7 @@ export const createBusinessThunk = createAsyncThunk(
   }
 );
 
+// ✅ Actualizar negocio
 export const updateBusinessThunk = createAsyncThunk(
   "negocios/update",
   async ({ id, formData }, { rejectWithValue, dispatch }) => {
@@ -130,6 +161,7 @@ export const updateBusinessThunk = createAsyncThunk(
   }
 );
 
+// ✅ Estado inicial
 const initialState = {
   lista: [],
   misNegocios: [],
@@ -169,6 +201,22 @@ const negociosSlice = createSlice({
         state.error = action.payload;
       })
 
+      .addCase(fetchNegociosPorComunidad.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.lista = [];
+      })
+      .addCase(fetchNegociosPorComunidad.fulfilled, (state, action) => {
+        state.loading = false;
+        state.lista = Array.isArray(action.payload) ? action.payload : [];
+        state.loaded = true;
+      })
+      .addCase(fetchNegociosPorComunidad.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.lista = [];
+      })
+
       .addCase(fetchMisNegocios.pending, (state) => {
         state.misLoading = true;
         state.error = null;
@@ -193,7 +241,7 @@ const negociosSlice = createSlice({
         state.error = action.payload;
       })
 
-      .addCase(resetApp, () => initialState); // ✅
+      .addCase(resetApp, () => initialState);
   },
 });
 
