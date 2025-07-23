@@ -48,11 +48,15 @@ export default function Layout() {
       )}
 
       <main className="flex w-full max-w-full xl:max-w-[99%] mx-auto gap-4 flex-grow px-2 md:px-4">
-        {/* Sidebar comunidad solo en desktop */}
+        {/* Sidebar comunidad (desktop y botón mobile) */}
         {!hideAds && (
-          <div className="hidden lg:block w-[280px] shrink-0">
+          <>
+            <div className="hidden lg:block w-[280px] shrink-0">
+              <SidebarComunidad />
+            </div>
+            {/* Botón flotante y dropdown en mobile */}
             <SidebarComunidad />
-          </div>
+          </>
         )}
 
         {/* Contenido principal */}
