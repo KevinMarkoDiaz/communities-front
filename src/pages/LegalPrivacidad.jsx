@@ -52,8 +52,8 @@ export default function LegalPrivacidad() {
           </p>
           <p className="text-gray-700">
             Utilizamos cookies y tecnologías similares para mejorar tu
-            experiencia. Si prefieres, puedes desactivarlas en la configuración
-            de tu navegador.
+            experiencia. Si preferís, podés desactivarlas desde tu navegador o
+            configurar tus preferencias desde el modal de cookies.
           </p>
         </div>
         <div className="md:w-1/2 w-full flex justify-center">
@@ -65,7 +65,59 @@ export default function LegalPrivacidad() {
         </div>
       </section>
 
-      {/* Términos de Uso + Ilustración */}
+      {/* Tabla de Cookies */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-semibold text-gray-900">
+          ¿Qué cookies usamos?
+        </h2>
+        <p className="text-gray-700">
+          A continuación te mostramos un resumen de las cookies que podemos usar
+          en nuestra plataforma:
+        </p>
+        <div className="overflow-x-auto">
+          <table className="min-w-full text-left text-sm border border-gray-200">
+            <thead className="bg-gray-100 text-gray-900">
+              <tr>
+                <th className="px-4 py-2 border">Tipo</th>
+                <th className="px-4 py-2 border">Descripción</th>
+                <th className="px-4 py-2 border">Ejemplos</th>
+              </tr>
+            </thead>
+            <tbody className="text-gray-700">
+              <tr>
+                <td className="px-4 py-2 border">Esenciales</td>
+                <td className="px-4 py-2 border">
+                  Necesarias para el funcionamiento básico del sitio.
+                </td>
+                <td className="px-4 py-2 border">sessionId, authToken</td>
+              </tr>
+              <tr>
+                <td className="px-4 py-2 border">Analíticas</td>
+                <td className="px-4 py-2 border">
+                  Nos ayudan a entender cómo se usa la plataforma.
+                </td>
+                <td className="px-4 py-2 border">Google Analytics</td>
+              </tr>
+              <tr>
+                <td className="px-4 py-2 border">Publicidad</td>
+                <td className="px-4 py-2 border">
+                  Utilizadas para mostrar anuncios relevantes.
+                </td>
+                <td className="px-4 py-2 border">Google Ads</td>
+              </tr>
+              <tr>
+                <td className="px-4 py-2 border">Terceros</td>
+                <td className="px-4 py-2 border">
+                  Cookies usadas por servicios externos integrados.
+                </td>
+                <td className="px-4 py-2 border">Mapbox (mapas)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      {/* Términos de Uso */}
       <section className="flex flex-col md:flex-row-reverse gap-8 items-center">
         <div className="md:w-1/2 space-y-3">
           <h2 className="text-2xl font-semibold text-gray-900">
@@ -74,7 +126,7 @@ export default function LegalPrivacidad() {
           <p className="text-gray-700">
             Al usar{" "}
             <span className="font-semibold text-[#F45525]">communidades</span>,
-            aceptas hacerlo de forma respetuosa y conforme a las leyes vigentes.
+            aceptás hacerlo de forma respetuosa y conforme a las leyes vigentes.
           </p>
           <p className="text-gray-700">
             Nos reservamos el derecho de moderar, editar o eliminar contenido
@@ -132,15 +184,15 @@ export default function LegalPrivacidad() {
       <section className="space-y-3">
         <h2 className="text-2xl font-semibold text-gray-900">Contacto Legal</h2>
         <p className="text-gray-700">
-          Si tienes preguntas sobre tu privacidad, nuestras políticas o el uso
-          de la información, puedes escribirnos a{" "}
+          Si tenés preguntas sobre tu privacidad, nuestras políticas o el uso de
+          tu información, podés escribirnos a{" "}
           <a
             href="mailto:info@communidades.com"
             className="text-[#F45525] font-medium"
           >
             info@communidades.com
           </a>
-          . Estamos aquí para ayudarte con transparencia y respeto.
+          . Estamos acá para ayudarte con transparencia y respeto.
         </p>
       </section>
     </div>

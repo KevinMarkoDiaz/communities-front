@@ -7,7 +7,7 @@ export default function DropzoneImagen({
   onChange,
   label = "Imagen destacada",
   className = "", // estilo del área de drop
-  infoTextClassName = "text-xs text-gray-400", // estilo del texto de formatos
+  infoTextClassName = "text-xs text-gray-200", // estilo del texto de formatos
 }) {
   const onDrop = useCallback(
     (acceptedFiles) => {
@@ -35,14 +35,14 @@ export default function DropzoneImagen({
           ${
             isDragActive
               ? "bg-blue-50 border-blue-400 text-blue-600"
-              : "border-gray-300 text-gray-500 hover:border-blue-400 hover:bg-blue-50"
+              : "border-gray-300 text-gray-200 hover:border-blue-400 hover:bg-blue-50"
           }
           ${className}`}
       >
         <input {...getInputProps()} />
 
         <FaCamera className="w-8 h-8 mb-2 opacity-70" />
-        <p className="text-sm font-medium">
+        <p className="text-sm font-medium text-xs text-gray-200">
           {isDragActive
             ? "Suelta la imagen aquí..."
             : "Toca o arrastra una imagen desde tu galería"}

@@ -28,10 +28,9 @@ export default function CardCategoria({ categoria, onSelect }) {
         {/* Nombre */}
         <h3
           className="
-            text-sm font-semibold text-gray-700
-            min-h-[2rem]
-            flex items-start md:items-center
-          "
+    text-sm font-semibold text-gray-700
+    line-clamp-2 leading-snug  overflow-hidden
+  "
         >
           {name}
         </h3>

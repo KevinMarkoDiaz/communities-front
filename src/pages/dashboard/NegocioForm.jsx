@@ -311,7 +311,7 @@ export default function NegocioForm() {
       }}
     >
       {({ validateForm }) => (
-        <Form className="flex flex-col md:flex-row gap-8 w-full max-w-5xl mx-auto p-8 bg-black/40 backdrop-blur-lg rounded-2xl shadow-2xl text-white">
+        <Form className="flex flex-col md:flex-row gap-8 w-full max-w-5xl mx-auto p-4 md:p-8 md:rounded-2xl bg-black/40 backdrop-blur-lg  shadow-2xl text-white">
           {/* Sidebar */}
           <div className="flex flex-row md:flex-col w-full md:w-20 lg:w-36 space-x-4 md:space-x-0 md:space-y-8">
             {nombresPasos.map((nombre, index) => (

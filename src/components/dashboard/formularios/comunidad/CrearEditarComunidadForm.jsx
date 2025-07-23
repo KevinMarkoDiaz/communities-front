@@ -182,7 +182,7 @@ export default function CrearEditarComunidadForm({
     >
       {({ validateForm, values, setErrors }) => (
         <Form
-          className="flex flex-col lg:flex-row gap-8 w-full max-w-5xl mx-auto p-8 bg-black/40 backdrop-blur-lg rounded-2xl shadow-2xl text-white"
+          className="flex flex-col lg:flex-row gap-8 w-full max-w-5xl mx-auto p-4 md:p-8 bg-black/40 backdrop-blur-lg md:rounded-2xl shadow-2xl text-white"
           onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
         >
           <div className="flex flex-row lg:flex-col w-full lg:w-36 space-x-4 lg:space-x-0 lg:space-y-8">

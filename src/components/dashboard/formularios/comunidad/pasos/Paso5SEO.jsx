@@ -57,6 +57,7 @@ export default function Paso5SEO() {
           Estado de publicación
         </label>
         <Select
+          menuPlacement="top"
           name="status"
           options={options}
           placeholder="Selecciona el estado..."

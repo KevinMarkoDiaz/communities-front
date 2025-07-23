@@ -15,13 +15,13 @@ export default function CrearComunidad() {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen px-4 gap-8">
+    <div className="flex flex-col items-center justify-center min-h-screen  md:px-4 gap-8">
       <Helmet>
         <title>Crear Comunidad | Communities</title>
       </Helmet>
 
       <section
-        className="relative w-full max-w-5xl shadow-xl rounded-2xl p-6 sm:p-16 space-y-6 overflow-hidden"
+        className="relative w-full max-w-5xl shadow-xl rounded-2xl  md:p-6 sm:p-16 space-y-6 overflow-hidden"
         style={{
           backgroundImage: `url(${authBg})`,
           backgroundSize: "cover",
@@ -31,7 +31,7 @@ export default function CrearComunidad() {
         <div className="absolute inset-0 bg-white/50 backdrop-blur-sm rounded-xl h-full" />
 
         <div className="relative z-10 space-y-6 grid gap-8">
-          <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center justify-between gap-2 p-6">
             <div className="grid gap-8">
               <h1 className="text-2xl font-bold text-black flex items-center gap-2">
                 Crea tu espacio cultural

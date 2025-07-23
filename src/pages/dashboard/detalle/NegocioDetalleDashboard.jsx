@@ -32,7 +32,7 @@ export default function NegocioDetalleDashboard({
       {onClose && (
         <button
           onClick={onClose}
-          className="md:hidden absolute top-1 right-4 text-gray-900 hover:text-black text-sm"
+          className="md:hidden absolute -top-0.5 right-4 text-gray-900 hover:text-black text-sm"
         >
           cerrar
         </button>

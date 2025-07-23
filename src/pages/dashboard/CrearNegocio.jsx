@@ -6,13 +6,13 @@ import ilust2 from "../../assets/ilust2.svg";
 
 export default function CrearNegocio() {
   return (
-    <div className="flex-col flex items-center justify-center min-h-screen px-4 gap-8 lg:mt-16">
+    <div className="flex-col flex items-center justify-center min-h-screen p-2 gap-8 lg:mt-16">
       <Helmet>
         <title>Crear Negocio | Communities</title>
       </Helmet>
 
       <section
-        className="relative w-full max-w-5xl shadow-xl rounded-2xl p-6 sm:p-16 space-y-6 overflow-hidden"
+        className="relative w-full max-w-5xl shadow-xl rounded-2xl md:p-6  space-y-6 overflow-hidden"
         style={{
           backgroundImage: `url(${authBg})`,
           backgroundSize: "cover",
@@ -24,7 +24,7 @@ export default function CrearNegocio() {
 
         {/* Contenido */}
         <div className="relative space-y-6 grid gap-8">
-          <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center justify-between gap-2 p-6 md:p-0 ">
             <div className="grid gap-8">
               <h1 className="text-2xl font-bold text-black flex items-center gap-2">
                 Empezá a dar a conocer tu negocio

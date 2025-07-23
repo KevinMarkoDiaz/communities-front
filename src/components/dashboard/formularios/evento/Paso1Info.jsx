@@ -73,6 +73,7 @@ export default function Paso1Info() {
           Idioma del evento
         </label>
         <Select
+          menuPlacement="top"
           name="language"
           options={opcionesIdioma}
           placeholder="Selecciona un idioma..."

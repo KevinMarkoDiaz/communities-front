@@ -77,7 +77,7 @@ export default function PromoForm() {
       enableReinitialize
     >
       {({ values, setFieldValue, isSubmitting }) => (
-        <Form className="flex flex-col md:flex-row gap-8 w-full max-w-5xl mx-auto p-8 bg-black/40 backdrop-blur-lg rounded-2xl shadow-2xl text-white">
+        <Form className="flex flex-col md:flex-row gap-8 w-full max-w-5xl mx-auto p-4 md:p-8 bg-black/40 backdrop-blur-lg md:rounded-2xl shadow-2xl text-white">
           <div className="flex-1 space-y-6">
             {/* Nombre */}
             <div>
@@ -120,17 +120,42 @@ export default function PromoForm() {
               <label className="block text-sm font-medium mb-1 text-white">
                 Tipo de promoción
               </label>
-              <Field
-                as="select"
-                name="type"
-                className="w-full px-4 py-3 border border-white/40 bg-white/10 rounded-lg text-white focus:outline-none"
-              >
-                <option value="promo_fin_de_semana">Promo fin de semana</option>
-                <option value="descuentos_imperdibles">
-                  Descuentos imperdibles
-                </option>
-                <option value="nuevos_lanzamientos">Nuevos lanzamientos</option>
-              </Field>
+              <Select
+                menuPlacement="top"
+                options={[
+                  {
+                    value: "promo_fin_de_semana",
+                    label: "Promo fin de semana",
+                  },
+                  {
+                    value: "descuentos_imperdibles",
+                    label: "Descuentos imperdibles",
+                  },
+                  {
+                    value: "nuevos_lanzamientos",
+                    label: "Nuevos lanzamientos",
+                  },
+                ]}
+                value={
+                  [
+                    {
+                      value: "promo_fin_de_semana",
+                      label: "Promo fin de semana",
+                    },
+                    {
+                      value: "descuentos_imperdibles",
+                      label: "Descuentos imperdibles",
+                    },
+                    {
+                      value: "nuevos_lanzamientos",
+                      label: "Nuevos lanzamientos",
+                    },
+                  ].find((option) => option.value === values.type) || null
+                }
+                placeholder="Selecciona el tipo de promoción..."
+                styles={customSelectStylesForm}
+                onChange={(opt) => setFieldValue("type", opt.value)}
+              />
               <ErrorMessage
                 name="type"
                 component="div"
@@ -178,6 +203,7 @@ export default function PromoForm() {
                 Comunidad
               </label>
               <Select
+                menuPlacement="top"
                 options={comunidades?.map((c) => ({
                   value: c._id,
                   label: c.name,
@@ -209,6 +235,7 @@ export default function PromoForm() {
                 Categoría
               </label>
               <Select
+                menuPlacement="top"
                 options={categorias?.map((c) => ({
                   value: c._id,
                   label: c.name,
@@ -235,9 +262,6 @@ export default function PromoForm() {
 
             {/* Imagen */}
             <div>
-              <label className="block text-sm font-medium mb-1 text-white">
-                Imagen destacada
-              </label>
               <DropzoneImagen
                 value={values.image}
                 nombreCampo="image"

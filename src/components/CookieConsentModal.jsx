@@ -1,55 +1,132 @@
-import { useEffect, useState } from "react";
+// components/CookieConsentModal.jsx
+import { useState, useEffect } from "react";
+import { FaCheck, FaTimes } from "react-icons/fa";
 
 export default function CookieConsentModal() {
   const [visible, setVisible] = useState(false);
+  const [preferences, setPreferences] = useState({
+    essential: true,
+    analytics: false,
+    ads: false,
+  });
 
   useEffect(() => {
-    const accepted = localStorage.getItem("cookiesAccepted");
-    if (accepted) {
-      setVisible(false);
+    const stored = localStorage.getItem("cookiePrefs");
+    if (!stored) {
+      setVisible(true);
     }
   }, []);
 
-  const handleAccept = () => {
-    localStorage.setItem("cookiesAccepted", "true");
+  const savePreferences = (prefs) => {
+    localStorage.setItem("cookiePrefs", JSON.stringify(prefs));
+    if (window.gtag) {
+      window.gtag("consent", "update", {
+        ad_storage: prefs.ads ? "granted" : "denied",
+        analytics_storage: prefs.analytics ? "granted" : "denied",
+      });
+    }
     setVisible(false);
   };
 
-  const handleDecline = () => {
-    localStorage.setItem("cookiesAccepted", "false");
-    setVisible(false);
+  const togglePref = (key) => {
+    setPreferences((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
   if (!visible) return null;
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center"
-      style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }} // Fondo oscuro con transparencia
-    >
-      <div className="bg-white rounded-lg shadow-lg max-w-md w-full p-6 space-y-4 text-center border border-gray-200">
-        <h2 className="text-xl font-semibold text-gray-900">Uso de Cookies</h2>
-        <p className="text-gray-700 text-sm">
-          Utilizamos cookies propias y de terceros para recordar tus
-          preferencias, analizar el tráfico y mejorar tu experiencia de
-          navegación. Al continuar navegando, aceptas nuestra{" "}
-          <a href="/legal-privacy" className="underline text-[#F45525]">
-            política de privacidad
-          </a>{" "}
-          y uso de cookies.
-        </p>
-        <div className="flex justify-center gap-3 mt-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+      <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full p-6 space-y-6 text-gray-800">
+        <div className="space-y-2">
+          <h2 className="text-2xl font-semibold text-gray-900">
+            Configuración de Cookies
+          </h2>
+          <p className="text-sm text-gray-600">
+            Usamos cookies para mejorar tu experiencia. Podés elegir qué tipos
+            de cookies querés permitir. Las cookies esenciales son necesarias
+            para el funcionamiento del sitio.
+          </p>
+        </div>
+
+        <div className="space-y-4">
+          {/* Esenciales */}
+          <div className="flex items-center justify-between py-2 border-b border-gray-200">
+            <div>
+              <p className="text-sm font-medium text-gray-800">
+                Cookies esenciales
+              </p>
+              <p className="text-xs text-gray-500">
+                Necesarias para el funcionamiento del sitio
+              </p>
+            </div>
+            <span className="text-green-600 text-sm font-semibold">
+              Siempre activas
+            </span>
+          </div>
+
+          {/* Analítica */}
+          <div className="flex items-center justify-between py-2 border-b border-gray-200">
+            <div>
+              <p className="text-sm font-medium text-gray-800">
+                Cookies de analítica
+              </p>
+              <p className="text-xs text-gray-500">
+                Nos ayudan a entender cómo usás la plataforma
+              </p>
+            </div>
+            <button
+              onClick={() => togglePref("analytics")}
+              className={`w-6 h-6 rounded-full flex items-center justify-center border transition ${
+                preferences.analytics
+                  ? "bg-green-500 text-white border-green-500"
+                  : "border-gray-300 text-gray-400"
+              }`}
+            >
+              {preferences.analytics ? (
+                <FaCheck size={12} />
+              ) : (
+                <FaTimes size={12} />
+              )}
+            </button>
+          </div>
+
+          {/* Publicidad */}
+          <div className="flex items-center justify-between py-2">
+            <div>
+              <p className="text-sm font-medium text-gray-800">
+                Cookies de publicidad
+              </p>
+              <p className="text-xs text-gray-500">
+                Usadas para mostrar anuncios relevantes
+              </p>
+            </div>
+            <button
+              onClick={() => togglePref("ads")}
+              className={`w-6 h-6 rounded-full flex items-center justify-center border transition ${
+                preferences.ads
+                  ? "bg-green-500 text-white border-green-500"
+                  : "border-gray-300 text-gray-400"
+              }`}
+            >
+              {preferences.ads ? <FaCheck size={12} /> : <FaTimes size={12} />}
+            </button>
+          </div>
+        </div>
+
+        <div className="flex justify-end gap-3 pt-4">
           <button
-            onClick={handleDecline}
-            className="px-4 py-2 rounded border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm"
+            className="px-4 py-2 text-sm text-gray-700 border border-gray-300 rounded hover:bg-gray-100"
+            onClick={() =>
+              savePreferences({ essential: true, analytics: false, ads: false })
+            }
           >
-            Rechazar
+            Rechazar todo
           </button>
           <button
-            onClick={handleAccept}
-            className="px-4 py-2 rounded bg-[#F45525] text-white hover:bg-[#d9451f] text-sm"
+            className="px-4 py-2 text-sm bg-[#F45525] text-white rounded hover:bg-[#d9451f]"
+            onClick={() => savePreferences(preferences)}
           >
-            Aceptar
+            Guardar preferencias
           </button>
         </div>
       </div>

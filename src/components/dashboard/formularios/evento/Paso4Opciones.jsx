@@ -46,6 +46,7 @@ export default function Paso4Opciones() {
       <div>
         <label className="block text-sm font-medium mb-1">Categorías</label>
         <Select
+          menuPlacement="top"
           isMulti
           options={categorias.map((cat) => ({
             value: cat._id,
@@ -81,6 +82,7 @@ export default function Paso4Opciones() {
       <div>
         <label className="block text-sm font-medium mb-1">Comunidades</label>
         <Select
+          menuPlacement="top"
           isMulti
           options={comunidades.map((com) => ({
             value: com._id,
@@ -118,6 +120,7 @@ export default function Paso4Opciones() {
           Negocios auspiciantes (opcional)
         </label>
         <Select
+          menuPlacement="top"
           isMulti
           options={negocios.map((n) => ({
             value: n._id,
@@ -155,6 +158,7 @@ export default function Paso4Opciones() {
           Estado del evento
         </label>
         <Select
+          menuPlacement="top"
           options={[
             { value: "activo", label: "Activo" },
             { value: "cancelado", label: "Cancelado" },
@@ -201,6 +205,7 @@ export default function Paso4Opciones() {
             Organizador del evento
           </label>
           <SelectOrganizer
+            menuPlacement="top"
             placeholder="Selecciona el organizador (usuario o negocio)..."
             value={
               values.organizer && values.organizerModel

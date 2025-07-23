@@ -58,6 +58,7 @@ export default function Paso1Datos() {
           Título
         </label>
         <Select
+          menuPlacement="top"
           options={opcionesTitulo}
           placeholder="Selecciona una opción..."
           styles={customSelectStylesForm}

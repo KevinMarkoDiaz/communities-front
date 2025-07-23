@@ -67,6 +67,7 @@ export default function Paso1Info() {
         <Field name="tipo">
           {({ field, form }) => (
             <Select
+              menuPlacement="top"
               styles={customSelectStylesForm}
               options={opcionesTipo}
               placeholder="Selecciona el tipo..."

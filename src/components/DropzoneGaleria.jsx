@@ -10,7 +10,7 @@ export default function DropzoneGaleria({
   label = "Galería de imágenes",
   maxImages = 5,
   className = "", // para el dropzone
-  infoTextClassName = "text-xs text-gray-400", // para el texto de formatos
+  infoTextClassName = "text-xs text-gray-200", // para el texto de formatos
 }) {
   const dispatch = useDispatch();
 

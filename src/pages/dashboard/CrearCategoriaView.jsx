@@ -7,13 +7,13 @@ import icono from "../../assets/icono.svg";
 
 export default function CrearCategoriaView() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen px-4 gap-8 mt-8 lg:mt-16">
+    <div className="flex flex-col items-center justify-center min-h-screen p-2  gap-8 md:mt-8 lg:mt-16">
       <Helmet>
         <title>Crear Categoría | Communities</title>
       </Helmet>
 
       <section
-        className="relative w-full max-w-3xl shadow-xl rounded-2xl p-6 sm:p-16 space-y-6 overflow-hidden"
+        className="relative w-full max-w-3xl shadow-xl rounded-2xl md:p-6 sm:p-16 space-y-6 overflow-hidden"
         style={{
           backgroundImage: `url(${authBg})`,
           backgroundSize: "cover",
@@ -26,7 +26,7 @@ export default function CrearCategoriaView() {
         {/* Contenido */}
         <div className="relative space-y-6 grid gap-8">
           {/* Título, descripción e ilustración */}
-          <div className="flex items-start justify-between gap-4 flex-wrap sm:flex-nowrap">
+          <div className="flex items-start justify-between gap-4 flex-wrap sm:flex-nowrap p-4">
             <div className="flex-1 space-y-2">
               <h1 className="text-2xl font-bold text-black">Crear Categoría</h1>
               <p className="text-gray-700 text-sm sm:text-base">

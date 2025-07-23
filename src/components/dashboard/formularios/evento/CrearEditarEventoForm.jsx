@@ -16,7 +16,7 @@ import { createEventThunk } from "../../../../store/eventosSlice";
 import { mostrarFeedback } from "../../../../store/feedbackSlice";
 
 const nombresPasos = [
-  "Información Básica",
+  "Información",
   "Ubicación",
   "Detalles",
   "Imágenes",
@@ -220,39 +220,42 @@ export default function CrearEditarEventoForm({
       validateOnChange={false}
     >
       {({ values, setErrors }) => (
-        <Form className="flex flex-col md:flex-row gap-8 w-full max-w-5xl mx-auto p-8 bg-black/40 backdrop-blur-lg rounded-2xl shadow-2xl text-white">
+        <Form className="flex flex-col md:flex-row gap-8 w-full max-w-5xl mx-auto p-4 md:p-8 bg-black/40 backdrop-blur-lg md:rounded-2xl shadow-2xl text-white">
           {/* Sidebar de pasos */}
           <div className="flex flex-row md:flex-col w-full md:w-20 lg:w-36 space-x-4 md:space-x-0 md:space-y-8">
             {nombresPasos.map((nombre, index) => (
               <div
                 key={index}
-                className="relative flex flex-col md:flex-row md:items-start items-center"
+                className="relative flex flex-row items-center md:items-start"
               >
+                {/* Conector */}
                 {index !== nombresPasos.length - 1 && (
                   <>
                     {/* Línea horizontal para mobile */}
-                    <span className="absolute hidden md:hidden left-1/2 top-6 w-10 h-px bg-white/20 translate-x-1/2" />
                     {/* Línea vertical para md+ */}
-                    <span
-                      className="absolute hidden md:block left-2.5 top-7 h-full w-px bg-white/20"
-                      style={{ minHeight: "1.5rem" }}
-                    />
+                    <span className="absolute hidden md:block left-3 top-6 h-[2rem] w-px bg-white/20" />
                   </>
                 )}
+
+                {/* Círculo con número o check */}
                 <div
-                  className={`flex items-center justify-center w-6 h-6 rounded-full border-2 ${
-                    paso === index
-                      ? "border-orange-500 bg-orange-500 text-black"
-                      : paso > index
-                      ? "border-green-500 bg-green-500 text-black"
-                      : "border-white/30 text-white"
-                  }`}
+                  className={`w-6 h-6 flex items-center justify-center rounded-full border-2 shrink-0
+          ${
+            paso === index
+              ? "border-orange-500 bg-orange-500 text-black"
+              : paso > index
+              ? "border-green-500 bg-green-500 text-black"
+              : "border-white/30 text-white"
+          }
+        `}
                 >
                   {paso > index ? "✓" : index + 1}
                 </div>
+
+                {/* Nombre del paso (solo visible en md+) */}
                 <div className="ml-2 text-xs lg:text-sm hidden md:block">
                   {nombre}
-                </div>{" "}
+                </div>
               </div>
             ))}
           </div>

@@ -54,6 +54,7 @@ export default function Paso1General({ categorias = [], comunidades = [] }) {
           Categoría
         </label>
         <Select
+          menuPlacement="top"
           options={categorias.map((c) => ({
             value: c._id,
             label: c.name,
@@ -83,6 +84,7 @@ export default function Paso1General({ categorias = [], comunidades = [] }) {
           Comunidad
         </label>
         <Select
+          menuPlacement="top"
           options={comunidades.map((c) => ({
             value: c._id,
             label: c.name,

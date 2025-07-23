@@ -1,41 +1,50 @@
 <!doctype html>
-<html lang="en">
- <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Communidades - Conectando negocios y comunidades latinas</title>
-  <meta name="description" content="Descubre negocios, eventos y comunidades latinas en tu ciudad.">
-<meta name="robots" content="noindex, nofollow">
-  <link rel="canonical" href="https://communidades.com/">
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Communidades - Conectando negocios y comunidades latinas</title>
+    <meta name="description" content="Descubre negocios, eventos y comunidades latinas en tu ciudad.">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="canonical" href="https://communidades.com/" />
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="Communidades - Conectando negocios y comunidades latinas">
-  <meta property="og:description" content="Descubre negocios, eventos y comunidades latinas en tu ciudad.">
-  <meta property="og:image" content="https://communidades.com/imagen-social.jpg">
-  <meta property="og:url" content="https://communidades.com/">
-  <meta name="twitter:card" content="summary_large_image">
-<!-- Fonts -->
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet" />
+    <!-- Open Graph -->
+    <meta property="og:title" content="Communidades - Conectando negocios y comunidades latinas" />
+    <meta property="og:description" content="Descubre negocios, eventos y comunidades latinas en tu ciudad." />
+    <meta property="og:image" content="https://communidades.com/imagen-social.jpg" />
+    <meta property="og:url" content="https://communidades.com/" />
+    <meta name="twitter:card" content="summary_large_image" />
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="./src/assets/icono.svg" />
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-5T52CG1MVT"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet" />
 
-  gtag('config', 'G-5T52CG1MVT');
-</script>
-</head>
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="./src/assets/icono.svg" />
+
+    <!-- ✅ Google Consent Mode v2 + Analytics -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+
+      // Modo por defecto: no se activa tracking hasta que el usuario consienta
+      gtag("consent", "default", {
+        ad_storage: "denied",
+        analytics_storage: "denied",
+        wait_for_update: 500 // Espera 500ms para que React actualice preferencias
+      });
+    </script>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5T52CG1MVT"></script>
+    <script>
+      gtag("js", new Date());
+      gtag("config", "G-5T52CG1MVT");
+    </script>
+  </head>
 
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
-   
-
   </body>
 </html>

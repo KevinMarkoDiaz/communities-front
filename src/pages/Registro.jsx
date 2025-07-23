@@ -241,6 +241,7 @@ export default function RegistroMultiStep() {
                       Rol
                     </label>
                     <Select
+                      menuPlacement="top"
                       name="role"
                       options={[
                         { value: "user", label: "Usuario" },

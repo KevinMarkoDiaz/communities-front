@@ -50,6 +50,7 @@ export default function SelectOrganizer({ value, onChange }) {
       </div>
 
       <Select
+        menuPlacement="top"
         isLoading={loading}
         options={opciones}
         value={value}

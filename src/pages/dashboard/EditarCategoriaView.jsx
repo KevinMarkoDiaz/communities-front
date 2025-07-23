@@ -88,7 +88,7 @@ export default function EditarCategoriaView() {
         <title>Editar Categoría | Dashboard</title>
       </Helmet>
 
-      <div className="flex flex-col items-center justify-center min-h-screen px-4 mt-8 lg:mt-16">
+      <div className="flex flex-col items-center justify-center min-h-screen md:px-4 mt-8 lg:mt-16">
         <section
           className="w-full max-w-2xl shadow rounded-2xl p-6 sm:p-16 space-y-6 bg-black/40 backdrop-blur-lg"
           style={{

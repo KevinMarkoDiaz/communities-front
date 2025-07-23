@@ -69,8 +69,8 @@ export default function CrearCategoria() {
         <title>Nueva Categoría | Dashboard</title>
       </Helmet>
 
-      <div className="flex flex-col items-center justify-center px-4 ">
-        <section className="w-full max-w-2xl shadow rounded-2xl p-6 md:p-8 space-y-6 bg-black/40 backdrop-blur-lg">
+      <div className="flex flex-col items-center justify-center md:px-4 ">
+        <section className="w-full max-w-2xl shadow md:rounded-2xl p-4 md:p-8 space-y-6 bg-black/40 backdrop-blur-lg">
           <Formik
             initialValues={{
               name: "",
