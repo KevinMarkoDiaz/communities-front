@@ -3,6 +3,7 @@ import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import Loading from "./Loading";
 import { fetchMapboxStyleWithRetry } from "../utils/fetchMapboxStyleWithRetry";
+import { estaAbiertoAhora } from "../utils/estaAbiertoAhora";
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
@@ -102,37 +103,50 @@ export default function MapaComunidad({ negocios, coords }) {
           ">${getEmoji(n.category)}</span>
         </div>
       `;
+      const estaAbierto = estaAbiertoAhora(n.openingHours);
 
       new mapboxgl.Marker(el)
         .setLngLat([c.lng, c.lat])
         .setPopup(
-          new mapboxgl.Popup({ offset: 25 }).setHTML(`
-            <div class="w-[240px] p-3 rounded-xl">
-              <div class="flex flex-col gap-1">
-                <div class="flex items-center">
-                  <h3 class="text-sm font-bold text-gray-900">${n.nombre}</h3>
-                  ${
-                    n.verificado
-                      ? `<div class="w-5 h-5 p-[2px] ring-2 ring-sky-400 shadow-inner bg-gradient-to-br from-sky-200 to-sky-400 flex items-center justify-center"
-                          style="clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)"
-                          title="Verificado por Communities">
-                          <svg class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 12.5c1.5 2 4 4.5 4 4.5s6-8.5 14-12"/>
-                          </svg>
-                        </div>`
-                      : ""
-                  }
-                </div>
-                <p class="text-xs text-gray-600 line-clamp-2">${
-                  n.descripcion
-                }</p>
-                <a href="/negocios/${n.id}" class="text-sm font-semibold mt-1">
-                  Ver perfil →
-                </a>
-              </div>
-            </div>
-          `)
+          new mapboxgl.Popup({ offset: 25, closeButton: false }).setHTML(`
+    <div class="w-[240px] rounded-xl shadow-2xl border border-white/10 bg-black/70 backdrop-blur-xs p-3">
+      <div class="flex items-center gap-3">
+        <img 
+          src="${n.profileImage || "/placeholder.png"}" 
+          alt="Logo de ${n.name}" 
+          class="w-10 h-10 rounded-full object-cover border border-white/10"
+        />
+        <div class="flex flex-col">
+          <h3 class="text-sm font-semibold text-gray-100">${n.name}</h3>
+          <p class="text-[11px] text-gray-100 leading-tight">${
+            n.category?.name || "Sin categoría"
+          }</p>
+        </div>
+      
+      </div>
+
+      <div class="flex justify-between items-center mt-3">
+        <a 
+          href="/negocios/${n._id}" 
+          class="text-xs text-white bg-orange-500 hover:bg-orange-600 font-medium px-2 py-1 rounded transition"
+        >
+          Ver más
+        </a>
+
+        <div class="flex items-center gap-2 ml-2">
+          ${
+            estaAbierto
+              ? `<span class="pulsing-dot"></span>
+              <span class="text-[11px] text-green-400">Abierto ahora</span>
+                 `
+              : `<span class="text-[11px] text-red-400">Cerrado</span>`
+          }
+        </div>
+      </div>
+    </div>
+  `)
         )
+
         .addTo(map);
 
       bounds.extend([c.lng, c.lat]);
@@ -182,28 +196,28 @@ export default function MapaComunidad({ negocios, coords }) {
 function getEmoji(categoria) {
   switch (categoria.name) {
     case "Comida y Bebida":
-      return "🍽️";
+      return "🥗"; // Plato y cubiertos
     case "Salud y Bienestar":
-      return "🧘‍♀️";
+      return "⚕️"; // Botellita tipo wellness
     case "Ciencia y Tecnología":
-      return "💻";
+      return "💻"; // Laptop
     case "Belleza y Cuidado Personal":
-      return "💇‍♀️";
+      return "✂️"; // Tijeras, más neutro para peluquería o estética
     case "Bienes Raíces":
-      return "🏠";
+      return "🏠"; // Casa
     case "Arte y Cultura":
-      return "🎨";
+      return "🎨"; // Paleta
     case "Mascotas":
-      return "🐾";
+      return "🐾"; // Huellas
     case "Educación":
-      return "📚";
+      return "📚"; // Libros
     case "Deporte y Fitness":
-      return "🏋️‍♂️";
+      return "🏃"; // Persona corriendo (sin género específico)
     case "Finanzas y Legales":
-      return "📊";
+      return "💼"; // Maletín
     case "Entretenimiento":
-      return "🎭";
+      return "🎬"; // Claqueta de cine
     default:
-      return "📍";
+      return "📍"; // Pin genérico
   }
 }
