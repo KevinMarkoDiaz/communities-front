@@ -39,7 +39,6 @@ const CommentsSection = ({ targetType, targetId }) => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("¿Eliminar comentario?")) return;
     try {
       await axiosInstance.delete(`/comments/${id}`);
       fetchComments();
