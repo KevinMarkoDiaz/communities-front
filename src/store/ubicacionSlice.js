@@ -4,13 +4,13 @@ export const obtenerUbicacionUsuario = createAsyncThunk(
   "ubicacion/obtener",
   async (_, { rejectWithValue }) => {
     // 🌐 🌴 DEV: Ubicación fake de Miami
-    return {
-      lat: 33.0462,
-      lng: -96.9942,
-    };
+    // return {
+    //   lat: 33.0462,
+    //   lng: -96.9942,
+    // };
 
     // 🌐 🌍 PROD: Descomentar para usar geolocalización real
-    /*
+
     return new Promise((resolve, reject) => {
       if (!navigator.geolocation) {
         return reject(rejectWithValue("Geolocalización no disponible"));
@@ -28,7 +28,6 @@ export const obtenerUbicacionUsuario = createAsyncThunk(
         { timeout: 10000 }
       );
     });
-    */
   }
 );
 

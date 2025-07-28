@@ -1,7 +1,6 @@
-// src/pages/dashboard/EditarCategoriaView.jsx
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { getCategoryById, updateCategory } from "../../api/categoryApi";
@@ -9,8 +8,7 @@ import { Helmet } from "react-helmet-async";
 import DropzoneImagen from "../../components/DropzoneImagen";
 import authBg from "../../../src/assets/authbg.png";
 import ilust2 from "../../assets/ilust2.svg";
-import { useDispatch } from "react-redux";
-import { mostrarFeedback } from "../../store/feedbackSlice"; // ajustá el path según tu estructura
+import { mostrarFeedback } from "../../store/feedbackSlice";
 import SkeletonNegocioForm from "../../components/Skeleton/SkeletonNegocioForm";
 
 const esquemaCategoria = Yup.object().shape({
@@ -56,7 +54,8 @@ export default function EditarCategoriaView() {
 
       formData.append("data", JSON.stringify(data));
 
-      if (valores.icon && typeof valores.icon !== "string") {
+      // ✅ Asegurar que se mande siempre el icono (sea URL o archivo nuevo)
+      if (valores.icon) {
         formData.append("profileImage", valores.icon);
       }
 
@@ -90,16 +89,19 @@ export default function EditarCategoriaView() {
 
       <div className="flex flex-col items-center justify-center min-h-screen md:px-4 mt-8 lg:mt-16">
         <section
-          className="w-full max-w-2xl shadow rounded-2xl p-6 sm:p-16 space-y-6 bg-black/40 backdrop-blur-lg"
+          className="w-full max-w-2xl shadow-xl rounded-2xl relative sm:p-16 space-y-6 overflow-hidden"
           style={{
             backgroundImage: `url(${authBg})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
         >
-          <div className="absolute inset-0 bg-white/50 backdrop-blur-sm rounded-xl h-full"></div>
-          <div className="flex gap-2">
-            <div className="space-y-2 relative grid ">
+          {/* Capa de desenfoque blanco */}
+          <div className="absolute inset-0 bg-white/50 backdrop-blur-sm rounded-xl z-0" />
+
+          {/* Cabecera */}
+          <div className="relative z-10 flex gap-2 items-start justify-between">
+            <div className="space-y-2 grid">
               <h1 className="text-2xl font-bold text-[#141C24]">
                 Editar Categoría
               </h1>
@@ -114,7 +116,9 @@ export default function EditarCategoriaView() {
               className="w-36 xl:w-52 opacity-90"
             />
           </div>
-          <section className="w-full max-w-2xl shadow rounded-2xl p-6 md:p-8 space-y-6 bg-black/40 backdrop-blur-lg">
+
+          {/* Formulario */}
+          <section className="relative z-10 w-full max-w-2xl shadow rounded-2xl p-6 md:p-8 space-y-6 bg-black/40 backdrop-blur-lg">
             {loading ? (
               <SkeletonNegocioForm />
             ) : (
@@ -130,7 +134,7 @@ export default function EditarCategoriaView() {
                 validateOnChange={false}
               >
                 {({ values, setFieldValue, isSubmitting }) => (
-                  <Form className="space-y-6">
+                  <Form className="space-y-6 text-white">
                     {/* Nombre */}
                     <div>
                       <label className="block text-sm font-medium text-white mb-1">
@@ -167,7 +171,7 @@ export default function EditarCategoriaView() {
                       />
                     </div>
 
-                    {/* Icono con dropzone */}
+                    {/* Icono */}
                     <div>
                       <DropzoneImagen
                         value={values.icon}
@@ -196,6 +200,7 @@ export default function EditarCategoriaView() {
           </section>
         </section>
 
+        {/* Footer mensaje motivacional */}
         <div className="pt-6 text-center">
           <p className="text-[#141C24] text-base font-medium">
             🌟 Mantén tu catálogo actualizado y profesional.
