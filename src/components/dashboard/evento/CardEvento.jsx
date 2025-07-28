@@ -21,7 +21,7 @@ export default function CardEvento({ evento, onSelect }) {
       </div>
 
       {/* Contenido */}
-      <div className="flex flex-col gap-2 p-2  flex-grow">
+      <div className="flex flex-col gap-2 justify-between p-2 h-[9rem] flex-grow">
         {/* Título */}
         <h3 className="text-sm font-semibold text-gray-700 line-clamp-2">
           {title}

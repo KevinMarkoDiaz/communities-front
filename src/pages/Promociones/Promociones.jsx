@@ -1,5 +1,4 @@
-// ✅ 3. pages/Promociones.jsx
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllPromos } from "../../store/promocionesSlice";
 
@@ -9,12 +8,11 @@ import BannerPromociones from "../../components/promo/BannerPromociones";
 import PromocionesDestacadas from "../../components/home/PromocionesDestacadas";
 
 import { Helmet } from "react-helmet-async";
-import { Link } from "react-router-dom";
 import PromocionesD from "../../assets/PromocionesD.png";
-
 import bndc from "../../assets/bndc.png";
 import bnnl from "../../assets/bnnl.png";
 import bnpf from "../../assets/bnpf.png";
+import ModalGuardarPromo from "../../components/modal/ModalGuardarPromo";
 
 export default function Promociones() {
   const dispatch = useDispatch();
@@ -23,6 +21,8 @@ export default function Promociones() {
     loading,
     error,
   } = useSelector((state) => state.promociones);
+
+  const [promoSeleccionada, setPromoSeleccionada] = useState(null);
 
   useEffect(() => {
     if (!promociones || promociones.length === 0) {
@@ -41,8 +41,6 @@ export default function Promociones() {
   const promosFinSemana = lista.filter((p) => p.type === "promo_fin_de_semana");
 
   const renderCarrusel = (titulo, imagen, items, emoji, carouselProps = {}) => {
-    console.log(`Carrusel "${titulo}" tiene ${items.length} promos`, items);
-
     if (items.length === 0) {
       return (
         <div className="text-center text-gray-400 text-sm italic">
@@ -68,22 +66,33 @@ export default function Promociones() {
         >
           {items
             .filter((promo) => promo && promo.business && promo.business._id)
-            .map((promo) => (
-              <Link
-                key={promo._id}
-                to={`/negocios/${promo.business._id}`}
-                className="flex-shrink-0 snap-start w-[220px] sm:w-[320px] md:w-[300px] lg:w-[260px] transform hover:scale-[1.03] transition duration-300"
-              >
-                <CardPromoHome
-                  title={promo.name}
-                  image={promo.featuredImage}
-                  isNew={promo.type === "promo_fin_de_semana"}
-                  hasDiscount={promo.type === "descuentos_imperdibles"}
-                  descuento={"20"}
-                  isVerified={true}
-                />
-              </Link>
-            ))}
+            .map((promo) => {
+              const maxClaims = promo.maxClaims || null;
+              const claimed = promo.claimed?.length || 0;
+              const remaining = maxClaims
+                ? Math.max(0, maxClaims - claimed)
+                : null;
+
+              return (
+                <div
+                  key={promo._id}
+                  onClick={() => setPromoSeleccionada(promo)}
+                  className="cursor-pointer flex-shrink-0 snap-start w-[220px] sm:w-[320px] md:w-[300px] lg:w-[260px] transform hover:scale-[1.03] transition duration-300"
+                >
+                  <CardPromoHome
+                    maxClaims={promo.maxClaims}
+                    title={promo.name}
+                    image={promo.featuredImage}
+                    isNew={promo.type === "promo_fin_de_semana"}
+                    hasDiscount={promo.type === "descuentos_imperdibles"}
+                    descuento={
+                      remaining !== null ? `${remaining} disponibles` : "20"
+                    }
+                    isVerified={true}
+                  />
+                </div>
+              );
+            })}
         </ScrollCarousel>
       </section>
     );
@@ -110,7 +119,7 @@ export default function Promociones() {
             {/* Hero de promociones */}
             <PromocionesDestacadas Link={false} imagen={PromocionesD} />
 
-            {/* Primer carrusel: autoplay hacia la derecha */}
+            {/* Carruseles por tipo */}
             {renderCarrusel(
               "Descuentos imperdibles",
               bndc,
@@ -118,8 +127,6 @@ export default function Promociones() {
               "🎉",
               { autoplay: true, direction: "right" }
             )}
-
-            {/* Carrusel del medio: sin autoplay */}
             {renderCarrusel(
               "Nuevos lanzamientos",
               bnnl,
@@ -127,8 +134,6 @@ export default function Promociones() {
               "🆕",
               { autoplay: true, direction: "right" }
             )}
-
-            {/* Último carrusel: autoplay hacia la izquierda */}
             {renderCarrusel(
               "Promo fin de semana",
               bnpf,
@@ -139,6 +144,13 @@ export default function Promociones() {
           </>
         )}
       </div>
+
+      {promoSeleccionada && (
+        <ModalGuardarPromo
+          promo={promoSeleccionada}
+          onClose={() => setPromoSeleccionada(null)}
+        />
+      )}
     </div>
   );
 }

@@ -18,6 +18,9 @@ const SidebarDashboard = ({ usuario, handleLogout }) => {
     { to: "perfil", label: "Mi perfil", icon: <MdPerson /> },
     { to: "mis-negocios", label: "Mis negocios", icon: <MdStore /> },
     { to: "mis-eventos", label: "Mis eventos", icon: <MdEvent /> },
+    { to: "cupones", label: "Mis cupones", icon: <MdStore /> },
+    { to: "redimir", label: "Redimir Cupones", icon: <MdStore /> },
+
     isAdmin && {
       to: "mis-comunidades",
       label: "Mis comunidades",

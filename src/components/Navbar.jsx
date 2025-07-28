@@ -25,7 +25,7 @@ import NotificationButton from "./badges/NotificationButton";
 import { logout } from "../store/authSlice";
 import BotonPublicar from "./nav/BotonPublicar";
 import useDeviceSize from "../hooks/useDeviceSize";
-import { toggleMenu } from "../store/mobileMenuSlice";
+import { cerrarMenu, toggleMenu } from "../store/mobileMenuSlice";
 
 export default function Header() {
   const usuario = useSelector((state) => state.auth.usuario);
@@ -175,7 +175,7 @@ export default function Header() {
           <div className="flex items-center gap-2 md:hidden">
             <Link
               to="/inbox"
-              onClick={() => dispatch(toggleMenu())}
+              onClick={() => dispatch(cerrarMenu())}
               className={`transition p-2 ${
                 mobileOpen ? "text-white" : "text-black"
               }`}
@@ -184,7 +184,7 @@ export default function Header() {
             </Link>
             {usuario && isMobile && (
               <NotificationButton
-                onClick={() => dispatch(toggleMenu())}
+                onClick={() => dispatch(cerrarMenu())}
                 className={mobileOpen ? "text-white" : "text-black"}
               />
             )}

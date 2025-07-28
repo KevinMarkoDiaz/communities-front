@@ -11,10 +11,14 @@ import { resetApp } from "./appActions"; // ✅
 
 export const fetchComunidades = createAsyncThunk(
   "comunidades/fetchAll",
-  async (_, { rejectWithValue, dispatch }) => {
+  async ({ lat, lng, page = 1 } = {}, { rejectWithValue, dispatch }) => {
     try {
-      const data = await getAllCommunities();
-      return data.communities;
+      const data = await getAllCommunities({ lat, lng, page });
+      return {
+        comunidades: data.communities,
+        totalPages: Math.ceil(data.total / data.perPage),
+        currentPage: data.page,
+      };
     } catch (error) {
       dispatch(
         mostrarFeedback({
@@ -130,6 +134,8 @@ const initialState = {
   busqueda: "",
   loaded: false,
   misLoaded: false,
+  totalPages: 1,
+  currentPage: 1,
 };
 
 const comunidadesSlice = createSlice({
@@ -155,7 +161,9 @@ const comunidadesSlice = createSlice({
       })
       .addCase(fetchComunidades.fulfilled, (state, action) => {
         state.loadingLista = false;
-        state.lista = action.payload;
+        state.lista = action.payload.comunidades;
+        state.totalPages = action.payload.totalPages;
+        state.currentPage = action.payload.currentPage;
         state.loaded = true;
       })
       .addCase(fetchComunidades.rejected, (state, action) => {

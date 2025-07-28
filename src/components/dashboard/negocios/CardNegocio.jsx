@@ -18,7 +18,7 @@ export default function CardNegocio({ negocio, onSelect }) {
       </div>
 
       {/* Contenido */}
-      <div className="flex flex-col justify-between gap-2 p-2 xl:p-3 flex-grow">
+      <div className="flex flex-col justify-between h-[5rem]  p-2 xl:p-3 flex-grow">
         {/* Nombre */}
         <h3
           className="

@@ -14,6 +14,8 @@ import metricsReducer from "./metricsSlice";
 import feedbackReducer from "./feedbackSlice";
 import mobileMenuReducer from "./mobileMenuSlice";
 import comunidadSeleccionadaReducer from "./comunidadSeleccionadaSlice";
+import ubicacionReducer from "./ubicacionSlice";
+import userPromosReducer from "./userPromosSlice";
 
 export const store = configureStore({
   reducer: {
@@ -32,5 +34,7 @@ export const store = configureStore({
     feedback: feedbackReducer,
     mobileMenu: mobileMenuReducer,
     comunidadSeleccionada: comunidadSeleccionadaReducer,
+    ubicacion: ubicacionReducer,
+    userPromos: userPromosReducer,
   },
 });

@@ -1,6 +1,7 @@
 import { Helmet } from "react-helmet-async";
 import iluste from "../assets/iluste.svg";
 import ilustf from "../assets/ilustf.svg";
+import FadeInOnScroll from "../components/FadeInOnScroll";
 
 export default function LegalPrivacidad() {
   return (
@@ -57,11 +58,13 @@ export default function LegalPrivacidad() {
           </p>
         </div>
         <div className="md:w-1/2 w-full flex justify-center">
-          <img
-            src={iluste}
-            alt="Protección de datos"
-            className="max-w-xs w-full h-auto rounded-xl"
-          />
+          <FadeInOnScroll direction="right" duration={600} delay={100}>
+            <img
+              src={iluste}
+              alt="Protección de datos"
+              className="max-w-xs w-full h-auto rounded-xl"
+            />
+          </FadeInOnScroll>
         </div>
       </section>
 
@@ -139,11 +142,13 @@ export default function LegalPrivacidad() {
           </p>
         </div>
         <div className="md:w-1/2 w-full flex justify-center">
-          <img
-            src={ilustf}
-            alt="Términos y condiciones"
-            className="max-w-xs w-full h-auto rounded-xl"
-          />
+          <FadeInOnScroll direction="left" duration={2000} delay={900}>
+            <img
+              src={ilustf}
+              alt="Términos y condiciones"
+              className="max-w-xs w-full h-auto rounded-xl"
+            />
+          </FadeInOnScroll>
         </div>
       </section>
 

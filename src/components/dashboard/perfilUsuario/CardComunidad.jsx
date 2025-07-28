@@ -29,12 +29,12 @@ export default function CardComunidad({ comunidad, onSelect }) {
       </div>
 
       {/* Contenido */}
-      <div className="flex flex-col gap-2 p-2  flex-grow">
+      <div className="flex flex-col gap-2 p-2 h-[3.2rem] flex-grow">
         {/* Nombre */}
         <h3
           className="
             text-sm font-semibold text-gray-700
-            min-h-[2rem]
+            
             flex items-start md:items-center
           "
         >

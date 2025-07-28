@@ -7,15 +7,17 @@ import {
 
 export function useComunidades() {
   const dispatch = useDispatch();
-  const { lista, loadingLista, error, busqueda } = useSelector(
+  const { lista, loadingLista, error, busqueda, loaded } = useSelector(
     (state) => state.comunidades
   );
 
+  const { coords } = useSelector((state) => state.ubicacion);
+
   useEffect(() => {
-    if (!lista || lista.length === 0) {
-      dispatch(fetchComunidades());
+    if (coords && loaded) {
+      dispatch(fetchComunidades(coords));
     }
-  }, [dispatch, lista]);
+  }, [loaded, dispatch]);
 
   const comunidadesFiltradas = lista.filter((comunidad) =>
     comunidad.name.toLowerCase().includes(busqueda.toLowerCase())

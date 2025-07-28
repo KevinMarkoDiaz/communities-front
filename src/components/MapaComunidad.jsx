@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import Loading from "./Loading";
@@ -10,25 +11,12 @@ mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 export default function MapaComunidad({ negocios, coords }) {
   const mapRef = useRef(null);
   const mapInstance = useRef(null);
-  const [userCoords, setUserCoords] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [mapError, setMapError] = useState(false);
 
-  // 🌎 Obtener ubicación del usuario
-  useEffect(() => {
-    if (!navigator.geolocation) return;
+  const userCoords = useSelector((state) => state.ubicacion.coords);
 
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setUserCoords([pos.coords.longitude, pos.coords.latitude]);
-      },
-      (err) => {
-        console.warn("Ubicación no disponible:", err.message);
-      }
-    );
-  }, []);
-
-  // 🗺️ Inicializar el mapa solo una vez
+  // 🗺️ Inicializar mapa
   useEffect(() => {
     if (!mapRef.current || mapInstance.current) return;
 
@@ -41,12 +29,8 @@ export default function MapaComunidad({ negocios, coords }) {
         const map = new mapboxgl.Map({
           container: mapRef.current,
           style: "mapbox://styles/mapbox/streets-v11",
-          center: [-74.006, 40.7128],
+          center: [-74.006, 40.7128], // default temporal
           zoom: 12,
-          optimizeForTerrain: false,
-          antialias: false,
-          preserveDrawingBuffer: false,
-          failIfMajorPerformanceCaveat: false,
           attributionControl: false,
         });
 
@@ -65,94 +49,99 @@ export default function MapaComunidad({ negocios, coords }) {
     initMap();
   }, []);
 
-  // 🎯 Actualizar marcadores cuando cambian negocios, coords o ubicación del usuario
+  // 🎯 Agregar marcadores
   useEffect(() => {
     const map = mapInstance.current;
     if (!map || !isLoaded) return;
 
     const bounds = new mapboxgl.LngLatBounds();
 
-    // Eliminar marcadores existentes
-    const oldMarkers = document.querySelectorAll(".emoji-pin, .marker-usuario");
-    oldMarkers.forEach((el) => el.remove());
+    // Limpiar marcadores antiguos
+    document
+      .querySelectorAll(".emoji-pin, .marker-usuario")
+      .forEach((el) => el.remove());
 
     negocios.forEach((n) => {
-      const c = n.location?.coordinates;
-      if (typeof c?.lng !== "number" || typeof c?.lat !== "number") return;
+      const coordsArray = n.location?.coordinates?.coordinates; // Esperado: [lng, lat]
+
+      if (
+        !Array.isArray(coordsArray) ||
+        coordsArray.length !== 2 ||
+        typeof coordsArray[0] !== "number" ||
+        typeof coordsArray[1] !== "number"
+      ) {
+        return;
+      }
+
+      const [lng, lat] = coordsArray;
 
       const el = document.createElement("div");
       el.className = "emoji-pin";
       el.innerHTML = `
-        <div style="position: relative; width: 30px; height: 30px;">
-          <div style="
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 30px;
-            height: 30px;
-            background-color: white;
-            border-radius: 50%;
-            box-shadow: 0 0 3px rgba(0,0,0,0.2);
-          "></div>
-          <span class="emoji" style="
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 22px;
-          ">${getEmoji(n.category)}</span>
-        </div>
-      `;
+    <div style="position: relative; width: 30px; height: 30px;">
+      <div style="
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 30px;
+        height: 30px;
+        background-color: white;
+        border-radius: 50%;
+        box-shadow: 0 0 3px rgba(0,0,0,0.2);
+      "></div>
+      <span class="emoji" style="
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 22px;
+      ">${getEmoji(n.category)}</span>
+    </div>
+  `;
+
       const estaAbierto = estaAbiertoAhora(n.openingHours);
 
       new mapboxgl.Marker(el)
-        .setLngLat([c.lng, c.lat])
+        .setLngLat([lng, lat])
         .setPopup(
           new mapboxgl.Popup({ offset: 25, closeButton: false }).setHTML(`
-    <div class="w-[240px] rounded-xl shadow-2xl border border-white/10 bg-black/70 backdrop-blur-xs p-3">
-      <div class="flex items-center gap-3">
-        <img 
-          src="${n.profileImage || "/placeholder.png"}" 
-          alt="Logo de ${n.name}" 
-          class="w-10 h-10 rounded-full object-cover border border-white/10"
-        />
-        <div class="flex flex-col">
-          <h3 class="text-sm font-semibold text-gray-100">${n.name}</h3>
-          <p class="text-[11px] text-gray-100 leading-tight">${
-            n.category?.name || "Sin categoría"
-          }</p>
+        <div class="w-[240px] rounded-xl shadow-2xl border border-white/10 bg-black/70 backdrop-blur-xs p-3">
+          <div class="flex items-center gap-3">
+            <img 
+              src="${n.profileImage || "/placeholder.png"}" 
+              alt="Logo de ${n.name}" 
+              class="w-10 h-10 rounded-full object-cover border border-white/10"
+            />
+            <div class="flex flex-col">
+              <h3 class="text-sm font-semibold text-gray-100">${n.name}</h3>
+              <p class="text-[11px] text-gray-100 leading-tight">
+                ${n.category?.name || "Sin categoría"}
+              </p>
+            </div>
+          </div>
+          <div class="flex justify-between items-center mt-3">
+            <a href="/negocios/${
+              n._id
+            }" class="text-xs text-white bg-orange-500 hover:bg-orange-600 font-medium px-2 py-1 rounded transition">
+              Ver más
+            </a>
+            <div class="flex items-center gap-2 ml-2">
+              ${
+                estaAbierto
+                  ? `<span class="pulsing-dot"></span><span class="text-[11px] text-green-400">Abierto ahora</span>`
+                  : `<span class="text-[11px] text-red-400">Cerrado</span>`
+              }
+            </div>
+          </div>
         </div>
-      
-      </div>
-
-      <div class="flex justify-between items-center mt-3">
-        <a 
-          href="/negocios/${n._id}" 
-          class="text-xs text-white bg-orange-500 hover:bg-orange-600 font-medium px-2 py-1 rounded transition"
-        >
-          Ver más
-        </a>
-
-        <div class="flex items-center gap-2 ml-2">
-          ${
-            estaAbierto
-              ? `<span class="pulsing-dot"></span>
-              <span class="text-[11px] text-green-400">Abierto ahora</span>
-                 `
-              : `<span class="text-[11px] text-red-400">Cerrado</span>`
-          }
-        </div>
-      </div>
-    </div>
-  `)
+      `)
         )
-
         .addTo(map);
 
-      bounds.extend([c.lng, c.lat]);
+      bounds.extend([lng, lat]);
     });
 
-    // 📍 Marcador de usuario
+    // 📍 Ubicación del usuario desde Redux
     if (userCoords) {
       const el = document.createElement("div");
       el.className = "marker-usuario";
@@ -164,11 +153,11 @@ export default function MapaComunidad({ negocios, coords }) {
       el.style.boxShadow = "0 0 6px rgba(0, 0, 0, 0.3)";
 
       new mapboxgl.Marker(el)
-        .setLngLat(userCoords)
+        .setLngLat([userCoords.lng, userCoords.lat])
         .setPopup(new mapboxgl.Popup().setText("Tu ubicación"))
         .addTo(map);
 
-      bounds.extend(userCoords);
+      bounds.extend([userCoords.lng, userCoords.lat]);
     }
 
     if (!bounds.isEmpty()) {
@@ -194,30 +183,30 @@ export default function MapaComunidad({ negocios, coords }) {
 }
 
 function getEmoji(categoria) {
-  switch (categoria.name) {
+  switch (categoria?.name) {
     case "Comida y Bebida":
-      return "🥗"; // Plato y cubiertos
+      return "🥗";
     case "Salud y Bienestar":
-      return "⚕️"; // Botellita tipo wellness
+      return "⚕️";
     case "Ciencia y Tecnología":
-      return "💻"; // Laptop
+      return "💻";
     case "Belleza y Cuidado Personal":
-      return "✂️"; // Tijeras, más neutro para peluquería o estética
+      return "✂️";
     case "Bienes Raíces":
-      return "🏠"; // Casa
+      return "🏠";
     case "Arte y Cultura":
-      return "🎨"; // Paleta
+      return "🎨";
     case "Mascotas":
-      return "🐾"; // Huellas
+      return "🐾";
     case "Educación":
-      return "📚"; // Libros
+      return "📚";
     case "Deporte y Fitness":
-      return "🏃"; // Persona corriendo (sin género específico)
+      return "🏃";
     case "Finanzas y Legales":
-      return "💼"; // Maletín
+      return "💼";
     case "Entretenimiento":
-      return "🎬"; // Claqueta de cine
+      return "🎬";
     default:
-      return "📍"; // Pin genérico
+      return "📍";
   }
 }

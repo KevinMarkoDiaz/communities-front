@@ -47,7 +47,7 @@ export default function Layout() {
         </div>
       )}
 
-      <main className="flex w-full max-w-full xl:max-w-[99%] mx-auto gap-4 flex-grow px-2 md:px-4">
+      <main className="flex w-full max-w-full   mx-auto gap-4 flex-grow px-2 md:px-4">
         {/* Sidebar comunidad solo en desktop */}
         {!hideAds && (
           <div className="hidden lg:block w-[230px] shrink-0">
@@ -56,7 +56,7 @@ export default function Layout() {
         )}
 
         {/* Contenido principal */}
-        <div className="flex-1 flex flex-col md:gap-12 py-8 overflow-hidden">
+        <div className="flex-1 flex flex-col md:gap-12 py-8 overflow-hidden xl:mx-[4rem]">
           <Outlet />
         </div>
 

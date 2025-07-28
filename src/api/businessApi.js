@@ -34,10 +34,11 @@ export async function updateBusiness(id, formData) {
 /**
  * Obtener todos los negocios (públicos o futuros filtrados).
  */
-export async function getAllBusinesses() {
-  const response = await axiosInstance.get("/businesses");
-  return response.data;
-}
+export const getAllBusinesses = async (params = {}) => {
+  const query = new URLSearchParams(params).toString();
+  const res = await axiosInstance.get(`/businesses?${query}`);
+  return res.data.businesses;
+};
 
 /**
  * Obtener un negocio específico por su ID.

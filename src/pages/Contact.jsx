@@ -8,6 +8,7 @@ import {
 } from "react-icons/fa";
 import { useCallback, useEffect, useState } from "react";
 import ilustrD from "../assets/ilustd.svg";
+import FadeInOnScroll from "../components/FadeInOnScroll";
 
 export default function Contacto() {
   const [esMovil, setEsMovil] = useState(false);
@@ -148,11 +149,13 @@ export default function Contacto() {
       </section>
       {/* Imagen ilustración */}
       <section className="flex justify-center">
-        <img
-          src={ilustrD}
-          alt="Conexión y comunidad"
-          className="w-full max-w-lg h-auto rounded-xl"
-        />
+        <FadeInOnScroll direction="up" duration={1800} delay={2950}>
+          <img
+            src={ilustrD}
+            alt="Conexión y comunidad"
+            className="w-full max-w-lg h-auto rounded-xl"
+          />
+        </FadeInOnScroll>
       </section>
       {/* Soporte */}
       <section className="space-y-4 text-center">

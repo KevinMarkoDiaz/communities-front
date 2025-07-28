@@ -1,7 +1,7 @@
 import { Link, Navigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { useState, useRef, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useRef, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import CardLista from "../components/CardLista";
 import Loading from "../components/Loading";
@@ -9,31 +9,44 @@ import GridWrapper from "../components/GridWrapper";
 import BannerEvento from "../components/eventos/BannerEvento";
 import EventosProximos from "../components/home/EventosProximos";
 import Pagination from "../components/Pagination";
-import { useEventos } from "../hooks/useEventos";
 import EventosP from "../assets/EventosP.png";
 import BusquedaGlobalWrapper from "../components/search/BusquedaGlobalWrapper";
 import ResetBusquedaOnMount from "../utils/ResetBusquedaOnMount";
 
+import { obtenerEventos, setPaginaActual } from "../store/eventosSlice";
+
 export default function Eventos() {
-  const { lista: eventosFiltrados, loading, error } = useEventos();
-  const busqueda = useSelector((state) => state.eventos.busqueda);
-
+  const dispatch = useDispatch();
   const gridRef = useRef(null);
+  const { coords } = useSelector((state) => state.ubicacion);
 
-  // Estados de paginación frontend
-  const [paginaActual, setPaginaActual] = useState(1);
-  const eventosPorPagina = 12;
+  const {
+    lista: eventos,
+    loading,
+    error,
+    paginaActual,
+    totalPaginas,
+    busqueda,
+  } = useSelector((state) => state.eventos);
 
-  // Lógica de paginación local con slice
-  const totalPaginas = Math.ceil(eventosFiltrados.length / eventosPorPagina);
-  const indexInicio = (paginaActual - 1) * eventosPorPagina;
-  const indexFin = indexInicio + eventosPorPagina;
-  const eventosPaginados = eventosFiltrados.slice(indexInicio, indexFin);
+  // 🔁 Cargar eventos cada vez que cambie la página o las coords
+  useEffect(() => {
+    if (coords?.lat && coords?.lng) {
+      dispatch(
+        obtenerEventos({
+          page: paginaActual,
+          limit: 12,
+          lat: coords.lat,
+          lng: coords.lng,
+        })
+      );
+    }
+  }, [dispatch, paginaActual, coords]);
 
   // Reiniciar página si cambia el texto de búsqueda
   useEffect(() => {
-    setPaginaActual(1);
-  }, [busqueda]);
+    dispatch(setPaginaActual(1));
+  }, [busqueda, dispatch]);
 
   if (loading) return <Loading mensaje="Cargando eventos..." />;
   if (error) return <div className="p-4 text-red-600">Error: {error}</div>;
@@ -70,7 +83,7 @@ export default function Eventos() {
 
         {/* Grid paginado */}
         <GridWrapper ref={gridRef} tipo="grid" className="min-h-[70vh]">
-          {eventosPaginados.map((evento) => {
+          {eventos.map((evento) => {
             const {
               _id,
               title,
@@ -97,7 +110,7 @@ export default function Eventos() {
             );
           })}
 
-          {eventosFiltrados.length === 0 && (
+          {eventos.length === 0 && (
             <p className="text-gray-500 w-full text-center">
               No hay eventos disponibles.
             </p>
@@ -107,7 +120,7 @@ export default function Eventos() {
         <Pagination
           totalPages={totalPaginas}
           currentPage={paginaActual}
-          onPageChange={setPaginaActual}
+          onPageChange={(page) => dispatch(setPaginaActual(page))}
           gridRef={gridRef}
         />
 

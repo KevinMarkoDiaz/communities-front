@@ -1,5 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import ilustg from "../assets/ilustg.svg";
+import FadeInOnScroll from "../components/FadeInOnScroll";
 
 export default function LegalTerminos() {
   return (
@@ -28,11 +29,13 @@ export default function LegalTerminos() {
       {/* Imagen y texto combinados */}
       <section className="flex flex-col md:flex-row gap-8 items-center">
         <div className="md:w-1/2 w-full">
-          <img
-            src={ilustg}
-            alt="Términos y condiciones"
-            className="w-full h-auto rounded-xl "
-          />
+          <FadeInOnScroll direction="left" duration={900} delay={300}>
+            <img
+              src={ilustg}
+              alt="Términos y condiciones"
+              className="w-full h-auto rounded-xl "
+            />
+          </FadeInOnScroll>
         </div>
         <div className="md:w-1/2 space-y-4">
           <h2 className="text-2xl font-semibold text-gray-900">

@@ -46,10 +46,11 @@ export default function EditarPerfilForm({ initialValues, onSubmit }) {
 
   const comunidades = useSelector((state) => state.comunidades.list);
   const comunidadesLoaded = useSelector((state) => state.comunidades.loaded);
+  const { coords } = useSelector((state) => state.ubicacion);
 
   useEffect(() => {
-    if (!comunidadesLoaded) {
-      dispatch(fetchComunidades());
+    if (coords && comunidadesLoaded) {
+      dispatch(fetchComunidades(coords));
     }
   }, [comunidadesLoaded, dispatch]);
 

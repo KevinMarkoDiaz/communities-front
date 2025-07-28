@@ -1,3 +1,4 @@
+// ✅ negociosSlice.js completo con paginación geolocalizada
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   getAllBusinesses,
@@ -5,18 +6,36 @@ import {
   deleteBusiness,
   updateBusiness,
   createBusiness,
-  getAllBusinessesByCommunity, // ✅ nuevo
+  getAllBusinessesByCommunity,
 } from "../api/businessApi";
 import { mostrarFeedback } from "./feedbackSlice";
 import { resetApp } from "./appActions";
 
-// ✅ Obtener todos los negocios (caché)
 export const obtenerNegocios = createAsyncThunk(
   "negocios/fetch",
-  async (_, { rejectWithValue, dispatch }) => {
+  async ({ page = 1 } = {}, { rejectWithValue, dispatch, getState }) => {
     try {
-      const data = await getAllBusinesses();
-      return Array.isArray(data) ? data : data.businesses || [];
+      const state = getState();
+      const coords = state.ubicacion?.coords;
+
+      if (!coords?.lat || !coords?.lng) {
+        return rejectWithValue("Ubicación no disponible");
+      }
+
+      const params = {
+        lat: coords.lat,
+        lng: coords.lng,
+        page,
+        limit: 15,
+      };
+
+      const res = await getAllBusinesses(params);
+
+      return {
+        negocios: res,
+        totalPages: Math.ceil(res.total / res.perPage),
+        currentPage: res.page,
+      };
     } catch (error) {
       dispatch(
         mostrarFeedback({
@@ -26,16 +45,9 @@ export const obtenerNegocios = createAsyncThunk(
       );
       return rejectWithValue(error.message || "Error al cargar negocios");
     }
-  },
-  {
-    condition: (_, { getState }) => {
-      const { negocios } = getState();
-      return !negocios.loaded;
-    },
   }
 );
 
-// ✅ Obtener negocios por comunidad
 export const fetchNegociosPorComunidad = createAsyncThunk(
   "negocios/fetchPorComunidad",
   async (communityId, { rejectWithValue, dispatch }) => {
@@ -60,7 +72,6 @@ export const fetchNegociosPorComunidad = createAsyncThunk(
   }
 );
 
-// ✅ Obtener negocios del usuario autenticado
 export const fetchMisNegocios = createAsyncThunk(
   "negocios/fetchMine",
   async (_, { rejectWithValue, dispatch }) => {
@@ -85,7 +96,6 @@ export const fetchMisNegocios = createAsyncThunk(
   }
 );
 
-// ✅ Eliminar negocio
 export const deleteNegocio = createAsyncThunk(
   "negocios/delete",
   async (id, { rejectWithValue, dispatch }) => {
@@ -110,7 +120,6 @@ export const deleteNegocio = createAsyncThunk(
   }
 );
 
-// ✅ Crear negocio
 export const createBusinessThunk = createAsyncThunk(
   "negocios/create",
   async (formData, { rejectWithValue, dispatch }) => {
@@ -135,7 +144,6 @@ export const createBusinessThunk = createAsyncThunk(
   }
 );
 
-// ✅ Actualizar negocio
 export const updateBusinessThunk = createAsyncThunk(
   "negocios/update",
   async ({ id, formData }, { rejectWithValue, dispatch }) => {
@@ -161,7 +169,6 @@ export const updateBusinessThunk = createAsyncThunk(
   }
 );
 
-// ✅ Estado inicial
 const initialState = {
   lista: [],
   misNegocios: [],
@@ -172,6 +179,8 @@ const initialState = {
   categoria: "todas",
   loaded: false,
   misLoaded: false,
+  totalPages: 1,
+  currentPage: 1,
 };
 
 const negociosSlice = createSlice({
@@ -193,7 +202,11 @@ const negociosSlice = createSlice({
       })
       .addCase(obtenerNegocios.fulfilled, (state, action) => {
         state.loading = false;
-        state.lista = Array.isArray(action.payload) ? action.payload : [];
+        state.lista = Array.isArray(action.payload.negocios)
+          ? action.payload.negocios
+          : [];
+        state.totalPages = action.payload.totalPages;
+        state.currentPage = action.payload.currentPage;
         state.loaded = true;
       })
       .addCase(obtenerNegocios.rejected, (state, action) => {

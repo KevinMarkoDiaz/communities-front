@@ -19,15 +19,28 @@ const initialState = {
   busqueda: "",
   loaded: false,
   misLoaded: false,
+  paginaActual: 1,
+  limite: 15,
+  totalPaginas: 1,
+  totalResultados: 0,
 };
 
 // 🔁 Todos los eventos
 export const obtenerEventos = createAsyncThunk(
   "eventos/fetch",
-  async (_, { rejectWithValue, dispatch }) => {
+  async (
+    { page = 1, limit = 15 } = {}, // ⚠️ acá no llegan lat/lng directamente
+    { rejectWithValue, dispatch, getState }
+  ) => {
     try {
-      const data = await getAllEvents();
-      return Array.isArray(data) ? data : data.events || [];
+      // ✅ Obtenemos coords del slice de ubicación
+      const { coords } = getState().ubicacion;
+      const lat = coords?.lat;
+      const lng = coords?.lng;
+
+      // ✅ Pasamos todo a la API
+      const data = await getAllEvents({ page, limit, lat, lng });
+      return data;
     } catch (error) {
       dispatch(
         mostrarFeedback({
@@ -39,10 +52,10 @@ export const obtenerEventos = createAsyncThunk(
     }
   },
   {
+    // ✅ Solo si aún no están cargados
     condition: (_, { getState }) => !getState().eventos.loaded,
   }
 );
-
 // 🔁 Solo mis eventos
 export const fetchMisEventos = createAsyncThunk(
   "eventos/fetchMine",
@@ -147,19 +160,27 @@ const eventosSlice = createSlice({
     setBusqueda: (state, action) => {
       state.busqueda = action.payload;
     },
+    setPaginaActual: (state, action) => {
+      state.paginaActual = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(resetApp, () => initialState) // ✅ Reset global
+      .addCase(resetApp, () => initialState)
 
-      // 🔁 Todos los eventos
       .addCase(obtenerEventos.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(obtenerEventos.fulfilled, (state, action) => {
+        const { events, totalPages, totalResults, currentPage } =
+          action.payload;
+
         state.loading = false;
-        state.lista = Array.isArray(action.payload) ? action.payload : [];
+        state.lista = events || [];
+        state.totalPaginas = totalPages || 1;
+        state.totalResultados = totalResults || 0;
+        state.paginaActual = currentPage || 1;
         state.loaded = true;
       })
       .addCase(obtenerEventos.rejected, (state, action) => {
@@ -193,5 +214,5 @@ const eventosSlice = createSlice({
   },
 });
 
-export const { setBusqueda } = eventosSlice.actions;
+export const { setBusqueda, setPaginaActual } = eventosSlice.actions;
 export default eventosSlice.reducer;

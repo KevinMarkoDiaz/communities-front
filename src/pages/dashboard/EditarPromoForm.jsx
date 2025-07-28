@@ -16,6 +16,10 @@ const schema = Yup.object().shape({
   startDate: Yup.date().required("Fecha de inicio obligatoria"),
   endDate: Yup.date().required("Fecha de fin obligatoria"),
   community: Yup.string().required("Comunidad obligatoria"),
+  maxClaims: Yup.number()
+    .nullable()
+    .min(1, "Debe ser al menos 1")
+    .typeError("Debe ser un número"),
 });
 
 export default function EditarPromoForm({ promo }) {
@@ -33,9 +37,10 @@ export default function EditarPromoForm({ promo }) {
     type: promo.type || "promo_fin_de_semana",
     startDate: promo.startDate ? promo.startDate.slice(0, 10) : "",
     endDate: promo.endDate ? promo.endDate.slice(0, 10) : "",
-    image: promo.featuredImage || "", // Puede ser string URL
+    image: promo.featuredImage || "",
     category: promo.category?._id || promo.category || "",
     community: promo.community?._id || promo.community || "",
+    maxClaims: promo.maxClaims || "", // ✅ nuevo campo
   };
 
   const handleSubmit = async (values, actions) => {
@@ -50,6 +55,7 @@ export default function EditarPromoForm({ promo }) {
         category: values.category,
         community: values.community,
         updatedBy: usuario._id,
+        maxClaims: values.maxClaims || null, // ✅ nuevo campo
       };
 
       if (values.image) {
@@ -271,7 +277,23 @@ export default function EditarPromoForm({ promo }) {
                 onChange={(opt) => setFieldValue("category", opt.value)}
               />
             </div>
-
+            <div>
+              <label className="block text-sm font-medium mb-1 text-white">
+                Límite de cupones disponibles{" "}
+                <span className="text-white/60">(opcional)</span>
+              </label>
+              <Field
+                name="maxClaims"
+                type="number"
+                className="w-full px-4 py-3 border border-white/40 bg-white/10 rounded-lg text-white placeholder:text-gray-300 focus:outline-none"
+                placeholder="Ej: 100"
+              />
+              <ErrorMessage
+                name="maxClaims"
+                component="div"
+                className="text-red-400 text-sm mt-1"
+              />
+            </div>
             {/* Imagen */}
             <div>
               <label className="block text-sm font-medium mb-1 text-white">

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { cargarNegociosDeComunidad } from "../store/comunidadSeleccionadaSlice";
 import MapaComunidad from "../components/MapaComunidad";
@@ -11,7 +11,7 @@ export default function VistaComunidad() {
     (state) => state.comunidadSeleccionada
   );
 
-  const [userCoords, setUserCoords] = useState(null);
+  const coordsRedux = useSelector((state) => state.ubicacion.coords);
 
   // ✅ Cargar negocios si hay comunidad y aún no se han cargado
   useEffect(() => {
@@ -20,28 +20,7 @@ export default function VistaComunidad() {
     }
   }, [comunidad?._id, loaded, dispatch]);
 
-  // 🌍 Obtener ubicación del usuario solo si no hay negocios ni coords del primer negocio
-  useEffect(() => {
-    const tieneCoords = negocios.some(
-      (n) => n.ubicacion?.coordenadas?.lat && n.ubicacion?.coordenadas?.lng
-    );
-
-    if (!tieneCoords && !userCoords) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setUserCoords({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          });
-        },
-        (error) => {
-          console.warn("No se pudo obtener la ubicación:", error.message);
-          setUserCoords({ lat: 32.7767, lng: -96.797 }); // fallback Dallas
-        }
-      );
-    }
-  }, [negocios, userCoords]);
-
+  // ✅ Obtener coordenadas desde el primer negocio si existen
   const primerNegocio = negocios.find(
     (n) => n.ubicacion?.coordenadas?.lat && n.ubicacion?.coordenadas?.lng
   );
@@ -51,7 +30,7 @@ export default function VistaComunidad() {
         lat: primerNegocio.ubicacion.coordenadas.lat,
         lng: primerNegocio.ubicacion.coordenadas.lng,
       }
-    : userCoords;
+    : coordsRedux; // ✅ Usa coords globales si no hay negocios
 
   if (!coords) {
     return (

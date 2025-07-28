@@ -1,6 +1,7 @@
+import { useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, Navigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { useRef, useState, useEffect } from "react";
 
 import CardLista from "../components/CardLista";
 import Loading from "../components/Loading";
@@ -10,27 +11,38 @@ import BannerNegocios from "../components/bussines/BannerNegocios";
 import NegociosSugeridos from "../components/home/NegociosSugeridos";
 import Pagination from "../components/Pagination";
 import NegociosS from "../assets/NegociosS.png";
-
-import { useNegocios } from "../hooks/useNegocios";
 import BusquedaGlobalWrapper from "../components/search/BusquedaGlobalWrapper";
 import ResetBusquedaOnMount from "../utils/ResetBusquedaOnMount";
 
-export default function Negocios() {
-  const { negociosFiltrados, loading, error, busqueda } = useNegocios();
+import { obtenerNegocios } from "../store/negociosSlice";
 
+export default function Negocios() {
+  const { coords } = useSelector((state) => state.ubicacion);
+  const { loaded } = useSelector((state) => state.negocios);
+
+  const dispatch = useDispatch();
   const gridRef = useRef(null);
 
-  // Paginación local
-  const [paginaActual, setPaginaActual] = useState(1);
-  const negociosPorPagina = 12;
-  const totalPaginas = Math.ceil(negociosFiltrados.length / negociosPorPagina);
-  const indexInicio = (paginaActual - 1) * negociosPorPagina;
-  const indexFin = indexInicio + negociosPorPagina;
-  const negociosPaginados = negociosFiltrados.slice(indexInicio, indexFin);
+  const {
+    lista: negociosFiltrados,
+    loading,
+    error,
+    currentPage,
+    totalPages,
+    busqueda,
+  } = useSelector((state) => state.negocios);
 
   useEffect(() => {
-    setPaginaActual(1);
-  }, [busqueda]);
+    if (coords && !loaded) {
+      dispatch(obtenerNegocios({ page: 1 }));
+    }
+  }, [dispatch, coords, loaded]);
+
+  const handlePageChange = (newPage) => {
+    if (coords) {
+      dispatch(obtenerNegocios({ page: newPage }));
+    }
+  };
 
   if (loading) return <Loading mensaje="Cargando negocios..." />;
   if (error) return <div className="p-4 text-red-600">Error: {error}</div>;
@@ -66,7 +78,7 @@ export default function Negocios() {
         </div>
 
         <GridWrapper ref={gridRef} tipo="grid" className="min-h-[70vh]">
-          {negociosPaginados.map((negocio) => (
+          {negociosFiltrados.map((negocio) => (
             <Link
               key={negocio._id}
               to={`/negocios/${negocio._id}`}
@@ -94,9 +106,9 @@ export default function Negocios() {
         </GridWrapper>
 
         <Pagination
-          totalPages={totalPaginas}
-          currentPage={paginaActual}
-          onPageChange={setPaginaActual}
+          totalPages={totalPages || 1}
+          currentPage={currentPage || 1}
+          onPageChange={handlePageChange}
           gridRef={gridRef}
         />
 

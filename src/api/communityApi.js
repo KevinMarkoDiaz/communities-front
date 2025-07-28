@@ -2,9 +2,25 @@ import axiosInstance from "./axiosInstance";
 
 /**
  * Obtener todas las comunidades
+ * Si se pasan coordenadas (lat, lng), traer solo las cercanas (80 millas).
  */
-export async function getAllCommunities() {
-  const res = await axiosInstance.get("/communities");
+export async function getAllCommunities({
+  lat,
+  lng,
+  page = 1,
+  limit = 15,
+} = {}) {
+  const params = {};
+
+  if (lat && lng) {
+    params.lat = lat;
+    params.lng = lng;
+  }
+
+  params.page = page;
+  params.limit = limit;
+
+  const res = await axiosInstance.get("/communities", { params });
   return res.data;
 }
 
@@ -56,6 +72,9 @@ export async function contarComunidades() {
   return res.data.communities.length;
 }
 
+/**
+ * Obtener una comunidad por su slug
+ */
 export async function getCommunityBySlug(slug) {
   const res = await axiosInstance.get(`/communities/slug/${slug}`);
   return res.data;

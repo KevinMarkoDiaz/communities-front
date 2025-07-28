@@ -9,7 +9,7 @@ const GridWrapper = forwardRef(
             "grid justify-center",
             "grid-cols-2", // mobile
             "md:grid-cols-3", // md y lg
-            "xl:grid-cols-[repeat(auto-fit,minmax(200px,1fr))]", // xl+: dinámico
+            "xl:grid-cols-4", // xl+: dinámico
             "gap-y-8 gap-x-4 xl:gap-x-6",
           ].join(" ");
 

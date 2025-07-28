@@ -1,7 +1,8 @@
+// src/pages/Comunidades.jsx
 import { Helmet } from "react-helmet-async";
 import { Link, Navigate } from "react-router-dom";
-import { useRef, useEffect, useState } from "react";
-import { useComunidades } from "../hooks/useComunidades";
+import { useRef, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import GridWrapper from "../components/GridWrapper";
 import CardLista from "../components/CardLista";
@@ -13,29 +14,43 @@ import ComunidadesD from "../assets/ComunidadesD.png";
 import BusquedaGlobalWrapper from "../components/search/BusquedaGlobalWrapper";
 import ResetBusquedaOnMount from "../utils/ResetBusquedaOnMount";
 
-export default function Comunidades() {
-  const { comunidadesFiltradas, busqueda, error, loading } = useComunidades();
+import { fetchComunidades, setBusqueda } from "../store/comunidadesSlice";
 
+export default function Comunidades() {
+  const dispatch = useDispatch();
   const gridRef = useRef(null);
 
-  const [paginaActual, setPaginaActual] = useState(1);
-  const comunidadesPorPagina = 12;
+  const {
+    lista: comunidades,
+    loadingLista,
+    error,
+    busqueda,
+    totalPages,
+    currentPage,
+  } = useSelector((state) => state.comunidades);
+  const { coords } = useSelector((state) => state.ubicacion);
 
-  const totalPaginas = Math.ceil(
-    comunidadesFiltradas.length / comunidadesPorPagina
-  );
-  const indexInicio = (paginaActual - 1) * comunidadesPorPagina;
-  const indexFin = indexInicio + comunidadesPorPagina;
-  const comunidadesPaginadas = comunidadesFiltradas.slice(
-    indexInicio,
-    indexFin
-  );
-
+  // Cargar comunidades con paginación desde el backend
   useEffect(() => {
-    setPaginaActual(1);
+    if (coords) {
+      dispatch(fetchComunidades({ lat: coords.lat, lng: coords.lng, page: 1 }));
+    }
+  }, [dispatch, coords]);
+
+  // Reiniciar paginación si cambia la búsqueda
+  useEffect(() => {
+    if (coords) {
+      dispatch(fetchComunidades({ lat: coords.lat, lng: coords.lng, page: 1 }));
+    }
   }, [busqueda]);
 
-  if (loading) return <Loading mensaje="Cargando comunidades..." />;
+  const handlePageChange = (page) => {
+    if (coords) {
+      dispatch(fetchComunidades({ lat: coords.lat, lng: coords.lng, page }));
+    }
+  };
+
+  if (loadingLista) return <Loading mensaje="Cargando comunidades..." />;
   if (error) return <div className="p-4 text-red-600">Error: {error}</div>;
 
   return (
@@ -69,7 +84,7 @@ export default function Comunidades() {
         </div>
 
         <GridWrapper ref={gridRef} tipo="grid" className="min-h-[70vh]">
-          {comunidadesPaginadas.map((comunidad) => (
+          {comunidades.map((comunidad) => (
             <Link
               key={comunidad.id || comunidad._id}
               to={`/comunidades/${comunidad.id || comunidad._id}`}
@@ -85,7 +100,7 @@ export default function Comunidades() {
             </Link>
           ))}
 
-          {comunidadesFiltradas.length === 0 && (
+          {comunidades.length === 0 && (
             <p className="text-gray-500 w-full text-center">
               No se encontraron comunidades.
             </p>
@@ -93,9 +108,9 @@ export default function Comunidades() {
         </GridWrapper>
 
         <Pagination
-          totalPages={totalPaginas}
-          currentPage={paginaActual}
-          onPageChange={setPaginaActual}
+          totalPages={totalPages || 1}
+          currentPage={currentPage || 1}
+          onPageChange={handlePageChange}
           gridRef={gridRef}
         />
 

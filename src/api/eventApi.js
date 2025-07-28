@@ -1,9 +1,7 @@
-// src/api/eventApi.js
 import axiosInstance from "./axiosInstance";
 
 /**
  * Crear un evento nuevo
- * @param {Object} data - Datos del evento
  */
 export async function createEvent(data) {
   const res = await axiosInstance.post("/events", data, {
@@ -12,19 +10,27 @@ export async function createEvent(data) {
   return res.data;
 }
 
-/**
- * Obtener todos los eventos
- */
-export async function getAllEvents() {
+export async function getAllEvents({ lat, lng, page = 1, limit = 15 } = {}) {
+  const params = {};
+
+  if (lat && lng) {
+    params.lat = lat;
+    params.lng = lng;
+  }
+
+  params.page = page;
+  params.limit = limit;
+
   const res = await axiosInstance.get("/events", {
+    params,
     withCredentials: true,
   });
-  return res.data;
+
+  return res.data; // { events, totalPages, currentPage, totalResults }
 }
 
 /**
  * Obtener un evento por ID
- * @param {string} id
  */
 export async function getEventById(id) {
   const res = await axiosInstance.get(`/events/${id}`, {
@@ -35,8 +41,6 @@ export async function getEventById(id) {
 
 /**
  * Actualizar evento
- * @param {string} id
- * @param {Object} data
  */
 export async function updateEvent(id, data) {
   const res = await axiosInstance.put(`/events/${id}`, data, {
@@ -47,7 +51,6 @@ export async function updateEvent(id, data) {
 
 /**
  * Eliminar evento
- * @param {string} id
  */
 export async function deleteEvent(id) {
   const res = await axiosInstance.delete(`/events/${id}`, {
@@ -65,7 +68,8 @@ export async function getMyEvents() {
   });
   return res.data.events;
 }
+
 export async function contarEventos() {
-  const res = await axiosInstance.get("/events/mine"); // si es por usuario
+  const res = await axiosInstance.get("/events/mine");
   return res.data.events.length;
 }

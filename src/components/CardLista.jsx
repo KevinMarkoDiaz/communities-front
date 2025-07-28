@@ -81,7 +81,7 @@ export default function CardGrid({
         <div className="flex items-center gap-1">
           <h3
             className="
-        text-base font-semibold text-gray-900 tracking-tight leading-tight
+        text-sm font-semibold text-gray-900 tracking-tight leading-tight
         overflow-hidden text-ellipsis
         [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical]
       "

@@ -8,6 +8,7 @@ import { useCargarCategorias } from "../../hooks/useCargarCategorias";
 import Select from "react-select";
 import { createPromo } from "../../store/promocionesSlice";
 
+// Al principio (Yup)
 const schema = Yup.object().shape({
   name: Yup.string().required("Nombre obligatorio"),
   description: Yup.string().required("Descripción obligatoria"),
@@ -17,6 +18,10 @@ const schema = Yup.object().shape({
   image: Yup.mixed().required("Imagen obligatoria"),
   community: Yup.string().required("Comunidad obligatoria"),
   business: Yup.string().required("Negocio obligatorio"),
+  maxClaims: Yup.number()
+    .nullable()
+    .min(1, "Debe ser al menos 1")
+    .typeError("Debe ser un número"),
 });
 
 export default function PromoForm() {
@@ -38,6 +43,7 @@ export default function PromoForm() {
     category: "",
     community: "",
     business: negocioId,
+    maxClaims: "", // nuevo campo
   };
 
   const handleSubmit = async (values, actions) => {
@@ -53,6 +59,7 @@ export default function PromoForm() {
         category: values.category,
         community: values.community,
         createdBy: usuario._id,
+        maxClaims: values.maxClaims || null, // importante
       };
 
       formData.append("data", JSON.stringify(data));
@@ -259,7 +266,23 @@ export default function PromoForm() {
                 className="text-red-400 text-sm mt-1"
               />
             </div>
-
+            <div>
+              <label className="block text-sm font-medium mb-1 text-white">
+                Límite de cupones disponibles{" "}
+                <span className="text-white/60">(opcional)</span>
+              </label>
+              <Field
+                name="maxClaims"
+                type="number"
+                className="w-full px-4 py-3 border border-white/40 bg-white/10 rounded-lg text-white placeholder:text-gray-300 focus:outline-none"
+                placeholder="Ej: 100"
+              />
+              <ErrorMessage
+                name="maxClaims"
+                component="div"
+                className="text-red-400 text-sm mt-1"
+              />
+            </div>
             {/* Imagen */}
             <div>
               <DropzoneImagen

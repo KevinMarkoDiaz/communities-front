@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { obtenerNegocios } from "../store/negociosSlice";
 import { obtenerEventos } from "../store/eventosSlice";
 import { fetchComunidades } from "../store/comunidadesSlice";
+import { obtenerUbicacionUsuario } from "../store/ubicacionSlice";
 
 export function useInitData() {
   const dispatch = useDispatch();
@@ -11,22 +12,33 @@ export function useInitData() {
   const negociosLoaded = useSelector((state) => state.negocios.loaded);
   const eventosLoaded = useSelector((state) => state.eventos.loaded);
   const comunidadesLoaded = useSelector((state) => state.comunidades.loaded);
+  const { coords, cargando } = useSelector((state) => state.ubicacion);
 
+  // Obtener ubicación solo si no existe
+  useEffect(() => {
+    if (!coords && !cargando) {
+      dispatch(obtenerUbicacionUsuario());
+    }
+  }, [dispatch, coords, cargando]);
+
+  // Obtener negocios si no están cargados
   useEffect(() => {
     if (!negociosLoaded) {
-      dispatch(obtenerNegocios());
+      dispatch(obtenerNegocios(coords));
     }
-  }, []); // Solo al montar
+  }, [dispatch, negociosLoaded, coords]);
 
+  // Obtener eventos si no están cargados
   useEffect(() => {
-    if (!eventosLoaded) {
-      dispatch(obtenerEventos());
+    if (!eventosLoaded && coords) {
+      dispatch(obtenerEventos(coords));
     }
-  }, []); // Solo al montar
+  }, [dispatch, eventosLoaded, coords]);
 
+  // Obtener comunidades SOLO cuando coords esté listo y aún no se hayan cargado
   useEffect(() => {
-    if (!comunidadesLoaded) {
-      dispatch(fetchComunidades());
+    if (!comunidadesLoaded && coords) {
+      dispatch(fetchComunidades(coords)); // ✅ con ubicación
     }
-  }, []); // Solo al montar
+  }, [dispatch, comunidadesLoaded, coords]);
 }

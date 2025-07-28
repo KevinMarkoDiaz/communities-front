@@ -59,6 +59,8 @@ import ChatView from "../components/mensajes/ChatView";
 import DashboardBusinessDetail from "../../src/pages/dashboard/vista_detalle/DashboardBusinessDetail";
 import DashboardEventDetail from "../../src/pages/dashboard/vista_detalle/DashboardEventDetail";
 import DashboardCommunityDetail from "../../src/pages/dashboard/vista_detalle/DashboardCommunityDetail";
+import Cupones from "../pages/dashboard/Cupones";
+import RedimirCodigo from "../pages/dashboard/RedimirCodigo";
 
 const router = createBrowserRouter([
   {
@@ -126,7 +128,11 @@ const router = createBrowserRouter([
           { path: "perfil", element: <Perfil /> },
           { path: "perfil/editar", element: <EditarPerfil /> },
           { path: "notificaciones", element: <Notificaciones /> },
-
+          {
+            path: "cupones",
+            element: <Cupones />,
+          },
+          { path: "redimir", element: <RedimirCodigo /> },
           // Negocios del usuario
           {
             path: "mis-negocios",

@@ -17,6 +17,7 @@ export default function Paso4Opciones() {
   const comunidades = useSelector((state) => state.comunidades?.lista ?? []);
   const negocios = useSelector((state) => state.negocios?.lista ?? []);
   const usuario = useSelector((state) => state.auth.usuario);
+  const { coords } = useSelector((state) => state.ubicacion);
 
   const loading =
     useSelector((state) => state.categorias.loading) ||
@@ -27,14 +28,18 @@ export default function Paso4Opciones() {
     if (Array.isArray(categorias) === false || categorias.length === 0) {
       dispatch(fetchCategorias());
     }
-    if (Array.isArray(comunidades) === false || comunidades.length === 0) {
-      dispatch(fetchComunidades());
-    }
+
     if (Array.isArray(negocios) === false || negocios.length === 0) {
       dispatch(obtenerNegocios());
     }
     // solo se ejecuta una vez, no depende de cambios
   }, []);
+
+  useEffect(() => {
+    if (coords && (!comunidades || comunidades.length === 0)) {
+      dispatch(fetchComunidades(coords));
+    }
+  }, [coords]);
 
   if (loading) {
     return <p className="text-sm text-gray-500">Cargando opciones...</p>;
