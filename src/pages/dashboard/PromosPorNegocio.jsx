@@ -5,12 +5,15 @@ import {
   getPromotionsByBusiness,
 } from "../../api/promotionApi";
 import CardPromo from "../../components/dashboard/promo/CardPromo";
+import { mostrarFeedback } from "../../store/feedbackSlice";
+import { useDispatch } from "react-redux";
 
 export default function PromosPorNegocio() {
   const { id } = useParams(); // ID del negocio desde la URL
   const [promos, setPromos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const dispatch = useDispatch();
 
   const fetchPromos = async () => {
     try {
@@ -30,13 +33,16 @@ export default function PromosPorNegocio() {
   }, [id]);
 
   const handleDelete = async (promoId) => {
-    if (!window.confirm("¿Estás seguro de eliminar esta promoción?")) return;
     try {
       await deletePromotion(promoId);
       setPromos((prev) => prev.filter((p) => p._id !== promoId));
     } catch (err) {
-      alert("❌ No se pudo eliminar la promoción");
-      console.error(err);
+      dispatch(
+        mostrarFeedback({
+          message: "No se pudo eliminar la promoción",
+          type: "error",
+        })
+      );
     }
   };
 

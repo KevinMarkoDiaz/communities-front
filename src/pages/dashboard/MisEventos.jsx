@@ -10,6 +10,7 @@ import EventoDetalleDashboard from "./detalle/EventoDetalleDashboard";
 import ConfirmDeleteModal from "../../components/ConfirmDeleteModal";
 import { Link } from "react-router-dom";
 import { MdAdd } from "react-icons/md";
+import { mostrarFeedback } from "../../store/feedbackSlice";
 
 export default function MisEventos() {
   const dispatch = useDispatch();
@@ -40,8 +41,12 @@ export default function MisEventos() {
       setShowModal(false);
       setConfirmDeleteId(null);
     } catch (err) {
-      console.error("Error al eliminar evento:", err);
-      alert("No se pudo eliminar el evento.");
+      dispatch(
+        mostrarFeedback({
+          message: "Error al eliminar evento",
+          type: "error",
+        })
+      );
     }
   };
 

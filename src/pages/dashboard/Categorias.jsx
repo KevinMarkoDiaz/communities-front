@@ -9,6 +9,7 @@ import DashboardSectionHeader from "../../components/dashboard/negocios/Dashboar
 import ilusta from "../../assets/ilusta.svg";
 import DetalleCategoria from "./detalle/DetalleCategoria";
 import { fetchCategorias } from "../../store/categoriasSlice";
+import { mostrarFeedback } from "../../store/feedbackSlice";
 
 export default function Categorias() {
   const [selectedCategoria, setSelectedCategoria] = useState(null);
@@ -56,17 +57,18 @@ export default function Categorias() {
   };
 
   const handleDelete = async (id) => {
-    const confirmar = window.confirm("¿Eliminar esta categoría?");
-    if (!confirmar) return;
-
     try {
       await deleteCategory(id);
       const nuevas = categorias.filter((c) => c._id !== id);
       setSelectedCategoria(nuevas[0] || null);
       setShowModal(false);
     } catch (err) {
-      console.error("Error al eliminar categoría:", err);
-      alert("No se pudo eliminar la categoría");
+      dispatch(
+        mostrarFeedback({
+          message: "Error al eliminar categoría",
+          type: "error",
+        })
+      );
     }
   };
 

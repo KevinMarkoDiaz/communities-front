@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axiosInstance from "../../api/axiosInstance";
+import { mostrarFeedback } from "../../store/feedbackSlice";
 
 const StarRating = ({ targetType, targetId }) => {
   const { usuario } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
   const [average, setAverage] = useState(0);
   const [count, setCount] = useState(0);
@@ -29,7 +31,12 @@ const StarRating = ({ targetType, targetId }) => {
 
   const handleRate = async (value) => {
     if (!usuario) {
-      alert("Debes iniciar sesión para calificar.");
+      dispatch(
+        mostrarFeedback({
+          message: "Debes iniciar sesión para calificar.",
+          type: "error",
+        })
+      );
       return;
     }
     try {
@@ -41,7 +48,12 @@ const StarRating = ({ targetType, targetId }) => {
       setUserRating(value);
       fetchAverage();
     } catch (error) {
-      console.error("Error al enviar calificación:", error);
+      dispatch(
+        mostrarFeedback({
+          message: "Error al enviar calificación",
+          type: "error",
+        })
+      );
     }
   };
 

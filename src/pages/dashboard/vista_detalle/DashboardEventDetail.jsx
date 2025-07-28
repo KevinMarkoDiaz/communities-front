@@ -116,10 +116,8 @@ export default function DashboardEventDetail() {
         </Link>
         <button
           onClick={async () => {
-            if (window.confirm("¿Estás seguro de eliminar este evento?")) {
-              await dispatch(deleteEvento(evento._id));
-              navigate("/dashboard/mis-eventos");
-            }
+            await dispatch(deleteEvento(evento._id));
+            navigate("/dashboard/mis-eventos");
           }}
           className="whitespace-nowrap flex shadow-md hover:shadow-lg text-white items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-red-500 hover:bg-red-700 transition text-xs font-medium"
         >
@@ -129,7 +127,7 @@ export default function DashboardEventDetail() {
       </div>
 
       {/* Métricas */}
-      <section className="bg-white border border-gray-200 rounded-2xl p-6 shadow space-y-4">
+      <section className="bg-white md:border border-gray-200 rounded-2xl md:p-6 md:shadow space-y-4">
         <h3 className="text-xl font-bold">Métricas del evento</h3>
         <p className="text-sm text-gray-500">
           Aquí podrás visualizar estadísticas de visitas y engagement.

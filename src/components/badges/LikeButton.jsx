@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axiosInstance from "../../api/axiosInstance";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
+import { mostrarFeedback } from "../../store/feedbackSlice";
 
 export default function LikeButton({
   targetType,
@@ -10,6 +11,7 @@ export default function LikeButton({
   className,
 }) {
   const { usuario } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
   const [likesCount, setLikesCount] = useState(0);
   const [liked, setLiked] = useState(false);
@@ -30,7 +32,12 @@ export default function LikeButton({
 
   const handleToggleLike = async () => {
     if (!usuario) {
-      alert("Debes iniciar sesión para dar me gusta.");
+      dispatch(
+        mostrarFeedback({
+          message: "Debes iniciar sesión para dar me gusta.",
+          type: "error",
+        })
+      );
       return;
     }
 
@@ -46,7 +53,12 @@ export default function LikeButton({
       setLikesCount(res.data.likesCount);
       setLiked(res.data.liked);
     } catch (error) {
-      console.error("❌ Error togglear like:", error);
+      dispatch(
+        mostrarFeedback({
+          message: "Error togglear like",
+          type: "error",
+        })
+      );
     } finally {
       setLoading(false);
     }

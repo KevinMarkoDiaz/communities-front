@@ -26,17 +26,19 @@ export default function SummaryDashboard({ summary }) {
       {/* Promedio de calificación */}
       <div className="bg-blue-50 border border-gray-200 rounded-lg p-4 text-center hover:shadow transition ">
         <FaStar className="mx-auto text-gray-500 mb-1" />
-        <p className="text-xs text-gray-500">Promedio de estrellas</p>
+        <p className="text-xs text-gray-500">Promedio</p>
         <p className="text-md font-bold text-gray-700">
           {summary.averageRating
-            ? `${Number(summary.averageRating).toFixed(2)} ⭐`
+            ? `${Number(summary.averageRating).toFixed(2)}`
             : "Sin datos"}
         </p>
       </div>
 
       {/* Distribución de ratings */}
       <div className="bg-blue-50 border border-gray-200 rounded-lg p-4 hover:shadow transition col-span-3 md:col-span-3 lg:col-span-1">
-        <p className="text-xs text-gray-500 mb-2">Distribución de estrellas</p>
+        <p className="text-xs text-gray-500 mb-2">
+          ¿Cómo calificaron los usuarios?{" "}
+        </p>
         <ul className="space-y-1 text-xs text-gray-600">
           {[5, 4, 3, 2, 1].map((stars) => {
             const count =

@@ -1,14 +1,15 @@
 import { NavLink, useLocation } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import {
-  LuStore,
   LuCalendarDays,
   LuUsers,
   LuTags,
   LuLayoutGrid,
+  LuRefreshCcw,
 } from "react-icons/lu";
 import { useDispatch } from "react-redux";
 import { cerrarMenu } from "../../store/mobileMenuSlice"; // Asegurate de que la ruta sea correcta
+import { RiCoupon3Line, RiStore2Line } from "react-icons/ri";
 
 export default function MobileFooterDashboard({ usuario }) {
   const [show, setShow] = useState(true);
@@ -22,10 +23,16 @@ export default function MobileFooterDashboard({ usuario }) {
   }, [pathname, dispatch]);
 
   const navItems = [
-    { to: "mis-negocios", icon: <LuStore size={24} /> },
+    { to: "mis-negocios", icon: <RiStore2Line size={24} /> },
     { to: "mis-eventos", icon: <LuCalendarDays size={24} /> },
     { to: "mis-comunidades", icon: <LuUsers size={24} /> },
     { to: "mis-promos", icon: <LuTags size={24} /> },
+    { to: "cupones", label: "Mis cupones", icon: <RiCoupon3Line size={24} /> },
+    {
+      to: "redimir",
+      label: "Redimir Cupones",
+      icon: <LuRefreshCcw size={24} />,
+    },
   ];
 
   const adminItem = {

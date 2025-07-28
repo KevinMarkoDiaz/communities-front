@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import axiosInstance from "../../api/axiosInstance";
 import { MdStar, MdStarBorder } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import { mostrarFeedback } from "../../store/feedbackSlice";
 
 export default function UniversalFollowButton({ entityType, entityId }) {
   const dispatch = useDispatch();
@@ -34,8 +35,12 @@ export default function UniversalFollowButton({ entityType, entityId }) {
       }
       await dispatch(fetchFollowings());
     } catch (err) {
-      console.error(err);
-      alert("Error al cambiar seguimiento");
+      dispatch(
+        mostrarFeedback({
+          message: "Error al cambiar seguimiento.",
+          type: "error",
+        })
+      );
     } finally {
       setLoading(false);
     }

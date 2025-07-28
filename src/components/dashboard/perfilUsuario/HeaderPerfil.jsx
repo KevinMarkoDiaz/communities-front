@@ -17,7 +17,7 @@ export default function HeaderPerfil({ usuario }) {
   } = usuario;
 
   return (
-    <div className="flex flex-col gap-4 bg-[#f9fafb] p-4 md:p-6 rounded-2xl">
+    <div className="flex flex-col gap-4 bg-[#f9fafb] p-4 md:p-6 rounded-2x bg-gradient-to-b from-[#fff7ec] to-[#f3e8ff] ">
       {/* Wrapper principal responsive */}
       <div className="flex flex-col md:flex-row md:justify-between md:items-center  gap-4">
         {/* Imagen y datos básicos */}

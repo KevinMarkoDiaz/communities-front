@@ -2,10 +2,13 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../api/axiosInstance";
 import { MdChatBubbleOutline } from "react-icons/md";
+import { mostrarFeedback } from "../../store/feedbackSlice";
+import { useDispatch } from "react-redux";
 
 export default function StartConversationButton({ entityType, entityId }) {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleStartConversation = async () => {
     setLoading(true);
@@ -17,14 +20,11 @@ export default function StartConversationButton({ entityType, entityId }) {
       const conversationId = res.data._id;
       navigate(`/inbox/conversation/${conversationId}`);
     } catch (error) {
-      console.error(
-        "❌ Error al iniciar conversación:",
-        error.response?.data || error
-      );
-      alert(
-        `Hubo un error al iniciar la conversación: ${
-          error.response?.data?.message || "Intenta de nuevo."
-        }`
+      dispatch(
+        mostrarFeedback({
+          message: "Hubo un error al iniciar la conversación.",
+          type: "error",
+        })
       );
     } finally {
       setLoading(false);

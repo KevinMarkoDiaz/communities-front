@@ -50,7 +50,7 @@ export default function Layout() {
       <main className="flex w-full max-w-full   mx-auto gap-4 flex-grow px-2 md:px-4">
         {/* Sidebar comunidad solo en desktop */}
         {!hideAds && (
-          <div className="hidden lg:block w-[230px] shrink-0">
+          <div className="hidden 2xl:block w-[230px] shrink-0">
             <SidebarComunidad />
           </div>
         )}
@@ -70,7 +70,7 @@ export default function Layout() {
 
       {/* Sidebar comunidad móvil: fuera de <main> para que sea flotante y no afecte layout */}
       {!hideAds && (
-        <div className="lg:hidden">
+        <div className="2xl:hidden">
           <SidebarComunidad />
         </div>
       )}

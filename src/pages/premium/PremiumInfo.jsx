@@ -11,10 +11,13 @@ import {
   FaRegCheckCircle,
   FaTimesCircle,
 } from "react-icons/fa";
+import { mostrarFeedback } from "../../store/feedbackSlice";
+import { useDispatch } from "react-redux";
 
 export default function PremiumInfo() {
   const [loading, setLoading] = useState(false);
   const [openQuestion, setOpenQuestion] = useState(null);
+  const dispatch = useDispatch();
 
   const manejarSuscripcion = async () => {
     try {
@@ -22,8 +25,12 @@ export default function PremiumInfo() {
       const url = await crearSesionStripe();
       window.location.href = url;
     } catch (error) {
-      console.error("❌ Error al iniciar suscripción:", error);
-      alert("Ocurrió un error al procesar la suscripción.");
+      dispatch(
+        mostrarFeedback({
+          message: "Error al iniciar suscripción.",
+          type: "error",
+        })
+      );
     } finally {
       setLoading(false);
     }

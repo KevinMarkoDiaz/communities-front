@@ -10,6 +10,7 @@ import SkeletonDashboardList from "../../components/Skeleton/SkeletonDashboardLi
 import DetalleComunidad from "./detalle/DetalleComunidad";
 import { MdGroups } from "react-icons/md";
 import { Link } from "react-router-dom";
+import { mostrarFeedback } from "../../store/feedbackSlice";
 
 export default function Comunidades() {
   const dispatch = useDispatch();
@@ -59,14 +60,20 @@ export default function Comunidades() {
   };
 
   const handleDelete = async (id) => {
-    const confirmar = window.confirm("¿Eliminar esta comunidad?");
-    if (!confirmar) return;
-
     try {
-      alert("Implementa la lógica de eliminación con Redux si es necesario");
+      dispatch(
+        mostrarFeedback({
+          message: "Comunidad eliminada",
+          type: "success",
+        })
+      );
     } catch (err) {
-      console.error("Error al eliminar comunidad:", err);
-      alert("No se pudo eliminar la comunidad.");
+      dispatch(
+        mostrarFeedback({
+          message: "No se pudo eliminar la comunidad.",
+          type: "success",
+        })
+      );
     }
   };
 

@@ -13,6 +13,7 @@ import ConfirmDeleteModal from "../../components/ConfirmDeleteModal";
 
 import ilusta from "../../assets/ilusta.svg";
 import ilust2 from "../../assets/ilust2.svg";
+import { mostrarFeedback } from "../../store/feedbackSlice";
 
 export default function MisNegocios() {
   const dispatch = useDispatch();
@@ -50,8 +51,12 @@ export default function MisNegocios() {
       setSelectedNegocio(nuevos[0] || null);
       setShowDeleteModal(false);
     } catch (error) {
-      console.error("Error al eliminar negocio:", error);
-      alert("No se pudo eliminar el negocio. Intenta más tarde.");
+      dispatch(
+        mostrarFeedback({
+          message: "Error al eliminar negocio",
+          type: "error",
+        })
+      );
     }
   };
 

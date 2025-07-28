@@ -8,6 +8,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ["Inter", "sans-serif"],
+        dancing: ["Dancing Script", "cursive"],
       },
       keyframes: {
         pulseSlow: {

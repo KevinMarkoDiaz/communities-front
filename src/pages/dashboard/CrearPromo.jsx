@@ -10,6 +10,7 @@ import PromoForm from "./PromoForm";
 import EditarPromoForm from "./EditarPromoForm";
 import { getPromotionById } from "../../api/promotionApi";
 import { fetchMisPromos } from "../../store/promocionesSlice";
+import { mostrarFeedback } from "../../store/feedbackSlice";
 
 export default function CrearPromo() {
   const { promoId } = useParams();
@@ -32,8 +33,12 @@ export default function CrearPromo() {
             const data = await getPromotionById(promoId);
             setPromo(data.promotion);
           } catch (err) {
-            console.error("Error al cargar promoción:", err);
-            alert("Error al cargar promoción");
+            dispatch(
+              mostrarFeedback({
+                message: "Error al cargar promoción",
+                type: "error",
+              })
+            );
           } finally {
             setLoading(false);
           }

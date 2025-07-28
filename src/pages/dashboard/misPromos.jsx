@@ -9,6 +9,7 @@ import { MdLocalOffer } from "react-icons/md";
 import SkeletonDashboardList from "../../components/Skeleton/SkeletonDashboardList";
 import ModalCrearPromo from "../../components/promo/ModalCrearPromo";
 import DetallePromo from "./detalle/DetallePromo";
+import { mostrarFeedback } from "../../store/feedbackSlice";
 
 export default function MisPromos() {
   const dispatch = useDispatch();
@@ -53,17 +54,18 @@ export default function MisPromos() {
   };
 
   const handleDelete = async (id) => {
-    const confirmar = window.confirm("¿Quieres eliminar esta promoción?");
-    if (!confirmar) return;
-
     try {
       await dispatch(deletePromo(id)).unwrap();
       const nuevos = promos.filter((p) => p._id !== id);
       setSelectedPromo(nuevos[0] || null);
       setShowModalDetalle(false);
     } catch (err) {
-      console.error("Error al eliminar promoción:", err);
-      alert("No se pudo eliminar la promoción.");
+      dispatch(
+        mostrarFeedback({
+          message: "Error al eliminar promoción",
+          type: "error",
+        })
+      );
     }
   };
 

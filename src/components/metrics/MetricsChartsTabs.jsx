@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import {
-  LineChart,
-  Line,
   XAxis,
   YAxis,
   Tooltip,
@@ -44,10 +42,9 @@ export default function MetricsChartsTabs({
   ];
 
   return (
-    <div className="border border-gray-200 rounded-xl p-4 space-y-4 bg-blue-50 h-full">
+    <div className="md:border border-gray-200 rounded-xl md:p-4 space-y-4 bg-blue-50 h-full">
       <h3 className="text-lg font-bold text-gray-700">Métricas Visuales</h3>
 
-      {/* Tabs */}
       {/* Tabs */}
       <div className="flex flex-wrap gap-2 border-b pb-2">
         {tabs.map((tab) => (
@@ -73,20 +70,24 @@ export default function MetricsChartsTabs({
       <div className="w-full h-82 bg-white border border-gray-100 rounded-lg p-4">
         {activeTab === "daily" && dailyViews?.length > 0 && (
           <ResponsiveContainer width="100%" height={250}>
-            <AreaChart data={dailyViews}>
+            <AreaChart
+              data={dailyViews}
+              margin={{ top: 10, right: 0, left: -30, bottom: 0 }}
+            >
               <defs>
                 <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#60a5fa" stopOpacity={0.8} />
-                  <stop offset="95%" stopColor="#60a5fa" stopOpacity={0} />
+                  <stop offset="5%" stopColor="#60dbfaff" stopOpacity={0.8} />
+                  <stop offset="95%" stopColor="#60fa93ff" stopOpacity={0} />
                 </linearGradient>
               </defs>
               <XAxis
                 dataKey="date"
                 tickFormatter={(d) => new Date(d).toLocaleDateString("es-ES")}
                 stroke="#6B7280"
+                tick={{ fontSize: 11 }}
               />
-              <YAxis stroke="#6B7280" />
-              <CartesianGrid strokeDasharray="3 3" />
+              <YAxis stroke="#6B7280" tick={{ fontSize: 12 }} />
+              <CartesianGrid strokeDasharray="2 2" />
               <Tooltip
                 formatter={(value) => [`${value} visitas`, "Visitas"]}
                 labelFormatter={(label) =>
@@ -101,7 +102,7 @@ export default function MetricsChartsTabs({
               <Area
                 type="monotone"
                 dataKey="count"
-                stroke="#60a5fa"
+                stroke="#60cefaff"
                 fillOpacity={1}
                 fill="url(#colorCount)"
               />
@@ -117,23 +118,29 @@ export default function MetricsChartsTabs({
                 count:
                   ratingsDistribution?.find((r) => r._id === stars)?.count || 0,
               }))}
+              margin={{ top: 10, right: 0, left: -39, bottom: 0 }}
             >
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis
+                tick={{ fontSize: 14 }}
                 dataKey="_id"
                 tickFormatter={(val) => `${val}★`}
                 stroke="#6B7280"
               />
-              <YAxis allowDecimals={false} stroke="#6B7280" />
+              <YAxis
+                allowDecimals={false}
+                stroke="#6B7280"
+                tick={{ fontSize: 14 }}
+              />
               <Tooltip
                 formatter={(value) => [`${value} calificaciones`, "Cantidad"]}
                 labelFormatter={(label) => `${label} estrellas`}
               />
-              <Bar dataKey="count" radius={[4, 4, 0, 0]}>
+              <Bar dataKey="count" radius={[4, 4, 0, 0]} barSize={30}>
                 {[5, 4, 3, 2, 1].map((stars) => (
                   <Cell
                     key={stars}
-                    fill={stars === 2 ? "#ffeda3ff" : "#bef5e1ff"}
+                    fill={stars < 2 ? "#de4e4eff" : "#00c83cff"}
                   />
                 ))}
               </Bar>
@@ -162,7 +169,7 @@ export default function MetricsChartsTabs({
                     outerRadius={60}
                     label
                   >
-                    {["#57fff1ff", "#11cf00ff"].map((color, index) => (
+                    {["#57ffd2ff", "#ffe855ff"].map((color, index) => (
                       <Cell key={index} fill={color} />
                     ))}
                   </Pie>
@@ -178,11 +185,11 @@ export default function MetricsChartsTabs({
             )}
 
             {/* Leyenda personalizada */}
-            <div className="flex flex-col text-xs text-gray-600 space-y-2">
+            <div className="flex flex-col text-xs text-gray-400 space-y-2">
               <div className="flex items-center gap-2">
                 <span
                   className="inline-block w-3 h-3 rounded"
-                  style={{ backgroundColor: "#57fff1ff" }}
+                  style={{ backgroundColor: "#57ffd2ff" }}
                 />
                 <span>
                   Personas que vieron tu perfil pero no estaban logueadas
@@ -191,7 +198,7 @@ export default function MetricsChartsTabs({
               <div className="flex items-center gap-2">
                 <span
                   className="inline-block w-3 h-3 rounded"
-                  style={{ backgroundColor: "#11cf00ff" }}
+                  style={{ backgroundColor: "#ffe855ff" }}
                 />
                 <span>Personas que vieron tu perfil estando logueadas</span>
               </div>
@@ -203,14 +210,22 @@ export default function MetricsChartsTabs({
           <>
             {topViewers?.length > 0 ? (
               <ResponsiveContainer width="100%" height={250}>
-                <BarChart layout="vertical" data={topViewers}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis type="number" />
-                  <YAxis dataKey="name" type="category" />
+                <BarChart
+                  layout="vertical"
+                  data={topViewers}
+                  margin={{ top: 10, right: 0, left: -10, bottom: 0 }}
+                >
+                  <CartesianGrid strokeDasharray="2 2" />
+                  <XAxis type="number" tick={{ fontSize: 14 }} />
+                  <YAxis
+                    dataKey="name"
+                    type="category"
+                    tick={{ fontSize: 11 }}
+                  />
                   <Tooltip
                     formatter={(value) => [`${value} visitas`, "Visitas"]}
                   />
-                  <Bar dataKey="visitCount" fill="#a78bfa" />
+                  <Bar dataKey="visitCount" fill="#8bfa9aff" barSize={30} />
                 </BarChart>
               </ResponsiveContainer>
             ) : (

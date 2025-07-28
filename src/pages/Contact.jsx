@@ -9,9 +9,12 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import ilustrD from "../assets/ilustd.svg";
 import FadeInOnScroll from "../components/FadeInOnScroll";
+import { mostrarFeedback } from "../store/feedbackSlice";
+import { useDispatch } from "react-redux";
 
 export default function Contacto() {
   const [esMovil, setEsMovil] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     // Detectar si es móvil
@@ -37,15 +40,44 @@ export default function Contacto() {
     if (navigator.share) {
       navigator
         .share(shareData)
-        .then(() => console.log("Contenido compartido"))
-        .catch((err) => console.error("Error al compartir:", err));
+        .then(() => {
+          dispatch(
+            mostrarFeedback({
+              message: "✅ Contenido compartido",
+              type: "success",
+            })
+          );
+        })
+        .catch((err) => {
+          console.error("Error al compartir:", err);
+          dispatch(
+            mostrarFeedback({
+              message: "❌ No se pudo compartir",
+              type: "error",
+            })
+          );
+        });
     } else {
       navigator.clipboard
         .writeText(shareData.url)
-        .then(() => alert("Enlace copiado al portapapeles"))
-        .catch(() => alert("No se pudo copiar el enlace"));
+        .then(() => {
+          dispatch(
+            mostrarFeedback({
+              message: "🔗 Enlace copiado al portapapeles",
+              type: "success",
+            })
+          );
+        })
+        .catch(() => {
+          dispatch(
+            mostrarFeedback({
+              message: "❌ No se pudo copiar el enlace",
+              type: "error",
+            })
+          );
+        });
     }
-  }, []);
+  }, [dispatch]);
 
   const grupos = [
     {

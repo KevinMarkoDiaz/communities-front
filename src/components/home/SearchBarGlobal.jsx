@@ -22,12 +22,11 @@ export default function SearchBarGlobal({
           rounded-xl
           overflow-hidden
           h-12
-          px-3
           transition
           focus-within:ring-2 focus-within:ring-white/30
         "
       >
-        <FiSearch className="text-white " size={18} />
+        <FiSearch className="text-white ml-3" size={18} />
         <input
           type="text"
           value={value}

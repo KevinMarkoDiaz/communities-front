@@ -5,6 +5,8 @@ import { FaPhoneAlt, FaEnvelope, FaGlobe } from "react-icons/fa";
 import axiosInstance from "../../../api/axiosInstance";
 import MetricsDashboard from "../../../components/metrics/MetricsDashboard";
 import ConfirmDeleteModal from "../../../components/ConfirmDeleteModal";
+import { mostrarFeedback } from "../../../store/feedbackSlice";
+import { useDispatch } from "react-redux";
 
 export default function DashboardBusinessDetail() {
   const { id } = useParams();
@@ -14,6 +16,7 @@ export default function DashboardBusinessDetail() {
   const [error, setError] = useState(null);
   const [tab, setTab] = useState("info");
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const dispatch = useDispatch();
 
   // 🔴 Manejo de eliminación
   const handleDelete = async () => {
@@ -21,8 +24,12 @@ export default function DashboardBusinessDetail() {
       await axiosInstance.delete(`/businesses/${id}`);
       window.location.href = "/dashboard/mis-negocios";
     } catch (error) {
-      console.error("Error al eliminar el negocio:", error);
-      alert("Ocurrió un error al eliminar el negocio.");
+      dispatch(
+        mostrarFeedback({
+          message: "Error al eliminar el negocio",
+          type: "error",
+        })
+      );
     } finally {
       setDeleteModalOpen(false);
     }
@@ -252,7 +259,7 @@ export default function DashboardBusinessDetail() {
       </div>
 
       {/* Sección de métricas */}
-      <section className="bg-white border border-gray-200 rounded-2xl p-6 shadow space-y-4">
+      <section className="bg-white md:border border-gray-200 rounded-2xl md:p-6 md:shadow space-y-4">
         <h3 className="text-lg font-semibold text-gray-700">Métricas</h3>
         <p className="text-sm text-gray-500">
           Aquí puedes ver las estadísticas de visitas, seguidores y

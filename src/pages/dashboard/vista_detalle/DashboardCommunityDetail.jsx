@@ -5,6 +5,8 @@ import { FaLanguage } from "react-icons/fa";
 import axiosInstance from "../../../api/axiosInstance";
 import MetricsDashboard from "../../../components/metrics/MetricsDashboard";
 import ConfirmDeleteModal from "../../../components/ConfirmDeleteModal";
+import { mostrarFeedback } from "../../../store/feedbackSlice";
+import { useDispatch } from "react-redux";
 
 export default function DashboardCommunityDetail() {
   const { id } = useParams();
@@ -14,6 +16,7 @@ export default function DashboardCommunityDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!id || typeof id !== "string" || id.length !== 24) {
@@ -47,8 +50,12 @@ export default function DashboardCommunityDetail() {
       await axiosInstance.delete(`/communities/${id}`);
       navigate("/dashboard/comunidades");
     } catch (err) {
-      console.error(err);
-      alert("Ocurrió un error al eliminar la comunidad");
+      dispatch(
+        mostrarFeedback({
+          message: "Ocurrió un error al eliminar la comunidad.",
+          type: "error",
+        })
+      );
     }
   };
 
@@ -138,7 +145,7 @@ export default function DashboardCommunityDetail() {
       </div>
 
       {/* SECCIÓN DE MÉTRICAS */}
-      <section className="bg-white border border-gray-200 rounded-3xl p-6 shadow space-y-4">
+      <section className="bg-white md:border border-gray-200 rounded-2xl md:p-6 md:shadow space-y-4">
         <h3 className="text-xl font-bold text-[#141C24]">
           Métricas de la comunidad
         </h3>

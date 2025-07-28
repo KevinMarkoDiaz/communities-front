@@ -5,6 +5,7 @@ import { FaGlobeAmericas } from "react-icons/fa";
 import Select from "react-select";
 import { customSelectStylesRefinado } from "../styles/customSelectStylesRefinado";
 import ilust1 from "../assets/ilust1.svg";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function SidebarComunidadMobile() {
   const dispatch = useDispatch();
@@ -14,7 +15,7 @@ export default function SidebarComunidadMobile() {
   );
 
   const [mostrarDropdown, setMostrarDropdown] = useState(false);
-  const dropdownRef = useRef(null); // 🧠 Referencia para detectar clics fuera
+  const dropdownRef = useRef(null);
 
   const opciones = useMemo(
     () =>
@@ -40,7 +41,7 @@ export default function SidebarComunidadMobile() {
 
   const noComunidadSeleccionada = !comunidadSeleccionada;
 
-  // 👇 Cerrar al hacer clic fuera
+  // Detectar clic fuera del dropdown
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -60,7 +61,7 @@ export default function SidebarComunidadMobile() {
   return (
     <>
       {/* Sidebar Desktop */}
-      <aside className="hidden lg:flex flex-col justify-between w-[230px] mt-20 p-6 shadow-lg h-[60vh] overflow-hidden relative bg-gradient-to-b from-[#fff7ec] to-[#f3e8ff]">
+      <aside className="hidden 2xl:flex flex-col justify-between w-[230px] mt-20 p-6 shadow-lg h-[60vh] overflow-hidden relative bg-gradient-to-b from-[#fff7ec] to-[#f3e8ff]">
         <div className="space-y-4">
           <div>
             <img
@@ -90,58 +91,74 @@ export default function SidebarComunidadMobile() {
         </div>
       </aside>
 
-      {/* Botón flotante Mobile */}
-      <div className="lg:hidden">
-        <button
-          onClick={() => setMostrarDropdown((prev) => !prev)}
-          className={`fixed z-50 border shadow-lg text-sky-600 flex items-center justify-center rounded-full transition-all duration-300
-          ${
-            noComunidadSeleccionada
-              ? "bottom-6 right-6 p-4 bg-sky-200 animate-pulse"
-              : "bottom-6 left-4 p-2 bg-gray-100 scale-75"
-          }
-        `}
-          title="Selecciona tu comunidad"
-        >
-          <FaGlobeAmericas className="w-6 h-6" />
-        </button>
-
-        {/* Dropdown flotante */}
-        {mostrarDropdown && (
-          <div
-            ref={dropdownRef}
-            className="fixed bottom-20 right-4 z-50 w-[90vw] max-w-[360px] bg-white p-4 rounded-2xl shadow-xl border h-[40vh] flex flex-col justify-between"
-          >
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                Comunidad
-              </label>
-
-              <Select
-                value={selectedOption}
-                onChange={handleSelectChange}
-                options={opciones}
-                placeholder="¿De qué comunidad sos?"
-                isClearable
-                isSearchable={false}
-                styles={customSelectStylesRefinado}
-                classNamePrefix="rs"
-                noOptionsMessage={() => "Sin resultados"}
-              />
-            </div>
-            <img
-              src={ilust1}
-              alt="Comunidades conectadas"
-              className="w-[50%] mx-auto mt-6 opacity-90"
-            />
-            <button
-              onClick={() => setMostrarDropdown(false)}
-              className="text-xs text-gray-500 underline self-end mt-4"
+      {/* Botón flotante Mobile con animación */}
+      <div className="2xl:hidden ">
+        <AnimatePresence>
+          {!mostrarDropdown && (
+            <motion.button
+              key="boton-flotante"
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -50 }}
+              transition={{ duration: 0.3 }}
+              onClick={() => setMostrarDropdown(true)}
+              className={`fixed z-50 border shadow-xl text-sky-600 flex items-center justify-center rounded-full transition-all duration-300 ${
+                noComunidadSeleccionada
+                  ? "bottom-6 right-6 p-4 bg-sky-200 animate-pulse scale-110"
+                  : "bottom-6 left-4 p-2 bg-gray-100 scale-75"
+              }`}
+              title="Selecciona tu comunidad"
             >
-              Cerrar
-            </button>
-          </div>
-        )}
+              <FaGlobeAmericas className="w-6 h-6" />
+            </motion.button>
+          )}
+        </AnimatePresence>
+
+        {/* Dropdown flotante con animación */}
+        <AnimatePresence>
+          {mostrarDropdown && (
+            <motion.div
+              key="dropdown-flotante"
+              ref={dropdownRef}
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 50 }}
+              transition={{ duration: 0.35 }}
+              className="fixed bottom-5 2xl:bottom-20 right-4 z-50 w-[90vw] max-w-[360px] bg-gradient-to-b from-[#fff7ec] to-[#f3e8ff] p-4 rounded-2xl shadow-2xl border border-sky-300 h-[40vh] min-h-[350px] flex flex-col justify-between"
+            >
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Comunidad
+                </label>
+
+                <Select
+                  value={selectedOption}
+                  onChange={handleSelectChange}
+                  options={opciones}
+                  placeholder="¿De qué comunidad sos?"
+                  isClearable
+                  isSearchable={false}
+                  styles={customSelectStylesRefinado}
+                  classNamePrefix="rs"
+                  noOptionsMessage={() => "Sin resultados"}
+                />
+              </div>
+
+              <img
+                src={ilust1}
+                alt="Comunidades conectadas"
+                className="w-[50%] mx-auto mt-6 opacity-90"
+              />
+
+              <button
+                onClick={() => setMostrarDropdown(false)}
+                className="text-xs text-gray-500 self-end mt-4"
+              >
+                Cerrar
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </>
   );
