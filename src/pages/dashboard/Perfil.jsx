@@ -11,6 +11,7 @@ import { fetchMisEventos } from "../../store/eventosSlice";
 import PerfilSkeleton from "../../components/Skeleton/PerfilSkeleton";
 import ilust3 from "../../assets/ilust3.svg";
 import { Link } from "react-router-dom";
+import { fetchCategorias } from "../../store/categoriasSlice";
 
 export default function PerfilPage() {
   const dispatch = useDispatch();
@@ -20,6 +21,7 @@ export default function PerfilPage() {
   const comunidades = useSelector((state) => state.comunidades.misComunidades);
   const negocios = useSelector((state) => state.negocios.misNegocios || []);
   const eventos = useSelector((state) => state.eventos.misEventos || []);
+  const categoriasLoaded = useSelector((state) => state.categorias.loaded);
 
   const loadingComunidades = useSelector(
     (state) => state.comunidades.loadingMis
@@ -35,7 +37,11 @@ export default function PerfilPage() {
   const fetchedComunidades = useRef(false);
   const fetchedNegocios = useRef(false);
   const fetchedEventos = useRef(false);
-
+  useEffect(() => {
+    if (!categoriasLoaded) {
+      dispatch(fetchCategorias());
+    }
+  }, [categoriasLoaded, dispatch]);
   useEffect(() => {
     if (
       !fetchedComunidades.current &&

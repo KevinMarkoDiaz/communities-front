@@ -9,7 +9,9 @@ export default function BusinessHero({
 
   return (
     <div
-      className="bg-cover bg-center min-h-[220px] sm:min-h-[300px] lg:min-h-[400px] flex flex-col justify-end rounded-xl overflow-hidden shadow-sm"
+      className="relative w-screen left-1/2 right-1/2 -translate-x-1/2
+                 sm:relative sm:w-full sm:left-0 sm:right-0 sm:translate-x-0
+                 bg-cover bg-center min-h-[220px] sm:min-h-[300px] lg:min-h-[400px] flex flex-col justify-end md:rounded-xl overflow-hidden shadow-sm"
       style={{
         backgroundImage: `linear-gradient(0deg, rgba(0,0,0,0.4), rgba(0,0,0,0)), url(${imagenFondo})`,
       }}

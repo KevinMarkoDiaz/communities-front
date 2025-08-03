@@ -8,6 +8,7 @@ export const customSelectStylesForm = {
     "&:hover": { borderColor: "#fb923c" },
     borderRadius: "0.5rem",
     minHeight: "3rem",
+    cursor: "pointer", // 👈 Esto hace que el cursor sea tipo manito
   }),
   menu: (provided) => ({
     ...provided,

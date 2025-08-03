@@ -25,7 +25,6 @@ export default function MobileFooterDashboard({ usuario }) {
   const navItems = [
     { to: "mis-negocios", icon: <RiStore2Line size={24} /> },
     { to: "mis-eventos", icon: <LuCalendarDays size={24} /> },
-    { to: "mis-comunidades", icon: <LuUsers size={24} /> },
     { to: "mis-promos", icon: <LuTags size={24} /> },
     { to: "cupones", label: "Mis cupones", icon: <RiCoupon3Line size={24} /> },
     {
@@ -35,13 +34,17 @@ export default function MobileFooterDashboard({ usuario }) {
     },
   ];
 
-  const adminItem = {
-    to: "categorias",
-    icon: <LuLayoutGrid size={24} />,
-  };
+  const adminItem = [
+    {
+      to: "categorias",
+      icon: <LuLayoutGrid size={24} />,
+    },
+
+    { to: "mis-comunidades", icon: <LuUsers size={24} /> },
+  ];
 
   const allItems =
-    usuario?.role === "admin" ? [...navItems, adminItem] : navItems;
+    usuario?.role === "admin" ? [...navItems, ...adminItem] : navItems;
 
   const allRoutes = allItems.map((i) => i.to);
   const activeIndex = allRoutes.findIndex((route) => pathname.includes(route));

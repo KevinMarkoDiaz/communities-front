@@ -19,7 +19,9 @@ export default function CardNegocioHome({ negocio }) {
 
       {/* Categoría */}
       <p className="text-xs text-gray-500 truncate text-center">
-        {negocio.category?.name || "Sin categoría"}
+        {Array.isArray(negocio.categories) && negocio.categories.length > 0
+          ? negocio.categories.map((cat) => cat.name).join(", ")
+          : "Sin categoría"}
       </p>
     </div>
   );

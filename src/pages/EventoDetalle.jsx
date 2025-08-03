@@ -1,3 +1,5 @@
+// Componente EventoDetalle.jsx con los mismos cambios visuales que NegocioDetalle
+
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getEventById } from "../api/eventApi";
@@ -6,13 +8,47 @@ import { getCommunityById } from "../api/communityApi";
 import MapaNegocioDetalle from "../components/bussines/MapaNegocioDetalle";
 import Compartir from "../components/Compartir";
 import DetalleSkeleton from "../components/Skeleton/DetalleSkeleton";
-
 import UniversalFollowButton from "../components/badges/UniversalFollowButton";
 import axiosInstance from "../api/axiosInstance";
 import StartConversationButton from "../components/mensajes/StartConversationButton";
 import CommentsSection from "../components/mensajes/CommentsSection";
 import StarRating from "../components/badges/StarRating";
 import LikeButton from "../components/badges/LikeButton";
+
+import { PhotoGallery } from "../components/bussines/PhotoGallery";
+import { MdAccessTime, MdCheckCircle, MdEvent } from "react-icons/md";
+
+function BadgeEstadoEvento({ date }) {
+  const now = new Date();
+  const eventDate = new Date(date);
+  const isToday = now.toDateString() === eventDate.toDateString();
+
+  let status = "próximo";
+  let bgColor = "bg-blue-100";
+  let textColor = "text-blue-800";
+  let icon = <MdEvent className="text-blue-600 text-xl" />;
+
+  if (now > eventDate) {
+    status = "finalizado";
+    bgColor = "bg-red-100";
+    textColor = "text-red-800";
+    icon = <MdAccessTime className="text-red-600 text-xl" />;
+  } else if (isToday) {
+    status = "en vivo";
+    bgColor = "bg-green-100";
+    textColor = "text-green-800";
+    icon = <MdCheckCircle className="text-green-600 text-xl" />;
+  }
+
+  return (
+    <div
+      className={`inline-flex items-center gap-2 p-3 rounded-xl text-md font-semibold shadow-md ${bgColor} ${textColor}`}
+    >
+      {icon}
+      <span className="capitalize ">Evento {status}</span>
+    </div>
+  );
+}
 
 export default function EventoDetalle() {
   const { id } = useParams();
@@ -27,31 +63,7 @@ export default function EventoDetalle() {
     const cargarEvento = async () => {
       try {
         const { event } = await getEventById(id);
-        setEvento({
-          id: event._id,
-          title: event.title,
-          description: event.description,
-          date: event.date,
-          time: event.time,
-          location: event.location,
-          image: event.featuredImage,
-          images: event.images || [],
-          tags: event.tags || [],
-          price: event.price ?? 0,
-          isFree: event.isFree ?? true,
-          registrationLink: event.registrationLink || "",
-          isOnline: event.isOnline || false,
-          virtualLink: event.virtualLink || "",
-          status: event.status,
-          organizerModel: event.organizerModel,
-          organizer: event.organizer,
-          sponsors: event.sponsors || [],
-          categories: event.categories || [],
-          communities: event.communities || [],
-          businesses: event.businesses || [],
-          createdAt: event.createdAt,
-          likes: event.likes || [],
-        });
+        setEvento(event);
       } catch (err) {
         console.error("Error cargando evento:", err);
         setError("No se pudo cargar el evento.");
@@ -64,17 +76,17 @@ export default function EventoDetalle() {
 
   useEffect(() => {
     const fetchFollow = async () => {
-      if (!evento?.id) return;
+      if (!evento?._id) return;
       try {
         const res = await axiosInstance.get("/users/me/following?type=event");
         const ids = res.data.items.map((e) => String(e._id));
-        setYaSigue(ids.includes(String(evento.id)));
+        setYaSigue(ids.includes(String(evento._id)));
       } catch (err) {
         console.warn("No se pudo cargar el estado de seguimiento:", err);
       }
     };
     fetchFollow();
-  }, [evento?.id]);
+  }, [evento?._id]);
 
   useEffect(() => {
     const cargarSponsors = async () => {
@@ -110,7 +122,7 @@ export default function EventoDetalle() {
 
   if (loading)
     return (
-      <div className="px-4 sm:px-8 lg:px-8 xl:px-40 py-5 flex justify-center">
+      <div className="px-4 py-5 flex justify-center">
         <div className="w-full max-w-[960px]">
           <DetalleSkeleton />
         </div>
@@ -125,38 +137,37 @@ export default function EventoDetalle() {
     );
 
   return (
-    <div className="px-4 sm:px-8 lg:px-8 xl:px-40 py-5 flex justify-center">
+    <div className="md:px-8 xl:px-40 py-5 flex justify-center">
       <div className="w-full max-w-[960px] flex flex-col gap-12">
-        {/* Imagen destacada */}
-        <div
-          className="w-full h-56 sm:h-72 rounded-xl bg-cover bg-center shadow-md"
-          style={{ backgroundImage: `url(${evento.image})` }}
-        />
+        <div className="w-full max-w-[960px] flex flex-col gap-12">
+          <div
+            className="
+      relative w-screen left-1/2 right-1/2 -translate-x-1/2
+      sm:relative sm:w-full sm:left-0 sm:right-0 sm:translate-x-0
+      bg-cover bg-center min-h-[220px] sm:min-h-[300px] lg:min-h-[400px]
+      flex flex-col justify-end md:rounded-xl overflow-hidden shadow-sm
+    "
+            style={{
+              backgroundImage: `linear-gradient(0deg, rgba(0,0,0,0.4), rgba(0,0,0,0)), url(${
+                evento.featuredImage ||
+                "https://via.placeholder.com/1200x400?text=Imagen+no+disponible"
+              })`,
+            }}
+          >
+            <div className="p-6 sm:p-10"></div>
+          </div>
+        </div>
 
-        {/* Encabezado */}
         <div className="space-y-2">
-          <div className="flex justify-between items-center w-full">
+          <div className=" flex flex-col lg:flex-row justify-between md:items-center w-full gap-8">
             <h1 className="text-2xl font-bold text-gray-900">{evento.title}</h1>
-            {evento.status && (
-              <span className="flex items-center gap-2 w-fit px-2 py-1 rounded-full bg-green-100 text-green-700 text-xs font-medium">
-                <span className="relative flex h-3 w-3 items-center justify-center">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-green-700"></span>
-                </span>
-                Activo
-              </span>
-            )}
+            <BadgeEstadoEvento date={evento.date} />
           </div>
 
-          {/* Fecha y ubicación */}
           <p className="text-sm text-gray-500">
             {new Date(evento.date).toLocaleDateString()} - {evento.time}
-            {evento.location?.address && (
-              <>
-                {" · "}
-                {evento.location.address}, {evento.location.city}
-              </>
-            )}
+            {evento.location?.address &&
+              ` · ${evento.location.address}, ${evento.location.city}`}
           </p>
 
           {!evento.isFree && evento.price > 0 && (
@@ -169,36 +180,27 @@ export default function EventoDetalle() {
           </p>
         </div>
 
-        {/* Botones de interacción */}
         <div className="flex flex-col gap-3">
           <div className="flex gap-4 items-start">
-            <div className="flex gap-4">
-              <LikeButton
-                targetType="event"
-                targetId={id}
-                initialLikes={Array.isArray(evento.likes) ? evento.likes : []}
-              />
+            <div className="flex flex-col md:flex-row gap-4">
               <UniversalFollowButton
                 entityType="event"
-                entityId={evento.id}
+                entityId={evento._id}
                 initialFollowed={yaSigue}
               />
-
               <StartConversationButton entityType="event" entityId={id} />
             </div>
-            <StarRating targetType="event" targetId={id} />
           </div>
 
           <Compartir
             url={window.location.href}
-            title={`Participá en "${evento.title}" en Communities`}
+            title={`Participá en \"${evento.title}\" en Communities`}
             text={`Mirá este evento: ${
               evento.title
             } - ${evento.description?.slice(0, 100)}...`}
           />
         </div>
 
-        {/* Botones de acción */}
         <div className="flex gap-4">
           {evento.registrationLink && (
             <a
@@ -222,33 +224,22 @@ export default function EventoDetalle() {
           )}
         </div>
 
-        {/* Descripción */}
         <div className="border-l-4 border-gray-200 pl-4">
           <p className="font-sans text-[15px] text-gray-800 leading-relaxed whitespace-pre-line">
             {evento.description}
           </p>
         </div>
 
-        {/* Galería */}
         {evento.images?.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {evento.images.map((img, idx) => (
-              <div
-                key={idx}
-                className="w-full h-40 rounded-xl bg-cover bg-center"
-                style={{ backgroundImage: `url(${img})` }}
-              />
-            ))}
-          </div>
+          <PhotoGallery galleryImages={evento.images} />
         )}
 
-        {/* Tags */}
         {evento.tags?.length > 0 && (
           <div className="flex flex-wrap gap-2">
             {evento.tags.map((tag, i) => (
               <span
                 key={i}
-                className="bg-gray-100 text-gray-800 px-3 py-1 text-xs rounded-full"
+                className="bg-gray-100 text-gray-800 px-3 py-1 text-xs rounded-full w-fit"
               >
                 {tag}
               </span>
@@ -256,7 +247,6 @@ export default function EventoDetalle() {
           </div>
         )}
 
-        {/* Sponsors */}
         {sponsorsData.length > 0 && (
           <div>
             <h2 className="text-lg font-semibold text-gray-800 mb-2">
@@ -286,7 +276,6 @@ export default function EventoDetalle() {
           </div>
         )}
 
-        {/* Comunidades */}
         {communitiesData.length > 0 && (
           <div>
             <h2 className="text-lg font-semibold text-gray-800 mb-2">
@@ -297,12 +286,12 @@ export default function EventoDetalle() {
                 <Link
                   key={community._id}
                   to={`/comunidades/${community._id}`}
-                  className="flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 text-sm text-gray-700 hover:bg-gray-200"
+                  className="w-fit shadow-lg flex items-center gap-2 px-2 py-2 rounded-full bg-gray-100 text-sm text-gray-700 hover:bg-gray-200"
                 >
                   <img
                     src={community.flagImage || "/placeholder-flag.png"}
                     alt="bandera"
-                    className="h-4 w-4 rounded-full object-cover"
+                    className="h-8 w-8 rounded-full object-cover"
                   />
                   {community.name}
                 </Link>
@@ -310,17 +299,25 @@ export default function EventoDetalle() {
             </div>
           </div>
         )}
-
-        {/* Mapa */}
-        {evento?.location?.coordinates?.lat &&
-          evento?.location?.coordinates?.lng && (
+        <div className="mt-4 flex flex-col gap-3 md:flex-row md:flex-wrap">
+          <div className="flex flex-wrap gap-2 md:w-full md:justify-between">
+            <LikeButton
+              targetType="event"
+              targetId={id}
+              initialLikes={evento.likes}
+            />
+            <StarRating targetType="event" targetId={id} />
+          </div>
+        </div>
+        {Array.isArray(evento?.coordinates?.coordinates) &&
+          evento.coordinates.coordinates.length === 2 && (
             <MapaNegocioDetalle
-              lat={evento.location.coordinates.lat}
-              lng={evento.location.coordinates.lng}
+              lat={evento.coordinates.coordinates[1]}
+              lng={evento.coordinates.coordinates[0]}
               name={evento.title}
             />
           )}
-        {/* Comentarios */}
+
         <CommentsSection targetType="event" targetId={id} />
       </div>
     </div>

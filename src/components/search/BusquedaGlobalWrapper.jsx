@@ -1,13 +1,13 @@
-// components/BusquedaGlobalWrapper.jsx
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useRef } from "react";
+import { motion } from "framer-motion";
 
 import {
   buscarGlobalThunk,
   limpiarBusquedaGlobal,
 } from "../../store/busquedaGlobalSlice";
-import CardHorizontal from "../home/CardHorizontal";
 import SearchBarGlobal from "../home/SearchBarGlobal";
+import CardResultadoCuadrada from "../home/CardResultadoCuadrada";
 
 export default function BusquedaGlobalWrapper({
   placeholder = "Buscar...",
@@ -37,9 +37,42 @@ export default function BusquedaGlobalWrapper({
     dispatch(limpiarBusquedaGlobal());
   };
 
+  const getImagen = (item) => {
+    return (
+      item.imagen ||
+      item.imagenDestacada ||
+      item.featuredImage ||
+      item.bannerImage ||
+      ""
+    );
+  };
+
+  const getTitulo = (item) => {
+    return (
+      item.nombre || item.titulo || item.title || item.name || "Sin título"
+    );
+  };
+
+  const getTipo = (item) => {
+    return item.tipo || "Sin tipo";
+  };
+
+  const getDescripcion = (item) => {
+    return item.descripcion || item.description || "";
+  };
+
   const resultadosFiltrados = filtroTipo
     ? resultados.filter((item) => item.tipo === filtroTipo)
     : resultados;
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: (i) => ({
+      opacity: 1,
+      y: 0,
+      transition: { delay: i * 0.05, duration: 0.4, ease: "easeOut" },
+    }),
+  };
 
   return (
     <div className="w-full flex flex-col gap-6">
@@ -51,34 +84,54 @@ export default function BusquedaGlobalWrapper({
         placeholder={placeholder}
       />
 
-      <div ref={resultadosRef} className="flex flex-col gap-4">
-        {loading && <p className="text-gray-500">Buscando...</p>}
-        {error && <p className="text-red-500">Error: {error}</p>}
-        {!loading && resultadosFiltrados.length === 0 && input && (
-          <p className="text-gray-500"></p>
-        )}
+      {resultadosFiltrados.length > 0 && (
+        <>
+          <div className="min-h-[20vh]">
+            {loading && <p className="text-gray-500">Buscando...</p>}
+            {error && <p className="text-red-500">Error: {error}</p>}
+            {!loading && resultadosFiltrados.length === 0 && input && (
+              <p className="text-gray-500">No se encontraron resultados.</p>
+            )}
 
-        {!loading &&
-          resultadosFiltrados.map((item) => (
-            <div
-              key={item._id || item.id}
-              onClick={() => onSelectResultado?.(item)}
-              className="cursor-pointer"
+            <motion.div
+              ref={resultadosRef}
+              className="grid grid-cols-[repeat(auto-fill,minmax(160px,180px))] justify-center gap-4 max-w-[1200px] mx-auto mt-10"
+              initial="hidden"
+              animate="visible"
             >
-              <CardHorizontal
-                title={item.nombre || item.titulo || item.title || item.name}
-                description={item.descripcion || item.description || ""}
-                image={
-                  item.imagen ||
-                  item.imagenDestacada ||
-                  item.featuredImage ||
-                  item.bannerImage
-                }
-                tipo={item.tipo || "Sin tipo"}
-              />
-            </div>
-          ))}
-      </div>
+              {resultadosFiltrados.map((item, i) => (
+                <motion.div
+                  key={item._id || item.id}
+                  custom={i}
+                  variants={itemVariants}
+                  className="cursor-pointer flex flex-col items-center justify-center"
+                  onClick={() => onSelectResultado?.(item)}
+                >
+                  <CardResultadoCuadrada
+                    title={getTitulo(item)}
+                    description={getDescripcion(item)}
+                    image={getImagen(item)}
+                    tipo={getTipo(item)}
+                  />
+                </motion.div>
+              ))}
+            </motion.div>
+          </div>
+
+          {/* Divider */}
+          <div className="w-full border-t border-gray-200 mt-12" />
+
+          {/* Botón limpiar */}
+          <div className="flex justify-center">
+            <button
+              onClick={handleLimpiar}
+              className="mt-4 px-6 py-2 rounded-2xl bg-gray-200 text-gray-700 hover:bg-gray-300 text-sm transition"
+            >
+              Limpiar búsqueda
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 }

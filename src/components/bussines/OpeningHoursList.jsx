@@ -1,6 +1,16 @@
 export function OpeningHoursList({ hours }) {
   if (!Array.isArray(hours) || hours.length === 0) return null;
 
+  const dias = {
+    monday: "Lunes",
+    tuesday: "Martes",
+    wednesday: "Miércoles",
+    thursday: "Jueves",
+    friday: "Viernes",
+    saturday: "Sábado",
+    sunday: "Domingo",
+  };
+
   return (
     <div className="bg-white rounded-xl shadow-sm">
       <h2 className="text-[#181411] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">
@@ -19,7 +29,7 @@ export function OpeningHoursList({ hours }) {
             }`}
           >
             <p className="text-[#8a7460] text-sm font-normal leading-normal capitalize">
-              {day}
+              {dias[day.toLowerCase()] || day}
             </p>
             <p className="text-[#181411] text-sm font-normal leading-normal">
               {closed ? "Cerrado" : `${open} - ${close}`}
@@ -27,6 +37,10 @@ export function OpeningHoursList({ hours }) {
           </div>
         ))}
       </div>
+
+      <p className="text-gray-400 text-xs px-4 pb-4">
+        *Horario habitual, sujeto a cambios.*
+      </p>
     </div>
   );
 }

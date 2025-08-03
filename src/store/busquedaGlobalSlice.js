@@ -13,9 +13,12 @@ const initialState = {
 
 export const buscarGlobalThunk = createAsyncThunk(
   "busquedaGlobal/fetch",
-  async (termino, { rejectWithValue, dispatch }) => {
+  async (termino, { rejectWithValue, dispatch, getState }) => {
     try {
-      const resultados = await fetchBusquedaGlobal(termino);
+      const state = getState();
+      const coords = state.ubicacion?.coords;
+
+      const resultados = await fetchBusquedaGlobal(termino, coords);
       return { termino, resultados };
     } catch (error) {
       dispatch(

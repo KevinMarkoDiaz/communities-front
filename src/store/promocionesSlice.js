@@ -8,7 +8,7 @@ import {
   getAllPromotions,
 } from "../api/promotionApi";
 import { mostrarFeedback } from "./feedbackSlice";
-import { resetApp } from "./appActions"; // ✅
+import { resetApp } from "./appActions";
 
 // 🔁 Obtener promociones por comunidad
 export const fetchPromosPorComunidad = createAsyncThunk(
@@ -56,10 +56,17 @@ export const fetchMisPromos = createAsyncThunk(
   }
 );
 
-// ➕ Crear promoción
+// ✅ ➕ Crear promoción (con feedback "loading")
 export const createPromo = createAsyncThunk(
   "promociones/create",
   async (formData, { rejectWithValue, dispatch }) => {
+    dispatch(
+      mostrarFeedback({
+        message: "Procesando...",
+        type: "loading",
+      })
+    );
+
     try {
       const data = await createPromotion(formData);
       dispatch(
@@ -81,10 +88,17 @@ export const createPromo = createAsyncThunk(
   }
 );
 
-// ✏️ Actualizar promoción
+// ✅ ✏️ Actualizar promoción (con feedback "loading")
 export const updatePromo = createAsyncThunk(
   "promociones/update",
   async ({ id, formData }, { rejectWithValue, dispatch }) => {
+    dispatch(
+      mostrarFeedback({
+        message: "Procesando...",
+        type: "loading",
+      })
+    );
+
     try {
       const data = await updatePromotion(id, formData);
       dispatch(

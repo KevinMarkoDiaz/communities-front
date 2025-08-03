@@ -7,8 +7,9 @@ import {
   getCommunityById,
 } from "../api/communityApi";
 import { mostrarFeedback } from "./feedbackSlice";
-import { resetApp } from "./appActions"; // ✅
+import { resetApp } from "./appActions";
 
+// 🌀 Obtener todas las comunidades
 export const fetchComunidades = createAsyncThunk(
   "comunidades/fetchAll",
   async ({ lat, lng, page = 1 } = {}, { rejectWithValue, dispatch }) => {
@@ -34,6 +35,7 @@ export const fetchComunidades = createAsyncThunk(
   }
 );
 
+// 🧍 Obtener comunidades propias
 export const fetchMisComunidades = createAsyncThunk(
   "comunidades/fetchMine",
   async (_, { rejectWithValue, dispatch }) => {
@@ -55,6 +57,7 @@ export const fetchMisComunidades = createAsyncThunk(
   }
 );
 
+// 🔍 Obtener comunidad por ID
 export const fetchCommunityById = createAsyncThunk(
   "comunidades/fetchById",
   async (id, { rejectWithValue, dispatch }) => {
@@ -73,9 +76,17 @@ export const fetchCommunityById = createAsyncThunk(
   }
 );
 
+// 🟢 Crear comunidad (con feedback "loading" al iniciar)
 export const createCommunityThunk = createAsyncThunk(
   "comunidades/create",
   async (formData, { rejectWithValue, dispatch }) => {
+    dispatch(
+      mostrarFeedback({
+        message: "Procesando...",
+        type: "loading",
+      })
+    );
+
     try {
       const response = await createCommunity(formData);
       dispatch(
@@ -97,9 +108,17 @@ export const createCommunityThunk = createAsyncThunk(
   }
 );
 
+// 🟡 Actualizar comunidad (con feedback "loading" al iniciar)
 export const updateCommunityThunk = createAsyncThunk(
   "comunidades/update",
   async ({ id, formData }, { rejectWithValue, dispatch }) => {
+    dispatch(
+      mostrarFeedback({
+        message: "Procesando...",
+        type: "loading",
+      })
+    );
+
     try {
       const response = await updateCommunity(id, formData);
       dispatch(
@@ -122,7 +141,7 @@ export const updateCommunityThunk = createAsyncThunk(
   }
 );
 
-// ✅ Estado inicial
+// 🔧 Estado inicial
 const initialState = {
   lista: [],
   misComunidades: [],
@@ -152,7 +171,7 @@ const comunidadesSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(resetApp, () => initialState) // ✅ Reset global
+      .addCase(resetApp, () => initialState)
 
       // Todas
       .addCase(fetchComunidades.pending, (state) => {

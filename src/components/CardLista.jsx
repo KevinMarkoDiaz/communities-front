@@ -63,21 +63,19 @@ export default function CardGrid({
         </div>
 
         {/* Logo o placeholder */}
-        <div className="absolute bottom-2 right-2 w-10 h-10 rounded-full border border-white shadow-md bg-white overflow-hidden">
-          {logo ? (
+        {logo && (
+          <div className="absolute bottom-2 right-2 w-10 h-10 rounded-full border border-white shadow-md bg-white overflow-hidden">
             <div
               className="w-full h-full bg-cover bg-center"
               style={{ backgroundImage: `url("${logo}")` }}
             />
-          ) : (
-            <AvatarPlaceholder />
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
       {/* Contenido */}
       {/* Contenido */}
-      <div className="flex flex-col gap-0.5 px-3 py-3 flex-1 min-h-[64px] max-h-[64px]">
+      <div className="flex flex-col gap-0.5 px-3 py-3 flex-1 min-h-[70px] max-h-[70px]">
         <div className="flex items-center gap-1">
           <h3
             className="

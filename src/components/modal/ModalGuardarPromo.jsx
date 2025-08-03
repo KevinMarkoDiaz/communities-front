@@ -1,14 +1,17 @@
-// src/components/promo/ModalGuardarPromo.jsx
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { claimPromoThunk } from "../../store/userPromosSlice";
 import { useState } from "react";
 
 export default function ModalGuardarPromo({ promo, onClose }) {
   const dispatch = useDispatch();
+  const usuario = useSelector((state) => state.auth.usuario); // 👈 Verifica si hay usuario logueado
+
   const [loading, setLoading] = useState(false);
   const [guardada, setGuardada] = useState(false);
 
   const handleGuardar = async () => {
+    if (!usuario) return; // seguridad adicional
+
     setLoading(true);
     const res = await dispatch(claimPromoThunk(promo._id));
     setLoading(false);
@@ -35,7 +38,11 @@ export default function ModalGuardarPromo({ promo, onClose }) {
           <h2 className="text-xl font-bold text-sky-800">{promo.name}</h2>
           <p className="text-gray-700 text-sm">{promo.description}</p>
 
-          {!guardada ? (
+          {!usuario ? (
+            <p className="text-red-600 font-semibold">
+              Debes iniciar sesión para reclamar esta promoción.
+            </p>
+          ) : !guardada ? (
             <button
               onClick={handleGuardar}
               disabled={loading}

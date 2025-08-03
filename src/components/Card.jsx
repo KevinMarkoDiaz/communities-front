@@ -1,7 +1,6 @@
 import BadgeDescuento from "./badges/BadgeDescuento";
 import BadgeIconVerified from "./badges/BadgeIconVerified";
 import BadgeNuevo from "./badges/BadgeNuevo";
-import AvatarPlaceholder from "./placeholder/AvatarPlaceholder";
 import ImagePlaceholderIcon from "./placeholder/ImagePlaceholderIcon";
 
 export default function CardDestacado({
@@ -14,6 +13,7 @@ export default function CardDestacado({
   hasDiscount = false,
   descuento = "20%",
   modo = "horizontal-compact",
+  category,
 }) {
   const hasImage = Boolean(image);
 
@@ -27,25 +27,63 @@ export default function CardDestacado({
 
   return (
     <div
-      className={`border border-gray-200 rounded-2xl bg-white overflow-hidden shadow-sm hover:shadow-xl transition duration-300 ease-in-out group ${classMap[modo]}`}
+      className={`relative border border-gray-200 rounded-2xl bg-white overflow-hidden shadow-sm hover:shadow-xl transition duration-300 ease-in-out group ${classMap[modo]}`}
     >
+      {/* Imagen */}
       <div
         className={
           modo === "vertical"
-            ? "w-full h-42 md:h-36 relative overflow-hidden"
-            : "w-1/3 h-full relative overflow-hidden flex items-center justify-center"
+            ? "relative w-full h-42 md:h-36 bg-gray-200 overflow-hidden"
+            : "relative w-1/3 h-full bg-gray-200 overflow-hidden flex items-center justify-center"
         }
       >
         {hasImage ? (
           <div
-            className="w-full h-full bg-cover bg-center transform group-hover:scale-105 transition duration-300"
-            style={{ backgroundImage: `url("${image}")` }}
+            className="w-full h-full bg-cover bg-center transform transition-transform duration-500 group-hover:scale-110"
+            style={{ backgroundImage: `url(${image})` }}
           />
         ) : (
           <ImagePlaceholderIcon />
         )}
+
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition duration-300" />
+
+        {/* Gradiente inferior */}
+        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/40 to-transparent z-0" />
+
+        {/* Badges top izquierda */}
+        <div className="absolute top-2 left-2 flex gap-1 z-10">
+          {hasDiscount && <BadgeDescuento value={descuento} />}
+          {isNew && <BadgeNuevo />}
+        </div>
+
+        {/* Categoría (top derecha) */}
+        {category && (
+          <div className="absolute top-2 right-2 bg-white text-xs font-semibold text-gray-800 px-2 py-0.5 rounded-full shadow-sm z-10">
+            {category}
+          </div>
+        )}
+
+        {/* Botón Ver más */}
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300 z-10">
+          <button className="bg-orange-500 text-white text-xs px-3 py-1 rounded-full shadow-md hover:bg-orange-600 transition">
+            Ver más
+          </button>
+        </div>
+
+        {/* Logo */}
+        {logo && (
+          <div className="absolute bottom-2 right-2 w-10 h-10 rounded-full border border-white shadow-md bg-white overflow-hidden z-10">
+            <div
+              className="w-full h-full bg-cover bg-center"
+              style={{ backgroundImage: `url("${logo}")` }}
+            />
+          </div>
+        )}
       </div>
 
+      {/* Contenido */}
       <div
         className={`${
           modo === "vertical"
@@ -53,57 +91,23 @@ export default function CardDestacado({
             : "w-2/3 p-4 flex flex-col justify-between"
         }`}
       >
-        <div className="flex gap-2 mb-1">
-          {hasDiscount && <BadgeDescuento value={descuento} />}
-          {isNew && <BadgeNuevo />}
+        <div className="flex flex-col gap-1 truncate  min-h-[40px] max-h-[40px]">
+          <div className="flex items-center gap-1">
+            <p
+              className="text-gray-900 text-[15px] font-semibold leading-snug overflow-hidden text-ellipsis whitespace-normal [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical]"
+              title={title}
+            >
+              {title}
+            </p>
+            {isVerified && <BadgeIconVerified />}
+          </div>
+
+          {description && (
+            <p className="text-gray-600 text-xs font-normal truncate">
+              {description}
+            </p>
+          )}
         </div>
-
-        {modo === "vertical" ? (
-          <div className="flex items-start gap-3">
-            {logo ? (
-              <div
-                className="w-10 h-10 rounded-xl bg-cover bg-center flex-shrink-0"
-                style={{ backgroundImage: `url("${logo}")` }}
-              />
-            ) : (
-              <AvatarPlaceholder />
-            )}
-
-            <div className="flex flex-col gap-1 truncate">
-              <div className="flex items-center gap-1">
-                <p
-                  className="text-gray-900 text-[15px] font-semibold leading-snug overflow-hidden text-ellipsis whitespace-normal [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical]"
-                  title={title}
-                >
-                  {title}
-                </p>
-                {isVerified && <BadgeIconVerified />}
-              </div>
-              {description && (
-                <p className="text-gray-600 text-xs font-normal truncate">
-                  {description}
-                </p>
-              )}
-            </div>
-          </div>
-        ) : (
-          <div className="flex flex-col gap-1 truncate">
-            <div className="flex items-center gap-1">
-              <p
-                className="text-gray-900 text-[15px] font-semibold leading-snug overflow-hidden text-ellipsis whitespace-normal [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical]"
-                title={title}
-              >
-                {title}
-              </p>
-              {isVerified && <BadgeIconVerified />}
-            </div>
-            {description && (
-              <p className="text-gray-600 text-xs font-normal truncate">
-                {description}
-              </p>
-            )}
-          </div>
-        )}
       </div>
     </div>
   );

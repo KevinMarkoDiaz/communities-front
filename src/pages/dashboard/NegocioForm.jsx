@@ -1,3 +1,4 @@
+// NegocioForm.jsx adaptado
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Formik, Form } from "formik";
@@ -5,11 +6,10 @@ import * as Yup from "yup";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { getBusinessById } from "../../api/businessApi";
-
 import Paso1General from "../../components/dashboard/formularios/negocios/Paso1General";
 import Paso2Contacto from "../../components/dashboard/formularios/negocios/Paso2Contacto";
-import Paso4Horarios from "../../components/dashboard/formularios/negocios/Paso4Horarios";
 import Paso3Ubicacion from "../../components/dashboard/formularios/PasoUbicacion";
+import Paso4Horarios from "../../components/dashboard/formularios/negocios/Paso4Horarios";
 import Paso5Propietario from "../../components/dashboard/formularios/negocios/Paso5Propietario";
 import Paso6Extras from "../../components/dashboard/formularios/negocios/Paso6Extras";
 
@@ -41,144 +41,56 @@ const nombresPasos = [
   "Extras",
 ];
 
-const validationSchema = [
-  Yup.object({
-    name: Yup.string().required("Nombre requerido"),
-    description: Yup.string().required("Descripción requerida"),
-    category: Yup.string().required("Categoría requerida"),
-    community: Yup.string().required("Comunidad requerida"),
-  }),
-  Yup.object({
-    contact: Yup.object({
-      phone: Yup.string().required("Teléfono requerido"),
-      email: Yup.string().email("Email inválido").required("Email requerido"),
-      website: Yup.string().url("URL inválida").nullable(),
-      socialMedia: Yup.object({
-        facebook: Yup.string().nullable(),
-        instagram: Yup.string().nullable(),
-        whatsapp: Yup.string().nullable(),
-      }).nullable(),
-    }).required(),
-  }),
-  Yup.object({
-    location: Yup.object({
-      address: Yup.string().required("Dirección requerida"),
-      city: Yup.string().required("Ciudad requerida"),
-      state: Yup.string().required("Estado requerido"),
-      zipCode: Yup.string().required("Código postal requerido"),
-      country: Yup.string().required("País requerido"),
-      coordinates: Yup.object({
-        lat: Yup.number().nullable(),
-        lng: Yup.number().nullable(),
-      }).nullable(),
-    }).required(),
-  }),
-  Yup.object({
-    openingHours: Yup.array()
-      .of(
-        Yup.object({
-          day: Yup.string().required(),
-          closed: Yup.boolean(),
-          open: Yup.string()
-            .nullable()
-            .when("closed", {
-              is: false,
-              then: (schema) =>
-                schema
-                  .required("Hora de apertura requerida")
-                  .matches(/^\d{2}:\d{2}$/, "Formato HH:MM inválido"),
-              otherwise: (schema) => schema.oneOf(["", null]),
-            }),
-          close: Yup.string()
-            .nullable()
-            .when("closed", {
-              is: false,
-              then: (schema) =>
-                schema
-                  .required("Hora de cierre requerida")
-                  .matches(/^\d{2}:\d{2}$/, "Formato HH:MM inválido"),
-              otherwise: (schema) => schema.oneOf(["", null]),
-            }),
-        })
-      )
-      .required(),
-  }),
-  Yup.object({
-    ownerId: Yup.string().required("Propietario requerido"),
-    ownerDisplay: Yup.object({
-      name: Yup.string().nullable(),
-      image: Yup.string().url("Debe ser una URL válida").nullable(),
-    }).nullable(),
-  }),
-  Yup.object({
-    featuredImage: Yup.mixed().required("Imagen destacada requerida"),
-    profileImage: Yup.mixed().required("Imagen de perfil requerida"),
-    images: Yup.array()
-      .of(
-        Yup.mixed().test(
-          "is-valid-image",
-          "Cada imagen debe ser una URL válida o un archivo",
-          (value) =>
-            typeof value === "string" ||
-            (typeof File !== "undefined" && value instanceof File)
-        )
-      )
-      .min(1, "Sube al menos una imagen"),
-    tags: Yup.array().of(Yup.string()).nullable(),
-    isVerified: Yup.boolean().nullable(),
-  }),
-];
-
-const defaultInitialValues = {
-  name: "",
-  description: "",
-  category: "",
-  community: "",
-  contact: {
-    phone: "",
-    email: "",
-    website: "",
-    socialMedia: { facebook: "", instagram: "", whatsapp: "" },
-  },
-  location: {
-    address: "",
-    city: "",
-    state: "",
-    zipCode: "",
-    country: "",
-    coordinates: { lat: "", lng: "" },
-  },
-  openingHours: [
-    { day: "Monday", open: "", close: "", closed: false },
-    { day: "Tuesday", open: "", close: "", closed: false },
-    { day: "Wednesday", open: "", close: "", closed: false },
-    { day: "Thursday", open: "", close: "", closed: false },
-    { day: "Friday", open: "", close: "", closed: false },
-    { day: "Saturday", open: "", close: "", closed: false },
-    { day: "Sunday", open: "", close: "", closed: false },
-  ],
-  ownerId: "",
-  ownerDisplay: { name: "", image: "" },
-  featuredImage: "",
-  profileImage: "",
-  tags: [],
-  isVerified: false,
-  images: [],
-};
-
 export default function NegocioForm() {
   const dispatch = useDispatch();
-  const [paso, setPaso] = useState(0);
-  const [initialValues, setInitialValues] = useState(defaultInitialValues);
-  const [cargando, setCargando] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
-  const PasoActual = steps[paso];
 
+  const user = useSelector((state) => state.auth.usuario); // Usuario autenticado
   const comunidades = useSelector((state) => state.comunidades.lista);
   const categorias = useSelector((state) => state.categorias.data);
   const comunidadesLoaded = useSelector((state) => state.comunidades.loaded);
-  const categoriasLoaded = useSelector((state) => state.comunidades.loaded);
+  const categoriasLoaded = useSelector((state) => state.categorias.loaded);
+
+  const [paso, setPaso] = useState(0);
+  const [initialValues, setInitialValues] = useState({
+    name: "",
+    description: "",
+    categories: [],
+    community: "",
+    contact: {
+      phone: "",
+      email: "",
+      website: "",
+      socialMedia: { facebook: "", instagram: "", whatsapp: "" },
+    },
+    location: {
+      address: "",
+      city: "",
+      state: "",
+      zipCode: "",
+      country: "",
+      coordinates: { lat: "", lng: "" },
+    },
+    openingHours: [
+      { day: "Monday", open: "", close: "", closed: false },
+      { day: "Tuesday", open: "", close: "", closed: false },
+      { day: "Wednesday", open: "", close: "", closed: false },
+      { day: "Thursday", open: "", close: "", closed: false },
+      { day: "Friday", open: "", close: "", closed: false },
+      { day: "Saturday", open: "", close: "", closed: false },
+      { day: "Sunday", open: "", close: "", closed: false },
+    ],
+    ownerId: "",
+    ownerDisplay: { name: "", image: "" },
+    featuredImage: "",
+    profileImage: "",
+    tags: [],
+    isVerified: false,
+    images: [],
+  });
+  const [cargando, setCargando] = useState(false);
+  const PasoActual = steps[paso];
 
   useEffect(() => {
     if (!categoriasLoaded) dispatch(fetchCategorias());
@@ -191,19 +103,19 @@ export default function NegocioForm() {
       getBusinessById(id)
         .then((res) => {
           const negocio = res.business;
-          setInitialValues({
-            ...defaultInitialValues,
+          setInitialValues((prev) => ({
+            ...prev,
             ...negocio,
-            category: negocio.category?._id || negocio.category,
+            categories: negocio.categories.map((cat) => cat._id || cat),
             community: negocio.community?._id || negocio.community,
             ownerId: negocio.owner?._id || negocio.owner,
             ownerDisplay: {
               name: negocio.owner?.name || "",
               image: negocio.owner?.profileImage || "",
             },
-          });
+          }));
         })
-        .catch((err) => {
+        .catch(() => {
           dispatch(
             mostrarFeedback({
               message: "Error al cargar los datos del negocio.",
@@ -212,10 +124,109 @@ export default function NegocioForm() {
           );
         })
         .finally(() => setCargando(false));
+    } else if (user?.role !== "admin") {
+      // Si no es admin y está creando, asignar su propio ID como dueño
+      setInitialValues((prev) => ({
+        ...prev,
+        ownerId: user._id,
+        ownerDisplay: { name: user.name, image: user.profileImage },
+      }));
     }
-  }, [id]);
+  }, [id, user]);
 
   if (cargando) return <SkeletonNegocioForm />;
+
+  const validationSchema = [
+    Yup.object({
+      name: Yup.string().required("Nombre requerido"),
+      description: Yup.string().required("Descripción requerida"),
+      categories: Yup.array()
+        .of(Yup.string().matches(/^[0-9a-fA-F]{24}$/))
+        .min(1, "Selecciona al menos una categoría"),
+      community: Yup.string().required("Comunidad requerida"),
+    }),
+    Yup.object({
+      contact: Yup.object({
+        phone: Yup.string().required("Teléfono requerido"),
+        email: Yup.string().email("Email inválido").required("Email requerido"),
+        website: Yup.string().url("URL inválida").nullable(),
+        socialMedia: Yup.object({
+          facebook: Yup.string().nullable(),
+          instagram: Yup.string().nullable(),
+          whatsapp: Yup.string().nullable(),
+        }).nullable(),
+      }).required(),
+    }),
+    Yup.object({
+      location: Yup.object({
+        address: Yup.string().required("Dirección requerida"),
+        city: Yup.string().required("Ciudad requerida"),
+        state: Yup.string().required("Estado requerida"),
+        zipCode: Yup.string().required("Código postal requerido"),
+        country: Yup.string().required("País requerido"),
+        coordinates: Yup.object({
+          lat: Yup.number().nullable(),
+          lng: Yup.number().nullable(),
+        }).nullable(),
+      }).required(),
+    }),
+    Yup.object({
+      openingHours: Yup.array()
+        .of(
+          Yup.object({
+            day: Yup.string().required(),
+            closed: Yup.boolean(),
+            open: Yup.string()
+              .nullable()
+              .when("closed", {
+                is: false,
+                then: (s) =>
+                  s
+                    .required("Hora de apertura requerida")
+                    .matches(/\d{2}:\d{2}/, "Formato HH:MM inválido"),
+              }),
+            close: Yup.string()
+              .nullable()
+              .when("closed", {
+                is: false,
+                then: (s) =>
+                  s
+                    .required("Hora de cierre requerida")
+                    .matches(/\d{2}:\d{2}/, "Formato HH:MM inválido"),
+              }),
+          })
+        )
+        .required(),
+    }),
+    Yup.object(
+      user?.role === "admin"
+        ? {
+            ownerId: Yup.string().required("Propietario requerido"),
+            ownerDisplay: Yup.object({
+              name: Yup.string().nullable(),
+              image: Yup.string().url("Debe ser una URL válida").nullable(),
+            }).nullable(),
+          }
+        : {}
+    ),
+    Yup.object({
+      featuredImage: Yup.mixed().required("Imagen destacada requerida"),
+      profileImage: Yup.mixed().required("Imagen de perfil requerida"),
+      images: Yup.array()
+        .of(
+          Yup.mixed().test(
+            "is-valid-image",
+            "Cada imagen debe ser una URL válida o un archivo",
+            (value) =>
+              typeof value === "string" ||
+              (typeof File !== "undefined" && value instanceof File)
+          )
+        )
+        .min(1, "Sube al menos una imagen"),
+      tags: Yup.array().of(Yup.string()).nullable(),
+      isVerified: Yup.boolean().nullable(),
+    }),
+  ];
 
   return (
     <Formik
@@ -238,14 +249,12 @@ export default function NegocioForm() {
               profileImage,
               images,
               ownerDisplay,
-              owner,
-              ownerId, // ✅ se usa solo si es creación
+              ownerId,
               ...rest
             } = values;
 
             const formData = new FormData();
 
-            // Imágenes
             if (featuredImage instanceof File)
               formData.append("featuredImage", featuredImage);
             else formData.append("featuredImageUrl", featuredImage);
@@ -265,13 +274,16 @@ export default function NegocioForm() {
               .filter((img) => img instanceof File)
               .forEach((img) => formData.append("images", img));
 
-            // Agregar ownerId solo si es creación
-            if (!id && ownerId) {
-              formData.append("ownerId", ownerId);
+            const finalOwnerId = user?.role === "admin" ? ownerId : user._id;
+            if (!id && finalOwnerId) {
+              formData.append("ownerId", finalOwnerId);
             }
 
-            // Resto del cuerpo
+            const categoryIds = values.categories.map((id) => id.toString());
+            formData.append("categories", JSON.stringify(categoryIds));
+
             Object.entries(rest).forEach(([key, val]) => {
+              if (key === "categories") return;
               formData.append(
                 key,
                 typeof val === "object" ? JSON.stringify(val) : val
@@ -312,19 +324,16 @@ export default function NegocioForm() {
     >
       {({ validateForm }) => (
         <Form className="flex flex-col md:flex-row gap-8 w-full max-w-5xl mx-auto p-4 md:p-8 md:rounded-2xl bg-black/40 backdrop-blur-lg  shadow-2xl text-white">
-          {/* Sidebar */}
+          {/* Sidebar de pasos */}
           <div className="flex flex-row md:flex-col w-full md:w-20 lg:w-36 space-x-4 md:space-x-0 md:space-y-8">
             {nombresPasos.map((nombre, index) => (
               <div
                 key={index}
                 className="relative flex flex-col md:flex-row md:items-start items-center"
               >
-                {/* Conector */}
                 {index !== nombresPasos.length - 1 && (
                   <>
-                    {/* Línea horizontal para mobile */}
                     <span className="absolute hidden md:hidden left-1/2 top-6 w-10 h-px bg-white/20 translate-x-1/2" />
-                    {/* Línea vertical para md+ */}
                     <span
                       className="absolute hidden md:block left-2.5 top-7 h-full w-px bg-white/20"
                       style={{ minHeight: "1.5rem" }}
@@ -332,21 +341,18 @@ export default function NegocioForm() {
                   </>
                 )}
 
-                {/* Círculo con número o check */}
                 <div
                   className={`flex items-center justify-center w-6 h-6 rounded-full border-2 shrink-0
-          ${
-            paso === index
-              ? "border-orange-500 bg-orange-500 text-black"
-              : paso > index
-              ? "border-green-500 bg-green-500 text-black"
-              : "border-white/30 text-white"
-          }`}
+                  ${
+                    paso === index
+                      ? "border-orange-500 bg-orange-500 text-black"
+                      : paso > index
+                      ? "border-green-500 bg-green-500 text-black"
+                      : "border-white/30 text-white"
+                  }`}
                 >
                   {paso > index ? "✓" : index + 1}
                 </div>
-
-                {/* Texto: solo visible en md+ */}
                 <div className="ml-2 text-xs lg:text-sm hidden md:block">
                   {nombre}
                 </div>
@@ -354,7 +360,7 @@ export default function NegocioForm() {
             ))}
           </div>
 
-          {/* Contenido */}
+          {/* Paso actual */}
           <div className="flex-1 space-y-6">
             <div className="flex items-center justify-between mb-2">
               <div className="text-sm font-medium">
@@ -381,6 +387,7 @@ export default function NegocioForm() {
               >
                 <PasoActual
                   {...(paso === 0 ? { categorias, comunidades } : {})}
+                  soloLectura={paso === 4 && user?.role !== "admin"}
                 />
               </motion.div>
             </AnimatePresence>

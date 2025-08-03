@@ -7,9 +7,8 @@ import {
   createEvent,
 } from "../api/eventApi";
 import { mostrarFeedback } from "./feedbackSlice";
-import { resetApp } from "./appActions"; // ✅ Importar acción global
+import { resetApp } from "./appActions";
 
-// ✅ Estado inicial
 const initialState = {
   lista: [],
   misEventos: [],
@@ -23,22 +22,21 @@ const initialState = {
   limite: 15,
   totalPaginas: 1,
   totalResultados: 0,
+  categoria: "todas", // ✅ NUEVO
 };
 
-// 🔁 Todos los eventos
+// 🔁 Obtener todos los eventos
 export const obtenerEventos = createAsyncThunk(
   "eventos/fetch",
   async (
-    { page = 1, limit = 15 } = {}, // ⚠️ acá no llegan lat/lng directamente
+    { page = 1, limit = 15 } = {},
     { rejectWithValue, dispatch, getState }
   ) => {
     try {
-      // ✅ Obtenemos coords del slice de ubicación
       const { coords } = getState().ubicacion;
       const lat = coords?.lat;
       const lng = coords?.lng;
 
-      // ✅ Pasamos todo a la API
       const data = await getAllEvents({ page, limit, lat, lng });
       return data;
     } catch (error) {
@@ -50,13 +48,10 @@ export const obtenerEventos = createAsyncThunk(
       );
       return rejectWithValue(error.message || "Error al cargar eventos");
     }
-  },
-  {
-    // ✅ Solo si aún no están cargados
-    condition: (_, { getState }) => !getState().eventos.loaded,
   }
 );
-// 🔁 Solo mis eventos
+
+// 🔁 Obtener mis eventos
 export const fetchMisEventos = createAsyncThunk(
   "eventos/fetchMine",
   async (_, { rejectWithValue, dispatch }) => {
@@ -78,10 +73,17 @@ export const fetchMisEventos = createAsyncThunk(
   }
 );
 
-// Crear evento
+// ✅ Crear evento
 export const createEventThunk = createAsyncThunk(
   "eventos/createEvent",
   async (formData, { rejectWithValue, dispatch }) => {
+    dispatch(
+      mostrarFeedback({
+        message: "Procesando...",
+        type: "loading",
+      })
+    );
+
     try {
       const res = await createEvent(formData);
       dispatch(
@@ -103,12 +105,19 @@ export const createEventThunk = createAsyncThunk(
   }
 );
 
-// Actualizar evento
+// ✅ Actualizar evento
 export const updateEventThunk = createAsyncThunk(
   "eventos/updateEvent",
-  async ({ id, formData, token }, { rejectWithValue, dispatch }) => {
+  async ({ id, formData }, { rejectWithValue, dispatch }) => {
+    dispatch(
+      mostrarFeedback({
+        message: "Procesando...",
+        type: "loading",
+      })
+    );
+
     try {
-      const response = await updateEvent(id, formData, token);
+      const response = await updateEvent(id, formData);
       dispatch(
         mostrarFeedback({
           message: "Evento actualizado correctamente",
@@ -128,7 +137,7 @@ export const updateEventThunk = createAsyncThunk(
   }
 );
 
-// Eliminar evento
+// 🗑️ Eliminar evento
 export const deleteEvento = createAsyncThunk(
   "eventos/deleteEvento",
   async (id, { rejectWithValue, dispatch }) => {
@@ -163,6 +172,9 @@ const eventosSlice = createSlice({
     setPaginaActual: (state, action) => {
       state.paginaActual = action.payload;
     },
+    setCategoria: (state, action) => {
+      state.categoria = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -173,14 +185,13 @@ const eventosSlice = createSlice({
         state.error = null;
       })
       .addCase(obtenerEventos.fulfilled, (state, action) => {
-        const { events, totalPages, totalResults, currentPage } =
-          action.payload;
+        const { events, totalPages, total = 0, page = 1 } = action.payload;
 
         state.loading = false;
         state.lista = events || [];
         state.totalPaginas = totalPages || 1;
-        state.totalResultados = totalResults || 0;
-        state.paginaActual = currentPage || 1;
+        state.totalResultados = total;
+        state.paginaActual = page;
         state.loaded = true;
       })
       .addCase(obtenerEventos.rejected, (state, action) => {
@@ -188,7 +199,6 @@ const eventosSlice = createSlice({
         state.error = action.payload;
       })
 
-      // 🔁 Mis eventos
       .addCase(fetchMisEventos.pending, (state) => {
         state.misLoading = true;
         state.error = null;
@@ -204,7 +214,6 @@ const eventosSlice = createSlice({
         state.misLoaded = true;
       })
 
-      // 🗑️ Eliminar evento
       .addCase(deleteEvento.fulfilled, (state, action) => {
         state.lista = state.lista.filter((e) => e._id !== action.payload);
         state.misEventos = state.misEventos.filter(
@@ -214,5 +223,6 @@ const eventosSlice = createSlice({
   },
 });
 
-export const { setBusqueda, setPaginaActual } = eventosSlice.actions;
+export const { setBusqueda, setPaginaActual, setCategoria } =
+  eventosSlice.actions;
 export default eventosSlice.reducer;

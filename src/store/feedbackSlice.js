@@ -5,7 +5,7 @@ import { resetApp } from "./appActions"; // ✅ Importado resetApp
 const initialState = {
   visible: false,
   message: "",
-  type: "success", // 'success' | 'error'
+  type: "success", // 'success' | 'error' | 'loading'
 };
 
 const feedbackSlice = createSlice({
@@ -15,7 +15,7 @@ const feedbackSlice = createSlice({
     mostrarFeedback: (state, action) => {
       state.visible = true;
       state.message = action.payload.message;
-      state.type = action.payload.type;
+      state.type = action.payload.type || "success";
     },
     ocultarFeedback: (state) => {
       state.visible = false;
@@ -23,7 +23,7 @@ const feedbackSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(resetApp, () => initialState); // ✅ Reset al cerrar sesión
+    builder.addCase(resetApp, () => initialState);
   },
 });
 

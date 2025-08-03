@@ -3,12 +3,13 @@ import { fetchFollowings } from "../../store/followSlice";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../api/axiosInstance";
 import { MdStar, MdStarBorder } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { mostrarFeedback } from "../../store/feedbackSlice";
 
 export default function UniversalFollowButton({ entityType, entityId }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const usuario = useSelector((state) => state.auth.usuario);
   const { items, loading: loadingFollows } = useSelector(
     (state) => state.follow
@@ -21,7 +22,13 @@ export default function UniversalFollowButton({ entityType, entityId }) {
 
   const toggleFollow = async () => {
     if (!usuario) {
-      return navigate("/login", { state: { redirectTo: location.pathname } });
+      dispatch(
+        mostrarFeedback({
+          message: "Debes iniciar sesión para seguir este perfil.",
+          type: "error",
+        })
+      );
+      return;
     }
 
     setLoading(true);
@@ -56,27 +63,25 @@ export default function UniversalFollowButton({ entityType, entityId }) {
     <button
       onClick={toggleFollow}
       disabled={loading || loadingFollows}
-      className={`flex items-center justify-center gap-1 shadow-md hover:shadow-lg px-2 py-1 rounded border border-gray-300 transition text-xs font-medium
-    ${
-      isFollowed
-        ? "bg-gray-200 text-gray-700 hover:bg-gray-300"
-        : "bg-white text-orange-600 hover:bg-gray-50"
-    }
-  `}
-      title={isFollowed ? "Siguiendo" : "Seguir"}
+      title={isFollowed ? "Ya estás siguiendo" : "Seguir"}
+      className={`flex items-center gap-2 px-4 py-1.5 rounded-xl transition-all shadow-md text-sm font-semibold
+        ${
+          isFollowed
+            ? "bg-blue-100 hover:bg-blue-200 text-blue-800 border border-blue-300"
+            : "bg-blue-100 hover:bg-blue-50 text-blue-600 border border-blue-300"
+        }
+      `}
     >
       {loading ? (
-        "..."
+        <span className="animate-pulse">...</span>
       ) : (
         <>
           {isFollowed ? (
-            <MdStar className="text-base" />
+            <MdStar className="text-lg" />
           ) : (
-            <MdStarBorder className="text-base" />
+            <MdStarBorder className="text-lg" />
           )}
-          <span className="sm:inline">
-            {isFollowed ? "Siguiendo" : "Seguir"}
-          </span>
+          <span>{isFollowed ? "Siguiéndonos" : "¡Seguinos!"}</span>
         </>
       )}
     </button>

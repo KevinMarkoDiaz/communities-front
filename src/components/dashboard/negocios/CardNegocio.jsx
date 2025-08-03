@@ -30,9 +30,18 @@ export default function CardNegocio({ negocio, onSelect }) {
         </h3>
 
         {/* Categoría */}
-        {negocio.category && (
-          <span className="text-[0.65rem] font-medium  rounded bg-white text-gray-500 w-fit">
-            {negocio.category.name}
+        {Array.isArray(negocio.categories) && negocio.categories.length > 0 ? (
+          negocio.categories.map((cat) => (
+            <span
+              key={cat._id}
+              className="text-[0.65rem] font-medium rounded bg-white text-gray-500 w-fit mr-1 px-2 py-0.5"
+            >
+              {cat.name}
+            </span>
+          ))
+        ) : (
+          <span className="text-[0.65rem] font-medium rounded bg-white text-gray-400 w-fit px-2 py-0.5">
+            Sin categoría
           </span>
         )}
       </div>

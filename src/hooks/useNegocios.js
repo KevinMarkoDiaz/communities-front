@@ -22,13 +22,17 @@ export function useNegocios() {
   // Aplicar filtros locales
   const negociosFiltrados = lista.filter((negocio) => {
     const nombre = negocio.nombre?.toLowerCase?.() || "";
-    const categoriaNegocio = negocio.category?.name?.toLowerCase?.() || "";
     const categoriaFiltro =
       typeof categoria === "string" ? categoria.toLowerCase() : "todas";
 
     const coincideBusqueda = nombre.includes(busqueda.toLowerCase());
+
     const coincideCategoria =
-      categoriaFiltro === "todas" || categoriaNegocio === categoriaFiltro;
+      categoriaFiltro === "todas" ||
+      (Array.isArray(negocio.categories) &&
+        negocio.categories.some(
+          (cat) => cat?.name?.toLowerCase?.() === categoriaFiltro
+        ));
 
     return coincideBusqueda && coincideCategoria;
   });

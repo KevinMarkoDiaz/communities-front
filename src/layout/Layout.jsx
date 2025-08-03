@@ -33,7 +33,13 @@ export default function Layout() {
     "/inbox/conversation",
   ];
 
+  const hiddenSideAdsRoutes = ["/comunidades"];
+
   const hideAds = hiddenAdsRoutes.some((route) =>
+    location.pathname.startsWith(route)
+  );
+
+  const hideSideAds = hiddenSideAdsRoutes.some((route) =>
     location.pathname.startsWith(route)
   );
 
@@ -56,12 +62,12 @@ export default function Layout() {
         )}
 
         {/* Contenido principal */}
-        <div className="flex-1 flex flex-col md:gap-12 py-8 overflow-hidden xl:mx-[4rem]">
+        <div className="flex-1 flex flex-col md:gap-12 py-8 overflow-hidden mx-auto 2xl:max-w-[1440px]">
           <Outlet />
         </div>
 
         {/* Anuncios sticky a la derecha en desktop */}
-        {!hideAds && (
+        {!hideAds && !hideSideAds && (
           <div className="hidden lg:block">
             <StickyAds />
           </div>

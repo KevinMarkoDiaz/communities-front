@@ -36,9 +36,7 @@ export default function EventosProximos({ eventos = [], loading, imagen }) {
             >
               <CardDestacado
                 title={title}
-                image={
-                  featuredImage || `https://cdn.usegalileo.ai/sdxl10/${_id}.png`
-                }
+                image={featuredImage}
                 modo="vertical"
               />
             </Link>

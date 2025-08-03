@@ -10,15 +10,19 @@ export default function VistaComunidad() {
   const { comunidad, negocios, loaded } = useSelector(
     (state) => state.comunidadSeleccionada
   );
-
   const coordsRedux = useSelector((state) => state.ubicacion.coords);
 
   // ✅ Cargar negocios si hay comunidad y aún no se han cargado
   useEffect(() => {
-    if (comunidad?._id && !loaded) {
-      dispatch(cargarNegociosDeComunidad(comunidad._id));
+    if (comunidad?._id && !loaded && coordsRedux?.lat && coordsRedux?.lng) {
+      dispatch(
+        cargarNegociosDeComunidad({
+          communityId: comunidad._id,
+          coords: coordsRedux,
+        })
+      );
     }
-  }, [comunidad?._id, loaded, dispatch]);
+  }, [comunidad?._id, loaded, coordsRedux, dispatch]);
 
   // ✅ Obtener coordenadas desde el primer negocio si existen
   const primerNegocio = negocios.find(
@@ -30,7 +34,7 @@ export default function VistaComunidad() {
         lat: primerNegocio.ubicacion.coordenadas.lat,
         lng: primerNegocio.ubicacion.coordenadas.lng,
       }
-    : coordsRedux; // ✅ Usa coords globales si no hay negocios
+    : coordsRedux;
 
   if (!coords) {
     return (

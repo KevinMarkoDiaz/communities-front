@@ -35,7 +35,10 @@ export default function Pagination({
     onPageChange(page);
     scrollToGrid();
   };
-
+  console.log("🧭 Paginación", {
+    totalPages,
+    currentPage,
+  });
   return (
     <footer className="flex justify-center mt-12">
       <div className="flex max-w-[960px] w-full flex-col">

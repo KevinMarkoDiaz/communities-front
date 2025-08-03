@@ -33,6 +33,7 @@ export default function NegociosSugeridos({ negocios = [], loading, imagen }) {
               hasDiscount={false} // Lógica futura para descuentos
               isVerified={n.isVerified}
               modo="vertical"
+              logo={n.profileImage}
             />
           </Link>
         ))}

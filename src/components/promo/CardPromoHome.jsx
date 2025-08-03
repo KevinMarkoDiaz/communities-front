@@ -1,11 +1,37 @@
-export default function CardPromoHome({ title, image, descuento, maxClaims }) {
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+
+export default function CardPromoHome({
+  title,
+  image,
+  descuento,
+  maxClaims,
+  businessId, // 🆕 solo pasás el ID del negocio
+}) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  // 🔍 Obtener logo del negocio desde Redux por ID
+  const negocio = useSelector((state) =>
+    state.negocios.lista?.find((n) => n._id === businessId)
+  );
+  const businessLogo = negocio?.profileImage;
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   const isAgotado =
     maxClaims === 0 ||
     descuento === "0 disponibles" ||
     descuento?.includes("0 disponibles");
 
   return (
-    <div className="relative group z-0 w-[220px] sm:w-[280px] md:w-[300px] lg:w-[245px] xl:w-[225px] aspect-[4/6] md:aspect-[5/3] xl:aspect-[5/6] rounded-[1.5rem] overflow-hidden shadow-md bg-gray-100 transition hover:shadow-lg my-4">
+    <div className="relative group z-0 w-[220px] sm:w-[280px] md:w-[300px] lg:w-[245px] xl:w-[225px] aspect-[9/16] rounded-[1.5rem] overflow-hidden shadow-md bg-gray-100 transition hover:shadow-lg my-4">
       {/* Imagen de fondo */}
       {image && (
         <div
@@ -14,13 +40,22 @@ export default function CardPromoHome({ title, image, descuento, maxClaims }) {
         />
       )}
 
-      {/* Capa oscura al hacer hover */}
-      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-      {/* Contenido base (badges, verificación, cupón) */}
+      {/* Capa oscura activa en hover o siempre en mobile */}
       <div
-        className="m-4 transform transition-all duration-900 group-hover:-translate-y-1 group-hover:scale-105 text-sm font-semibold text-center rounded-full py-1.5 px-4 self-center shadow-md
-  bg-white text-gray-900"
+        className={`absolute inset-0 bg-black/50 transition-opacity duration-500 ${
+          isMobile ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+        }`}
+      />
+
+      {/* Badge de cupón */}
+      <div
+        className={`m-4 transform transition-all duration-900 text-xs md:text-sm font-semibold text-center rounded-full py-1.5 px-4 self-center shadow-md bg-white text-gray-900
+    ${
+      isMobile
+        ? "scale-105"
+        : "group-hover:-translate-y-1 group-hover:scale-105"
+    }
+  `}
       >
         {isAgotado ? (
           <span className="text-red-700">Cupones agotados</span>
@@ -29,9 +64,26 @@ export default function CardPromoHome({ title, image, descuento, maxClaims }) {
         )}
       </div>
 
-      {/* Capa con título que aparece al hacer hover */}
-      <div className="absolute bottom-0 left-0 right-0 h-full flex items-end justify-center opacity-0 translate-y-full group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 z-20 pointer-events-none">
-        <div className="w-full text-white text-lg  font-bold p-4 rounded-b-[1.5rem] whitespace-normal break-words leading-snug pointer-events-none">
+      {/* Logo del negocio abajo a la derecha */}
+      {businessLogo && (
+        <div className="absolute bottom-3 right-3 z-30">
+          <img
+            src={businessLogo}
+            alt="Logo del negocio"
+            className="w-16 h-16 rounded-full border-2 border-white shadow-md"
+          />
+        </div>
+      )}
+
+      {/* Título sobre fondo oscuro al final */}
+      <div
+        className={`absolute bottom-0 left-0 right-0 h-full flex items-end justify-center transition-all duration-500 z-20 pointer-events-none ${
+          isMobile
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-full group-hover:translate-y-0 group-hover:opacity-100"
+        }`}
+      >
+        <div className="w-full text-white text-lg font-bold p-4 rounded-b-[1.5rem] whitespace-normal break-words leading-snug pointer-events-none">
           {title}
         </div>
       </div>

@@ -38,18 +38,37 @@ const esquemaValidacion = [
     tags: Yup.string().nullable(),
   }),
   Yup.object({
+    isOnline: Yup.boolean(),
+
     location: Yup.object({
-      address: Yup.string().required("Dirección obligatoria"),
-      city: Yup.string().required("Ciudad obligatoria"),
-      state: Yup.string().required("Estado obligatorio"),
-      zipCode: Yup.string().required("Código postal obligatorio"),
-      country: Yup.string().required("País obligatorio"),
-      coordinates: Yup.object({
-        lat: Yup.number().nullable(),
-        lng: Yup.number().nullable(),
-      }).nullable(),
-    }).required("Ubicación obligatoria"),
+      address: Yup.string().when("isOnline", {
+        is: false,
+        then: (schema) => schema.required("Dirección obligatoria"),
+        otherwise: (schema) => schema.notRequired(),
+      }),
+      city: Yup.string().when("isOnline", {
+        is: false,
+        then: (schema) => schema.required("Ciudad obligatoria"),
+        otherwise: (schema) => schema.notRequired(),
+      }),
+      state: Yup.string().when("isOnline", {
+        is: false,
+        then: (schema) => schema.required("Estado obligatorio"),
+        otherwise: (schema) => schema.notRequired(),
+      }),
+      zipCode: Yup.string().when("isOnline", {
+        is: false,
+        then: (schema) => schema.required("Código postal obligatorio"),
+        otherwise: (schema) => schema.notRequired(),
+      }),
+      country: Yup.string().when("isOnline", {
+        is: false,
+        then: (schema) => schema.required("País obligatorio"),
+        otherwise: (schema) => schema.notRequired(),
+      }),
+    }),
   }),
+
   Yup.object({
     date: Yup.date().required("Fecha obligatoria"),
     time: Yup.string().required("Hora obligatoria"),
@@ -108,7 +127,6 @@ const valoresIniciales = {
     state: "",
     zipCode: "",
     country: "USA",
-    coordinates: { lat: null, lng: null },
   },
   image: null,
   images: [],

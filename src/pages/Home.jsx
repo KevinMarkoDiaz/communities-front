@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useSelector } from "react-redux";
 
@@ -9,14 +9,19 @@ import BusquedaList from "../components/home/BusquedaList";
 import VistaComunidad from "../components/VistaComunidad";
 import PromocionesDestacadas from "../components/home/PromocionesDestacadas";
 import bannerBTN from "../assets/bannerBTN.mp4";
+import GridResultadosGlobal from "../components/home/GridResultadosGlobal";
 
 export default function Home() {
+  const resultadosRef = useRef(null);
+  const [resaltado, setResaltado] = useState(false);
+
   const [activePanel, setActivePanel] = useState("map");
   const negocios = useSelector((state) => state.negocios.lista);
   const negociosLoading = useSelector((state) => state.negocios.loading);
 
   const eventos = useSelector((state) => state.eventos.lista);
   const eventosLoading = useSelector((state) => state.eventos.loading);
+  const resultados = useSelector((state) => state.busquedaGlobal.resultados);
 
   const comunidades = useSelector((state) => state.comunidades.lista);
   const comunidadesLoading = useSelector((state) => state.comunidades.loading);
@@ -33,7 +38,6 @@ export default function Home() {
           content="Explora negocios, eventos y servicios útiles para comunidades migrantes en tu ciudad."
         />
       </Helmet>
-
       {/* Mapa + Buscador */}
       <div className="relative flex flex-col lg:flex-row gap-4 min-h-[500px]">
         <div
@@ -57,9 +61,28 @@ export default function Home() {
             ${activePanel === "search" ? "lg:w-[75%]" : "lg:w-[25%]"}
           `}
         >
-          <BusquedaList />
+          <BusquedaList
+            onResultadosRef={resultadosRef}
+            onResaltar={() => {
+              setResaltado(true);
+              setTimeout(() => setResaltado(false), 1000); // dura 1s
+            }}
+          />
         </div>
       </div>
+      {resultados && resultados.length > 0 && (
+        <div
+          ref={resultadosRef}
+          className={`w-full px-4 sm:px-6 lg:px-8 xl:px-10 max-w-screen-xl mx-auto flex flex-col gap-8 py-10
+      transition-all duration-500
+      ${resaltado ? "md:ring-4 ring-sky-300/60 rounded-xl" : ""}
+      pt-[80px] -mt-[80px] scroll-mt-[180px]
+    `}
+        >
+          <GridResultadosGlobal resultados={resultados} />
+        </div>
+      )}
+
       {!comunidad ? (
         <div className="w-full max-w-5xl mx-auto px-4 mt-6 text-center">
           <div className="bg-gradient-to-r from-yellow-50 to-purple-50 p-4 rounded-xl shadow text-sm text-gray-700 font-medium">
@@ -102,7 +125,6 @@ export default function Home() {
           </button>
         </div>
       </div>
-
       {/* Secciones principales */}
       <div className="flex flex-col gap-12 md:gap-16 xl:gap-24 mt-12">
         <PromocionesDestacadas />

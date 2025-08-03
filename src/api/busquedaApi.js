@@ -5,9 +5,14 @@ import axiosInstance from "./axiosInstance";
  * @param {string} termino - término de búsqueda
  * @returns {Promise<Array>} resultados [{ tipo, ...datos }]
  */
-export async function fetchBusquedaGlobal(termino) {
+export async function fetchBusquedaGlobal(termino, coords = {}) {
+  const { lat, lng } = coords || {};
   const res = await axiosInstance.get("/busqueda", {
-    params: { q: termino },
+    params: {
+      q: termino,
+      lat,
+      lng,
+    },
   });
-  return res.data; // Asegurate de que backend devuelva: [{ tipo: "negocio", ... }]
+  return res.data;
 }

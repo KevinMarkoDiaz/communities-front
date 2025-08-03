@@ -90,11 +90,15 @@ export default function NegocioDetalleDashboard({
                 #{tag}
               </span>
             ))}
-            {negocio?.category && (
-              <span className="inline-block bg-black text-white text-xs font-medium px-2 py-1 rounded-full">
-                {negocio.category.name}
-              </span>
-            )}
+            {negocio?.categories?.length > 0 &&
+              negocio.categories.map((cat) => (
+                <span
+                  key={cat._id}
+                  className="inline-block bg-black text-white text-xs font-medium px-2 py-1 rounded-full"
+                >
+                  {cat.name}
+                </span>
+              ))}
           </div>
 
           {/* Link a perfil */}

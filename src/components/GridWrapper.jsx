@@ -6,11 +6,14 @@ const GridWrapper = forwardRef(
       tipo === "lista"
         ? "flex flex-col gap-4"
         : [
-            "grid justify-center",
-            "grid-cols-2", // mobile
-            "md:grid-cols-3", // md y lg
-            "xl:grid-cols-4", // xl+: dinámico
+            "grid",
+            "items-start", // alinea contenido arriba
+            "grid-cols-2",
+            "md:grid-cols-3",
+            "xl:grid-cols-4",
             "gap-y-8 gap-x-4 xl:gap-x-6",
+            "w-full", // ocupa ancho completo
+            "max-h-fit", // 👈 esto es lo que buscás
           ].join(" ");
 
     return (

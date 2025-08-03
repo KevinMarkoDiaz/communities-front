@@ -10,10 +10,10 @@ export function PhotoGallery({ galleryImages = [] }) {
   return (
     <div className="w-full">
       <h2 className="text-[#181411] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">
-        Fotos
+        Galeria
       </h2>
 
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-4 p-4">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-4 p-2">
         {visibleImages.map((url, idx) => (
           <button
             key={idx}

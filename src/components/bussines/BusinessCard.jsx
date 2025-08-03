@@ -6,28 +6,25 @@ export function BusinessCard({
   highlightText,
 }) {
   return (
-    <div className="p-4 @container">
-      <div className="flex flex-col items-stretch justify-start rounded-xl bg-white shadow-[0_0_4px_rgba(0,0,0,0.1)] @xl:flex-row @xl:items-start">
+    <div className="">
+      <div className="flex flex-row items-stretch bg-white rounded-2xl shadow-lg  transition-all overflow-hidden">
+        {/* Imagen cuadrada a la izquierda */}
         <div
-          className="w-full h-40 @xl:h-48 bg-center bg-no-repeat bg-cover rounded-xl @xl:rounded-l-xl @xl:rounded-r-none @xl:w-64"
+          className="w-[30vw] md:w-40 aspect-square bg-center bg-cover bg-no-repeat shrink-0"
           style={{ backgroundImage: `url("${imageUrl}")` }}
         ></div>
-        <div className="flex w-full min-w-72 grow flex-col items-stretch justify-center gap-1 py-4 px-4 @xl:px-4">
-          <p className="text-[#8a7460] text-sm font-normal leading-normal">
+
+        {/* Contenido */}
+        <div className="flex flex-col justify-between flex-grow gap-2 px-4 py-3">
+          <p className="text-xs md:text-sm text-gray-500 font-medium">
             {categoryName}
           </p>
-          <p className="text-[#181411] text-lg font-bold leading-tight tracking-[-0.015em]">
+          <p className="text-sm md:text-lg font-semibold text-gray-900">
             {businessName}
           </p>
-          <div className="flex items-end gap-3 justify-between">
-            <div className="flex flex-col gap-1">
-              <p className="text-[#8a7460] text-base font-normal leading-normal">
-                {businessDescription}
-              </p>
-              <p className="text-[#8a7460] text-base font-normal leading-normal">
-                {highlightText}
-              </p>
-            </div>
+
+          <div className="flex flex-col gap-1 text-xs text-gray-600">
+            <p className="line-clamp-2">{businessDescription}</p>
           </div>
         </div>
       </div>

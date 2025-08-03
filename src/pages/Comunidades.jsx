@@ -15,6 +15,7 @@ import BusquedaGlobalWrapper from "../components/search/BusquedaGlobalWrapper";
 import ResetBusquedaOnMount from "../utils/ResetBusquedaOnMount";
 
 import { fetchComunidades, setBusqueda } from "../store/comunidadesSlice";
+import SkeletonNegocioCard from "../components/Skeleton/SkeletonNegocioCard";
 
 export default function Comunidades() {
   const dispatch = useDispatch();
@@ -50,11 +51,10 @@ export default function Comunidades() {
     }
   };
 
-  if (loadingLista) return <Loading mensaje="Cargando comunidades..." />;
   if (error) return <div className="p-4 text-red-600">Error: {error}</div>;
 
   return (
-    <div className="flex flex-col gap-12 md:gap-16 xl:gap-24 mt-12">
+    <div className="flex flex-col gap-12 md:gap-16 xl:gap-24 mt-12 w-[1240px] 2xl:w-[1440px] mx-auto">
       <ResetBusquedaOnMount />
 
       <Helmet>
@@ -83,24 +83,28 @@ export default function Comunidades() {
           </div>
         </div>
 
-        <GridWrapper ref={gridRef} tipo="grid" className="min-h-[70vh]">
-          {comunidades.map((comunidad) => (
-            <Link
-              key={comunidad.id || comunidad._id}
-              to={`/comunidades/${comunidad.id || comunidad._id}`}
-              className="flex-shrink-0"
-            >
-              <CardLista
-                title={comunidad.name}
-                description={comunidad.description}
-                image={comunidad.bannerImage || comunidad.flagImage}
-                isVerified={comunidad.isVerified}
-                logo={comunidad.flagImage}
-              />
-            </Link>
-          ))}
-
-          {comunidades.length === 0 && (
+        <GridWrapper ref={gridRef} tipo="grid" className="min-h-[30vh]">
+          {loadingLista ? (
+            Array.from({ length: 12 }).map((_, i) => (
+              <SkeletonNegocioCard key={i} />
+            ))
+          ) : comunidades.length > 0 ? (
+            comunidades.map((comunidad) => (
+              <Link
+                key={comunidad.id || comunidad._id}
+                to={`/comunidades/${comunidad.id || comunidad._id}`}
+                className="flex-shrink-0"
+              >
+                <CardLista
+                  title={comunidad.name}
+                  description={comunidad.description}
+                  image={comunidad.bannerImage || comunidad.flagImage}
+                  isVerified={comunidad.isVerified}
+                  logo={comunidad.flagImage}
+                />
+              </Link>
+            ))
+          ) : (
             <p className="text-gray-500 w-full text-center">
               No se encontraron comunidades.
             </p>

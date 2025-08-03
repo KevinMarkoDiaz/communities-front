@@ -5,6 +5,8 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import Loading from "./Loading";
 import { fetchMapboxStyleWithRetry } from "../utils/fetchMapboxStyleWithRetry";
 import { estaAbiertoAhora } from "../utils/estaAbiertoAhora";
+import { FaQuestionCircle } from "react-icons/fa";
+import { PiChartPieSliceFill } from "react-icons/pi";
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
@@ -13,10 +15,11 @@ export default function MapaComunidad({ negocios, coords }) {
   const mapInstance = useRef(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [mapError, setMapError] = useState(false);
+  const [categoriasUnicas, setCategoriasUnicas] = useState([]);
+  const [mostrarLeyenda, setMostrarLeyenda] = useState(false);
 
   const userCoords = useSelector((state) => state.ubicacion.coords);
 
-  // 🗺️ Inicializar mapa
   useEffect(() => {
     if (!mapRef.current || mapInstance.current) return;
 
@@ -29,7 +32,7 @@ export default function MapaComunidad({ negocios, coords }) {
         const map = new mapboxgl.Map({
           container: mapRef.current,
           style: "mapbox://styles/mapbox/streets-v11",
-          center: [-74.006, 40.7128], // default temporal
+          center: [-74.006, 40.7128],
           zoom: 12,
           attributionControl: false,
         });
@@ -49,62 +52,74 @@ export default function MapaComunidad({ negocios, coords }) {
     initMap();
   }, []);
 
-  // 🎯 Agregar marcadores
   useEffect(() => {
     const map = mapInstance.current;
     if (!map || !isLoaded) return;
 
     const bounds = new mapboxgl.LngLatBounds();
-
-    // Limpiar marcadores antiguos
     document
       .querySelectorAll(".emoji-pin, .marker-usuario")
       .forEach((el) => el.remove());
 
-    negocios.forEach((n) => {
-      const coordsArray = n.location?.coordinates?.coordinates; // Esperado: [lng, lat]
+    const categorias = new Set();
 
-      if (
-        !Array.isArray(coordsArray) ||
-        coordsArray.length !== 2 ||
-        typeof coordsArray[0] !== "number" ||
-        typeof coordsArray[1] !== "number"
-      ) {
-        return;
-      }
+    negocios.forEach((n) => {
+      const coordsArray = n.location?.coordinates?.coordinates;
+      if (!Array.isArray(coordsArray) || coordsArray.length !== 2) return;
 
       const [lng, lat] = coordsArray;
+      const categoria = n.categories[0]?.name || "Sin categoría";
+      const colorCategoria = getColorByCategory(categoria);
+      categorias.add(categoria);
 
-      const el = document.createElement("div");
-      el.className = "emoji-pin";
-      el.innerHTML = `
-    <div style="position: relative; width: 30px; height: 30px;">
-      <div style="
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 30px;
-        height: 30px;
-        background-color: white;
-        border-radius: 50%;
-        box-shadow: 0 0 3px rgba(0,0,0,0.2);
-      "></div>
-      <span class="emoji" style="
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 22px;
-      ">${getEmoji(n.category)}</span>
-    </div>
-  `;
+      const wrapper = document.createElement("div");
+      wrapper.className = "emoji-pin";
+      wrapper.style.position = "absolute";
+      wrapper.style.zIndex = "1";
 
-      const estaAbierto = estaAbiertoAhora(n.openingHours);
+      const markerEl = document.createElement("div");
+      markerEl.style.width = "26px";
+      markerEl.style.height = "26px";
+      markerEl.style.borderRadius = "50%";
+      markerEl.style.overflow = "hidden";
+      markerEl.style.transition = "transform 0.2s ease";
+      markerEl.style.pointerEvents = "auto";
 
-      new mapboxgl.Marker(el)
-        .setLngLat([lng, lat])
-        .setPopup(
-          new mapboxgl.Popup({ offset: 25, closeButton: false }).setHTML(`
+      if (n.isPremium) {
+        markerEl.style.backgroundColor = "white";
+        markerEl.style.border = `1px solid ${colorCategoria}`;
+        markerEl.style.boxShadow = "0 0 6px rgba(0, 0, 0, 0.3)";
+        markerEl.style.width = "32px";
+        markerEl.style.height = "32px";
+        const img = document.createElement("img");
+        img.src = n.profileImage || "/placeholder.png";
+        img.alt = `Logo de ${n.name}`;
+        img.style.width = "100%";
+        img.style.height = "100%";
+        img.style.objectFit = "cover";
+        markerEl.appendChild(img);
+
+        wrapper.addEventListener("mouseenter", () => {
+          if (window.innerWidth >= 768) {
+            wrapper.style.zIndex = "9999";
+            markerEl.style.transform = "scale(4.4)";
+          }
+        });
+        wrapper.addEventListener("mouseleave", () => {
+          if (window.innerWidth >= 768) {
+            wrapper.style.zIndex = "1";
+            markerEl.style.transform = "scale(1)";
+          }
+        });
+      } else {
+        markerEl.style.backgroundColor = colorCategoria;
+        markerEl.style.border = "none";
+      }
+
+      wrapper.appendChild(markerEl);
+
+      const popup = new mapboxgl.Popup({ offset: 25, closeButton: false })
+        .setHTML(`
         <div class="w-[240px] rounded-xl shadow-2xl border border-white/10 bg-black/70 backdrop-blur-xs p-3">
           <div class="flex items-center gap-3">
             <img 
@@ -114,9 +129,7 @@ export default function MapaComunidad({ negocios, coords }) {
             />
             <div class="flex flex-col">
               <h3 class="text-sm font-semibold text-gray-100">${n.name}</h3>
-              <p class="text-[11px] text-gray-100 leading-tight">
-                ${n.category?.name || "Sin categoría"}
-              </p>
+              <p class="text-[11px] text-gray-100 leading-tight">${categoria}</p>
             </div>
           </div>
           <div class="flex justify-between items-center mt-3">
@@ -127,21 +140,24 @@ export default function MapaComunidad({ negocios, coords }) {
             </a>
             <div class="flex items-center gap-2 ml-2">
               ${
-                estaAbierto
+                estaAbiertoAhora(n.openingHours)
                   ? `<span class="pulsing-dot"></span><span class="text-[11px] text-green-400">Abierto ahora</span>`
                   : `<span class="text-[11px] text-red-400">Cerrado</span>`
               }
             </div>
           </div>
         </div>
-      `)
-        )
-        .addTo(map);
+      `);
 
+      new mapboxgl.Marker(wrapper)
+        .setLngLat([lng, lat])
+        .setPopup(popup)
+        .addTo(map);
       bounds.extend([lng, lat]);
     });
 
-    // 📍 Ubicación del usuario desde Redux
+    setCategoriasUnicas(Array.from(categorias));
+
     if (userCoords) {
       const el = document.createElement("div");
       el.className = "marker-usuario";
@@ -172,6 +188,32 @@ export default function MapaComunidad({ negocios, coords }) {
           <Loading />
         </div>
       )}
+
+      {/* Dropdown de leyenda de colores */}
+      <div className="absolute top-2 left-2 z-20">
+        <button
+          onClick={() => setMostrarLeyenda((prev) => !prev)}
+          className="flex items-center gap-1 bg-white text-gray-700 px-3 py-2 rounded shadow text-sm hover:bg-gray-100"
+        >
+          <PiChartPieSliceFill className="text-lg text-orange-500" />
+          <p className="text-xs">Categorias</p>
+        </button>
+
+        {mostrarLeyenda && (
+          <div className="absolute mt-2 w-max bg-black/50 backdrop-blur-sm rounded-md shadow p-3 text-xs text-white">
+            {categoriasUnicas.map((cat) => (
+              <div key={cat} className="flex items-center gap-2 py-1">
+                <div
+                  className="w-3 h-3 rounded-sm"
+                  style={{ backgroundColor: getColorByCategory(cat) }}
+                />
+                <span>{cat}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
       {!mapError && (
         <div
           ref={mapRef}
@@ -182,31 +224,28 @@ export default function MapaComunidad({ negocios, coords }) {
   );
 }
 
-function getEmoji(categoria) {
-  switch (categoria?.name) {
+// 🎨 Color asociado a cada categoría
+function getColorByCategory(nombre) {
+  switch (nombre) {
     case "Comida y Bebida":
-      return "🥗";
+      return "#fbbf24"; // naranja claro (honey)
     case "Salud y Bienestar":
-      return "⚕️";
-    case "Ciencia y Tecnología":
-      return "💻";
-    case "Belleza y Cuidado Personal":
-      return "✂️";
-    case "Bienes Raíces":
-      return "🏠";
-    case "Arte y Cultura":
-      return "🎨";
-    case "Mascotas":
-      return "🐾";
-    case "Educación":
-      return "📚";
+      return "#10b981"; // verde esmeralda
     case "Deporte y Fitness":
-      return "🏃";
-    case "Finanzas y Legales":
-      return "💼";
+      return "#3b82f6"; // azul vibrante
+    case "Belleza y Cuidado Personal":
+      return "#f9a8d4"; // rosa pálido
+    case "Educación":
+      return "#8b5cf6"; // violeta pastel
     case "Entretenimiento":
-      return "🎬";
+      return "#facc15"; // amarillo maíz
+    case "Mascotas":
+      return "#d6a35c"; // café claro (arena)
+    case "Finanzas y Legales":
+      return "#e5e7eb"; // gris claro / blanco roto
+    case "Arte y Cultura":
+      return "#7c3aed"; // morado profundo
     default:
-      return "📍";
+      return "#9ca3af"; // gris neutro medio
   }
 }

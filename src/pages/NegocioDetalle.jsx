@@ -24,6 +24,35 @@ import LikeButton from "../components/badges/LikeButton";
 import StarRating from "../components/badges/StarRating";
 import axiosInstance from "../api/axiosInstance";
 import { useSelector } from "react-redux";
+import PromocionesRelacionadas from "../components/bussines/PromocionesRelacionadas";
+import { estaAbiertoAhora } from "../utils/estaAbiertoAhora";
+import { MdAccessTime, MdCheckCircle } from "react-icons/md";
+
+function BadgeEstadoNegocio({ openingHours }) {
+  const abierto = estaAbiertoAhora(openingHours);
+
+  return (
+    <div
+      className={`inline-flex items-center gap-2 p-3 rounded-xl text-sm font-semibold shadow-md transition-all
+        ${abierto ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}
+      `}
+    >
+      {abierto ? (
+        <>
+          <MdCheckCircle className="text-green-600 text-lg" />
+          <span className="text-gray-600 ">¡Abierto ahora!</span>
+        </>
+      ) : (
+        <>
+          <MdAccessTime className="text-red-600 text-lg" />
+          <span className="text-red-600 ">
+            Estamos cerrados — consultá nuestros horarios para visitarnos
+          </span>
+        </>
+      )}
+    </div>
+  );
+}
 
 export default function NegocioDetalle() {
   const usuario = useSelector((state) => state.auth.usuario);
@@ -31,7 +60,7 @@ export default function NegocioDetalle() {
   const { id } = useParams();
   const [negocio, setNegocio] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState("horarios");
+  const [tab, setTab] = useState("galeria");
   const [yaSigue, setYaSigue] = useState(false);
 
   useEffect(() => {
@@ -85,7 +114,7 @@ export default function NegocioDetalle() {
   }
 
   return (
-    <div className="px-4 sm:px-8 lg:px-8 xl:px-40 py-5 flex justify-center">
+    <div className="px-4 sm:px-8 lg:px-8 py-5 flex justify-center">
       <div className="w-full max-w-[960px] flex flex-col gap-8">
         {/* Hero */}
         <BusinessHero
@@ -94,17 +123,13 @@ export default function NegocioDetalle() {
         />
 
         {/* Encabezado */}
-        <div className="space-y-3">
+        <div className="space-y-8">
           <div className="flex justify-between items-center flex-wrap gap-2">
-            <h1 className="text-2xl font-bold text-gray-900">{negocio.name}</h1>
-            {negocio.isVerified && (
-              <span className="flex items-center gap-2 w-fit px-2 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-medium">
-                <span className="relative flex h-3 w-3 items-center justify-center">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-blue-700"></span>
-                </span>
-                Verificado
-              </span>
+            <h1 className="hidden md:block text-2xl font-bold text-gray-900">
+              {negocio.name}
+            </h1>
+            {negocio.openingHours && (
+              <BadgeEstadoNegocio openingHours={negocio.openingHours} />
             )}
           </div>
 
@@ -129,23 +154,17 @@ export default function NegocioDetalle() {
               {negocio.location.state}
             </p>
           )}
-
           {/* Botones principales */}
-          <div className="flex flex-wrap gap-2 mt-2">
-            <UniversalFollowButton
-              entityType="business"
-              entityId={id}
-              initialFollowed={yaSigue}
-            />
-            <StartConversationButton entityType="business" entityId={id} />
-            <LikeButton
-              targetType="business"
-              targetId={id}
-              initialLikes={negocio.likes}
-            />
-            <StarRating targetType="business" targetId={id} />
+          <div className="mt-4 flex flex-col gap-3 md:flex-row md:flex-wrap">
+            <div className="flex flex-wrap gap-2 md:w-full md:justify-start">
+              <UniversalFollowButton
+                entityType="business"
+                entityId={id}
+                initialFollowed={yaSigue}
+              />
+              <StartConversationButton entityType="business" entityId={id} />
+            </div>
           </div>
-
           {/* Compartir */}
           <Compartir
             url={window.location.href}
@@ -166,14 +185,17 @@ export default function NegocioDetalle() {
         {/* Card visual */}
         <BusinessCard
           imageUrl={negocio.profileImage}
-          categoryName={negocio.category?.name}
+          categoryName={negocio.categories?.[0]?.name}
           businessName={negocio.name}
           highlightText={negocio.isVerified ? "Verificado por Communities" : ""}
         />
 
-        {negocio.category?.description && (
+        {negocio.categories?.length > 0 && (
           <p className="text-sm text-gray-500 italic">
-            {negocio.category.description}
+            {negocio.categories
+              .map((cat) => cat.description)
+              .filter(Boolean)
+              .join(" • ")}
           </p>
         )}
 
@@ -208,65 +230,113 @@ export default function NegocioDetalle() {
             <PhotoGallery galleryImages={negocio.images} />
           )}
           {tab === "redes" && negocio.contact?.socialMedia && (
-            <div className="space-y-3">
-              <h2 className="text-lg font-semibold text-gray-800 mb-2">
+            <div className="bg-white rounded-xl shadow-sm">
+              <h2 className="text-gray-900 text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">
                 Redes sociales
               </h2>
-              <div className="flex flex-col gap-2 text-sm">
+              <div className="flex flex-col">
                 {negocio.contact.socialMedia.instagram && (
-                  <a
-                    href={negocio.contact.socialMedia.instagram}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 hover:text-pink-600 transition"
-                  >
-                    <FaInstagram className="text-xl" />
-                    Instagram
-                  </a>
+                  <div className="flex items-center gap-4 bg-white px-4 min-h-[72px] py-2">
+                    <div className="flex items-center justify-center rounded-lg bg-gray-100 shrink-0 size-12">
+                      <FaInstagram size={20} className="text-pink-600" />
+                    </div>
+                    <div className="flex flex-col justify-center">
+                      <a
+                        href={negocio.contact.socialMedia.instagram}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-gray-900 text-base font-medium leading-normal hover:underline line-clamp-1 break-all"
+                      >
+                        {negocio.contact.socialMedia.instagram}
+                      </a>
+                      <p className="text-gray-500 text-sm font-normal leading-normal line-clamp-1">
+                        Instagram
+                      </p>
+                    </div>
+                  </div>
                 )}
                 {negocio.contact.socialMedia.facebook && (
-                  <a
-                    href={negocio.contact.socialMedia.facebook}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 hover:text-blue-600 transition"
-                  >
-                    <FaFacebook className="text-xl" />
-                    Facebook
-                  </a>
+                  <div className="flex items-center gap-4 bg-white px-4 min-h-[72px] py-2">
+                    <div className="flex items-center justify-center rounded-lg bg-gray-100 shrink-0 size-12">
+                      <FaFacebook size={20} className="text-blue-600" />
+                    </div>
+                    <div className="flex flex-col justify-center">
+                      <a
+                        href={negocio.contact.socialMedia.facebook}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-gray-900 text-base font-medium leading-normal hover:underline line-clamp-1 break-all"
+                      >
+                        {negocio.contact.socialMedia.facebook}
+                      </a>
+                      <p className="text-gray-500 text-sm font-normal leading-normal line-clamp-1">
+                        Facebook
+                      </p>
+                    </div>
+                  </div>
                 )}
                 {negocio.contact.socialMedia.twitter && (
-                  <a
-                    href={negocio.contact.socialMedia.twitter}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 hover:text-sky-500 transition"
-                  >
-                    <FaTwitter className="text-xl" />
-                    Twitter
-                  </a>
+                  <div className="flex items-center gap-4 bg-white px-4 min-h-[72px] py-2">
+                    <div className="flex items-center justify-center rounded-lg bg-gray-100 shrink-0 size-12">
+                      <FaTwitter size={20} className="text-sky-500" />
+                    </div>
+                    <div className="flex flex-col justify-center">
+                      <a
+                        href={negocio.contact.socialMedia.twitter}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-gray-900 text-base font-medium leading-normal hover:underline line-clamp-1 break-all"
+                      >
+                        {negocio.contact.socialMedia.twitter}
+                      </a>
+                      <p className="text-gray-500 text-sm font-normal leading-normal line-clamp-1">
+                        Twitter
+                      </p>
+                    </div>
+                  </div>
                 )}
                 {negocio.contact.socialMedia.youtube && (
-                  <a
-                    href={negocio.contact.socialMedia.youtube}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 hover:text-red-600 transition"
-                  >
-                    <FaYoutube className="text-xl" />
-                    YouTube
-                  </a>
+                  <div className="flex items-center gap-4 bg-white px-4 min-h-[72px] py-2">
+                    <div className="flex items-center justify-center rounded-lg bg-gray-100 shrink-0 size-12">
+                      <FaYoutube size={20} className="text-red-600" />
+                    </div>
+                    <div className="flex flex-col justify-center">
+                      <a
+                        href={negocio.contact.socialMedia.youtube}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-gray-900 text-base font-medium leading-normal hover:underline line-clamp-1 break-all"
+                      >
+                        {negocio.contact.socialMedia.youtube}
+                      </a>
+                      <p className="text-gray-500 text-sm font-normal leading-normal line-clamp-1">
+                        YouTube
+                      </p>
+                    </div>
+                  </div>
                 )}
                 {negocio.contact.socialMedia.whatsapp && (
-                  <a
-                    href={negocio.contact.socialMedia.whatsapp}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 hover:text-green-500 transition"
-                  >
-                    <FaWhatsapp className="text-xl" />
-                    WhatsApp
-                  </a>
+                  <div className="flex items-center gap-4 bg-white px-4 min-h-[72px] py-2">
+                    <div className="flex items-center justify-center rounded-lg bg-gray-100 shrink-0 size-12">
+                      <FaWhatsapp size={20} className="text-green-500" />
+                    </div>
+                    <div className="flex flex-col justify-center">
+                      <a
+                        href={`https://wa.me/${negocio.contact.socialMedia.whatsapp.replace(
+                          /[^\d]/g,
+                          ""
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-gray-900 text-base font-medium leading-normal hover:underline line-clamp-1 break-all"
+                      >
+                        {negocio.contact.socialMedia.whatsapp}
+                      </a>
+                      <p className="text-gray-500 text-sm font-normal leading-normal line-clamp-1">
+                        WhatsApp
+                      </p>
+                    </div>
+                  </div>
                 )}
               </div>
             </div>
@@ -276,6 +346,7 @@ export default function NegocioDetalle() {
             <ContactCard contact={negocio.contact} />
           )}
         </div>
+        <PromocionesRelacionadas businessId={negocio._id} />
 
         {/* Mapa y comunidad */}
         <div className="pt-6 flex flex-col gap-4">
@@ -286,27 +357,37 @@ export default function NegocioDetalle() {
               </h2>
               <Link
                 to={`/comunidades/${negocio.community._id}`}
-                className="flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 text-sm text-gray-700 hover:bg-gray-200"
+                className="w-fit flex items-center gap-2 p-2 rounded-full bg-gray-200 text-sm text-gray-700 hover:bg-gray-200"
               >
                 <img
                   src={negocio.community.flagImage || "/placeholder-flag.png"}
                   alt="bandera"
-                  className="h-4 w-4 rounded-full object-cover"
+                  className="h-8 w-8 rounded-full object-cover"
                 />
                 {negocio.community.name}
               </Link>
             </div>
           )}
-          {negocio.location?.coordinates?.lat &&
-            negocio.location?.coordinates?.lng && (
+          {Array.isArray(negocio.location?.coordinates.coordinates) &&
+            negocio.location.coordinates.coordinates.length === 2 && (
               <MapaNegocioDetalle
-                lat={negocio.location.coordinates.lat}
-                lng={negocio.location.coordinates.lng}
+                lat={negocio.location.coordinates.coordinates[1]}
+                lng={negocio.location.coordinates.coordinates[0]}
                 name={negocio.name}
               />
             )}
         </div>
-
+        {/* Botones principales */}
+        <div className="mt-4 flex flex-col gap-3 md:flex-row md:flex-wrap">
+          <div className="flex flex-wrap gap-2 md:w-full md:justify-between">
+            <LikeButton
+              targetType="business"
+              targetId={id}
+              initialLikes={negocio.likes}
+            />
+            <StarRating targetType="business" targetId={id} />
+          </div>
+        </div>
         {/* Comentarios */}
         <CommentsSection targetType="business" targetId={id} />
       </div>

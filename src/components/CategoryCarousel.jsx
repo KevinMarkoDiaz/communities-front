@@ -1,20 +1,49 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setCategoria } from "../store/negociosSlice";
 import { fetchCategorias } from "../store/categoriasSlice";
 import ScrollCarousel from "./ScrollCarousel";
 
-export default function CategoryCarousel() {
+// slices
+import {
+  setCategoria as setCategoriaNegocios,
+  obtenerNegocios,
+} from "../store/negociosSlice";
+import {
+  setCategoria as setCategoriaEventos,
+  obtenerEventos,
+} from "../store/eventosSlice";
+
+export default function CategoryCarousel({ tipo = "negocios" }) {
   const dispatch = useDispatch();
-  const categoriaSeleccionada = useSelector(
-    (state) => state.negocios.categoria
+
+  const categoriaSeleccionada = useSelector((state) =>
+    tipo === "eventos" ? state.eventos.categoria : state.negocios.categoria
   );
+
   const categorias = useSelector((state) => state.categorias.data);
   const loading = useSelector((state) => state.categorias.loading);
 
   useEffect(() => {
     dispatch(fetchCategorias());
   }, [dispatch]);
+
+  const handleSeleccionCategoria = (valor) => {
+    if (tipo === "eventos") {
+      dispatch(setCategoriaEventos(valor));
+      if (valor === "todas") {
+        dispatch(obtenerEventos({ page: 1 }));
+      } else {
+        dispatch(obtenerEventos({ all: true }));
+      }
+    } else {
+      dispatch(setCategoriaNegocios(valor));
+      if (valor === "todas") {
+        dispatch(obtenerNegocios({ page: 1 }));
+      } else {
+        dispatch(obtenerNegocios({ all: true }));
+      }
+    }
+  };
 
   return (
     <div className="mt-4">
@@ -35,11 +64,11 @@ export default function CategoryCarousel() {
               return (
                 <button
                   key={cat._id}
-                  onClick={() => dispatch(setCategoria(valor))}
-                  className={`group flex flex-col gap-2 flex-shrink-0 snap-start cursor-pointer
-                    w-[40vw] aspect-square sm:w-[140px] md:w-[160px]
-                    rounded-lg text-left ring-offset-1 transition
-                    ${seleccionada ? "ring-2 ring-[#f4c753]" : ""}
+                  onClick={() => handleSeleccionCategoria(valor)}
+                  className={`group flex flex-col gap-2 flex-shrink-0 snap-start p-2 cursor-pointer
+                    w-[40vw] aspect-square md:w-[205px]
+                    rounded-2xl text-left ring-offset-6 transition
+${seleccionada ? "border-4 border-[#f4c753]" : "border border-transparent"}
                   `}
                 >
                   <div
@@ -72,7 +101,7 @@ export default function CategoryCarousel() {
                       </svg>
                     )}
                   </div>
-                  <p className="text-[#181411] text-sm font-medium leading-tight truncate mt-1 transition-colors duration-200 group-hover:text-orange-600">
+                  <p className="line-clamp-2 text-[#181411] text-sm font-medium leading-tight mt-1 transition-colors duration-200 ">
                     {cat.name}
                   </p>
                 </button>
@@ -80,11 +109,10 @@ export default function CategoryCarousel() {
             })}
           </ScrollCarousel>
 
-          {/* Botón "Todas las categorías" debajo */}
           <div className="px-4 pt-3">
             <button
-              onClick={() => dispatch(setCategoria("todas"))}
-              className="text-md font-semibold text-[#181411] cursor-pointer transition"
+              onClick={() => handleSeleccionCategoria("todas")}
+              className="mt-4 inline-block bg-white text-[#181411] font-semibold text-sm md:text-base px-4 py-2 border border-gray-300 rounded-lg shadow-md hover:bg-orange-500 hover:text-white transition-colors duration-200"
             >
               Todas las categorías
             </button>

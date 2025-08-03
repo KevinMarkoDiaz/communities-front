@@ -61,7 +61,7 @@ export default function SidebarComunidadMobile() {
   return (
     <>
       {/* Sidebar Desktop */}
-      <aside className="hidden 2xl:flex flex-col justify-between w-[230px] mt-20 p-6 shadow-lg h-[60vh] overflow-hidden relative bg-gradient-to-b from-[#fff7ec] to-[#f3e8ff]">
+      <aside className="hidden 2xl:flex flex-col justify-between  2xl:w-[12vw] mt-20 p-2  shadow-lg h-[60vh] overflow-hidden relative bg-gradient-to-b from-[#fff7ec] to-[#f3e8ff]">
         <div className="space-y-4">
           <div>
             <img
@@ -82,7 +82,6 @@ export default function SidebarComunidadMobile() {
             onChange={handleSelectChange}
             options={opciones}
             placeholder="Elegí con cuál te sentís parte"
-            isClearable
             isSearchable={false}
             styles={customSelectStylesRefinado}
             classNamePrefix="rs"
@@ -92,7 +91,7 @@ export default function SidebarComunidadMobile() {
       </aside>
 
       {/* Botón flotante Mobile con animación */}
-      <div className="2xl:hidden ">
+      <div className="2xl:hidden">
         <AnimatePresence>
           {!mostrarDropdown && (
             <motion.button

@@ -1,33 +1,54 @@
-// components/ui/ModalFeedback.jsx
 import { useSelector, useDispatch } from "react-redux";
 import { ocultarFeedback } from "../../store/feedbackSlice";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import {
+  AiOutlineCheckCircle,
+  AiOutlineCloseCircle,
+  AiOutlineLoading3Quarters,
+} from "react-icons/ai";
 
 export default function ModalFeedback() {
   const dispatch = useDispatch();
   const { visible, message, type } = useSelector((state) => state.feedback);
+  const timerRef = useRef(null);
 
   useEffect(() => {
-    if (visible) {
-      const timer = setTimeout(() => {
-        dispatch(ocultarFeedback());
-      }, 3000); // se oculta luego de 3s
-      return () => clearTimeout(timer);
-    }
-  }, [visible, dispatch]);
+    if (!visible || type === "loading") return;
+
+    timerRef.current = setTimeout(() => {
+      dispatch(ocultarFeedback());
+    }, 3000);
+
+    return () => clearTimeout(timerRef.current);
+  }, [visible, type, dispatch]);
 
   if (!visible) return null;
 
+  // 🔥 Colores fuertes por tipo
+  const colorClasses = {
+    success: "bg-green-500 text-white",
+    error: "bg-red-500 text-white",
+    loading: "bg-sky-500 text-white",
+  };
+
+  const iconos = {
+    success: <AiOutlineCheckCircle className="text-white text-xl" />,
+    error: <AiOutlineCloseCircle className="text-white text-xl" />,
+    loading: (
+      <AiOutlineLoading3Quarters className="animate-spin text-white text-xl" />
+    ),
+  };
+
   return (
-    <div className="fixed top-5 right-5 z-[999]">
+    <div className="fixed bottom-5 right-5 z-[999] flex items-end justify-end">
       <div
-        className={`rounded-lg px-4 py-3 shadow-lg text-sm font-medium ${
-          type === "success"
-            ? "bg-green-100 text-green-700 border border-green-300"
-            : "bg-red-100 text-red-700 border border-red-300"
-        }`}
+        className={`rounded-xl px-5 py-4 text-sm font-semibold flex items-center gap-3 
+          shadow-2xl shadow-black/30 animate-slide-in-up
+          ${colorClasses[type]}
+        `}
       >
-        {message}
+        {iconos[type]}
+        <span>{message}</span>
       </div>
     </div>
   );

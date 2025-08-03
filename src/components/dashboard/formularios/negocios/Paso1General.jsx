@@ -40,7 +40,6 @@ export default function Paso1General({ categorias = [], comunidades = [] }) {
           placeholder="Describe tu negocio"
           className="form-textarea cursor-default w-full h-42 xl:h-82 bg-white/10 border border-white/30 rounded-lg px-4 py-3 placeholder:text-gray-300 focus:outline-none resize-none overflow-y-auto custom-scroll"
         />
-
         <ErrorMessage
           name="description"
           component="div"
@@ -48,31 +47,32 @@ export default function Paso1General({ categorias = [], comunidades = [] }) {
         />
       </div>
 
-      {/* Categoría */}
+      {/* Categorías (múltiples) */}
       <div>
         <label className="block text-sm font-medium text-white mb-1">
-          Categoría
+          Categorías
         </label>
         <Select
+          isMulti
           menuPlacement="top"
           options={categorias.map((c) => ({
             value: c._id,
             label: c.name,
           }))}
-          placeholder="Selecciona una categoría..."
+          placeholder="Selecciona una o más categorías..."
           styles={customSelectStylesForm}
-          value={
-            categorias
-              .filter((c) => c._id === values.category)
-              .map((c) => ({
-                value: c._id,
-                label: c.name,
-              }))[0] || null
+          value={categorias
+            .filter((c) => values.categories?.includes(c._id))
+            .map((c) => ({ value: c._id, label: c.name }))}
+          onChange={(selected) =>
+            setFieldValue(
+              "categories",
+              selected ? selected.map((opt) => opt.value) : []
+            )
           }
-          onChange={(selected) => setFieldValue("category", selected?.value)}
         />
         <ErrorMessage
-          name="category"
+          name="categories"
           component="div"
           className="text-red-500 text-sm mt-1"
         />

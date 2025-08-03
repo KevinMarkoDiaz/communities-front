@@ -1,4 +1,3 @@
-// ✅ negociosSlice.js completo con paginación geolocalizada
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   getAllBusinesses,
@@ -7,13 +6,18 @@ import {
   updateBusiness,
   createBusiness,
   getAllBusinessesByCommunity,
+  getAllBusinessesForMap,
+  getBusinessesForMapByCommunity, // ✅ nuevo
 } from "../api/businessApi";
 import { mostrarFeedback } from "./feedbackSlice";
 import { resetApp } from "./appActions";
 
 export const obtenerNegocios = createAsyncThunk(
   "negocios/fetch",
-  async ({ page = 1 } = {}, { rejectWithValue, dispatch, getState }) => {
+  async (
+    { page = 1, all = false } = {},
+    { rejectWithValue, dispatch, getState }
+  ) => {
     try {
       const state = getState();
       const coords = state.ubicacion?.coords;
@@ -26,13 +30,12 @@ export const obtenerNegocios = createAsyncThunk(
         lat: coords.lat,
         lng: coords.lng,
         page,
-        limit: 15,
+        limit: all ? 9999 : 15,
       };
 
       const res = await getAllBusinesses(params);
-
       return {
-        negocios: res,
+        negocios: res.businesses,
         totalPages: Math.ceil(res.total / res.perPage),
         currentPage: res.page,
       };
@@ -69,6 +72,46 @@ export const fetchNegociosPorComunidad = createAsyncThunk(
       const { negocios } = getState();
       return !negocios.loaded || negocios.lista.length === 0;
     },
+  }
+);
+
+export const fetchNegociosMapa = createAsyncThunk(
+  "negocios/fetchMapa",
+  async (params = {}, { rejectWithValue, dispatch }) => {
+    try {
+      const data = await getAllBusinessesForMap(params);
+      return Array.isArray(data) ? data : data.businesses || [];
+    } catch (error) {
+      dispatch(
+        mostrarFeedback({
+          message: "No se pudieron cargar negocios para el mapa",
+          type: "error",
+        })
+      );
+      return rejectWithValue(error.message || "Error al cargar mapa");
+    }
+  }
+);
+
+export const fetchNegociosMapaPorComunidad = createAsyncThunk(
+  "negocios/fetchMapaPorComunidad",
+  async ({ communityId, coords }, { rejectWithValue, dispatch }) => {
+    try {
+      const data = await getBusinessesForMapByCommunity(communityId, {
+        lat: coords.lat,
+        lng: coords.lng,
+      });
+      return Array.isArray(data) ? data : data.businesses || [];
+    } catch (error) {
+      dispatch(
+        mostrarFeedback({
+          message:
+            "No se pudieron cargar negocios de la comunidad para el mapa",
+          type: "error",
+        })
+      );
+      return rejectWithValue(error.message || "Error al cargar negocios");
+    }
   }
 );
 
@@ -123,6 +166,7 @@ export const deleteNegocio = createAsyncThunk(
 export const createBusinessThunk = createAsyncThunk(
   "negocios/create",
   async (formData, { rejectWithValue, dispatch }) => {
+    dispatch(mostrarFeedback({ message: "Procesando...", type: "loading" }));
     try {
       const res = await createBusiness(formData);
       dispatch(
@@ -147,6 +191,7 @@ export const createBusinessThunk = createAsyncThunk(
 export const updateBusinessThunk = createAsyncThunk(
   "negocios/update",
   async ({ id, formData }, { rejectWithValue, dispatch }) => {
+    dispatch(mostrarFeedback({ message: "Procesando...", type: "loading" }));
     try {
       const res = await updateBusiness(id, formData);
       dispatch(
@@ -171,6 +216,7 @@ export const updateBusinessThunk = createAsyncThunk(
 
 const initialState = {
   lista: [],
+  negociosMapa: [],
   misNegocios: [],
   loading: false,
   misLoading: false,
@@ -202,9 +248,7 @@ const negociosSlice = createSlice({
       })
       .addCase(obtenerNegocios.fulfilled, (state, action) => {
         state.loading = false;
-        state.lista = Array.isArray(action.payload.negocios)
-          ? action.payload.negocios
-          : [];
+        state.lista = action.payload.negocios || [];
         state.totalPages = action.payload.totalPages;
         state.currentPage = action.payload.currentPage;
         state.loaded = true;
@@ -230,6 +274,26 @@ const negociosSlice = createSlice({
         state.lista = [];
       })
 
+      .addCase(fetchNegociosMapa.fulfilled, (state, action) => {
+        state.negociosMapa = Array.isArray(action.payload)
+          ? action.payload
+          : [];
+      })
+      .addCase(fetchNegociosMapa.rejected, (state, action) => {
+        state.negociosMapa = [];
+        state.error = action.payload;
+      })
+
+      .addCase(fetchNegociosMapaPorComunidad.fulfilled, (state, action) => {
+        state.negociosMapa = Array.isArray(action.payload)
+          ? action.payload
+          : [];
+      })
+      .addCase(fetchNegociosMapaPorComunidad.rejected, (state, action) => {
+        state.negociosMapa = [];
+        state.error = action.payload;
+      })
+
       .addCase(fetchMisNegocios.pending, (state) => {
         state.misLoading = true;
         state.error = null;
@@ -249,9 +313,6 @@ const negociosSlice = createSlice({
         state.misNegocios = state.misNegocios.filter(
           (n) => n._id !== action.payload
         );
-      })
-      .addCase(deleteNegocio.rejected, (state, action) => {
-        state.error = action.payload;
       })
 
       .addCase(resetApp, () => initialState);

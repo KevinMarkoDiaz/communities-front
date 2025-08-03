@@ -1,16 +1,28 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axiosInstance from "../../api/axiosInstance";
 import { MdChatBubbleOutline } from "react-icons/md";
 import { mostrarFeedback } from "../../store/feedbackSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function StartConversationButton({ entityType, entityId }) {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
+  const usuario = useSelector((state) => state.auth.usuario);
 
   const handleStartConversation = async () => {
+    if (!usuario) {
+      dispatch(
+        mostrarFeedback({
+          message: "Debes iniciar sesión para enviar un mensaje.",
+          type: "error",
+        })
+      );
+      return;
+    }
+
     setLoading(true);
     try {
       const res = await axiosInstance.post("/conversations", {
@@ -35,19 +47,21 @@ export default function StartConversationButton({ entityType, entityId }) {
     <button
       onClick={handleStartConversation}
       disabled={loading}
-      className={`flex items-center justify-center gap-1 shadow-md hover:shadow-lg px-2 py-1 rounded border border-gray-300 transition text-xs font-medium ${
-        loading
-          ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-          : "bg-white text-orange-600 hover:bg-gray-50"
-      }`}
+      className={`flex items-center gap-2 px-4 py-1.5 rounded-xl transition-all shadow-md text-sm font-semibold
+        ${
+          loading
+            ? "bg-gray-100 text-gray-400 border border-gray-300 cursor-not-allowed"
+            : "bg-white hover:bg-blue-50 text-blue-600 border border-blue-300"
+        }
+      `}
       title="Enviar mensaje"
     >
       {loading ? (
-        "Abriendo chat..."
+        <span className="animate-pulse">Abriendo chat...</span>
       ) : (
         <>
-          <MdChatBubbleOutline className="text-base" />
-          <span className="hidden sm:inline">Enviar mensaje</span>
+          <MdChatBubbleOutline className="text-lg" />
+          <span className="sm:inline">Habla con nosotros</span>
         </>
       )}
     </button>

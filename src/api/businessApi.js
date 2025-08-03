@@ -37,7 +37,7 @@ export async function updateBusiness(id, formData) {
 export const getAllBusinesses = async (params = {}) => {
   const query = new URLSearchParams(params).toString();
   const res = await axiosInstance.get(`/businesses?${query}`);
-  return res.data.businesses;
+  return res.data;
 };
 
 /**
@@ -100,5 +100,22 @@ export async function contarNegocios() {
 
 export const getAllBusinessesByCommunity = async (communityId) => {
   const res = await axiosInstance.get(`/businesses/community/${communityId}`);
+  return res.data.businesses;
+};
+
+export const getAllBusinessesForMap = async (params = {}) => {
+  const query = new URLSearchParams(params).toString();
+  const res = await axiosInstance.get(`/businesses/map?${query}`);
+  return res.data.businesses;
+};
+
+export const getBusinessesForMapByCommunity = async (
+  communityId,
+  params = {}
+) => {
+  const query = new URLSearchParams(params).toString();
+  const res = await axiosInstance.get(
+    `/businesses/map/${communityId}?${query}`
+  );
   return res.data.businesses;
 };

@@ -14,21 +14,28 @@ export default function SearchBarGlobal({
   };
 
   return (
-    <div className="px-4 py-3">
+    <div className="px-4 py-3 flex">
       <div
         className="
+        
           flex items-center gap-2
-          bg-black/60 backdrop-blur-md
-          rounded-xl
-          overflow-hidden
-          h-12
-          transition
-          focus-within:ring-2 focus-within:ring-white/30
+          bg-white/50 backdrop-blur-md
+          border border-sky-400
+          rounded-2xl
+          h-12 px-4
+          shadow-2xl
+          transition-all
+          focus-within:border-sky-400
+          focus-within:ring-2
+          focus-within:ring-sky-300/40
+          w-full max-w-[400px]
         "
       >
-        <FiSearch className="text-white ml-3" size={18} />
+        <FiSearch className="text-black " />
         <input
           type="text"
+          inputMode="search"
+          autoComplete="off"
           value={value}
           onChange={(e) => {
             onChange(e.target.value);
@@ -43,8 +50,9 @@ export default function SearchBarGlobal({
             bg-transparent
             border-none
             outline-none
-            text-sm
-            text-white placeholder:text-white/80
+            text-base
+            text-black
+            placeholder:text-black
           "
         />
       </div>

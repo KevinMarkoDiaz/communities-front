@@ -6,6 +6,7 @@ import {
   FaLink,
   FaShareAlt,
 } from "react-icons/fa";
+
 export default function Compartir({
   url,
   title = "Mirá esto en Communities",
@@ -42,14 +43,17 @@ export default function Compartir({
   const showNativeShare = typeof window !== "undefined" && navigator.share;
 
   return (
-    <div className="w-full bg-white px-4 py-5">
-      <h2 className="text-gray-900 text-lg font-semibold mb-3">Compartir</h2>
-      <div className="flex flex-wrap items-center gap-4 text-xl">
+    <div className="w-full bg-white ">
+      <h2 className="text-gray-900 text-base sm:text-lg font-semibold mb-4">
+        Compartilo con alguien — juntos creamos comunidad{" "}
+      </h2>
+
+      <div className="flex flex-wrap items-center gap-3 text-xl sm:text-2xl">
         {showNativeShare ? (
           <button
             onClick={handleNativeShare}
-            className="text-gray-600 hover:text-black"
-            title="Compartir"
+            className="rounded-full p-3 bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-black transition"
+            title="Compartir desde tu dispositivo"
           >
             <FaShareAlt />
           </button>
@@ -59,8 +63,8 @@ export default function Compartir({
               href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-600 hover:text-blue-800"
-              title="Facebook"
+              className="rounded-full p-3 bg-blue-100 hover:bg-blue-200 text-blue-600 hover:text-blue-800 transition"
+              title="Compartir en Facebook"
             >
               <FaFacebookF />
             </a>
@@ -68,8 +72,8 @@ export default function Compartir({
               href={`https://wa.me/?text=${encodedTitle}%20${encodedUrl}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-green-500 hover:text-green-700"
-              title="WhatsApp"
+              className="rounded-full p-3 bg-green-100 hover:bg-green-200 text-green-600 hover:text-green-800 transition"
+              title="Compartir en WhatsApp"
             >
               <FaWhatsapp />
             </a>
@@ -77,8 +81,8 @@ export default function Compartir({
               href={`https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sky-500 hover:text-sky-700"
-              title="X"
+              className="rounded-full p-3 bg-sky-100 hover:bg-sky-200 text-sky-600 hover:text-sky-800 transition"
+              title="Compartir en X"
             >
               <FaTwitter />
             </a>
@@ -87,14 +91,16 @@ export default function Compartir({
 
         <button
           onClick={handleCopy}
-          className="text-gray-600 hover:text-black"
+          className="rounded-full p-3 bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-black transition"
           title="Copiar enlace"
         >
           <FaLink />
         </button>
 
         {copiado && (
-          <span className="text-sm text-green-600 ml-2">¡Enlace copiado!</span>
+          <span className="text-sm text-green-600 font-medium ml-1 animate-fade-in">
+            ¡Enlace copiado!
+          </span>
         )}
       </div>
     </div>

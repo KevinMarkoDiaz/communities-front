@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getAllBusinessesByCommunity } from "../api/businessApi";
+import { getBusinessesForMapByCommunity } from "../api/businessApi";
 import { mostrarFeedback } from "./feedbackSlice";
 
 // ✅ Estado inicial cargado desde localStorage
@@ -7,15 +7,18 @@ const stored = JSON.parse(localStorage.getItem("comunidadSeleccionada"));
 const initialState = stored || {
   comunidad: null,
   negocios: [],
-  loaded: false, // ✅ nueva bandera
+  loaded: false,
 };
 
-// ✅ Thunk: cargar negocios de una comunidad
+// ✅ Thunk usando coordenadas + comunidad (para mapa)
 export const cargarNegociosDeComunidad = createAsyncThunk(
   "comunidadSeleccionada/cargarNegocios",
-  async (communityId, { rejectWithValue, dispatch }) => {
+  async ({ communityId, coords }, { rejectWithValue, dispatch }) => {
     try {
-      const negocios = await getAllBusinessesByCommunity(communityId);
+      const negocios = await getBusinessesForMapByCommunity(
+        communityId,
+        coords
+      );
       return Array.isArray(negocios) ? negocios : negocios.businesses || [];
     } catch (error) {
       dispatch(
@@ -63,7 +66,7 @@ const comunidadSeleccionadaSlice = createSlice({
         localStorage.setItem("comunidadSeleccionada", JSON.stringify(nueva));
       })
       .addCase(cargarNegociosDeComunidad.rejected, (state) => {
-        state.loaded = true; // ✅ Evita retry loop en caso de error
+        state.loaded = true; // ✅ evita retry loop
       });
   },
 });

@@ -55,37 +55,19 @@ export default function Promociones() {
 
     return (
       <section className="">
-        {/* Título decorado */}
         <FadeInOnScroll direction="up" duration={600} delay={100}>
           <div className="text-left mb-4">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl text-gray-900 font-normal">
-              {/* Línea 1 */}
-              <div className="relative inline-block mb-1">
-                <span
-                  style={{ fontFamily: '"Dancing Script", cursive' }}
-                  className="relative z-10"
-                >
-                  {linea1}
-                </span>
-                <span
-                  className="absolute left-0 right-0 bottom-0 h-2 bg-lime-300/60 z-0 rounded"
-                  style={{ transform: "skewX(-12deg)" }}
-                />
-              </div>
-
-              {/* Línea 2 */}
-              <div className="relative inline-block ml-4">
-                <span
-                  style={{ fontFamily: '"Dancing Script", cursive' }}
-                  className="relative z-10"
-                >
-                  {linea2}
-                </span>
-                <span
-                  className="absolute left-0 right-0 bottom-0 h-2 bg-lime-300/60 z-0 rounded"
-                  style={{ transform: "skewX(-12deg)" }}
-                />
-              </div>
+            <h2 className="text-md md:text-xl font-bold text-gray-800 relative inline-block">
+              <span className="relative z-10">{`${linea1} ${linea2}`}</span>
+              <span
+                className="absolute bottom-0 h-2 bg-lime-300/60 z-0 rounded"
+                style={{
+                  transform: "skewX(-12deg)",
+                  left: "-4px",
+                  right: "-4px",
+                  boxShadow: "0 4px 6px -2px rgba(0, 0, 0, 0.2)", // sombra solo hacia abajo
+                }}
+              />
             </h2>
           </div>
         </FadeInOnScroll>
@@ -117,21 +99,23 @@ export default function Promociones() {
                     isNew={promo.type === "promo_fin_de_semana"}
                     hasDiscount={promo.type === "descuentos_imperdibles"}
                     descuento={
-                      remaining !== null
-                        ? `${remaining} disponibles`
-                        : "disponible"
+                      promo.maxClaims === 0
+                        ? "0 disponibles"
+                        : typeof promo.maxClaims === "number"
+                        ? `Quedan ${promo.maxClaims} cupones`
+                        : "No te la pierdas"
                     }
                     isVerified={true}
+                    businessId={promo.business?._id}
                   />
                 </div>
               );
             })}
         </ScrollCarousel>
 
-        {/* Divider elegante */}
         {showDivider && (
           <div className="my-8 md:my-12">
-            <hr className="border-t border-gray-200 mx-auto " />
+            <hr className="border-t border-gray-200 mx-auto" />
           </div>
         )}
       </section>
@@ -148,7 +132,7 @@ export default function Promociones() {
         />
       </Helmet>
 
-      <div className="w-full max-w-full overflow-hidden flex flex-col gap-12 md:gap-16 ">
+      <div className="w-full max-w-full overflow-hidden flex flex-col gap-12 md:gap-16">
         {loading && (
           <p className="text-center text-gray-500">Cargando promociones...</p>
         )}
@@ -156,10 +140,8 @@ export default function Promociones() {
 
         {!loading && !error && (
           <>
-            {/* Hero de la sección */}
             <PromocionesDestacadas Link={false} imagen={PromocionesD} />
 
-            {/* Carruseles con divisores entre ellos */}
             {renderCarrusel(
               "Descuentos",
               "imperdibles",
@@ -182,7 +164,7 @@ export default function Promociones() {
               promosFinSemana,
               "🌞",
               { autoplay: true, direction: "right" },
-              false // último sin divisor
+              false
             )}
           </>
         )}
