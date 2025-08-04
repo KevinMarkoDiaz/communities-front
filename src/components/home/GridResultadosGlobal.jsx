@@ -14,6 +14,7 @@ const getImagen = (item) =>
   "";
 
 const getTipo = (item) => item.tipo || "Sin tipo";
+const esPremium = (item) => item.isPremium === true;
 
 const getRuta = (tipo, id) => {
   switch (tipo) {
@@ -28,7 +29,6 @@ const getRuta = (tipo, id) => {
   }
 };
 
-// Animación para cada tarjeta
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: (i) => ({
@@ -46,12 +46,12 @@ export default function GridResultadosGlobal({ resultados = [] }) {
   if (!resultados.length) return null;
 
   return (
-    <section className="w-full max-w-7xl mx-auto flex flex-col gap-4 px-4">
+    <section className="w-full max-w-7xl mx-auto flex flex-col gap-4 ">
       <h2 className="text-xl font-semibold text-gray-800">
         🔍 Resultados de tu búsqueda
       </h2>
 
-      <div className="grid grid-cols-[repeat(auto-fill,minmax(160px,180px))]  gap-4">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(120px,1fr))] sm:grid-cols-[repeat(auto-fit,minmax(180px,180px))] md:grid-cols-[repeat(auto-fit,minmax(180px,180px))]  gap-4">
         {resultados.map((item, index) => (
           <motion.div
             key={item.id || item._id}
@@ -59,12 +59,14 @@ export default function GridResultadosGlobal({ resultados = [] }) {
             initial="hidden"
             animate="visible"
             variants={itemVariants}
+            className={item.isPremium ? "col-span-2 " : ""}
           >
-            <Link to={getRuta(item.tipo, item.id || item._id)}>
+            <Link to={getRuta(item.tipo, item.id || item._id)} className="">
               <CardResultadoCuadrada
                 title={getTitulo(item)}
                 image={getImagen(item)}
                 tipo={getTipo(item)}
+                isPremium={item.isPremium}
               />
             </Link>
           </motion.div>

@@ -75,7 +75,7 @@ export default function CardGrid({
 
       {/* Contenido */}
       {/* Contenido */}
-      <div className="flex flex-col gap-0.5 px-3 py-3 flex-1 min-h-[70px] max-h-[70px]">
+      <div className="flex flex-col gap-0.5 px-2  justify-between py-2 flex-1 min-h-[70px] max-h-[70px]">
         <div className="flex items-center gap-1">
           <h3
             className="

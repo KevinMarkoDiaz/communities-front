@@ -37,29 +37,19 @@ export default function BusquedaGlobalWrapper({
     dispatch(limpiarBusquedaGlobal());
   };
 
-  const getImagen = (item) => {
-    return (
-      item.imagen ||
-      item.imagenDestacada ||
-      item.featuredImage ||
-      item.bannerImage ||
-      ""
-    );
-  };
+  const getImagen = (item) =>
+    item.imagen ||
+    item.imagenDestacada ||
+    item.featuredImage ||
+    item.bannerImage ||
+    "";
 
-  const getTitulo = (item) => {
-    return (
-      item.nombre || item.titulo || item.title || item.name || "Sin título"
-    );
-  };
+  const getTitulo = (item) =>
+    item.nombre || item.titulo || item.title || item.name || "Sin título";
 
-  const getTipo = (item) => {
-    return item.tipo || "Sin tipo";
-  };
+  const getDescripcion = (item) => item.descripcion || item.description || "";
 
-  const getDescripcion = (item) => {
-    return item.descripcion || item.description || "";
-  };
+  const getTipo = (item) => item.tipo || "Sin tipo";
 
   const resultadosFiltrados = filtroTipo
     ? resultados.filter((item) => item.tipo === filtroTipo)
@@ -95,7 +85,7 @@ export default function BusquedaGlobalWrapper({
 
             <motion.div
               ref={resultadosRef}
-              className="grid grid-cols-[repeat(auto-fill,minmax(160px,180px))] justify-center gap-4 max-w-[1200px] mx-auto mt-10"
+              className="grid grid-cols-[repeat(auto-fit,minmax(120px,1fr))] sm:grid-cols-[repeat(auto-fit,minmax(180px,180px))] md:grid-cols-[repeat(auto-fit,minmax(180px,180px))] gap-4 max-w-7xl mx-auto mt-10"
               initial="hidden"
               animate="visible"
             >
@@ -104,7 +94,9 @@ export default function BusquedaGlobalWrapper({
                   key={item._id || item.id}
                   custom={i}
                   variants={itemVariants}
-                  className="cursor-pointer flex flex-col items-center justify-center"
+                  className={`cursor-pointer flex flex-col items-center justify-center ${
+                    item.isPremium ? "col-span-2" : ""
+                  }`}
                   onClick={() => onSelectResultado?.(item)}
                 >
                   <CardResultadoCuadrada
@@ -112,6 +104,7 @@ export default function BusquedaGlobalWrapper({
                     description={getDescripcion(item)}
                     image={getImagen(item)}
                     tipo={getTipo(item)}
+                    isPremium={item.isPremium}
                   />
                 </motion.div>
               ))}

@@ -1,3 +1,4 @@
+// Mapa Comunidad Pins (actualizado con gestión unificada de popups y leyenda)
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import mapboxgl from "mapbox-gl";
@@ -5,20 +6,47 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import Loading from "./Loading";
 import { fetchMapboxStyleWithRetry } from "../utils/fetchMapboxStyleWithRetry";
 import { estaAbiertoAhora } from "../utils/estaAbiertoAhora";
-import { FaQuestionCircle } from "react-icons/fa";
 import { PiChartPieSliceFill } from "react-icons/pi";
+import { motion, AnimatePresence } from "framer-motion";
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
 export default function MapaComunidad({ negocios, coords }) {
   const mapRef = useRef(null);
   const mapInstance = useRef(null);
+  const markerActivoRef = useRef(null);
+  const dropdownRef = useRef(null);
+  const botonDropdownRef = useRef(null);
+  const usuarioTocoDropdown = useRef(false);
+
   const [isLoaded, setIsLoaded] = useState(false);
   const [mapError, setMapError] = useState(false);
   const [categoriasUnicas, setCategoriasUnicas] = useState([]);
   const [mostrarLeyenda, setMostrarLeyenda] = useState(false);
 
   const userCoords = useSelector((state) => state.ubicacion.coords);
+
+  const getDispositivoEscala = () => {
+    const width = window.innerWidth;
+    if (width < 1024) return 0.8;
+    return 1;
+  };
+
+  useEffect(() => {
+    const timeoutOpen = setTimeout(() => {
+      setMostrarLeyenda(true);
+
+      const timeoutClose = setTimeout(() => {
+        if (!usuarioTocoDropdown.current) {
+          setMostrarLeyenda(false);
+        }
+      }, 4000);
+
+      return () => clearTimeout(timeoutClose);
+    }, 1000);
+
+    return () => clearTimeout(timeoutOpen);
+  }, []);
 
   useEffect(() => {
     if (!mapRef.current || mapInstance.current) return;
@@ -56,6 +84,7 @@ export default function MapaComunidad({ negocios, coords }) {
     const map = mapInstance.current;
     if (!map || !isLoaded) return;
 
+    const escalaDispositivo = getDispositivoEscala();
     const bounds = new mapboxgl.LngLatBounds();
     document
       .querySelectorAll(".emoji-pin, .marker-usuario")
@@ -72,55 +101,28 @@ export default function MapaComunidad({ negocios, coords }) {
       const colorCategoria = getColorByCategory(categoria);
       categorias.add(categoria);
 
+      const baseSize = n.isPremium ? 40 : 36;
+      const size =
+        escalaDispositivo * (n.isPremium ? baseSize : baseSize * 0.8);
+
       const wrapper = document.createElement("div");
       wrapper.className = "emoji-pin";
       wrapper.style.position = "absolute";
       wrapper.style.zIndex = "1";
+      wrapper.style.width = `${size}px`;
+      wrapper.style.height = `${size}px`;
 
       const markerEl = document.createElement("div");
-      markerEl.style.width = "26px";
-      markerEl.style.height = "26px";
+      markerEl.style.width = `80%`;
+      markerEl.style.height = `80%`;
       markerEl.style.borderRadius = "50%";
       markerEl.style.overflow = "hidden";
       markerEl.style.transition = "transform 0.2s ease";
       markerEl.style.pointerEvents = "auto";
 
-      if (n.isPremium) {
-        markerEl.style.backgroundColor = "white";
-        markerEl.style.border = `1px solid ${colorCategoria}`;
-        markerEl.style.boxShadow = "0 0 6px rgba(0, 0, 0, 0.3)";
-        markerEl.style.width = "32px";
-        markerEl.style.height = "32px";
-        const img = document.createElement("img");
-        img.src = n.profileImage || "/placeholder.png";
-        img.alt = `Logo de ${n.name}`;
-        img.style.width = "100%";
-        img.style.height = "100%";
-        img.style.objectFit = "cover";
-        markerEl.appendChild(img);
-
-        wrapper.addEventListener("mouseenter", () => {
-          if (window.innerWidth >= 768) {
-            wrapper.style.zIndex = "9999";
-            markerEl.style.transform = "scale(4.4)";
-          }
-        });
-        wrapper.addEventListener("mouseleave", () => {
-          if (window.innerWidth >= 768) {
-            wrapper.style.zIndex = "1";
-            markerEl.style.transform = "scale(1)";
-          }
-        });
-      } else {
-        markerEl.style.backgroundColor = colorCategoria;
-        markerEl.style.border = "none";
-      }
-
-      wrapper.appendChild(markerEl);
-
-      const popup = new mapboxgl.Popup({ offset: 25, closeButton: false })
+      const popup = new mapboxgl.Popup({ offset: 35, closeButton: false })
         .setHTML(`
-        <div class="w-[240px] rounded-xl shadow-2xl border border-white/10 bg-black/70 backdrop-blur-xs p-3">
+        <div class="w-[240px] rounded-xl shadow-2xl  border border-white/10 bg-black/70 backdrop-blur-xs p-3">
           <div class="flex items-center gap-3">
             <img 
               src="${n.profileImage || "/placeholder.png"}" 
@@ -149,10 +151,51 @@ export default function MapaComunidad({ negocios, coords }) {
         </div>
       `);
 
-      new mapboxgl.Marker(wrapper)
+      if (n.isPremium) {
+        markerEl.style.backgroundColor = "white";
+        markerEl.style.border = `1px solid ${colorCategoria}`;
+        markerEl.style.boxShadow = "0 0 6px rgba(0, 0, 0, 0.3)";
+        const img = document.createElement("img");
+        img.src = n.profileImage || "/placeholder.png";
+        img.alt = `Logo de ${n.name}`;
+        img.style.width = "100%";
+        img.style.height = "100%";
+        img.style.objectFit = "cover";
+        markerEl.appendChild(img);
+      } else {
+        markerEl.style.backgroundColor = colorCategoria;
+        markerEl.style.border = "none";
+      }
+
+      wrapper.appendChild(markerEl);
+
+      const marker = new mapboxgl.Marker(wrapper)
         .setLngLat([lng, lat])
-        .setPopup(popup)
-        .addTo(map);
+        .setPopup(popup);
+
+      wrapper.addEventListener("click", (e) => {
+        e.stopPropagation();
+
+        if (
+          markerActivoRef.current &&
+          markerActivoRef.current.markerEl !== markerEl
+        ) {
+          markerActivoRef.current.markerEl.style.transform = "scale(1)";
+          markerActivoRef.current.wrapper.style.zIndex = "1";
+          markerActivoRef.current.popup?.remove();
+        }
+
+        popup.addTo(map);
+
+        if (n.isPremium) {
+          markerEl.style.transform = "scale(3)";
+          wrapper.style.zIndex = "20";
+        }
+
+        markerActivoRef.current = { markerEl, wrapper, popup };
+      });
+
+      marker.addTo(map);
       bounds.extend([lng, lat]);
     });
 
@@ -181,6 +224,29 @@ export default function MapaComunidad({ negocios, coords }) {
     }
   }, [negocios, coords, userCoords, isLoaded]);
 
+  useEffect(() => {
+    const handleGlobalClick = (e) => {
+      if (
+        mostrarLeyenda &&
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target) &&
+        !botonDropdownRef.current?.contains(e.target)
+      ) {
+        setMostrarLeyenda(false);
+      }
+
+      if (markerActivoRef.current) {
+        markerActivoRef.current.markerEl.style.transform = "scale(1)";
+        markerActivoRef.current.wrapper.style.zIndex = "1";
+        markerActivoRef.current.popup?.remove();
+        markerActivoRef.current = null;
+      }
+    };
+
+    document.addEventListener("click", handleGlobalClick);
+    return () => document.removeEventListener("click", handleGlobalClick);
+  }, [mostrarLeyenda]);
+
   return (
     <div className="relative overflow-hidden rounded-xl shadow h-full">
       {!isLoaded && (
@@ -189,29 +255,48 @@ export default function MapaComunidad({ negocios, coords }) {
         </div>
       )}
 
-      {/* Dropdown de leyenda de colores */}
       <div className="absolute top-2 left-2 z-20">
         <button
-          onClick={() => setMostrarLeyenda((prev) => !prev)}
+          ref={botonDropdownRef}
+          onClick={(e) => {
+            e.stopPropagation();
+            usuarioTocoDropdown.current = true;
+            setMostrarLeyenda((prev) => !prev);
+          }}
           className="flex items-center gap-1 bg-white text-gray-700 px-3 py-2 rounded shadow text-sm hover:bg-gray-100"
         >
           <PiChartPieSliceFill className="text-lg text-orange-500" />
           <p className="text-xs">Categorias</p>
         </button>
 
-        {mostrarLeyenda && (
-          <div className="absolute mt-2 w-max bg-black/50 backdrop-blur-sm rounded-md shadow p-3 text-xs text-white">
-            {categoriasUnicas.map((cat) => (
-              <div key={cat} className="flex items-center gap-2 py-1">
-                <div
-                  className="w-3 h-3 rounded-sm"
-                  style={{ backgroundColor: getColorByCategory(cat) }}
-                />
-                <span>{cat}</span>
-              </div>
-            ))}
-          </div>
-        )}
+        <AnimatePresence>
+          {mostrarLeyenda && (
+            <motion.div
+              ref={dropdownRef}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+              className="absolute mt-2 w-max bg-black/50 backdrop-blur-sm rounded-md shadow p-3 text-xs text-white"
+            >
+              {categoriasUnicas.map((cat, i) => (
+                <motion.div
+                  key={cat}
+                  className="flex items-center gap-2 py-1"
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1 * i }}
+                >
+                  <div
+                    className="w-3 h-3 rounded-sm"
+                    style={{ backgroundColor: getColorByCategory(cat) }}
+                  />
+                  <span>{cat}</span>
+                </motion.div>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {!mapError && (
@@ -224,28 +309,27 @@ export default function MapaComunidad({ negocios, coords }) {
   );
 }
 
-// 🎨 Color asociado a cada categoría
 function getColorByCategory(nombre) {
   switch (nombre) {
     case "Comida y Bebida":
-      return "#fbbf24"; // naranja claro (honey)
+      return "#fbbf24";
     case "Salud y Bienestar":
-      return "#10b981"; // verde esmeralda
+      return "#10b981";
     case "Deporte y Fitness":
-      return "#3b82f6"; // azul vibrante
+      return "#3b82f6";
     case "Belleza y Cuidado Personal":
-      return "#f9a8d4"; // rosa pálido
+      return "#f9a8d4";
     case "Educación":
-      return "#8b5cf6"; // violeta pastel
+      return "#8b5cf6";
     case "Entretenimiento":
-      return "#facc15"; // amarillo maíz
+      return "#facc15";
     case "Mascotas":
-      return "#d6a35c"; // café claro (arena)
+      return "#d6a35c";
     case "Finanzas y Legales":
-      return "#e5e7eb"; // gris claro / blanco roto
+      return "#e5e7eb";
     case "Arte y Cultura":
-      return "#7c3aed"; // morado profundo
+      return "#7c3aed";
     default:
-      return "#9ca3af"; // gris neutro medio
+      return "#9ca3af";
   }
 }

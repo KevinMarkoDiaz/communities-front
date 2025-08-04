@@ -45,7 +45,7 @@ export default function VistaComunidad() {
   }
 
   return (
-    <section className="space-y-4 relative h-full rounded-xl shadow">
+    <section className="space-y-4 relative h-full rounded-xl shadow overflow-hidden z-0">
       <MapaComunidad negocios={negocios} coords={coords} />
     </section>
   );

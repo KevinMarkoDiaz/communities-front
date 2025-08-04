@@ -17,7 +17,6 @@ export default function SearchBarGlobal({
     <div className="px-4 py-3 flex">
       <div
         className="
-        
           flex items-center gap-2
           bg-white/50 backdrop-blur-md
           border border-sky-400
@@ -31,7 +30,13 @@ export default function SearchBarGlobal({
           w-full max-w-[400px]
         "
       >
-        <FiSearch className="text-black " />
+        <button
+          onClick={onBuscar}
+          className="text-black hover:opacity-70 transition"
+        >
+          <FiSearch />
+        </button>
+
         <input
           type="text"
           inputMode="search"
