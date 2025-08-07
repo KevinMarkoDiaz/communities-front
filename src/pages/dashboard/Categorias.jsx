@@ -38,7 +38,7 @@ export default function Categorias() {
       categorias.length > 0 &&
       !selectedCategoria
     ) {
-      setSelectedCategoria(categorias[0]);
+      setSelectedCategoria(categorias?.[0] ?? null);
     }
   }, [categorias, selectedCategoria]);
 

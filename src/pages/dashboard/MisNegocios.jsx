@@ -33,14 +33,14 @@ export default function MisNegocios() {
         .unwrap()
         .then((data) => {
           if (data?.length > 0) {
-            setSelectedNegocio(data[0]);
+            setSelectedNegocio(data?.[0] ?? null);
           }
         })
         .catch((err) => {
           console.error("Error al cargar negocios:", err);
         });
     } else if (!selectedNegocio && misNegocios.length > 0) {
-      setSelectedNegocio(misNegocios[0]);
+      setSelectedNegocio(misNegocios?.[0] ?? null);
     }
   }, [dispatch, misNegocios, selectedNegocio, misLoaded]);
 

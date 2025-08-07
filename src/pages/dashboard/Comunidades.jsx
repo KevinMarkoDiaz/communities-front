@@ -41,7 +41,7 @@ export default function Comunidades() {
 
   useEffect(() => {
     if (misComunidades.length > 0 && !selectedComunidad) {
-      setSelectedComunidad(misComunidades[0]);
+      setSelectedComunidad(misComunidades?.[0] ?? null);
     }
   }, [misComunidades, selectedComunidad]);
 

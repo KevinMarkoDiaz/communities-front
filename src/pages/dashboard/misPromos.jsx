@@ -35,7 +35,7 @@ export default function MisPromos() {
 
   useEffect(() => {
     if (promos.length > 0 && !selectedPromo) {
-      setSelectedPromo(promos[0]);
+      setSelectedPromo(promos?.[0] ?? null);
     }
   }, [promos, selectedPromo]);
 

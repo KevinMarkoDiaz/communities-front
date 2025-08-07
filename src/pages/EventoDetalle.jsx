@@ -313,9 +313,9 @@ export default function EventoDetalle() {
           {Array.isArray(evento?.coordinates?.coordinates) &&
             evento.coordinates.coordinates.length === 2 && (
               <MapaNegocioDetalleUnico
-                lat={evento.coordinates.coordinates[1]}
-                lng={evento.coordinates.coordinates[0]}
-                name={evento.title}
+                lat={evento?.coordinates?.coordinates?.[1] ?? 0}
+                lng={evento?.coordinates?.coordinates?.[0] ?? 0}
+                name={evento?.title ?? "Sin título"}
                 logo=""
               />
             )}

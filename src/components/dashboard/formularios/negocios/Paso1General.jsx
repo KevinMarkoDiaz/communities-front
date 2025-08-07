@@ -92,12 +92,14 @@ export default function Paso1General({ categorias = [], comunidades = [] }) {
           placeholder="Selecciona una comunidad..."
           styles={customSelectStylesForm}
           value={
-            comunidades
-              .filter((c) => c._id === values.community)
-              .map((c) => ({
-                value: c._id,
-                label: c.name,
-              }))[0] || null
+            Array.isArray(comunidades)
+              ? comunidades
+                  .filter((c) => c?._id === values?.community)
+                  .map((c) => ({
+                    value: c._id,
+                    label: c.name,
+                  }))[0] || null
+              : null
           }
           onChange={(selected) => setFieldValue("community", selected?.value)}
         />

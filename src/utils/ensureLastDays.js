@@ -7,7 +7,7 @@ export function ensureLastDays(data, days = 5) {
   for (let i = days - 1; i >= 0; i--) {
     const date = new Date(today);
     date.setDate(today.getDate() - i);
-    const dateStr = date.toISOString().split("T")[0];
+    const dateStr = date?.toISOString?.().split("T")[0] ?? "";
 
     const found = data.find((d) => d.date === dateStr);
 

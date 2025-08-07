@@ -20,7 +20,10 @@ function transformGrowthData(summary) {
   for (let i = days - 1; i >= 0; i--) {
     const date = new Date(today);
     date.setDate(today.getDate() - i);
-    const isoDate = date.toISOString().split("T")[0];
+    const isoDate =
+      date instanceof Date && !isNaN(date)
+        ? date.toISOString().split("T")[0]
+        : "";
 
     result.push({
       date: isoDate,
@@ -45,8 +48,14 @@ export default function MetricsDashboard({
     const last7 = new Date();
     last7.setDate(today.getDate() - 7);
     return {
-      startDate: last7.toISOString().split("T")[0],
-      endDate: today.toISOString().split("T")[0],
+      startDate:
+        last7 instanceof Date && !isNaN(last7)
+          ? last7.toISOString().split("T")[0]
+          : "",
+      endDate:
+        today instanceof Date && !isNaN(today)
+          ? today.toISOString().split("T")[0]
+          : "",
     };
   });
 

@@ -90,7 +90,10 @@ export default function MapaComunidadConApi() {
       mapInstance.current = null;
     }
 
-    const primerNegocio = negocios[0]?.location?.coordinates?.coordinates;
+    const primerNegocio =
+      Array.isArray(negocios) && negocios[0]?.location?.coordinates?.coordinates
+        ? negocios[0]?.location.coordinates.coordinates
+        : null;
     const defaultCenter =
       primerNegocio?.length === 2
         ? primerNegocio
@@ -120,7 +123,10 @@ export default function MapaComunidadConApi() {
         if (!Array.isArray(coordsArray) || coordsArray.length !== 2) return;
 
         const [lng, lat] = coordsArray;
-        const categoria = n.categories[0]?.name || "Sin categoría";
+        const categoria =
+          Array.isArray(n.categories) && n.categories[0]?.name
+            ? n.categories[0].name
+            : "Sin categoría";
         const colorCategoria = getColorByCategory(categoria);
         categorias.add(categoria);
 

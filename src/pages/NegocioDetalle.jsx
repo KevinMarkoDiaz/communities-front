@@ -371,10 +371,10 @@ export default function NegocioDetalle() {
           {Array.isArray(negocio.location?.coordinates.coordinates) &&
             negocio.location.coordinates.coordinates.length === 2 && (
               <MapaNegocioDetalleUnico
-                lat={negocio.location.coordinates.coordinates[1]}
-                lng={negocio.location.coordinates.coordinates[0]}
-                name={negocio.name}
-                logo={negocio.profileImage}
+                lat={negocio?.location?.coordinates?.coordinates?.[1] ?? 0}
+                lng={negocio?.location?.coordinates?.coordinates?.[0] ?? 0}
+                name={negocio?.name ?? "Sin nombre"}
+                logo={negocio?.profileImage ?? ""}
               />
             )}
         </div>

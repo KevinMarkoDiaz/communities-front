@@ -11,9 +11,11 @@ export default function DropzoneImagen({
 }) {
   const onDrop = useCallback(
     (acceptedFiles) => {
-      const file = acceptedFiles[0];
-      if (file) {
-        onChange(file); // guarda el archivo tipo File
+      if (Array.isArray(acceptedFiles) && acceptedFiles.length > 0) {
+        const file = acceptedFiles[0];
+        if (file instanceof File) {
+          onChange(file);
+        }
       }
     },
     [onChange]

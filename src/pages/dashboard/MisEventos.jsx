@@ -29,7 +29,7 @@ export default function MisEventos() {
 
   useEffect(() => {
     if (loaded && eventos.length > 0 && !selectedEvento) {
-      setSelectedEvento(eventos[0]);
+      setSelectedEvento(eventos?.[0] ?? null);
     }
   }, [loaded, eventos, selectedEvento]);
 

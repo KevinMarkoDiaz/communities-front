@@ -97,7 +97,10 @@ export default function MapaComunidad({ negocios, coords }) {
       if (!Array.isArray(coordsArray) || coordsArray.length !== 2) return;
 
       const [lng, lat] = coordsArray;
-      const categoria = n.categories[0]?.name || "Sin categoría";
+      const categoria =
+        Array.isArray(n.categories) && n.categories[0]?.name
+          ? n.categories[0]?.name
+          : "Sin categoría";
       const colorCategoria = getColorByCategory(categoria);
       categorias.add(categoria);
 
