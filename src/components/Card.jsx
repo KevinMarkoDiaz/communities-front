@@ -2,6 +2,7 @@ import BadgeDescuento from "./badges/BadgeDescuento";
 import BadgeIconVerified from "./badges/BadgeIconVerified";
 import BadgeNuevo from "./badges/BadgeNuevo";
 import ImagePlaceholderIcon from "./placeholder/ImagePlaceholderIcon";
+import { FaGem } from "react-icons/fa";
 
 export default function CardDestacado({
   title,
@@ -14,6 +15,7 @@ export default function CardDestacado({
   descuento = "20%",
   modo = "horizontal-compact",
   category,
+  isPremium = false, // ✅ NUEVO
 }) {
   const hasImage = Boolean(image);
 
@@ -27,7 +29,14 @@ export default function CardDestacado({
 
   return (
     <div
-      className={`relative border border-gray-200 rounded-2xl bg-white overflow-hidden shadow-sm hover:shadow-xl transition duration-300 ease-in-out group ${classMap[modo]}`}
+      className={`relative rounded-2xl overflow-hidden transition duration-300 ease-in-out group 
+        ${classMap[modo]}
+        border  hover:shadow-xl 
+        ${
+          isPremium
+            ? "border-yellow-400 shadow-[0_0_4px_4px_rgba(234,179,8,0.3)]"
+            : "border-gray-200 shadow-sm"
+        }`}
     >
       {/* Imagen */}
       <div
@@ -58,9 +67,12 @@ export default function CardDestacado({
           {isNew && <BadgeNuevo />}
         </div>
 
-        {/* Categoría (top derecha) */}
+        {/* Badge de categoría */}
         {category && (
-          <div className="absolute top-2 right-2 bg-white text-xs font-semibold text-gray-800 px-2 py-0.5 rounded-full shadow-sm z-10">
+          <div
+            className={`absolute top-2 right-2 text-xs font-semibold px-2 py-0.5 rounded-full shadow-sm z-10
+        ${isPremium ? "bg-orange-500 text-white" : "bg-white text-gray-800"}`}
+          >
             {category}
           </div>
         )}
@@ -74,38 +86,45 @@ export default function CardDestacado({
 
         {/* Logo */}
         {logo && (
-          <div className="absolute bottom-2 right-2 w-10 h-10 rounded-full border border-white shadow-md bg-white overflow-hidden z-10">
+          <div
+            className={`absolute bottom-2 right-2 rounded-full border border-white shadow-md bg-white overflow-hidden z-10
+        ${isPremium ? "w-12 h-12" : "w-10 h-10"}`}
+          >
             <div
               className="w-full h-full bg-cover bg-center"
               style={{ backgroundImage: `url("${logo}")` }}
             />
           </div>
         )}
+
+        {/* Diamante premium */}
+        {isPremium && (
+          <div className="absolute bottom-2 left-2 text-yellow-500 rounded-full p-1 shadow-md z-10">
+            <FaGem className="w-5 h-5" />
+          </div>
+        )}
       </div>
 
       {/* Contenido */}
       <div
-        className={`${
+        className={`relative ${
           modo === "vertical"
             ? "px-4 py-3"
             : "w-2/3 p-4 flex flex-col justify-between"
-        }`}
+        } ${isPremium ? "bg-black text-white" : ""}`}
       >
-        <div className="flex flex-col gap-1 truncate  min-h-[40px] max-h-[40px]">
+        <div className="flex flex-col gap-1 truncate min-h-[40px] max-h-[40px]">
           <div className="flex items-center gap-1">
             <p
-              className="text-gray-900 text-[15px] font-semibold leading-snug overflow-hidden text-ellipsis whitespace-normal [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical]"
+              className="text-[15px] font-semibold leading-snug overflow-hidden text-ellipsis whitespace-normal [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical]"
               title={title}
             >
               {title}
             </p>
-            {isVerified && <BadgeIconVerified />}
           </div>
 
           {description && (
-            <p className="text-gray-600 text-xs font-normal truncate">
-              {description}
-            </p>
+            <p className="text-xs font-normal truncate">{description}</p>
           )}
         </div>
       </div>

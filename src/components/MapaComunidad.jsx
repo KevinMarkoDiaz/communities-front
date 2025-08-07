@@ -111,6 +111,7 @@ export default function MapaComunidad({ negocios, coords }) {
       wrapper.style.zIndex = "1";
       wrapper.style.width = `${size}px`;
       wrapper.style.height = `${size}px`;
+      wrapper.style.cursor = "pointer"; // ✅ Cambia el cursor al pasar sobre el pin
 
       const markerEl = document.createElement("div");
       markerEl.style.width = `80%`;
@@ -162,6 +163,25 @@ export default function MapaComunidad({ negocios, coords }) {
         img.style.height = "100%";
         img.style.objectFit = "cover";
         markerEl.appendChild(img);
+
+        // ✅ Hover en desktop para hacer zoom del logo premium
+        const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
+
+        if (isDesktop) {
+          wrapper.addEventListener("mouseenter", () => {
+            if (!markerActivoRef.current) {
+              markerEl.style.transform = "scale(3)";
+              wrapper.style.zIndex = "20";
+            }
+          });
+
+          wrapper.addEventListener("mouseleave", () => {
+            if (!markerActivoRef.current) {
+              markerEl.style.transform = "scale(1)";
+              wrapper.style.zIndex = "1";
+            }
+          });
+        }
       } else {
         markerEl.style.backgroundColor = colorCategoria;
         markerEl.style.border = "none";

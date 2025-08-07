@@ -9,6 +9,11 @@ import {
 } from "../../store/messagesSlice";
 import { fetchConversations } from "../../store/conversationsSlice";
 import ilustrA from "../../assets/ilusta.svg";
+import spin1 from "../../assets/spin1.svg";
+import spin2 from "../../assets/spin2.svg";
+import spin3 from "../../assets/spin3.svg";
+import spin4 from "../../assets/spin4.svg";
+import spin5 from "../../assets/spin5.svg";
 
 // ✅ Utilidad para mostrar tiempo aproximado
 function formatTimeAgo(dateString) {
@@ -29,8 +34,10 @@ const ChatView = () => {
   );
   const { usuario } = useSelector((state) => state.auth);
   const { items: conversations } = useSelector((state) => state.conversations);
-  const [text, setText] = useState("");
+  const { negocios } = useSelector((state) => state.comunidadSeleccionada);
+  const { data: eventos } = useSelector((state) => state.eventos);
 
+  const [text, setText] = useState("");
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
@@ -47,7 +54,6 @@ const ChatView = () => {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
 
-    // ✅ Marcar como leídos al abrir
     items.forEach((msg) => {
       if (!msg.isRead && !isMyMessage(msg)) {
         dispatch(markMessageRead(msg._id));
@@ -63,22 +69,34 @@ const ChatView = () => {
   };
 
   const isMyMessage = (msg) => {
-    if (!msg || !msg.sender || !usuario) return false;
-    if (typeof msg.sender === "string") {
-      return usuario.id && msg.sender === usuario.id;
-    }
-    return usuario.id && msg.sender._id === usuario.id;
+    return msg?.sender?._id === usuario?.id;
   };
 
   const conversation = conversations.find((c) => c._id === id);
-  const participant = conversation?.user;
-  const entityLabel =
-    conversation?.entityType === "business"
-      ? conversation?.entityId?.name
-      : conversation?.entityId?.title;
 
-  const entityTypeLabel =
-    conversation?.entityType === "business" ? "Negocio" : "Evento";
+  // 🧠 Determinar si el usuario es quien inició la conversación
+  const isInitiator = conversation?.user?._id === usuario?.id;
+
+  const participant = isInitiator ? conversation?.entityId : conversation?.user;
+
+  // 🔍 Buscar entidad (si aplica)
+  let entity = null;
+  if (conversation?.tipo === "business") {
+    entity = negocios?.find((n) => n._id === conversation?.entityId);
+  } else if (conversation?.tipo === "event") {
+    entity = eventos?.find((e) => e.id === conversation?.entityId);
+  }
+
+  const tipoLabel = conversation?.tipo === "business" ? "Negocio" : "Evento";
+  const entityLabel =
+    conversation?.tipo === "business"
+      ? entity?.name || "Negocio"
+      : entity?.title || "Evento";
+
+  const entityImage =
+    conversation?.tipo === "business"
+      ? entity?.profileImage ?? "/placeholder.svg"
+      : entity?.featuredImage ?? "/placeholder.svg";
 
   if (loading) {
     return (
@@ -99,56 +117,166 @@ const ChatView = () => {
         </h2>
 
         {/* Cabecera del chat */}
-        <div className="flex justify-between items-center p-3 rounded-lg border border-gray-200 bg-white">
-          {/* Usuario */}
+        <div className="flex flex-col p-3 gap-3 rounded-lg border border-gray-200 bg-white">
+          {/* Participante visible */}
           <div className="flex items-center gap-2">
             <img
-              src={participant?.profileImage || "/avatar-placeholder.png"}
-              alt={participant?.name || "Usuario"}
-              className="w-8 h-8 rounded-full object-cover"
+              src={
+                isInitiator
+                  ? entityImage
+                  : participant?.profileImage || "/avatar-placeholder.png"
+              }
+              alt="Participante"
+              className="w-12 h-12 rounded-full object-cover"
             />
-            <p className="text-sm text-gray-700">
-              {participant?.name || "Usuario"}
-            </p>
+            <div className="flex flex-col">
+              {isInitiator && (
+                <span className="text-xs text-gray-400">{tipoLabel}:</span>
+              )}
+              <p className="text-sm text-gray-700">
+                {isInitiator ? entityLabel : usuario?.name || "Usuario"}
+              </p>
+            </div>
           </div>
-          {/* Entidad */}
-          <div className="flex items-center gap-1">
-            <span className="text-xs text-gray-400">{entityTypeLabel}:</span>
-            <span
-              className="text-sm font-medium text-gray-700 truncate max-w-[150px]"
-              title={entityLabel}
-            >
-              {entityLabel}
-            </span>
-          </div>
+
+          {/* Info adicional (solo si el otro participante es una entidad) */}
+          {isInitiator && (
+            <div className="flex items-center gap-2">
+              <img
+                src={usuario?.profileImage}
+                alt={usuario?.name}
+                className="w-12 h-12 rounded-full object-cover border border-gray-300"
+              />
+              <span
+                className="text-sm font-medium text-gray-700 truncate"
+                title={usuario?.name}
+              >
+                {usuario?.name}
+              </span>
+            </div>
+          )}
         </div>
 
-        <div className="flex-1 shadow-lg overflow-y-auto space-y-2 bg-gray-50 p-3 rounded-xl border border-gray-200 shadow-inner min-h-[60vh]">
-          {items.length === 0 && (
-            <p className="text-gray-500 text-center">No hay mensajes aún.</p>
-          )}
-          {items.map((msg) => (
-            <div key={msg._id} className="flex w-full">
-              <div
-                className={`max-w-xs p-3 rounded-xl shadow ${
-                  isMyMessage(msg)
-                    ? "ml-auto bg-orange-500 text-white"
-                    : "mr-auto bg-white border border-gray-200 text-gray-800"
-                }`}
-              >
-                <p className="text-sm">{msg.text}</p>
-                <div className="text-[10px] text-gray-300 mt-1 flex items-center justify-between">
-                  <span>{formatTimeAgo(msg.createdAt)}</span>
-                  {isMyMessage(msg) && msg.isRead && (
-                    <span className="ml-2">✔ Leído</span>
+        {/* Chat con fondo SVGs */}
+        <div className="relative flex-1 min-h-[60vh]">
+          {/* 🎨 Fondo SVG decorativo */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none z-11">
+            <img
+              src={spin1}
+              alt=""
+              className="absolute top-[180px] left-[190px] w-24 opacity-15"
+            />
+            <img
+              src={spin2}
+              alt=""
+              className="absolute top-[16%] left-[80%] w-22  opacity-15"
+            />
+            <img
+              src={spin3}
+              alt=""
+              className="absolute top-[60%] left-[50%] w-20 opacity-15 "
+            />
+            <img
+              src={spin4}
+              alt=""
+              className="absolute bottom-[10%] right-[15%] w-20 opacity-15 "
+            />
+            <img
+              src={spin5}
+              alt=""
+              className="absolute top-[40%] right-[50%] w-20 opacity-15  rotate-12"
+            />
+            <img
+              src={spin1}
+              alt=""
+              className="absolute top-[40%] left-[10%] w-24 opacity-15 rotate-62"
+            />
+            <img
+              src={spin2}
+              alt=""
+              className="absolute top-[86%] left-[30%] w-22 rotate-22  opacity-15"
+            />
+            <img
+              src={spin3}
+              alt=""
+              className="absolute top-[5%] left-[5%] w-20 opacity-15 rotate-22"
+            />
+            <img
+              src={spin4}
+              alt=""
+              className="absolute bottom-[50%] right-[95%] w-20 opacity-15 "
+            />
+            <img
+              src={spin5}
+              alt=""
+              className="absolute top-[40%] right-[0%] w-20 opacity-15  rotate-12"
+            />
+          </div>
+
+          {/* 💬 Contenido del chat */}
+          <div className="relative z-10 shadow-lg overflow-y-auto space-y-2 bg-gray-50 p-3 rounded-xl border border-gray-200 shadow-inner h-full">
+            {items.length === 0 && (
+              <p className="text-gray-500 text-center">No hay mensajes aún.</p>
+            )}
+            {items.map((msg) => {
+              const esMio = isMyMessage(msg);
+              return (
+                <div
+                  key={msg._id}
+                  className={`flex w-full z-15 ${
+                    esMio ? "justify-end" : "justify-start"
+                  } items-end gap-2`}
+                >
+                  {!esMio && !isInitiator && (
+                    <img
+                      src={usuario?.profileImage || participant?.profileImage}
+                      alt="Participante"
+                      className="w-10 h-10 rounded-full object-cover"
+                    />
+                  )}
+                  {!esMio && isInitiator && (
+                    <img
+                      src={entityImage}
+                      alt="Participante"
+                      className="w-10 h-10 rounded-full object-cover"
+                    />
+                  )}
+                  <div
+                    className={`max-w-xs p-3 rounded-xl z-15 shadow-md ${
+                      esMio
+                        ? "bg-orange-500 text-white"
+                        : "bg-white border border-gray-200 text-gray-800"
+                    }`}
+                  >
+                    <p className="text-sm">{msg.text}</p>
+                    <div className="text-[10px] text-gray-300 mt-1 flex items-center justify-between">
+                      <span>{formatTimeAgo(msg.createdAt)}</span>
+                      {esMio && msg.isRead && (
+                        <span className="ml-2">✔ Leído</span>
+                      )}
+                    </div>
+                  </div>
+
+                  {esMio && (
+                    <img
+                      src={
+                        isInitiator
+                          ? usuario?.profileImage || participant?.profileImage
+                          : entityImage
+                      }
+                      alt="Yo"
+                      className="w-10 h-10 rounded-full object-cover"
+                    />
                   )}
                 </div>
-              </div>
-            </div>
-          ))}
-          <div ref={messagesEndRef} />
+              );
+            })}
+
+            <div ref={messagesEndRef} />
+          </div>
         </div>
 
+        {/* Formulario de envío */}
         <form onSubmit={handleSend} className="flex mt-2">
           <input
             type="text"

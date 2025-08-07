@@ -26,6 +26,7 @@ import { logout } from "../store/authSlice";
 import BotonPublicar from "./nav/BotonPublicar";
 import useDeviceSize from "../hooks/useDeviceSize";
 import { cerrarMenu, toggleMenu } from "../store/mobileMenuSlice";
+import InboxButton from "./mensajes/InboxButton";
 
 export default function Header() {
   const usuario = useSelector((state) => state.auth.usuario);
@@ -151,12 +152,7 @@ export default function Header() {
             ))}
 
             <div className=" md:flex ">
-              <Link
-                to="/inbox"
-                className="flex  p-2 hover:text-orange-600   transition  font-medium no-underline"
-              >
-                <FiMessageCircle className="text-2xl" />
-              </Link>
+              {usuario && <InboxButton />}
               {usuario && isDesktop && <NotificationButton />}
             </div>
             {/* Perfil */}
@@ -173,18 +169,15 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center gap-2 md:hidden">
-            <Link
-              to="/inbox"
-              onClick={() => dispatch(cerrarMenu())}
-              className={`transition p-2 ${
-                mobileOpen ? "text-white" : "text-black"
-              }`}
-            >
-              <FiMessageCircle className="text-2xl" />
-            </Link>
+            {usuario && (
+              <InboxButton
+                onClick={() => dispatch(cerrarMenu())}
+                className={mobileOpen ? "text-white" : "text-black"}
+              />
+            )}
             {usuario && isMobile && (
               <NotificationButton
-                onClick={() => dispatch(cerrarMenu())}
+                onClick={() => dispatch(toggleMenu())}
                 className={mobileOpen ? "text-white" : "text-black"}
               />
             )}

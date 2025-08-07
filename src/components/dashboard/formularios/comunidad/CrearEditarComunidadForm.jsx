@@ -17,11 +17,13 @@ import {
   initialValuesComunidad,
   validationSchemaComunidad,
 } from "./schemaComunidad";
+
 import {
   createCommunityThunk,
   updateCommunityThunk,
 } from "../../../../store/comunidadesSlice.js";
 import { mostrarFeedback } from "../../../../store/feedbackSlice.js";
+import Paso8EnlacesExternos from "./pasos/Paso8EnlacesExternos.jsx";
 
 const nombresPasos = [
   "Información Básica",
@@ -31,6 +33,7 @@ const nombresPasos = [
   "SEO y Visibilidad",
   "Imágenes",
   "Resumen Final",
+  "Enlaces Externos",
 ];
 
 const pasos = [
@@ -41,6 +44,7 @@ const pasos = [
   Paso5SEO,
   Paso6Imagenes,
   Paso7Resumen,
+  Paso8EnlacesExternos,
 ];
 
 export default function CrearEditarComunidadForm({
@@ -54,9 +58,12 @@ export default function CrearEditarComunidadForm({
   const dispatch = useDispatch();
 
   const handleSubmit = async (values, { setSubmitting }) => {
+    console.log("➡️ Submitting values:", values);
+
     try {
       const { flagImage, bannerImage, food, originCountryInfo, ...resto } =
         values;
+
       const formData = new FormData();
 
       if (flagImage instanceof File) formData.append("flagImage", flagImage);
@@ -100,11 +107,18 @@ export default function CrearEditarComunidadForm({
             : payload.location.coordinates.lng;
       }
 
-      if (payload.mapCenter) {
-        payload.mapCenter.lat =
-          payload.mapCenter.lat === "" ? null : payload.mapCenter.lat;
-        payload.mapCenter.lng =
-          payload.mapCenter.lng === "" ? null : payload.mapCenter.lng;
+      if (
+        payload.mapCenter?.lat !== undefined &&
+        payload.mapCenter?.lng !== undefined
+      ) {
+        const lat =
+          payload.mapCenter.lat === "" ? null : Number(payload.mapCenter.lat);
+        const lng =
+          payload.mapCenter.lng === "" ? null : Number(payload.mapCenter.lng);
+        payload.mapCenter = {
+          type: "Point",
+          coordinates: [lng, lat],
+        };
       }
 
       formData.append("data", JSON.stringify(payload));
@@ -162,6 +176,13 @@ export default function CrearEditarComunidadForm({
           description: item.description || "",
           image: item.image ?? "",
         })) || [],
+      externalLinks:
+        comunidadInicial.externalLinks?.map((link) => ({
+          title: link.title,
+          url: link.url,
+          type: link.type,
+          description: link.description || "",
+        })) || [],
     };
   }, [modoEdicion, comunidadInicial]);
 
@@ -193,17 +214,13 @@ export default function CrearEditarComunidadForm({
               >
                 {index !== nombresPasos.length - 1 && (
                   <>
-                    {/* Línea horizontal para mobile hasta lg */}
                     <span className="absolute lg:hidden left-full top-3 w-4 h-px bg-white/20" />
-                    {/* Línea vertical para lg+ */}
                     <span
                       className="absolute hidden lg:block left-2.5 top-7 h-full w-px bg-white/20"
                       style={{ minHeight: "1.5rem" }}
                     />
                   </>
                 )}
-
-                {/* Círculo con número o check */}
                 <div
                   className={`flex items-center justify-center w-6 h-6 rounded-full border-2 shrink-0 ${
                     paso === index
@@ -215,8 +232,6 @@ export default function CrearEditarComunidadForm({
                 >
                   {paso > index ? "✓" : index + 1}
                 </div>
-
-                {/* Nombre del paso (solo en lg+) */}
                 <div className="mt-2 text-xs lg:text-sm hidden lg:block lg:ml-2">
                   {nombre}
                 </div>
@@ -260,7 +275,6 @@ export default function CrearEditarComunidadForm({
                   Atrás
                 </button>
               )}
-
               {paso < pasos.length - 1 && (
                 <button
                   type="button"
@@ -286,7 +300,6 @@ export default function CrearEditarComunidadForm({
                   Siguiente
                 </button>
               )}
-
               {paso === pasos.length - 1 && (
                 <button
                   type="submit"

@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { getEventById } from "../api/eventApi";
 import { getBusinessById } from "../api/businessApi";
 import { getCommunityById } from "../api/communityApi";
-import MapaNegocioDetalle from "../components/bussines/MapaNegocioDetalle";
 import Compartir from "../components/Compartir";
 import DetalleSkeleton from "../components/Skeleton/DetalleSkeleton";
 import UniversalFollowButton from "../components/badges/UniversalFollowButton";
@@ -17,6 +16,7 @@ import LikeButton from "../components/badges/LikeButton";
 
 import { PhotoGallery } from "../components/bussines/PhotoGallery";
 import { MdAccessTime, MdCheckCircle, MdEvent } from "react-icons/md";
+import MapaNegocioDetalleUnico from "../components/bussines/MapaNegocioDetalleUnico";
 
 function BadgeEstadoEvento({ date }) {
   const now = new Date();
@@ -158,7 +158,7 @@ export default function EventoDetalle() {
           </div>
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-2 p-2">
           <div className=" flex flex-col lg:flex-row justify-between md:items-center w-full gap-8">
             <h1 className="text-2xl font-bold text-gray-900">{evento.title}</h1>
             <BadgeEstadoEvento date={evento.date} />
@@ -180,7 +180,7 @@ export default function EventoDetalle() {
           </p>
         </div>
 
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 p-2">
           <div className="flex gap-4 items-start">
             <div className="flex flex-col md:flex-row gap-4">
               <UniversalFollowButton
@@ -299,7 +299,7 @@ export default function EventoDetalle() {
             </div>
           </div>
         )}
-        <div className="mt-4 flex flex-col gap-3 md:flex-row md:flex-wrap">
+        <div className="mt-4 flex flex-col gap-3 md:flex-row md:flex-wrap p-2">
           <div className="flex flex-wrap gap-2 md:w-full md:justify-between">
             <LikeButton
               targetType="event"
@@ -309,16 +309,19 @@ export default function EventoDetalle() {
             <StarRating targetType="event" targetId={id} />
           </div>
         </div>
-        {Array.isArray(evento?.coordinates?.coordinates) &&
-          evento.coordinates.coordinates.length === 2 && (
-            <MapaNegocioDetalle
-              lat={evento.coordinates.coordinates[1]}
-              lng={evento.coordinates.coordinates[0]}
-              name={evento.title}
-            />
-          )}
+        <div className="p-2">
+          {Array.isArray(evento?.coordinates?.coordinates) &&
+            evento.coordinates.coordinates.length === 2 && (
+              <MapaNegocioDetalleUnico
+                lat={evento.coordinates.coordinates[1]}
+                lng={evento.coordinates.coordinates[0]}
+                name={evento.title}
+                logo=""
+              />
+            )}
 
-        <CommentsSection targetType="event" targetId={id} />
+          <CommentsSection targetType="event" targetId={id} />
+        </div>
       </div>
     </div>
   );

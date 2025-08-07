@@ -9,9 +9,9 @@ export default function BannerComunidades({ scrollToRef }) {
   };
 
   return (
-    <div className="flex justify-center">
-      <div className="w-full rounded-xl overflow-hidden relative">
-        {/* 🎥 Fondo de video */}
+    <div className="w-full">
+      <div className="relative w-full rounded-xl overflow-hidden aspect-[3/1] sm:aspect-[3/1.2] md:aspect-[16/6]">
+        {/* 🎥 Video de fondo */}
         <video
           className="absolute inset-0 w-full h-full object-cover"
           src={bannerCMM}
@@ -22,9 +22,9 @@ export default function BannerComunidades({ scrollToRef }) {
         />
 
         {/* 🔲 Capa oscura para contraste */}
+        <div className="absolute inset-0 bg-black/10 z-10" />
 
-        {/* 🧾 Contenido */}
-        <div className="relative z-10 flex flex-col gap-6 sm:gap-8 min-h-[450px] 2xl:min-h-[480px] items-start justify-end p-6 sm:p-10 text-white"></div>
+        {/* 🧾 Contenido encima del video */}
       </div>
     </div>
   );

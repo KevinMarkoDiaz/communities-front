@@ -57,6 +57,7 @@ export default function PromocionesRelacionadas({ businessId }) {
             className="cursor-pointer flex-shrink-0 snap-start w-[220px] sm:w-[320px] md:w-[300px] lg:w-[260px] transform transition duration-300"
           >
             <CardPromoHome
+              isPremium={promo.isPremium}
               title={promo.name}
               image={promo.featuredImage}
               maxClaims={promo.maxClaims}

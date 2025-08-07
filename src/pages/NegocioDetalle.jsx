@@ -13,7 +13,6 @@ import { ContactCard } from "../components/bussines/ContactCard";
 import { OpeningHoursList } from "../components/bussines/OpeningHoursList";
 import { BusinessCard } from "../components/bussines/BusinessCard";
 import { PhotoGallery } from "../components/bussines/PhotoGallery";
-import MapaNegocioDetalle from "../components/bussines/MapaNegocioDetalle";
 import Compartir from "../components/Compartir";
 import DetalleSkeleton from "../components/Skeleton/DetalleSkeleton";
 
@@ -27,6 +26,7 @@ import { useSelector } from "react-redux";
 import PromocionesRelacionadas from "../components/bussines/PromocionesRelacionadas";
 import { estaAbiertoAhora } from "../utils/estaAbiertoAhora";
 import { MdAccessTime, MdCheckCircle } from "react-icons/md";
+import MapaNegocioDetalleUnico from "../components/bussines/MapaNegocioDetalleUnico";
 
 function BadgeEstadoNegocio({ openingHours }) {
   const abierto = estaAbiertoAhora(openingHours);
@@ -370,10 +370,11 @@ export default function NegocioDetalle() {
           )}
           {Array.isArray(negocio.location?.coordinates.coordinates) &&
             negocio.location.coordinates.coordinates.length === 2 && (
-              <MapaNegocioDetalle
+              <MapaNegocioDetalleUnico
                 lat={negocio.location.coordinates.coordinates[1]}
                 lng={negocio.location.coordinates.coordinates[0]}
                 name={negocio.name}
+                logo={negocio.profileImage}
               />
             )}
         </div>

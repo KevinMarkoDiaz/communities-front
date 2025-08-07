@@ -69,7 +69,7 @@ export default function NotificationButton({ className = "", onClick }) {
       >
         <FiBell className="w-6 h-6" />
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1 rounded-full">
+          <span className="absolute -top-1.5 -right-1.5 bg-red-500 w-4 h-4 flex items-center justify-center text-white text-[10px] rounded-full leading-tight shadow-md">
             {unreadCount}
           </span>
         )}

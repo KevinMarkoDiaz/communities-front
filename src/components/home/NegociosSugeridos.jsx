@@ -27,6 +27,7 @@ export default function NegociosSugeridos({ negocios = [], loading, imagen }) {
             className="flex-shrink-0 snap-start min-w-[280px] sm:min-w-[250px] md:min-w-[250px] lg:min-w-[320px]"
           >
             <CardDestacado
+              isPremium={n.isPremium}
               title={n.name}
               image={n.featuredImage}
               isNew={false} // Lógica futura para marcar nuevos

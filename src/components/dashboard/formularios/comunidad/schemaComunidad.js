@@ -25,6 +25,9 @@ export const initialValuesComunidad = {
     youtube: "",
   },
 
+  // 🔹 Paso 8 – Enlaces externos
+  externalLinks: [],
+
   // Paso 4 – Ubicación
   region: "",
   mapCenter: {
@@ -55,14 +58,15 @@ export const initialValuesComunidad = {
 };
 
 export const validationSchemaComunidad = [
-  // Paso 1
+  // Paso 1 – Info básica
   Yup.object({
     name: Yup.string().required("El nombre es obligatorio"),
     description: Yup.string().required("La descripción es obligatoria"),
     language: Yup.string().required("El idioma es obligatorio"),
     tipo: Yup.string().required("El tipo es obligatorio"),
   }),
-  // Paso 2
+
+  // Paso 2 – Cultura
   Yup.object({
     originCountryInfo: Yup.object({
       name: Yup.string().required("El país de origen es obligatorio"),
@@ -80,7 +84,8 @@ export const validationSchemaComunidad = [
       })
     ),
   }),
-  // Paso 3
+
+  // Paso 3 – Recursos
   Yup.object({
     resources: Yup.array().of(
       Yup.object({
@@ -98,7 +103,8 @@ export const validationSchemaComunidad = [
       youtube: Yup.string().url("URL inválida").nullable(),
     }),
   }),
-  // Paso 4
+
+  // Paso 4 – Ubicación
   Yup.object({
     region: Yup.string().required("La región es obligatoria"),
     mapCenter: Yup.object({
@@ -125,7 +131,8 @@ export const validationSchemaComunidad = [
       }),
     }),
   }),
-  // Paso 5 – SEO y estado
+
+  // Paso 5 – SEO
   Yup.object({
     metaTitle: Yup.string().required("El meta título es obligatorio"),
     metaDescription: Yup.string().required(
@@ -136,6 +143,7 @@ export const validationSchemaComunidad = [
       .required("El estado es obligatorio"),
     verified: Yup.boolean(),
   }),
+
   // Paso 6 – Imágenes
   Yup.object({
     flagImage: Yup.mixed()
@@ -153,6 +161,25 @@ export const validationSchemaComunidad = [
         (val) => typeof val === "string" || typeof val === "object"
       ),
   }),
+
   // Paso 7 – Confirmación
   Yup.object(),
+
+  // Paso 8 – Enlaces externos
+  Yup.object({
+    externalLinks: Yup.array()
+      .of(
+        Yup.object({
+          title: Yup.string().required("El título es obligatorio"),
+          url: Yup.string()
+            .url("Debe ser una URL válida")
+            .required("La URL es obligatoria"),
+          type: Yup.string()
+            .oneOf(["facebook", "instagram", "whatsapp", "otro"])
+            .required("El tipo es obligatorio"),
+          description: Yup.string().nullable(),
+        })
+      )
+      .notRequired(), // 👈 Esto lo vuelve opcional si está vacío
+  }),
 ];

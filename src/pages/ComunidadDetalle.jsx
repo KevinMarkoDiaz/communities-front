@@ -1,12 +1,16 @@
 import { useParams, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
-import { useMemo, useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
+
 import Compartir from "../components/Compartir";
 import MapaNegocioDetalle from "../components/bussines/MapaNegocioDetalle";
 import CardNegocioHome from "../components/communities/CardNegocioHome";
 import CardEventoGrid from "../components/communities/CardEventoGrid";
 import DetalleSkeleton from "../components/Skeleton/DetalleSkeleton";
+import UniversalFollowButton from "../components/badges/UniversalFollowButton";
+import axiosInstance from "../api/axiosInstance";
+
 import {
   FaFacebook,
   FaInstagram,
@@ -16,22 +20,29 @@ import {
   FaYoutube,
 } from "react-icons/fa";
 
-import UniversalFollowButton from "../components/badges/UniversalFollowButton";
-import axiosInstance from "../api/axiosInstance";
+const socialIcons = {
+  facebook: <FaFacebook />,
+  instagram: <FaInstagram />,
+  whatsapp: <FaWhatsapp />,
+  twitter: <FaTwitter />,
+  website: <FaGlobe />,
+  youtube: <FaYoutube />,
+};
 
 export default function ComunidadDetalle() {
   const { id } = useParams();
-  const { lista, loading, error } = useSelector((state) => state.comunidades);
+  const { lista, loading } = useSelector((state) => state.comunidades);
   const eventos = useSelector((state) => state.eventos.lista);
   const eventosLoading = useSelector((state) => state.eventos.loading);
   const negocios = useSelector((state) => state.negocios.lista);
   const negociosLoading = useSelector((state) => state.negocios.loading);
 
   const [yaSigue, setYaSigue] = useState(false);
+  const [tab, setTab] = useState("negocios");
 
-  const comunidad = lista.find(
-    (c) => String(c.id) === id || String(c._id) === id
-  );
+  const comunidad = useMemo(() => {
+    return lista.find((c) => String(c.id) === id || String(c._id) === id);
+  }, [lista, id]);
 
   useEffect(() => {
     const fetchFollow = async () => {
@@ -48,6 +59,28 @@ export default function ComunidadDetalle() {
     };
     fetchFollow();
   }, [comunidad?._id]);
+
+  const negociosDeLaComunidad = useMemo(() => {
+    if (!comunidad?._id) return [];
+    return negocios.filter((n) => {
+      if (!n.community) return false;
+      if (typeof n.community === "object" && n.community._id) {
+        return String(n.community._id) === String(comunidad._id);
+      }
+      return String(n.community) === String(comunidad._id);
+    });
+  }, [negocios, comunidad]);
+
+  const eventosDeLaComunidad = useMemo(() => {
+    if (!comunidad?._id) return [];
+    return eventos.filter((e) => {
+      const porNombre = e.comunidad?.trim() === comunidad.name?.trim();
+      const porIdPopulado = Array.isArray(e.communities)
+        ? e.communities.some((c) => String(c._id) === String(comunidad._id))
+        : false;
+      return porNombre || porIdPopulado;
+    });
+  }, [eventos, comunidad]);
 
   if (loading) {
     return (
@@ -70,35 +103,6 @@ export default function ComunidadDetalle() {
     );
   }
 
-  const negociosDeLaComunidad = useMemo(() => {
-    return negocios.filter((n) => {
-      if (!n.community) return false;
-      if (typeof n.community === "object" && n.community._id) {
-        return String(n.community._id) === String(comunidad._id);
-      }
-      return String(n.community) === String(comunidad._id);
-    });
-  }, [negocios, comunidad]);
-
-  const eventosDeLaComunidad = useMemo(() => {
-    return eventos.filter((e) => {
-      const porNombre = e.comunidad?.trim() === comunidad.name?.trim();
-      const porIdPopulado = Array.isArray(e.communities)
-        ? e.communities.some((c) => String(c._id) === String(comunidad._id))
-        : false;
-      return porNombre || porIdPopulado;
-    });
-  }, [eventos, comunidad]);
-
-  const socialIcons = {
-    facebook: <FaFacebook />,
-    instagram: <FaInstagram />,
-    whatsapp: <FaWhatsapp />,
-    twitter: <FaTwitter />,
-    website: <FaGlobe />,
-    youtube: <FaYoutube />,
-  };
-
   return (
     <>
       <Helmet>
@@ -111,167 +115,222 @@ export default function ComunidadDetalle() {
         />
       </Helmet>
 
-      <div className="px-4 sm:px-8 lg:px-8 xl:px-40 py-5 flex justify-center">
-        <div className="w-full max-w-[1400px] flex flex-col gap-12">
-          {/* Banner */}
+      <div className=" sm:px-8 lg:px-8 xl:px-40 py-5 flex justify-center">
+        <div className="w-full max-w-[1400px] flex flex-col gap-10">
           <div
-            className="w-full h-56 sm:h-72 rounded-xl bg-cover bg-center shadow-md"
-            style={{ backgroundImage: `url(${comunidad.bannerImage})` }}
+            className="w-full h-56 sm:h-72 md:rounded-xl bg-cover bg-center shadow-md"
+            style={{
+              backgroundImage: `url(${
+                comunidad.bannerImage || "/placeholder.jpg"
+              })`,
+            }}
           />
 
-          {/* Encabezado */}
-          <div className="space-y-3">
-            <div className="flex justify-between items-center w-full flex-wrap gap-2">
-              <h1 className="text-2xl font-bold text-gray-900">
-                {comunidad.name}
-              </h1>
-              {comunidad.status && (
-                <span className="flex items-center gap-2 w-fit px-2 py-1 rounded-full bg-green-100 text-green-700 text-xs font-medium">
-                  {comunidad.verified ? (
-                    <>
-                      <span className="relative flex h-3 w-3">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                        <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-green-700"></span>
-                      </span>
-                      Verificada
-                    </>
-                  ) : (
-                    comunidad.status
-                  )}
-                </span>
-              )}
-            </div>
-
-            {/* Info básica */}
-            {comunidad.region && (
-              <p className="text-sm text-gray-500">
-                Región: {comunidad.region}
-              </p>
+          <div className="space-y-4 m-2">
+            <h1 className="text-3xl font-bold text-gray-900">
+              {comunidad.name || "Nombre no disponible"}
+            </h1>
+            {comunidad._id && (
+              <UniversalFollowButton
+                entityType="community"
+                entityId={comunidad._id}
+                initialFollowed={yaSigue}
+              />
             )}
-            {comunidad.tipo && (
-              <p className="text-sm text-gray-500 capitalize">
-                Tipo: {comunidad.tipo}
-              </p>
-            )}
-            {comunidad.slug && (
-              <p className="text-xs text-gray-400">Slug: {comunidad.slug}</p>
-            )}
-            <p className="text-xs text-gray-400">
-              Actualizada el{" "}
-              {new Date(comunidad.updatedAt).toLocaleDateString()}
-            </p>
-
-            {/* Botón Follow */}
-            <UniversalFollowButton
-              entityType="community"
-              entityId={comunidad._id}
-              initialFollowed={yaSigue}
-            />
-
-            {/* Compartir */}
             <Compartir
               url={window.location.href}
-              title={`Descubrí la comunidad "${comunidad.name}" en Communities`}
-              text={`Mirá esta comunidad: ${
-                comunidad.name
-              } - ${comunidad.description?.slice(0, 100)}...`}
+              title={`Descubrí la comunidad \"${comunidad.name}\" en Communities`}
+              text={`Mirá esta comunidad: ${comunidad.name || ""} - ${
+                comunidad.description?.slice(0, 100) || ""
+              }...`}
             />
           </div>
 
-          {/* Descripción */}
           <div className="border-l-4 border-gray-200 pl-4">
             <p className="font-sans text-[15px] text-gray-800 leading-relaxed whitespace-pre-line">
-              {comunidad.description}
+              {comunidad.description || "Sin descripción disponible."}
             </p>
           </div>
 
-          {/* Redes Sociales */}
-          {comunidad.socialMediaLinks &&
-            Object.keys(comunidad.socialMediaLinks).length > 0 && (
-              <div>
-                <h2 className="text-lg font-semibold text-gray-800 mb-2">
-                  Redes sociales
+          <div className="flex flex-wrap gap-2 border-b border-gray-200 pt-4">
+            {["negocios", "eventos", "puntos"].map((tabId) => (
+              <button
+                key={tabId}
+                onClick={() => setTab(tabId)}
+                className={`text-sm px-3 py-2 rounded-t font-medium transition ${
+                  tab === tabId
+                    ? "bg-white border border-b-0 border-gray-200 text-gray-800"
+                    : "text-gray-600 hover:text-gray-800"
+                }`}
+              >
+                {tabId === "negocios"
+                  ? "Negocios"
+                  : tabId === "eventos"
+                  ? "Eventos"
+                  : "Puntos de encuentro"}
+              </button>
+            ))}
+          </div>
+
+          <div className="pt-4 flex flex-col gap-6 m-2">
+            {tab === "negocios" && (
+              <>
+                <h2 className="text-lg font-semibold text-gray-800">
+                  Negocios de la comunidad
                 </h2>
-                <div className="flex gap-3 flex-wrap">
-                  {Object.entries(comunidad.socialMediaLinks).map(
-                    ([key, value]) =>
-                      value && (
-                        <a
-                          key={key}
-                          href={value}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="flex items-center gap-2 px-3 py-1 bg-gray-100 text-sm text-gray-700 rounded-full hover:bg-gray-200"
-                        >
-                          {socialIcons[key.toLowerCase()] || <FaGlobe />}
-                          <span className="capitalize">{key}</span>
-                        </a>
-                      )
-                  )}
-                </div>
-              </div>
+                {negociosLoading ? (
+                  <p className="text-sm text-gray-500">Cargando negocios...</p>
+                ) : negociosDeLaComunidad.length > 0 ? (
+                  <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-4">
+                    {negociosDeLaComunidad.map((neg) => (
+                      <Link key={neg._id} to={`/negocios/${neg._id}`}>
+                        <CardNegocioHome negocio={neg} />
+                      </Link>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-gray-500">
+                    No hay negocios registrados todavía.
+                  </p>
+                )}
+              </>
             )}
 
-          {/* Negocios */}
-          <section>
-            <h2 className="text-lg font-semibold text-gray-800 mb-2">
-              Negocios de la comunidad
-            </h2>
-            {negociosLoading ? (
-              <p className="text-sm text-gray-500">Cargando negocios...</p>
-            ) : negociosDeLaComunidad.length > 0 ? (
-              <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-4">
-                {negociosDeLaComunidad.map((neg) => (
-                  <Link key={neg._id} to={`/negocios/${neg._id}`}>
-                    <CardNegocioHome negocio={neg} />
-                  </Link>
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-gray-500">
-                No hay negocios registrados todavía.
-              </p>
+            {tab === "eventos" && (
+              <>
+                <h2 className="text-lg font-semibold text-gray-800">
+                  Eventos de la comunidad
+                </h2>
+                {eventosLoading ? (
+                  <p className="text-sm text-gray-500">Cargando eventos...</p>
+                ) : eventosDeLaComunidad.length > 0 ? (
+                  <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    {eventosDeLaComunidad.map((ev) => (
+                      <CardEventoGrid
+                        key={ev._id}
+                        title={ev.title}
+                        subtitle={
+                          ev.date
+                            ? new Date(ev.date).toLocaleDateString()
+                            : "Sin fecha"
+                        }
+                        image={ev.featuredImage}
+                        to={`/eventos/${ev._id}`}
+                        categories={ev.categories}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-gray-500">
+                    No hay eventos registrados todavía.
+                  </p>
+                )}
+              </>
             )}
-          </section>
 
-          {/* Eventos */}
-          <section>
-            <h2 className="text-lg font-semibold text-gray-800 mb-2">
-              Eventos de la comunidad
-            </h2>
-            {eventosLoading ? (
-              <p className="text-sm text-gray-500">Cargando eventos...</p>
-            ) : eventosDeLaComunidad.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {eventosDeLaComunidad.map((ev) => (
-                  <CardEventoGrid
-                    key={ev._id}
-                    title={ev.title}
-                    subtitle={
-                      ev.date
-                        ? new Date(ev.date).toLocaleDateString()
-                        : "Sin fecha"
-                    }
-                    image={ev.featuredImage}
-                    to={`/eventos/${ev._id}`}
-                  />
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-gray-500">
-                No hay eventos registrados todavía.
-              </p>
+            {tab === "puntos" && (
+              <>
+                <h2 className="text-lg font-semibold text-gray-800">
+                  Puntos de encuentro y enlaces útiles
+                </h2>
+
+                {comunidad.externalLinks?.length > 0 ? (
+                  <>
+                    {/* FUNCIONES AUXILIARES */}
+                    {["facebook", "instagram", "whatsapp", "otros"].map(
+                      (tipo) => {
+                        let grupo = [];
+
+                        if (tipo === "otros") {
+                          grupo = comunidad.externalLinks.filter(
+                            (l) =>
+                              l.type !== "facebook" &&
+                              l.type !== "instagram" &&
+                              l.type !== "whatsapp"
+                          );
+                        } else {
+                          grupo = comunidad.externalLinks.filter(
+                            (l) => l.type === tipo
+                          );
+                        }
+
+                        if (grupo.length === 0) return null;
+
+                        const icono =
+                          tipo === "facebook" ? (
+                            <FaFacebook className="text-blue-600" />
+                          ) : tipo === "instagram" ? (
+                            <FaInstagram className="text-pink-500" />
+                          ) : tipo === "whatsapp" ? (
+                            <FaWhatsapp className="text-green-500" />
+                          ) : (
+                            <FaGlobe className="text-gray-500" />
+                          );
+
+                        const titulo =
+                          tipo === "facebook"
+                            ? "Grupos que reúnen la comunidad en Facebook"
+                            : tipo === "instagram"
+                            ? "Perfiles de la comunidad en Instagram"
+                            : tipo === "whatsapp"
+                            ? "Grupos o chats de la comunidad en WhatsApp"
+                            : "Otros enlaces útiles de la comunidad";
+
+                        return (
+                          <div key={tipo} className="mb-8">
+                            <div className="flex items-center gap-2 mb-2">
+                              <span className="text-xl">{icono}</span>
+                              <h3 className="text-md font-semibold text-gray-500">
+                                {titulo}
+                              </h3>
+                            </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                              {grupo.map((link, idx) => (
+                                <a
+                                  key={idx}
+                                  href={link.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="flex items-center gap-3 p-4 rounded-xl bg-gray-50 hover:bg-gray-100 border border-gray-200 shadow-sm"
+                                >
+                                  <div className="text-xl text-back-600">
+                                    {socialIcons[link.type] || <FaGlobe />}
+                                  </div>
+                                  <div>
+                                    <h3 className="font-semibold text-gray-800 text-sm">
+                                      {link.title}
+                                    </h3>
+                                    {link.description && (
+                                      <p className="text-xs text-gray-500 line-clamp-2">
+                                        {link.description}
+                                      </p>
+                                    )}
+                                  </div>
+                                </a>
+                              ))}
+                            </div>
+                          </div>
+                        );
+                      }
+                    )}
+                  </>
+                ) : (
+                  <p className="text-sm text-gray-500">
+                    No hay enlaces registrados para esta comunidad.
+                  </p>
+                )}
+
+                {/* Redes sociales tipo chips */}
+              </>
             )}
-          </section>
-
-          {/* Mapa */}
-          {comunidad.mapCenter?.lat && comunidad.mapCenter?.lng && (
-            <MapaNegocioDetalle
-              lat={comunidad.mapCenter.lat}
-              lng={comunidad.mapCenter.lng}
-              name={comunidad.name}
-            />
-          )}
+          </div>
+          <p className="text-lg text-gray-900 font-bold">
+            Conectá con los negocios que mueven tu comunidad.
+          </p>
+          <div className="overflow-hidden z-0 mt-8">
+            <MapaNegocioDetalle logo="" />
+          </div>
         </div>
       </div>
     </>

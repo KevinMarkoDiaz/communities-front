@@ -110,9 +110,12 @@ export default function Negocios() {
                 <Link
                   key={negocio._id}
                   to={`/negocios/${negocio._id}`}
-                  className="flex-shrink-0"
+                  className={`flex-shrink-0 ${
+                    negocio.isPremium ? "col-span-2" : ""
+                  }`}
                 >
                   <CardLista
+                    isPremium={negocio.isPremium}
                     title={negocio.name}
                     image={negocio.featuredImage}
                     isVerified={negocio.isVerified}

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import {
@@ -13,6 +13,8 @@ export default function NotificationCenter() {
     (state) => state.notificaciones
   );
 
+  const [visibleCount, setVisibleCount] = useState(5);
+
   useEffect(() => {
     if (!loaded) {
       dispatch(cargarNotificaciones());
@@ -23,15 +25,24 @@ export default function NotificationCenter() {
     dispatch(marcarNotificacionLeida(id));
   };
 
+  const notificacionesVisibles = items.slice(0, visibleCount);
+  const hayMas = items.length > visibleCount;
+  const puedeVerMenos = visibleCount > 5;
+
+  const verMas = () => setVisibleCount((prev) => prev + 5);
+  const verMenos = () => setVisibleCount(5);
+
   return (
-    <div className="p-4 space-y-4 bg-gray-50 rounded-xl w-fit shadow-lg">
+    <div className="p-4 space-y-4 bg-gray-50 rounded-xl w-fit shadow-lg max-w-xl">
       {loading && <p className="text-gray-500">Cargando...</p>}
       {items.length === 0 && !loading && (
         <p className="text-gray-500">No tienes notificaciones.</p>
       )}
-      {items.map((n) => (
+
+      {notificacionesVisibles.map((n) => (
         <div
-          className={`border shadow-lg text-sm border-gray-200 rounded-xl p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3 transition hover:border-gray-300 ${
+          key={n._id}
+          className={`border shadow text-sm border-gray-200 rounded-xl p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3 transition hover:border-gray-300 ${
             n.read ? "bg-white" : "bg-blue-50"
           }`}
         >
@@ -78,6 +89,28 @@ export default function NotificationCenter() {
           </div>
         </div>
       ))}
+
+      {/* Botones Ver más / Ver menos */}
+      {(hayMas || puedeVerMenos) && (
+        <div className="text-center flex justify-center gap-4">
+          {hayMas && (
+            <button
+              onClick={verMas}
+              className="text-sm text-orange-600 hover:text-orange-800 font-medium transition"
+            >
+              Ver más
+            </button>
+          )}
+          {puedeVerMenos && (
+            <button
+              onClick={verMenos}
+              className="text-sm text-gray-500 hover:text-gray-700 font-medium transition"
+            >
+              Ver menos
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 }

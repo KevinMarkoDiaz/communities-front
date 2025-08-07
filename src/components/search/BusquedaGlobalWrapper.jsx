@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useRef } from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
 import {
@@ -8,6 +9,40 @@ import {
 } from "../../store/busquedaGlobalSlice";
 import SearchBarGlobal from "../home/SearchBarGlobal";
 import CardResultadoCuadrada from "../home/CardResultadoCuadrada";
+
+// Helpers
+const getImagen = (item) =>
+  item.imagen ||
+  item.imagenDestacada ||
+  item.featuredImage ||
+  item.bannerImage ||
+  "";
+const getTitulo = (item) =>
+  item.nombre || item.titulo || item.title || item.name || "Sin título";
+
+const getTipo = (item) => item.tipo || "Sin tipo";
+
+const getRuta = (tipo, id) => {
+  switch (tipo) {
+    case "negocio":
+      return `/negocios/${id}`;
+    case "evento":
+      return `/eventos/${id}`;
+    case "comunidad":
+      return `/comunidades/${id}`;
+    default:
+      return "#";
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.05, duration: 0.4, ease: "easeOut" },
+  }),
+};
 
 export default function BusquedaGlobalWrapper({
   placeholder = "Buscar...",
@@ -37,32 +72,9 @@ export default function BusquedaGlobalWrapper({
     dispatch(limpiarBusquedaGlobal());
   };
 
-  const getImagen = (item) =>
-    item.imagen ||
-    item.imagenDestacada ||
-    item.featuredImage ||
-    item.bannerImage ||
-    "";
-
-  const getTitulo = (item) =>
-    item.nombre || item.titulo || item.title || item.name || "Sin título";
-
-  const getDescripcion = (item) => item.descripcion || item.description || "";
-
-  const getTipo = (item) => item.tipo || "Sin tipo";
-
   const resultadosFiltrados = filtroTipo
     ? resultados.filter((item) => item.tipo === filtroTipo)
     : resultados;
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: (i) => ({
-      opacity: 1,
-      y: 0,
-      transition: { delay: i * 0.05, duration: 0.4, ease: "easeOut" },
-    }),
-  };
 
   return (
     <div className="w-full flex flex-col gap-6">
@@ -89,25 +101,29 @@ export default function BusquedaGlobalWrapper({
               initial="hidden"
               animate="visible"
             >
-              {resultadosFiltrados.map((item, i) => (
-                <motion.div
-                  key={item._id || item.id}
-                  custom={i}
-                  variants={itemVariants}
-                  className={`cursor-pointer flex flex-col items-center justify-center ${
-                    item.isPremium ? "col-span-2" : ""
-                  }`}
-                  onClick={() => onSelectResultado?.(item)}
-                >
-                  <CardResultadoCuadrada
-                    title={getTitulo(item)}
-                    description={getDescripcion(item)}
-                    image={getImagen(item)}
-                    tipo={getTipo(item)}
-                    isPremium={item.isPremium}
-                  />
-                </motion.div>
-              ))}
+              {resultadosFiltrados.map((item, i) => {
+                const ruta = getRuta(item.tipo, item._id || item.id);
+                return (
+                  <motion.div
+                    key={item._id || item.id}
+                    custom={i}
+                    variants={itemVariants}
+                    className={`cursor-pointer flex flex-col items-center justify-center ${
+                      item.isPremium ? "col-span-2" : ""
+                    }`}
+                    onClick={() => onSelectResultado?.(item)}
+                  >
+                    <Link to={ruta} className="w-full flex justify-center">
+                      <CardResultadoCuadrada
+                        title={getTitulo(item)}
+                        image={getImagen(item)}
+                        tipo={getTipo(item)}
+                        isPremium={item.isPremium}
+                      />
+                    </Link>
+                  </motion.div>
+                );
+              })}
             </motion.div>
           </div>
 

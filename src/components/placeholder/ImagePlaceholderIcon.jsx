@@ -1,7 +1,8 @@
 export default function ImagePlaceholderIcon({ size = 24 }) {
   return (
     <svg
-      className={`w-[${size}px] h-[${size}px] text-gray-400 m-auto`}
+      style={{ width: size, height: size }}
+      className="text-gray-400 m-auto"
       fill="none"
       stroke="currentColor"
       strokeWidth={1.5}

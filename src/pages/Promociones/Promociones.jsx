@@ -107,6 +107,7 @@ export default function Promociones() {
                     }
                     isVerified={true}
                     businessId={promo.business?._id}
+                    isPremium={promo.isPremium}
                   />
                 </div>
               );

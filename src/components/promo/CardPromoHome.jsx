@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { BsGem } from "react-icons/bs";
 
 export default function CardPromoHome({
   title,
@@ -7,6 +8,7 @@ export default function CardPromoHome({
   descuento,
   maxClaims,
   businessId, // 🆕 solo pasás el ID del negocio
+  isPremium = false,
 }) {
   const [isMobile, setIsMobile] = useState(false);
 
@@ -30,12 +32,23 @@ export default function CardPromoHome({
     descuento === "0 disponibles" ||
     descuento?.includes("0 disponibles");
 
+  const clasesBase = `
+    relative group z-0 overflow-hidden transition my-4
+    aspect-[9/16] rounded-[1.5rem] w-[220px] sm:w-[280px] md:w-[300px] lg:w-[245px] xl:w-[225px]
+     hover:shadow-lg bg-gray-100
+    ${
+      isPremium
+        ? "border-1 border-yellow-200 shadow-[0_0_10px_3px_rgba(234,179,8,0.4)]"
+        : "shadow-md"
+    }
+  `;
+
   return (
-    <div className="relative group z-0 w-[220px] sm:w-[280px] md:w-[300px] lg:w-[245px] xl:w-[225px] aspect-[9/16] rounded-[1.5rem] overflow-hidden shadow-md bg-gray-100 transition hover:shadow-lg my-4">
+    <div className={clasesBase}>
       {/* Imagen de fondo */}
       {image && (
         <div
-          className="absolute inset-0 bg-cover bg-center transition-transform duration-500 "
+          className="absolute inset-0 bg-cover bg-center transition-transform duration-500"
           style={{ backgroundImage: `url("${image}")` }}
         />
       )}
@@ -47,21 +60,26 @@ export default function CardPromoHome({
         }`}
       />
 
+      {/* Icono Premium */}
+
       {/* Badge de cupón */}
       <div
-        className={`m-4 transform transition-all duration-900 text-xs md:text-sm font-semibold text-center rounded-full py-1.5 px-4 self-center shadow-md bg-white text-gray-900
-    ${
-      isMobile
-        ? "scale-105"
-        : "group-hover:-translate-y-1 group-hover:scale-105"
-    }
-  `}
+        className={`m-4 transform  transition-all duration-900 text-xs md:text-sm font-semibold text-center rounded-full py-1.5 px-4 self-center 
+        ${
+          isMobile
+            ? "scale-105"
+            : "group-hover:-translate-y-1 group-hover:scale-105"
+        }
+        ${
+          isAgotado
+            ? "text-red-700"
+            : isPremium
+            ? " bg-black shadow-[0_0_30px_20px_rgba(234,179,8,0.4)] text-green-300 "
+            : " bg-white shadow-md text-green-700"
+        }
+      `}
       >
-        {isAgotado ? (
-          <span className="text-red-700">Cupones agotados</span>
-        ) : (
-          <span className="text-green-700">{descuento}</span>
-        )}
+        {isAgotado ? "Cupones agotados" : descuento}
       </div>
 
       {/* Logo del negocio abajo a la derecha */}

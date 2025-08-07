@@ -8,7 +8,7 @@ import {
   LuRefreshCcw,
 } from "react-icons/lu";
 import { useDispatch } from "react-redux";
-import { cerrarMenu } from "../../store/mobileMenuSlice"; // Asegurate de que la ruta sea correcta
+import { cerrarMenu } from "../../store/mobileMenuSlice";
 import { RiCoupon3Line, RiStore2Line } from "react-icons/ri";
 
 export default function MobileFooterDashboard({ usuario }) {
@@ -17,30 +17,33 @@ export default function MobileFooterDashboard({ usuario }) {
   const { pathname } = useLocation();
   const dispatch = useDispatch();
 
-  // Cierra el menú global mobile cuando cambia la ruta
   useEffect(() => {
     dispatch(cerrarMenu());
   }, [pathname, dispatch]);
 
   const navItems = [
-    { to: "mis-negocios", icon: <RiStore2Line size={24} /> },
-    { to: "mis-eventos", icon: <LuCalendarDays size={24} /> },
-    { to: "mis-promos", icon: <LuTags size={24} /> },
-    { to: "cupones", label: "Mis cupones", icon: <RiCoupon3Line size={24} /> },
     {
-      to: "redimir",
-      label: "Redimir Cupones",
-      icon: <LuRefreshCcw size={24} />,
+      to: "mis-negocios",
+      label: "Mis negocios",
+      icon: <RiStore2Line size={24} />,
     },
+    {
+      to: "mis-eventos",
+      label: "Mis eventos",
+      icon: <LuCalendarDays size={24} />,
+    },
+    { to: "mis-promos", label: "Promos", icon: <LuTags size={24} /> },
+    { to: "cupones", label: "Cupones", icon: <RiCoupon3Line size={24} /> },
+    { to: "redimir", label: "Redimir", icon: <LuRefreshCcw size={24} /> },
   ];
 
   const adminItem = [
+    { to: "categorias", label: "Categorías", icon: <LuLayoutGrid size={24} /> },
     {
-      to: "categorias",
-      icon: <LuLayoutGrid size={24} />,
+      to: "mis-comunidades",
+      label: "Comunidades",
+      icon: <LuUsers size={24} />,
     },
-
-    { to: "mis-comunidades", icon: <LuUsers size={24} /> },
   ];
 
   const allItems =
@@ -48,6 +51,8 @@ export default function MobileFooterDashboard({ usuario }) {
 
   const allRoutes = allItems.map((i) => i.to);
   const activeIndex = allRoutes.findIndex((route) => pathname.includes(route));
+  const columns = allItems.length;
+  const widthClass = `w-1/${columns}`;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -73,18 +78,10 @@ export default function MobileFooterDashboard({ usuario }) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const columns = allItems.length;
-  const widthClass = `w-1/${columns}`;
-
   return (
     <div
-      className={`
-        md:hidden fixed left-0 right-0 bg-white border-t border-gray-200 z-50 shadow-lg
-        transition-all duration-500
-      `}
-      style={{
-        bottom: show ? 0 : "-100%",
-      }}
+      className={`md:hidden fixed left-0 right-0 bg-white border-t-2 border-orange-500 z-50 transition-all duration-500`}
+      style={{ bottom: show ? 0 : "-100%" }}
     >
       <nav
         className={`relative grid grid-cols-${columns}`}
@@ -92,6 +89,7 @@ export default function MobileFooterDashboard({ usuario }) {
           gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
         }}
       >
+        {/* Fondo deslizante */}
         <div
           className={`absolute top-0 left-0 h-full ${widthClass} transition-transform duration-300`}
           style={{
@@ -101,19 +99,24 @@ export default function MobileFooterDashboard({ usuario }) {
           <div className="w-full h-full bg-orange-100" />
         </div>
 
-        {allItems.map(({ to, icon }) => (
+        {/* Botones */}
+        {allItems.map(({ to, icon, label }) => (
           <NavLink
             key={to}
             to={to}
             className={({ isActive }) =>
               `relative flex flex-col items-center justify-center py-3 transition-colors duration-200 ${
                 isActive
-                  ? "text-orange-600"
+                  ? "text-white bg-orange-500"
                   : "text-gray-500 hover:text-orange-500"
               }`
             }
           >
             {icon}
+            {/* ⛔️ Solo se muestra el label si NO es admin */}
+            {usuario?.role !== "admin" && (
+              <span className="text-[10px] mt-1">{label}</span>
+            )}
           </NavLink>
         ))}
       </nav>

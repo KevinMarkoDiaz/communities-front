@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { redeemPromoThunk } from "../../store/userPromosSlice";
 import { Helmet } from "react-helmet-async";
 import ilusta from "../../assets/ilusta.svg";
+import FadeInOnScroll from "../../components/FadeInOnScroll";
 
 export default function RedimirCodigo() {
   const dispatch = useDispatch();
@@ -28,7 +29,7 @@ export default function RedimirCodigo() {
   };
 
   return (
-    <div className="max-w-[1200px] w-full mx-auto flex flex-col gap-8 md:gap-12 xl:gap-16 px-2">
+    <div className="max-w-[1200px] w-full mx-auto flex flex-col gap-8 md:gap-12 xl:gap-16 px-2 pb-10">
       <Helmet>
         <title>Redimir Código | Communities</title>
       </Helmet>
@@ -106,6 +107,12 @@ export default function RedimirCodigo() {
           ❌ {error}
         </div>
       )}
+      <FadeInOnScroll direction="left" duration={900} delay={200}>
+        {/* Imagen ilustrativa para mobile (abajo) */}
+        <div className="block lg:hidden mt-10 flex justify-center">
+          <img src={ilusta} alt="Ilustración" className="max-h-48 w-auto" />
+        </div>
+      </FadeInOnScroll>
     </div>
   );
 }
