@@ -23,7 +23,7 @@ export default function Paso5SEO() {
         </label>
         <Field
           name="metaTitle"
-          placeholder="Comunidad Colombiana en DFW"
+          placeholder="Comunidad en DFW"
           className="w-full px-4 py-3 border border-white/40 bg-white/10 rounded-lg placeholder:text-gray-300 focus:outline-none"
         />
         <ErrorMessage
@@ -41,7 +41,7 @@ export default function Paso5SEO() {
         <Field
           as="textarea"
           name="metaDescription"
-          placeholder="Conecta con migrantes colombianos, negocios locales, eventos y más en DFW."
+          placeholder="Conecta con migrantes, negocios locales, eventos y más en USA."
           className="w-full px-4 py-3 border border-white/40 bg-white/10 rounded-lg placeholder:text-gray-300 focus:outline-none min-h-[100px]"
         />
         <ErrorMessage

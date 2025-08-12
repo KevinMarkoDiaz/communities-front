@@ -7,6 +7,7 @@ import {
   FaTwitter,
   FaYoutube,
   FaWhatsapp,
+  FaShippingFast,
 } from "react-icons/fa";
 import BusinessHero from "../components/bussines/BusinessHero";
 import { ContactCard } from "../components/bussines/ContactCard";
@@ -27,6 +28,55 @@ import PromocionesRelacionadas from "../components/bussines/PromocionesRelaciona
 import { estaAbiertoAhora } from "../utils/estaAbiertoAhora";
 import { MdAccessTime, MdCheckCircle } from "react-icons/md";
 import MapaNegocioDetalleUnico from "../components/bussines/MapaNegocioDetalleUnico";
+
+// ✅ Nuevo: Badge azul para delivery
+function DeliveryBadge({ zip }) {
+  return (
+    <span
+      className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold
+                 bg-blue-100 text-blue-800 border border-blue-200"
+      title={zip ? `Centro del ZIP ${zip}` : "Delivery disponible"}
+    >
+      <FaShippingFast className="text-blue-600" />
+      Disponible para delivery{zip ? ` · ZIP ${zip}` : ""}
+    </span>
+  );
+}
+
+// ✅ Nuevo: Renderiza dirección o badge de delivery
+function RenderLocation({ negocio }) {
+  if (negocio.isDeliveryOnly) {
+    return <DeliveryBadge zip={negocio.primaryZip} />;
+  }
+
+  const addr = negocio.location?.address;
+  const city = negocio.location?.city;
+  const state = negocio.location?.state;
+
+  if (!addr && !city && !state) return null;
+
+  return (
+    <p className="flex items-center text-sm text-gray-500 gap-2">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="h-4 w-4 text-gray-400"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M17.657 16.657L13 21.314 8.343 16.657A8 8 0 1117.657 16.657z"
+        />
+      </svg>
+      {addr ? `${addr}, ` : ""}
+      {city ? `${city}, ` : ""}
+      {state || ""}
+    </p>
+  );
+}
 
 function BadgeEstadoNegocio({ openingHours }) {
   const abierto = estaAbiertoAhora(openingHours);
@@ -133,27 +183,9 @@ export default function NegocioDetalle() {
             )}
           </div>
 
-          {/* Dirección */}
-          {negocio.location?.address && (
-            <p className="flex items-center text-sm text-gray-500 gap-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4 text-gray-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M17.657 16.657L13 21.314 8.343 16.657A8 8 0 1117.657 16.657z"
-                />
-              </svg>
-              {negocio.location.address}, {negocio.location.city},{" "}
-              {negocio.location.state}
-            </p>
-          )}
+          {/* Dirección o Badge de delivery */}
+          <RenderLocation negocio={negocio} />
+
           {/* Botones principales */}
           <div className="mt-4 flex flex-col gap-3 md:flex-row md:flex-wrap">
             <div className="flex flex-wrap gap-2 md:w-full md:justify-start">
@@ -249,9 +281,7 @@ export default function NegocioDetalle() {
                       >
                         {negocio.contact.socialMedia.instagram}
                       </a>
-                      <p className="text-gray-500 text-sm font-normal leading-normal line-clamp-1">
-                        Instagram
-                      </p>
+                      <p className="text-gray-500 text-sm">Instagram</p>
                     </div>
                   </div>
                 )}
@@ -265,13 +295,11 @@ export default function NegocioDetalle() {
                         href={negocio.contact.socialMedia.facebook}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-gray-900 text-base font-medium leading-normal hover:underline line-clamp-1 break-all"
+                        className="text-gray-900 text-base font-medium hover:underline line-clamp-1 break-all"
                       >
                         {negocio.contact.socialMedia.facebook}
                       </a>
-                      <p className="text-gray-500 text-sm font-normal leading-normal line-clamp-1">
-                        Facebook
-                      </p>
+                      <p className="text-gray-500 text-sm">Facebook</p>
                     </div>
                   </div>
                 )}
@@ -285,13 +313,11 @@ export default function NegocioDetalle() {
                         href={negocio.contact.socialMedia.twitter}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-gray-900 text-base font-medium leading-normal hover:underline line-clamp-1 break-all"
+                        className="text-gray-900 text-base font-medium hover:underline line-clamp-1 break-all"
                       >
                         {negocio.contact.socialMedia.twitter}
                       </a>
-                      <p className="text-gray-500 text-sm font-normal leading-normal line-clamp-1">
-                        Twitter
-                      </p>
+                      <p className="text-gray-500 text-sm">Twitter</p>
                     </div>
                   </div>
                 )}
@@ -305,13 +331,11 @@ export default function NegocioDetalle() {
                         href={negocio.contact.socialMedia.youtube}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-gray-900 text-base font-medium leading-normal hover:underline line-clamp-1 break-all"
+                        className="text-gray-900 text-base font-medium hover:underline line-clamp-1 break-all"
                       >
                         {negocio.contact.socialMedia.youtube}
                       </a>
-                      <p className="text-gray-500 text-sm font-normal leading-normal line-clamp-1">
-                        YouTube
-                      </p>
+                      <p className="text-gray-500 text-sm">YouTube</p>
                     </div>
                   </div>
                 )}
@@ -328,13 +352,11 @@ export default function NegocioDetalle() {
                         )}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-gray-900 text-base font-medium leading-normal hover:underline line-clamp-1 break-all"
+                        className="text-gray-900 text-base font-medium hover:underline line-clamp-1 break-all"
                       >
                         {negocio.contact.socialMedia.whatsapp}
                       </a>
-                      <p className="text-gray-500 text-sm font-normal leading-normal line-clamp-1">
-                        WhatsApp
-                      </p>
+                      <p className="text-gray-500 text-sm">WhatsApp</p>
                     </div>
                   </div>
                 )}

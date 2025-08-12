@@ -8,7 +8,7 @@ import { fetchMapboxStyleWithRetry } from "../utils/fetchMapboxStyleWithRetry";
 import { estaAbiertoAhora } from "../utils/estaAbiertoAhora";
 import { PiChartPieSliceFill } from "react-icons/pi";
 import { motion, AnimatePresence } from "framer-motion";
-
+import { useNavigate } from "react-router-dom";
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
 export default function MapaComunidad({ negocios, coords }) {
@@ -18,6 +18,7 @@ export default function MapaComunidad({ negocios, coords }) {
   const dropdownRef = useRef(null);
   const botonDropdownRef = useRef(null);
   const usuarioTocoDropdown = useRef(false);
+  const navigate = useNavigate();
 
   const [isLoaded, setIsLoaded] = useState(false);
   const [mapError, setMapError] = useState(false);
@@ -60,7 +61,7 @@ export default function MapaComunidad({ negocios, coords }) {
         const map = new mapboxgl.Map({
           container: mapRef.current,
           style: "mapbox://styles/mapbox/streets-v11",
-          center: [-74.006, 40.7128],
+          center: [-96.797, 32.7767],
           zoom: 12,
           attributionControl: false,
         });
@@ -124,36 +125,74 @@ export default function MapaComunidad({ negocios, coords }) {
       markerEl.style.transition = "transform 0.2s ease";
       markerEl.style.pointerEvents = "auto";
 
-      const popup = new mapboxgl.Popup({ offset: 35, closeButton: false })
-        .setHTML(`
-        <div class="w-[240px] rounded-xl shadow-2xl  border border-white/10 bg-black/70 backdrop-blur-xs p-3">
-          <div class="flex items-center gap-3">
-            <img 
-              src="${n.profileImage || "/placeholder.png"}" 
-              alt="Logo de ${n.name}" 
-              class="w-10 h-10 rounded-full object-cover border border-white/10"
-            />
-            <div class="flex flex-col">
-              <h3 class="text-sm font-semibold text-gray-100">${n.name}</h3>
-              <p class="text-[11px] text-gray-100 leading-tight">${categoria}</p>
-            </div>
-          </div>
-          <div class="flex justify-between items-center mt-3">
-            <a href="/negocios/${
-              n._id
-            }" class="text-xs text-white bg-orange-500 hover:bg-orange-600 font-medium px-2 py-1 rounded transition">
-              Ver más
-            </a>
-            <div class="flex items-center gap-2 ml-2">
-              ${
-                estaAbiertoAhora(n.openingHours)
-                  ? `<span class="pulsing-dot"></span><span class="text-[11px] text-green-400">Abierto ahora</span>`
-                  : `<span class="text-[11px] text-red-400">Cerrado</span>`
-              }
-            </div>
-          </div>
-        </div>
-      `);
+      // donde construyes el mapa/popup
+
+      // ...
+
+      // crea el popup con un data-attribute para que podamos enganchar el click
+      const html = `
+  <div class="w-[240px] rounded-xl shadow-2xl border border-white/10 bg-black/70 backdrop-blur-xs p-3">
+    <div class="flex items-center gap-3">
+      <img 
+        src="${n.profileImage || "/placeholder.png"}" 
+        alt="Logo de ${n.name}" 
+        class="w-10 h-10 rounded-full object-cover border border-white/10"
+      />
+      <div class="flex flex-col">
+        <h3 class="text-sm font-semibold text-gray-100">${n.name}</h3>
+        <p class="text-[11px] text-gray-100 leading-tight">${categoria}</p>
+      </div>
+    </div>
+    <div class="flex justify-between items-center mt-3">
+      <a 
+        href="/negocios/${n._id}" 
+        data-navigate="/negocios/${n._id}"
+        class="text-xs text-white bg-orange-500 hover:bg-orange-600 font-medium px-2 py-1 rounded transition"
+      >
+        Ver más
+      </a>
+      <div class="flex items-center gap-2 ml-2">
+        ${
+          estaAbiertoAhora(n.openingHours)
+            ? `<span class="pulsing-dot"></span><span class="text-[11px] text-green-400">Abierto ahora</span>`
+            : `<span class="text-[11px] text-red-400">Cerrado</span>`
+        }
+      </div>
+    </div>
+  </div>
+`;
+
+      const popup = new mapboxgl.Popup({
+        offset: 35,
+        closeButton: false,
+      }).setHTML(html);
+
+      // Intercepta clics dentro del popup y navega con React Router
+      popup.on("open", () => {
+        const el = popup.getElement();
+
+        const clickHandler = (e) => {
+          const link = e.target.closest("[data-navigate]");
+          if (link) {
+            e.preventDefault();
+            const to = link.getAttribute("data-navigate");
+            navigate(to); // navegación SPA, sin recargar
+            popup.remove(); // opcional: cierra el popup
+          }
+        };
+
+        el.addEventListener("click", clickHandler);
+        // guarda ref para quitarlo al cerrar
+        el._popupClickHandler = clickHandler;
+      });
+
+      popup.on("close", () => {
+        const el = popup.getElement();
+        if (el && el._popupClickHandler) {
+          el.removeEventListener("click", el._popupClickHandler);
+          delete el._popupClickHandler;
+        }
+      });
 
       if (n.isPremium) {
         markerEl.style.backgroundColor = "white";

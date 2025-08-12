@@ -25,7 +25,7 @@ export default function Paso1Datos() {
         </label>
         <Field
           name="name"
-          placeholder="Kevin"
+          placeholder="Usuario"
           className="w-full px-4 py-3 border border-white/30 bg-white/10 rounded-lg placeholder:text-gray-300 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
         />
         <ErrorMessage
@@ -42,7 +42,7 @@ export default function Paso1Datos() {
         </label>
         <Field
           name="lastName"
-          placeholder="Díaz"
+          placeholder="Usuario"
           className="w-full px-4 py-3 border border-white/30 bg-white/10 rounded-lg placeholder:text-gray-300 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
         />
         <ErrorMessage

@@ -13,7 +13,7 @@ export default function Paso2Cultura() {
           <label className="block text-sm font-medium mb-1">Nombre</label>
           <Field
             name="originCountryInfo.name"
-            placeholder="Colombia"
+            placeholder="Usa"
             className="form-input w-full h-12 px-4 rounded-xl border border-gray-300"
           />
           <ErrorMessage
@@ -42,7 +42,7 @@ export default function Paso2Cultura() {
           <label className="block text-sm font-medium mb-1">Capital</label>
           <Field
             name="originCountryInfo.capital"
-            placeholder="Bogotá"
+            placeholder="Bs As"
             className="form-input w-full h-12 px-4 rounded-xl border border-gray-300"
           />
           <ErrorMessage
@@ -61,7 +61,7 @@ export default function Paso2Cultura() {
               <div key={index} className="flex gap-2 items-center">
                 <Field
                   name={`traditions[${index}]`}
-                  placeholder="Carnaval de Barranquilla"
+                  placeholder="Carnaval"
                   className="form-input flex-1 h-12 px-4 rounded-xl border border-gray-300"
                 />
                 <button
@@ -97,7 +97,7 @@ export default function Paso2Cultura() {
                   <label className="text-sm font-medium">Nombre</label>
                   <Field
                     name={`food[${index}].name`}
-                    placeholder="Arepa"
+                    placeholder="tacos"
                     className="form-input w-full h-12 px-4 rounded-xl border border-gray-300"
                   />
                 </div>

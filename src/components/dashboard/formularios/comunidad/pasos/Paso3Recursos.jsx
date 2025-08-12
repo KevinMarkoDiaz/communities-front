@@ -21,7 +21,7 @@ export default function Paso3Recursos() {
                   </label>
                   <Field
                     name={`resources[${index}].title`}
-                    placeholder="Consulado colombiano en Dallas"
+                    placeholder=""
                     className="form-input w-full h-12 px-4 rounded-xl border border-gray-300"
                   />
                   <ErrorMessage
@@ -113,7 +113,7 @@ export default function Paso3Recursos() {
           <label className="block text-sm font-medium mb-1">WhatsApp</label>
           <Field
             name="socialMediaLinks.whatsapp"
-            placeholder="https://wa.me/..."
+            placeholder="=1 9 00 233..."
             className="form-input w-full h-12 px-4 rounded-xl border border-gray-300"
           />
         </div>

@@ -134,7 +134,7 @@ export default function SidebarComunidadMobile() {
                   value={selectedOption}
                   onChange={handleSelectChange}
                   options={opciones}
-                  placeholder="¿De qué comunidad sos?"
+                  placeholder="¿De qué comunidad eres?"
                   isClearable
                   isSearchable={false}
                   styles={customSelectStylesRefinado}

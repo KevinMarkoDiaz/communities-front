@@ -64,6 +64,10 @@ export default function NegocioForm() {
       website: "",
       socialMedia: { facebook: "", instagram: "", whatsapp: "" },
     },
+    // 🔵 NUEVO: flags de delivery
+    isDeliveryOnly: false,
+    primaryZip: "",
+
     location: {
       address: "",
       city: "",
@@ -106,12 +110,34 @@ export default function NegocioForm() {
           setInitialValues((prev) => ({
             ...prev,
             ...negocio,
-            categories: negocio.categories.map((cat) => cat._id || cat),
+            // 🔁 Mapea refs
+            categories: (negocio.categories || []).map((cat) => cat._id || cat),
             community: negocio.community?._id || negocio.community,
             ownerId: negocio.owner?._id || negocio.owner,
             ownerDisplay: {
               name: negocio.owner?.name || "",
               image: negocio.owner?.profileImage || "",
+            },
+            // 🔵 Trae flags de delivery si existen en backend
+            isDeliveryOnly: Boolean(negocio.isDeliveryOnly),
+            primaryZip: negocio.primaryZip || "",
+            // Asegura shape de location esperado por el form
+            location: {
+              address: negocio.location?.address || "",
+              city: negocio.location?.city || "",
+              state: negocio.location?.state || "",
+              zipCode: negocio.location?.zipCode || "",
+              country: negocio.location?.country || "",
+              coordinates: {
+                lat:
+                  negocio.location?.coordinates?.coordinates?.[1] ?? // [lng, lat]
+                  negocio.location?.coordinates?.lat ??
+                  "",
+                lng:
+                  negocio.location?.coordinates?.coordinates?.[0] ??
+                  negocio.location?.coordinates?.lng ??
+                  "",
+              },
             },
           }));
         })
@@ -136,6 +162,7 @@ export default function NegocioForm() {
 
   if (cargando) return <SkeletonNegocioForm />;
 
+  // ✅ Validación condicional del PASO 3 (Ubicación)
   const validationSchema = [
     Yup.object({
       name: Yup.string().required("Nombre requerido"),
@@ -157,18 +184,46 @@ export default function NegocioForm() {
         }).nullable(),
       }).required(),
     }),
+    // 🧠 Aquí está la lógica delivery vs dirección
     Yup.object({
-      location: Yup.object({
-        address: Yup.string().required("Dirección requerida"),
-        city: Yup.string().required("Ciudad requerida"),
-        state: Yup.string().required("Estado requerida"),
-        zipCode: Yup.string().required("Código postal requerido"),
-        country: Yup.string().required("País requerido"),
-        coordinates: Yup.object({
-          lat: Yup.number().nullable(),
-          lng: Yup.number().nullable(),
-        }).nullable(),
-      }).required(),
+      isDeliveryOnly: Yup.boolean().default(false),
+      primaryZip: Yup.string().when("isDeliveryOnly", {
+        is: true,
+        then: (s) =>
+          s
+            .required("ZIP requerido")
+            .matches(/^\d{5}$/, "Debe ser un ZIP de 5 dígitos"),
+        otherwise: (s) => s.notRequired().nullable(true),
+      }),
+      location: Yup.object().when("isDeliveryOnly", {
+        is: true,
+        // Solo delivery: NO obligamos address/city/state/zip/country
+        then: (schema) =>
+          schema.shape({
+            address: Yup.string().nullable(true),
+            city: Yup.string().nullable(true),
+            state: Yup.string().nullable(true),
+            zipCode: Yup.string().nullable(true),
+            country: Yup.string().nullable(true),
+            coordinates: Yup.object({
+              lat: Yup.number().nullable(),
+              lng: Yup.number().nullable(),
+            }).nullable(true),
+          }),
+        // Presencial: dirección completa obligatoria
+        otherwise: (schema) =>
+          schema.shape({
+            address: Yup.string().required("Dirección requerida"),
+            city: Yup.string().required("Ciudad requerida"),
+            state: Yup.string().required("Estado requerido"),
+            zipCode: Yup.string().required("Código postal requerido"),
+            country: Yup.string().required("País requerido"),
+            coordinates: Yup.object({
+              lat: Yup.number().nullable(),
+              lng: Yup.number().nullable(),
+            }).nullable(true),
+          }),
+      }),
     }),
     Yup.object({
       openingHours: Yup.array()
@@ -253,6 +308,21 @@ export default function NegocioForm() {
               ...rest
             } = values;
 
+            // 🧹 Ajuste seguro para delivery-only:
+            // Evitamos mandar dirección completa si es solo delivery (no rompe tu backend)
+            let safePayload = { ...rest };
+            if (rest.isDeliveryOnly) {
+              safePayload.location = {
+                // puedes dejar vacíos estos campos; el backend usará primaryZip
+                address: "",
+                city: "",
+                state: "",
+                zipCode: rest.location?.zipCode || "",
+                country: rest.location?.country || "",
+                coordinates: { lat: "", lng: "" },
+              };
+            }
+
             const formData = new FormData();
 
             if (featuredImage instanceof File)
@@ -282,11 +352,13 @@ export default function NegocioForm() {
             const categoryIds = values.categories.map((id) => id.toString());
             formData.append("categories", JSON.stringify(categoryIds));
 
-            Object.entries(rest).forEach(([key, val]) => {
-              if (key === "categories") return;
+            // 🔑 Mandamos todo lo demás (incluye isDeliveryOnly y primaryZip)
+            Object.entries(safePayload).forEach(([key, val]) => {
               formData.append(
                 key,
-                typeof val === "object" ? JSON.stringify(val) : val
+                typeof val === "object"
+                  ? JSON.stringify(val)
+                  : String(val ?? "")
               );
             });
 
@@ -387,6 +459,8 @@ export default function NegocioForm() {
               >
                 <PasoActual
                   {...(paso === 0 ? { categorias, comunidades } : {})}
+                  // 🏷️ Si tu Paso3Ubicacion soporta banderas/props, aquí puedes pasarle una:
+                  // enableDeliveryToggle
                   soloLectura={paso === 4 && user?.role !== "admin"}
                 />
               </motion.div>

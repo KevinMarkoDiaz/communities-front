@@ -64,7 +64,7 @@ export default function Paso2Contacto() {
         </label>
         <Field
           name="contact.socialMedia.facebook"
-          placeholder="Enlace o usuario"
+          placeholder="https://..."
           className="form-input w-full bg-white/10 border border-white/30 rounded-lg h-12 px-4 placeholder:text-gray-300 focus:outline-none"
         />
         <ErrorMessage
@@ -81,7 +81,7 @@ export default function Paso2Contacto() {
         </label>
         <Field
           name="contact.socialMedia.instagram"
-          placeholder="@usuario"
+          placeholder="https://..."
           className="form-input w-full bg-white/10 border border-white/30 rounded-lg h-12 px-4 placeholder:text-gray-300 focus:outline-none"
         />
         <ErrorMessage

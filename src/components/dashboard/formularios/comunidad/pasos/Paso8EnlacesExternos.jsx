@@ -32,7 +32,7 @@ export function Paso8EnlacesExternos() {
                   </label>
                   <Field
                     name={`externalLinks[${index}].title`}
-                    placeholder="Grupo de WhatsApp colombiano"
+                    placeholder="Grupo de WhatsApp"
                     className="form-input w-full h-12 px-4 rounded-xl border border-gray-300"
                   />
                   <ErrorMessage

@@ -176,7 +176,7 @@ export default function RegistroMultiStep() {
                       </label>
                       <Field
                         name="name"
-                        placeholder="Kevin"
+                        placeholder="Usuario"
                         className="w-full px-4 py-3 border border-white/40 bg-white/10 rounded-lg placeholder:text-gray-300 focus:outline-none"
                       />
                       <ErrorMessage
@@ -191,7 +191,7 @@ export default function RegistroMultiStep() {
                       </label>
                       <Field
                         name="lastName"
-                        placeholder="Díaz"
+                        placeholder="Usuario"
                         className="w-full px-4 py-3 border border-white/40 bg-white/10 rounded-lg placeholder:text-gray-300 focus:outline-none"
                       />
                       <ErrorMessage
