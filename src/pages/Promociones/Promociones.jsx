@@ -4,12 +4,10 @@ import { fetchAllPromos } from "../../store/promocionesSlice";
 
 import CardPromoHome from "../../components/promo/CardPromoHome";
 import ScrollCarousel from "../../components/ScrollCarousel";
-import PromocionesDestacadas from "../../components/home/PromocionesDestacadas";
 import ModalGuardarPromo from "../../components/modal/ModalGuardarPromo";
 import FadeInOnScroll from "../../components/FadeInOnScroll";
 
 import { Helmet } from "react-helmet-async";
-import PromocionesD from "../../assets/PromocionesD.png";
 
 export default function Promociones() {
   const dispatch = useDispatch();
@@ -141,8 +139,6 @@ export default function Promociones() {
 
         {!loading && !error && (
           <>
-            <PromocionesDestacadas Link={false} imagen={PromocionesD} />
-
             {renderCarrusel(
               "Descuentos",
               "imperdibles",

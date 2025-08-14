@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import ScrollCarousel from "../ScrollCarousel";
-import BannerTituloSugeridos from "../BannerTituloSugeridos";
 import CardDestacado from "../Card";
 import SugeridosSkeleton from "../Skeleton/SugeridosSkeleton";
 
@@ -18,12 +17,6 @@ export default function EventosProximos({ eventos = [], loading, imagen }) {
 
   return (
     <section className="space-y-4">
-      <BannerTituloSugeridos
-        titulo="Viví tu cultura. Sumate a los eventos que hacen vibrar tu comunidad."
-        imagen={imagen}
-        link="/eventos"
-      />
-
       <ScrollCarousel>
         {eventosProximos.map((evento) => {
           const { _id, title, featuredImage } = evento;

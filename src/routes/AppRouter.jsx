@@ -18,9 +18,6 @@ import NegocioDetalle from "../pages/NegocioDetalle";
 import EventoDetalle from "../pages/EventoDetalle";
 
 import Promociones from "../pages/Promociones/Promociones";
-import PromoFinDeSemana from "../pages/Promociones/PromoFinDeSemana";
-import DescuentosImperdibles from "../pages/Promociones/DescuentosImperdibles";
-import NuevosLanzamientos from "../pages/Promociones/NuevosLanzamientos";
 
 import PremiumInfo from "../pages/premium/PremiumInfo";
 import SuscripcionExitosa from "../pages/premium/SuscripcionExitosa";
@@ -50,6 +47,7 @@ import CrearComunidad from "../pages/dashboard/CrearComunidad";
 import EditarComunidad from "../pages/dashboard/EditarComunidad";
 
 import RutaPrivada from "../components/RutaPrivada";
+import RutaPrivadaAdmin from "../components/RutaPrivadaAdmin";
 
 // ✅ Mensajería
 import InboxList from "../components/mensajes/InboxList";
@@ -61,6 +59,9 @@ import DashboardEventDetail from "../../src/pages/dashboard/vista_detalle/Dashbo
 import DashboardCommunityDetail from "../../src/pages/dashboard/vista_detalle/DashboardCommunityDetail";
 import Cupones from "../pages/dashboard/Cupones";
 import RedimirCodigo from "../pages/dashboard/RedimirCodigo";
+import Banners from "../pages/dashboard/banners/Banners";
+import CrearBannerView from "../pages/dashboard/banners/CrearBannerView";
+import MisBanners from "../pages/dashboard/banners/MisBanners";
 
 const router = createBrowserRouter([
   {
@@ -84,15 +85,7 @@ const router = createBrowserRouter([
       // Promociones
       {
         path: "/promociones",
-        children: [
-          { path: "", element: <Promociones /> },
-          { path: "promo-fin-de-semana", element: <PromoFinDeSemana /> },
-          {
-            path: "descuentos-imperdibles",
-            element: <DescuentosImperdibles />,
-          },
-          { path: "nuevos-lanzamientos", element: <NuevosLanzamientos /> },
-        ],
+        children: [{ path: "", element: <Promociones /> }],
       },
 
       // Páginas informativas
@@ -115,6 +108,43 @@ const router = createBrowserRouter([
   // Autenticación
   { path: "/login", element: <Login /> },
   { path: "/registro", element: <RegistroMultiStep /> },
+
+  {
+    path: "/dashboard-admin",
+    element: <RutaPrivadaAdmin />,
+    children: [
+      {
+        path: "",
+        element: <DashboardLayout />,
+        children: [
+          {
+            path: "mis-categorias",
+            children: [
+              { path: "", element: <Categorias /> },
+              { path: "crear", element: <CrearCategoriaView /> },
+              { path: ":id/editar", element: <EditarCategoriaView /> },
+            ],
+          },
+
+          {
+            path: "mis-comunidades",
+            children: [
+              { path: "", element: <Comunidades /> },
+              { path: "crear", element: <CrearComunidad /> },
+              { path: ":id/editar", element: <EditarComunidad /> },
+            ],
+          },
+          {
+            path: "banners",
+            children: [
+              { path: "", element: <Banners /> },
+              { path: "crear", element: <CrearBannerView /> },
+            ],
+          },
+        ],
+      },
+    ],
+  },
 
   // Dashboard privado
   {
@@ -145,7 +175,13 @@ const router = createBrowserRouter([
               { path: ":negocioId/promos/nueva", element: <CrearPromo /> },
             ],
           },
-
+          {
+            path: "mis-banners",
+            children: [
+              { path: "", element: <MisBanners /> },
+              { path: "crear", element: <CrearBannerView /> },
+            ],
+          },
           // Eventos del usuario
           {
             path: "mis-eventos",
@@ -169,21 +205,15 @@ const router = createBrowserRouter([
           // Categorías
           {
             path: "categorias",
-            children: [
-              { path: "", element: <Categorias /> },
-              { path: "crear", element: <CrearCategoriaView /> },
-              { path: ":id/editar", element: <EditarCategoriaView /> },
-            ],
+            children: [{ path: "", element: <Categorias /> }],
           },
 
           // Comunidades del usuario
           {
-            path: "mis-comunidades",
+            path: "comunidades",
             children: [
               { path: "", element: <Comunidades /> },
-              { path: "crear", element: <CrearComunidad /> },
               { path: ":id", element: <DashboardCommunityDetail /> }, // 📌 NUEVO
-              { path: ":id/editar", element: <EditarComunidad /> },
             ],
           },
         ],

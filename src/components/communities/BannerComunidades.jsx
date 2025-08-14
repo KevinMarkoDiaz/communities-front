@@ -1,4 +1,4 @@
-import bannerCMM from "../../assets/bannerCMM.mp4";
+import bannerCMM from "../../assets/eventosbanner.png";
 
 export default function BannerComunidades({ scrollToRef }) {
   const handleScroll = () => {
@@ -10,21 +10,18 @@ export default function BannerComunidades({ scrollToRef }) {
 
   return (
     <div className="w-full">
-      <div className="relative w-full rounded-xl overflow-hidden aspect-[3/1] sm:aspect-[3/1.2] md:aspect-[16/6]">
-        {/* 🎥 Video de fondo */}
-        <video
-          className="absolute inset-0 w-full h-full object-cover"
+      <div className="relative w-full rounded-xl overflow-hidden h-[250px]  md:h-[300px]">
+        {/* 🖼 Imagen de fondo */}
+        <img
           src={bannerCMM}
-          autoPlay
-          muted
-          loop
-          playsInline
+          alt="Banner comunidades"
+          className="absolute inset-0 w-full h-full object-cover"
         />
 
         {/* 🔲 Capa oscura para contraste */}
         <div className="absolute inset-0 bg-black/10 z-10" />
 
-        {/* 🧾 Contenido encima del video */}
+        {/* 🧾 Contenido encima de la imagen */}
       </div>
     </div>
   );

@@ -1,14 +1,9 @@
 import { Link } from "react-router-dom";
 import ScrollCarousel from "../ScrollCarousel";
-import BannerTituloSugeridos from "../BannerTituloSugeridos";
 import CardDestacado from "../Card";
 import SugeridosSkeleton from "../Skeleton/SugeridosSkeleton";
 
-export default function ComunidadesDestacadas({
-  comunidades = [],
-  loading,
-  imagen,
-}) {
+export default function ComunidadesDestacadas({ comunidades = [], loading }) {
   if (loading) return <SugeridosSkeleton />;
 
   const destacadas = comunidades.slice(0, 6);
@@ -17,12 +12,6 @@ export default function ComunidadesDestacadas({
 
   return (
     <section className="space-y-4">
-      <BannerTituloSugeridos
-        titulo="Encontrá tu comunidad y sentite en casa"
-        imagen={imagen}
-        link="/comunidades"
-      />
-
       <ScrollCarousel>
         {destacadas.map((comunidad) => (
           <Link

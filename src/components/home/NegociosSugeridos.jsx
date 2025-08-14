@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import CardDestacado from "../Card";
 import ScrollCarousel from "../ScrollCarousel";
-import BannerTituloSugeridos from "../BannerTituloSugeridos";
 import SugeridosSkeleton from "../Skeleton/SugeridosSkeleton";
 
 export default function NegociosSugeridos({ negocios = [], loading, imagen }) {
@@ -13,12 +12,6 @@ export default function NegociosSugeridos({ negocios = [], loading, imagen }) {
 
   return (
     <section className="space-y-4">
-      <BannerTituloSugeridos
-        titulo="Destacados de tu comunidad"
-        imagen={imagen}
-        link="/negocios"
-      />
-
       <ScrollCarousel>
         {destacados.map((n) => (
           <Link

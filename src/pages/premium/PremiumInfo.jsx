@@ -8,8 +8,6 @@ import {
   FaShieldAlt,
   FaUndo,
   FaHeadset,
-  FaRegCheckCircle,
-  FaTimesCircle,
 } from "react-icons/fa";
 import { mostrarFeedback } from "../../store/feedbackSlice";
 import { useDispatch } from "react-redux";
@@ -129,7 +127,7 @@ export default function PremiumInfo() {
 
           {/* Plan Premium */}
           <div className="border rounded-2xl p-6 bg-green-50 shadow-lg ring-2 ring-green-500">
-            <h2 className="text-2xl font-semibold mb-4 ">Plan Premium</h2>
+            <h2 className="text-2xl font-semibold mb-4">Plan Premium</h2>
             <ul className="space-y-3 text-gray-700">
               <li className="flex items-start gap-3">
                 <div className="w-5 flex-shrink-0 flex justify-center">
@@ -143,7 +141,9 @@ export default function PremiumInfo() {
                 <div className="w-5 flex-shrink-0 flex justify-center">
                   <FaCheckCircle size={18} className="text-green-700" />
                 </div>
-                <span className="flex-1">Icono destacado en el mapa</span>
+                <span className="flex-1">
+                  Icono destacado en el mapa de tu comunidad
+                </span>
               </li>
               <li className="flex items-start gap-3">
                 <div className="w-5 flex-shrink-0 flex justify-center">
@@ -158,7 +158,15 @@ export default function PremiumInfo() {
                   <FaCheckCircle size={18} className="text-green-700" />
                 </div>
                 <span className="flex-1">
-                  Galería extendida de hasta 15 imágenes
+                  Notificaciones por correo de nuevos mensajes a tu negocio
+                </span>
+              </li>
+              <li className="flex items-start gap-3">
+                <div className="w-5 flex-shrink-0 flex justify-center">
+                  <FaCheckCircle size={18} className="text-green-700" />
+                </div>
+                <span className="flex-1">
+                  Perfil de negocio destacado dentro del detalle de tu comunidad
                 </span>
               </li>
               <li className="flex items-start gap-3">
@@ -179,7 +187,7 @@ export default function PremiumInfo() {
 
             <div className="mt-6">
               <p className="text-xl font-bold text-green-700 mb-4">
-                $9.99 / mes
+                $12.99 / mes
               </p>
               <button
                 onClick={manejarSuscripcion}
@@ -218,7 +226,7 @@ export default function PremiumInfo() {
         </div>
 
         {/* FAQ */}
-        <div className="max-w-2xl mx-auto mt-10">
+        <div className="max-w-md mx-auto mt-10">
           <h3 className="text-2xl font-semibold mb-6 text-orange-600 text-center">
             Preguntas Frecuentes
           </h3>

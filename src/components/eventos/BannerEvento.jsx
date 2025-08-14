@@ -1,4 +1,4 @@
-import bannerEVV from "../../assets/bannerEVV.mp4";
+import bannerEVV from "../../assets/comunidadbanner.png";
 
 export default function BannerEvento({ scrollToRef }) {
   const handleScroll = () => {
@@ -10,25 +10,18 @@ export default function BannerEvento({ scrollToRef }) {
 
   return (
     <div className="flex justify-center">
-      <div className="w-full rounded-xl overflow-hidden relative">
-        {/* 🎥 Video de fondo */}
-        <video
-          className="absolute inset-0 w-full h-full object-cover"
+      <div className="w-full rounded-xl overflow-hidden relative h-[300px]  md:h-[300px]">
+        {/* 🖼 Imagen de fondo */}
+        <img
           src={bannerEVV}
-          autoPlay
-          muted
-          playsInline
+          alt="Banner eventos"
+          className="absolute inset-0 w-full h-full object-cover"
         />
 
         {/* 🔲 Capa oscura para contraste */}
-        <div className="absolute inset-0 bg-black/20" />
 
         {/* 🧾 Contenido */}
-        <div className="relative z-10 flex flex-col gap-6 sm:gap-8 min-h-[420px] items-start justify-end p-6 sm:p-10 text-white">
-          <h1 className="text-3xl sm:text-5xl font-black leading-tight tracking-[-0.02em]">
-            Celebrá tu identidad. Unite a experiencias que inspiran.
-          </h1>
-
+        <div className="relative z-10 flex flex-col gap-6 sm:gap-8 h-full items-start justify-end p-6 sm:p-10 text-white">
           <button
             onClick={handleScroll}
             className="bg-[#f45525] hover:bg-[#e64a1d] transition text-white text-sm sm:text-base font-bold px-5 py-2 sm:py-3 rounded-full"

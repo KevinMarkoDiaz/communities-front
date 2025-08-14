@@ -9,7 +9,6 @@ import CardLista from "../components/CardLista";
 import BannerComunidades from "../components/communities/BannerComunidades";
 import ComunidadesDestacadas from "../components/home/ComunidadesDestacadas";
 import Pagination from "../components/Pagination";
-import ComunidadesD from "../assets/ComunidadesD.png";
 import BusquedaGlobalWrapper from "../components/search/BusquedaGlobalWrapper";
 import ResetBusquedaOnMount from "../utils/ResetBusquedaOnMount";
 
@@ -64,7 +63,7 @@ export default function Comunidades() {
 
       {/* SECCIÓN DESTACADA + BUSCADOR */}
       <div className="flex flex-col gap-12 md:gap-16 xl:gap-24">
-        <ComunidadesDestacadas imagen={ComunidadesD} />
+        <ComunidadesDestacadas />
 
         <div>
           <h4 className="text-xl sm:text-2xl font-bold text-black tracking-tight leading-snug my-4">

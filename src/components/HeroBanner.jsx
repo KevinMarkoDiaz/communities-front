@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import bn1 from "../../src/assets/bn1.svg";
-import bn2 from "../../src/assets/bn2.svg";
+import bn1 from "../../src/assets/bn1.png";
+import bn2 from "../../src/assets/bn2.png";
 
 export default function HeroBanner({ onBuscar }) {
   const images = [bn1, bn2];

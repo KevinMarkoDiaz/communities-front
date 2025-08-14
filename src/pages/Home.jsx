@@ -7,8 +7,7 @@ import EventosProximos from "../components/home/EventosProximos";
 import ComunidadesDestacadas from "../components/home/ComunidadesDestacadas";
 import BusquedaList from "../components/home/BusquedaList";
 import VistaComunidad from "../components/VistaComunidad";
-import PromocionesDestacadas from "../components/home/PromocionesDestacadas";
-import bannerBTN from "../assets/bannerBTN.mp4";
+import bannerBTN from "../assets/bnnhome.png";
 import GridResultadosGlobal from "../components/home/GridResultadosGlobal";
 
 export default function Home() {
@@ -127,7 +126,6 @@ export default function Home() {
       </div>
       {/* Secciones principales */}
       <div className="flex flex-col gap-12 md:gap-16 xl:gap-24 mt-12">
-        <PromocionesDestacadas />
         <NegociosSugeridos negocios={negocios} loading={negociosLoading} />
         <EventosProximos eventos={eventos} loading={eventosLoading} />
         <ComunidadesDestacadas
@@ -136,12 +134,10 @@ export default function Home() {
         />
 
         <div className="w-full hidden sm:flex justify-center px-4 py-10">
-          <video
+          <img
             src={bannerBTN}
-            autoPlay
-            muted
-            playsInline
-            className="rounded-xl max-w-6xl w-full shadow-lg"
+            alt="Banner negocios"
+            className=" inset-0 w-full h-full object-cover"
           />
         </div>
       </div>

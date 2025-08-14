@@ -1,15 +1,25 @@
-import AdBanner from "./ads/AdBanner";
+// src/components/StickyAds.jsx
+import BannerSlot from "./ads/BannerSlot";
 
-export default function StickyAds() {
+export default function StickyAds({ communityId }) {
   return (
     <aside className="hidden lg:flex flex-col w-[300px] min-h-full gap-6 lg:w-[200px] xl:w-[240px] 2xl:w-[280px]">
-      {[1, 2].map((_, index) => (
-        <div key={index} className="flex-1 min-h-screen relative">
-          <div className="sticky top-[96px] p-2">
-            <AdBanner
-              // Si aún no tienes anuncio real, déjalo sin props
-              // Puedes usar className para un fondo amarillo-naranja
-              className="bg-gradient-to-r from-yellow-50 to-orange-100 h-[250px]"
+      {[0, 1].map((i) => (
+        <div key={i} className="flex-1 min-h-screen relative">
+          <div className="sticky top-[120px] p-2">
+            <BannerSlot
+              placement={i === 0 ? "sidebar_right_1" : "sidebar_right_2"}
+              communityId={communityId}
+              adUnit={
+                i === 0
+                  ? import.meta.env.VITE_ADSENSE_SLOT_SIDEBAR_1
+                  : import.meta.env.VITE_ADSENSE_SLOT_SIDEBAR_2
+              }
+              enableGoogleAds={true}
+              className="bg-gradient-to-r from-yellow-50 to-orange-100 rounded-2xl  shadow-2xl"
+              containerStyle={{ minHeight: "250px" }}
+              fixedHeight="250px"
+              imgClassName="max-h-[246px] "
             />
           </div>
         </div>

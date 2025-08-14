@@ -8,7 +8,6 @@ import GridWrapper from "../components/GridWrapper";
 import BannerEvento from "../components/eventos/BannerEvento";
 import EventosProximos from "../components/home/EventosProximos";
 import Pagination from "../components/Pagination";
-import EventosP from "../assets/EventosP.png";
 import BusquedaGlobalWrapper from "../components/search/BusquedaGlobalWrapper";
 import ResetBusquedaOnMount from "../utils/ResetBusquedaOnMount";
 import ilust2 from "../assets/ilust2.svg";
@@ -76,7 +75,7 @@ export default function Eventos() {
 
       <div className="w-full max-w-full overflow-hidden flex flex-col gap-12 md:gap-16 xl:gap-24">
         <div className="flex flex-col gap-12 md:gap-16 xl:gap-24">
-          <EventosProximos imagen={EventosP} />
+          <EventosProximos />
 
           <div>
             <h4 className="text-xl md:text-xl font-bold text-black tracking-tight leading-snug my-4">

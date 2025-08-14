@@ -1,15 +1,16 @@
-import { Outlet, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 export default function RutaPrivada() {
-  // Accede al usuario desde el store de Redux
-  const usuario = useSelector((state) => state.auth.usuario);
+  const { usuario, loading } = useSelector((s) => s.auth);
+  const location = useLocation();
 
-  // Si no está autenticado, redirige al login
+  if (loading) return <div className="p-4">Cargando…</div>;
+
+  // ✅ Cualquier autenticado puede entrar, incluyendo admin
   if (!usuario) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/login" replace state={{ from: location }} />;
   }
 
-  // Si está autenticado, renderiza las rutas hijas
   return <Outlet />;
 }
