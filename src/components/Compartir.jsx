@@ -48,7 +48,7 @@ export default function Compartir({
         Compartilo con alguien — juntos creamos comunidad{" "}
       </h2>
 
-      <div className="flex flex-wrap items-center gap-3 text-xl sm:text-2xl">
+      <div className="flex flex-wrap items-center gap-3  text-lg sm:text-2xl">
         {showNativeShare ? (
           <button
             onClick={handleNativeShare}

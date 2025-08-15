@@ -15,7 +15,7 @@ export default function DashboardSectionHeader({
         <div className="inline-block bg-orange-100 text-orange-700 text-xs font-semibold px-3 py-1 rounded-full self-center md:self-start">
           {badge}
         </div>
-        <h1 className="text-xl xl:text-2xl font-extrabold text-[#141C24] tracking-tight leading-snug flex items-center gap-2 justify-center md:justify-start">
+        <h1 className=" text-lg xl:text-2xl font-extrabold text-[#141C24] tracking-tight leading-snug flex items-center gap-2 justify-center md:justify-start">
           <span>{icon}</span>
           {title}
         </h1>

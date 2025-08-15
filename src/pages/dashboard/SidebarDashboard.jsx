@@ -96,12 +96,12 @@ const SidebarDashboard = ({ usuario, handleLogout }) => {
               className={({ isActive }) => itemClasses(isActive)}
             >
               <div className="flex items-center gap-3">
-                <span className="text-xl">{icon}</span>
+                <span className=" text-lg">{icon}</span>
                 <p className="hidden md:block text-xs font-medium leading-normal truncate">
                   {label}
                 </p>
               </div>
-              <span className="text-xl text-white opacity-0 group-hover:opacity-100 group-[.active]:opacity-100 transition-opacity duration-300 ease-out">
+              <span className=" text-lg text-white opacity-0 group-hover:opacity-100 group-[.active]:opacity-100 transition-opacity duration-300 ease-out">
                 <MdArrowRight />
               </span>
             </NavLink>
@@ -121,12 +121,12 @@ const SidebarDashboard = ({ usuario, handleLogout }) => {
                 className={({ isActive }) => itemClasses(isActive)}
               >
                 <div className="flex items-center gap-3">
-                  <span className="text-xl">{icon}</span>
+                  <span className=" text-lg">{icon}</span>
                   <p className="hidden md:block text-xs font-medium leading-normal truncate">
                     {label}
                   </p>
                 </div>
-                <span className="text-xl text-white opacity-0 group-hover:opacity-100 group-[.active]:opacity-100 transition-opacity duration-300 ease-out">
+                <span className=" text-lg text-white opacity-0 group-hover:opacity-100 group-[.active]:opacity-100 transition-opacity duration-300 ease-out">
                   <MdArrowRight />
                 </span>
               </NavLink>
@@ -146,7 +146,7 @@ const SidebarDashboard = ({ usuario, handleLogout }) => {
           }
         >
           <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out" />
-          <span className="relative z-10 text-xl">
+          <span className="relative z-10  text-lg">
             <FaRocket />
           </span>
           <p className="hidden md:block relative z-10 text-xs font-semibold">

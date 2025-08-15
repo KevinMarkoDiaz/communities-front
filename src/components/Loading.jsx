@@ -19,11 +19,7 @@ export default function Loading({ className = "" }) {
 
   return (
     <div className={`flex items-center justify-center ${className}`}>
-      <img
-        src={icons[current]}
-        alt="Cargando..."
-        className="w-24 h-24 animate-pulse"
-      />
+      <img src={icons[current]} alt="..." className="w-24 h-24 animate-pulse" />
     </div>
   );
 }

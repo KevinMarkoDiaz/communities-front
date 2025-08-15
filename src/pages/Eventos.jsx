@@ -78,7 +78,7 @@ export default function Eventos() {
           <EventosProximos />
 
           <div>
-            <h4 className="text-xl md:text-xl font-bold text-black tracking-tight leading-snug my-4">
+            <h4 className=" text-lg md: text-lg font-bold text-black tracking-tight leading-snug my-4">
               Descubre eventos que enriquecen tu conexión cultural
             </h4>
             <BusquedaGlobalWrapper
@@ -138,7 +138,7 @@ export default function Eventos() {
                     alt="Sin eventos"
                     className="w-32 md:w-60 xl:w-120 opacity-90"
                   />
-                  <p className="text-gray-600  text-xs md:text-base xl:text-xl">
+                  <p className="text-gray-600  text-xs md:text-base xl: text-lg">
                     Ups... no encontramos ningún evento en esta categoría dentro
                     de tu comunidad.
                     <br />
@@ -146,7 +146,7 @@ export default function Eventos() {
                   </p>
                   <Link
                     to="/dashboard/mis-eventos/crear"
-                    className="inline-block shadow-2xl bg-orange-500 hover:bg-orange-600 text-white  text-xs font-medium px-4 py-2 xl:text-xl rounded-2xl transition"
+                    className="inline-block shadow-2xl bg-orange-500 hover:bg-orange-600 text-white  text-xs font-medium px-4 py-2 xl: text-lg rounded-2xl transition"
                   >
                     ¿Tienes una idea de evento? Publícalo aquí
                   </Link>

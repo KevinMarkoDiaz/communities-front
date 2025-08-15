@@ -281,7 +281,7 @@ export default function ComunidadDetalle() {
                         return (
                           <div key={tipo} className="mb-8">
                             <div className="flex items-center gap-2 mb-2">
-                              <span className="text-xl">{icono}</span>
+                              <span className=" text-lg">{icono}</span>
                               <h3 className="text-md font-semibold text-gray-500">
                                 {titulo}
                               </h3>
@@ -296,7 +296,7 @@ export default function ComunidadDetalle() {
                                   rel="noopener noreferrer"
                                   className="flex items-center gap-3 p-4 rounded-xl bg-gray-50 hover:bg-gray-100 border border-gray-200 shadow-sm"
                                 >
-                                  <div className="text-xl text-back-600">
+                                  <div className=" text-lg text-back-600">
                                     {socialIcons[link.type] || <FaGlobe />}
                                   </div>
                                   <div>

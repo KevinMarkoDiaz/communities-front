@@ -26,18 +26,18 @@ function BadgeEstadoEvento({ date }) {
   let status = "próximo";
   let bgColor = "bg-blue-100";
   let textColor = "text-blue-800";
-  let icon = <MdEvent className="text-blue-600 text-xl" />;
+  let icon = <MdEvent className="text-blue-600  text-lg" />;
 
   if (now > eventDate) {
     status = "finalizado";
     bgColor = "bg-red-100";
     textColor = "text-red-800";
-    icon = <MdAccessTime className="text-red-600 text-xl" />;
+    icon = <MdAccessTime className="text-red-600  text-lg" />;
   } else if (isToday) {
     status = "en vivo";
     bgColor = "bg-green-100";
     textColor = "text-green-800";
-    icon = <MdCheckCircle className="text-green-600 text-xl" />;
+    icon = <MdCheckCircle className="text-green-600  text-lg" />;
   }
 
   return (

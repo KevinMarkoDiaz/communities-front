@@ -135,7 +135,7 @@ export default function Cupones() {
           >
             <button
               onClick={handleCloseModal}
-              className="absolute top-2 right-2 text-gray-400 hover:text-gray-700 text-xl"
+              className="absolute top-2 right-2 text-gray-400 hover:text-gray-700  text-lg"
             >
               ×
             </button>

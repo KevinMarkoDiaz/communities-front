@@ -186,7 +186,7 @@ export default function PremiumInfo() {
             </ul>
 
             <div className="mt-6">
-              <p className="text-xl font-bold text-green-700 mb-4">
+              <p className=" text-lg font-bold text-green-700 mb-4">
                 $12.99 / mes
               </p>
               <button

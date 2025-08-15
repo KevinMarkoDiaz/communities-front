@@ -29,13 +29,13 @@ export default function ModalGuardarPromo({ promo, onClose }) {
       <div className="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full relative">
         <button
           onClick={onClose}
-          className="absolute top-2 right-2 text-gray-500 hover:text-black text-xl"
+          className="absolute top-2 right-2 text-gray-500 hover:text-black  text-lg"
         >
           &times;
         </button>
 
         <div className="text-center space-y-4">
-          <h2 className="text-xl font-bold text-sky-800">{promo.name}</h2>
+          <h2 className=" text-lg font-bold text-sky-800">{promo.name}</h2>
           <p className="text-gray-700  text-xs">{promo.description}</p>
 
           {!usuario ? (

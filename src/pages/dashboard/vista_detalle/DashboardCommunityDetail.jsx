@@ -146,7 +146,7 @@ export default function DashboardCommunityDetail() {
 
       {/* SECCIÓN DE MÉTRICAS */}
       <section className="bg-white md:border border-gray-200 rounded-2xl md:p-6 md:shadow space-y-4">
-        <h3 className="text-xl font-bold text-[#141C24]">
+        <h3 className=" text-lg font-bold text-[#141C24]">
           Métricas de la comunidad
         </h3>
         <p className="  text-xs text-gray-500">

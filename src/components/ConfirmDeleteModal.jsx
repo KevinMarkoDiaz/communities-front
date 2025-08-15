@@ -20,7 +20,7 @@ export default function ConfirmDeleteModal({
         className="bg-white max-w-md w-full rounded-xl shadow-xl p-6 flex flex-col gap-5"
       >
         {/* Título */}
-        <h2 className="text-xl font-bold text-[#141C24] leading-snug">
+        <h2 className=" text-lg font-bold text-[#141C24] leading-snug">
           ¿Quieres eliminar <span className="text-red-600">{entityName}</span>?
         </h2>
 

@@ -34,7 +34,6 @@ export default function NotificationCenter() {
 
   return (
     <div className="p-4 space-y-4 bg-gray-50 rounded-xl w-fit shadow-lg max-w-xl">
-      {loading && <p className="text-gray-500">Cargando...</p>}
       {items.length === 0 && !loading && (
         <p className="text-gray-500">No tienes notificaciones.</p>
       )}

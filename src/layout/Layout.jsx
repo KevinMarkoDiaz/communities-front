@@ -50,7 +50,7 @@ export default function Layout() {
       <Navbar />
 
       {!hideAds && (
-        <div className="w-full bg-gray-100 text-center py-2">
+        <div className="w-full bg-gradient-to-r from-[#fff7ec] to-[#f3e8ff] text-center py-2">
           <BannerSlot
             placement="home_top"
             communityId={selectedCommunityId}
@@ -89,7 +89,7 @@ export default function Layout() {
       )}
 
       {!hideAds && (
-        <div className="w-full bg-gray-100 text-center py-2">
+        <div className="w-full bg-gradient-to-r from-[#fff7ec] to-[#f3e8ff] text-center py-2">
           <BannerSlot
             placement="home_bottom"
             communityId={selectedCommunityId}

@@ -37,7 +37,7 @@ export default function HeaderPerfil({ usuario }) {
 
           {/* Nombre y detalles */}
           <div className="flex flex-col gap-1 text-left">
-            <p className="text-[#111827] text-base sm:text-lg md:text-xl font-semibold leading-tight tracking-[-0.015em]">
+            <p className="text-[#111827] text-base sm:text-lg md: text-lg font-semibold leading-tight tracking-[-0.015em]">
               {name} {lastName}
             </p>
 
@@ -84,7 +84,7 @@ export default function HeaderPerfil({ usuario }) {
           + Nuevo negocio
         </Link>
         <Link
-          to="/inbox"
+          to="/dashboard/inbox"
           className="flex shadow-md hover:shadow-lg text-orange-600 items-center justify-center gap-2 px-3 py-2 rounded border border-gray-300 bg-white hover:bg-gray-50 transition text-xs font-medium whitespace-nowrap no-underline"
         >
           <FiMessageCircle className="text-lg" />

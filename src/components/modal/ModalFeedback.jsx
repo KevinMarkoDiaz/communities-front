@@ -32,10 +32,10 @@ export default function ModalFeedback() {
   };
 
   const iconos = {
-    success: <AiOutlineCheckCircle className="text-white text-xl" />,
-    error: <AiOutlineCloseCircle className="text-white text-xl" />,
+    success: <AiOutlineCheckCircle className="text-white  text-lg" />,
+    error: <AiOutlineCloseCircle className="text-white  text-lg" />,
     loading: (
-      <AiOutlineLoading3Quarters className="animate-spin text-white text-xl" />
+      <AiOutlineLoading3Quarters className="animate-spin text-white  text-lg" />
     ),
   };
 

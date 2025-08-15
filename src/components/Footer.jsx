@@ -94,7 +94,7 @@ export default function Footer() {
               aria-label="Facebook"
               className="hover:opacity-80"
             >
-              <FaFacebookF className="text-white text-xl" />
+              <FaFacebookF className="text-white  text-lg" />
             </a>
             <a
               href="https://www.tiktok.com/@comunnidades_latino?lang=en"
@@ -103,7 +103,7 @@ export default function Footer() {
               aria-label="TikTok"
               className="hover:opacity-80"
             >
-              <FaTiktok className="text-white text-xl" />
+              <FaTiktok className="text-white  text-lg" />
             </a>
             <a
               href="https://www.instagram.com/communidades_/"
@@ -112,7 +112,7 @@ export default function Footer() {
               aria-label="Instagram"
               className="hover:opacity-80"
             >
-              <FaInstagram className="text-white text-xl" />
+              <FaInstagram className="text-white  text-lg" />
             </a>
           </div>
           <p className="text-xs text-white/80 italic hidden md:block">

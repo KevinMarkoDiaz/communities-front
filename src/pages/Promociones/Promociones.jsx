@@ -55,7 +55,7 @@ export default function Promociones() {
       <section className="">
         <FadeInOnScroll direction="up" duration={600} delay={100}>
           <div className="text-left mb-4">
-            <h2 className="text-md md:text-xl font-bold text-gray-800 relative inline-block">
+            <h2 className="text-md md: text-lg font-bold text-gray-800 relative inline-block">
               <span className="relative z-10">{`${linea1} ${linea2}`}</span>
               <span
                 className="absolute bottom-0 h-2 bg-lime-300/60 z-0 rounded"

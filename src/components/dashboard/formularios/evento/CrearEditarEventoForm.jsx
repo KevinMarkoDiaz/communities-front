@@ -7,7 +7,7 @@ import * as Yup from "yup";
 
 import { customSelectStylesForm } from "../../../../../src/styles/customSelectStylesForm.js";
 import Paso1Info from "./Paso1Info";
-import PasoUbicacion from "../PasoUbicacion";
+import PasoUbicacion from "./PasoUbicacion";
 import Paso2Detalles from "./Paso2Detalles";
 import Paso3Imagen from "./Paso3Imagen";
 import Paso4Opciones from "./Paso4Opciones";
@@ -162,43 +162,106 @@ export default function CrearEditarEventoForm({
     try {
       const formData = new FormData();
 
-      // Imagen destacada
+      // 1) Files
       if (values.image && typeof values.image !== "string") {
         formData.append("featuredImage", values.image);
       }
-
-      // Galería de imágenes
       if (Array.isArray(values.images)) {
         values.images.forEach((img) => {
           if (img instanceof File) formData.append("images", img);
         });
       }
 
-      // Convertir tags a array
+      // 2) Normalizaciones base
       const tagsArray = values.tags
-        ? values.tags.split(",").map((tag) => tag.trim())
+        ? values.tags
+            .split(",")
+            .map((t) => t.trim())
+            .filter(Boolean)
         : [];
 
-      // Construcción base de datos (sin image ni images)
+      // Clonar para no mutar Formik
       const data = {
         ...values,
         tags: tagsArray,
-        price: Number(values.price),
+        price: Number(values.price || 0),
       };
 
-      // Limpiar image e images (ya se mandan por FormData)
+      // No enviar estos porque ya van como archivos
       delete data.image;
       delete data.images;
 
-      // Si el usuario es admin y seleccionó organizador, usarlo
+      // 3) Organizer / organizerModel
+      //    - Si admin y seleccionó un organizer desde un <Select> tipo { value, label, model }
       if (usuario.role === "admin" && values.organizer?.value) {
-        data.organizer = values.organizer.value;
-        data.organizerModel = values.organizer.model;
+        data.organizer = String(values.organizer.value);
+        data.organizerModel =
+          values.organizer.model === "Business" ? "Business" : "User";
+      } else {
+        // No admin: usar el propio usuario
+        data.organizer = String(usuario?._id || "");
+        // infiere el modelo según tu app (ajusta si tu store usa otra key)
+        const rol = usuario?.role?.toLowerCase();
+        data.organizerModel =
+          rol === "business" || rol === "business_owner" ? "Business" : "User";
       }
 
+      // 4) Limpiar campos que no están en el schema (venían del form viejo)
+      delete data.isDeliveryOnly;
+      delete data.primaryZip;
+
+      // 5) location.coordinates → NO mandar objeto; o crear geoJSON arriba
+      //    Si hay números válidos, creamos `coordinates` (geoJSON) y removemos location.coordinates
+      const latRaw = values?.location?.coordinates?.lat;
+      const lngRaw = values?.location?.coordinates?.lng;
+      const lat = latRaw === "" ? null : Number(latRaw);
+      const lng = lngRaw === "" ? null : Number(lngRaw);
+
+      // Si el evento es online, limpiar dirección y geo
+      if (data.isOnline) {
+        data.location = {
+          address: "",
+          city: "",
+          state: "",
+          zipCode: "",
+          country: data.location?.country || "USA",
+        };
+        delete data.coordinates; // geoJSON top-level
+      } else {
+        // Evento presencial: si hay lat/lng válidos, arma geoJSON; si no, deja que el backend geocodifique
+        if (
+          !Number.isNaN(lat) &&
+          !Number.isNaN(lng) &&
+          lat !== null &&
+          lng !== null
+        ) {
+          data.coordinates = { type: "Point", coordinates: [lng, lat] };
+        } else {
+          // sin coordenadas explícitas → no mandes geoJSON, backend puede geocodificar
+          delete data.coordinates;
+        }
+      }
+      // En todos los casos, NO mandes location.coordinates como objeto (Zod se queja)
+      if (data.location?.coordinates) delete data.location.coordinates;
+
+      // 6) Arrays de IDs → string
+      const toStringArray = (arr) =>
+        Array.isArray(arr) ? arr.map((x) => String(x)) : [];
+
+      data.categories = toStringArray(data.categories);
+      data.communities = toStringArray(data.communities);
+      data.sponsors = toStringArray(data.sponsors);
+      data.likes = toStringArray(data.likes);
+
+      // 7) Links vacíos → undefined (tu schema hace set: "" => undefined)
+      if (!data.registrationLink) delete data.registrationLink;
+      if (!data.virtualLink) delete data.virtualLink;
+
+      // 8) Adjuntar JSON al FormData
       formData.append("data", JSON.stringify(data));
 
-      // Enviar al backend
+      formData.append("organizer", data.organizer);
+      formData.append("organizerModel", data.organizerModel);
       await dispatch(createEventThunk(formData)).unwrap();
 
       dispatch(

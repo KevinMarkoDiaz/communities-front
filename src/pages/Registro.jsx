@@ -6,11 +6,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { login } from "../store/authSlice";
 import { Link, useNavigate } from "react-router-dom";
 import Select from "react-select";
-import authbg from "../assets/authbg.png";
 import { registerUser } from "../api/authApi";
 import { fetchComunidades } from "../store/comunidadesSlice";
-import icono from "../assets/logo_icono.svg"; // ⬅️ Aquí importas tu SVG
+import icono from "../assets/logo_icono.svg";
 
+/* =========================
+   Pasos del formulario
+========================= */
 const steps = [
   "Cuéntanos sobre ti",
   "Elige tu rol en la comunidad",
@@ -18,15 +20,16 @@ const steps = [
   "Revisa y confirma",
 ];
 
+/* =========================
+   Estilos de react-select (oscuro)
+========================= */
 const customSelectStyles = {
   control: (provided, state) => ({
     ...provided,
     backgroundColor: "rgba(255,255,255,0.05)",
     borderColor: state.isFocused ? "#fb923c" : "rgba(255,255,255,0.2)",
     boxShadow: state.isFocused ? "0 0 0 1px #fb923c" : "none",
-    "&:hover": {
-      borderColor: "#fb923c",
-    },
+    "&:hover": { borderColor: "#fb923c" },
     borderRadius: "0.5rem",
     minHeight: "3rem",
   }),
@@ -38,36 +41,24 @@ const customSelectStyles = {
   }),
   option: (provided, state) => ({
     ...provided,
-    backgroundColor: state.isFocused
-      ? "rgba(251, 146, 60, 0.2)"
-      : "transparent",
+    backgroundColor: state.isFocused ? "rgba(251,146,60,0.2)" : "transparent",
     color: "white",
     cursor: "pointer",
   }),
-  singleValue: (provided) => ({
-    ...provided,
-    color: "white",
-  }),
-  placeholder: (provided) => ({
-    ...provided,
-    color: "rgba(255,255,255,0.4)",
-  }),
-  input: (provided) => ({
-    ...provided,
-    color: "white",
-  }),
+  singleValue: (provided) => ({ ...provided, color: "white" }),
+  placeholder: (provided) => ({ ...provided, color: "rgba(255,255,255,0.4)" }),
+  input: (provided) => ({ ...provided, color: "white" }),
   dropdownIndicator: (provided) => ({
     ...provided,
     color: "rgba(255,255,255,0.6)",
-    "&:hover": {
-      color: "white",
-    },
+    "&:hover": { color: "white" },
   }),
-  indicatorSeparator: () => ({
-    display: "none",
-  }),
+  indicatorSeparator: () => ({ display: "none" }),
 };
 
+/* =========================
+   Validaciones por paso
+========================= */
 const validationSchemas = [
   Yup.object().shape({
     name: Yup.string().min(2, "Muy corto").required("Campo obligatorio"),
@@ -93,6 +84,15 @@ const validationSchemas = [
   Yup.object(), // Confirmación
 ];
 
+/* =========================
+   Helper: fondo responsive (sin imports)
+========================= */
+const pickBg = (w) => {
+  if (w >= 1024) return "/images/3.png"; // desktop
+  if (w >= 768) return "/images/2.png"; // tablet
+  return "/images/1.png"; // mobile
+};
+
 export default function RegistroMultiStep() {
   const [currentStep, setCurrentStep] = useState(0);
   const dispatch = useDispatch();
@@ -101,12 +101,51 @@ export default function RegistroMultiStep() {
   const comunidades = useSelector((state) => state.comunidades.lista ?? []);
   const loadingComunidades = useSelector((state) => state.comunidades.loading);
 
+  /* =========================
+     Carga de comunidades
+  ========================= */
   useEffect(() => {
     if (!comunidades.length) {
       dispatch(fetchComunidades());
     }
-  }, [dispatch]);
+  }, [dispatch, comunidades.length]);
 
+  /* =========================
+     Fondo responsive (solo descarga el actual)
+  ========================= */
+  const [bgImage, setBgImage] = useState(() => {
+    if (typeof window === "undefined") return "/images/3.png"; // Fallback SSR
+    return pickBg(window.innerWidth);
+  });
+
+  useEffect(() => {
+    // Corrige en primer render del cliente
+    setBgImage(pickBg(window.innerWidth));
+
+    // Respeta ahorro de datos si el user lo tiene activo (opcional)
+    const saveData = navigator.connection?.saveData;
+    if (saveData) setBgImage("/images/1.png");
+
+    // Resize con rAF para evitar exceso de renders
+    let ticking = false;
+    const onResize = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const next = pickBg(window.innerWidth);
+          setBgImage((prev) => (prev === next ? prev : next));
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("resize", onResize, { passive: true });
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  /* =========================
+     Handlers submit
+  ========================= */
   const handleSubmit = async (values, { setSubmitting, setErrors }) => {
     try {
       const nuevoUsuario = await registerUser(values);
@@ -132,12 +171,13 @@ export default function RegistroMultiStep() {
         <title>Communities | Registro</title>
       </Helmet>
 
+      {/* Fondo dinámico según dispositivo */}
       <div
         className="min-h-screen flex flex-col items-center justify-center bg-cover bg-center relative gap-2 py-7 px-2"
-        style={{ backgroundImage: `url(${authbg})` }}
+        style={{ backgroundImage: `url(${bgImage})` }}
       >
-        <div className="relative w-full max-w-lg mx-auto p-8 bg-black/40 backdrop-blur-lg rounded-2xl shadow-2xl text-white m-4">
-          <h2 className="text-3xl font-bold text-center mb-4 tracking-wide">
+        <div className="relative w-full max-w-lg mx-auto p-8 bg-white/40 backdrop-blur-md rounded-2xl shadow-2xl text-black m-4">
+          <h2 className=" text-lg font-bold text-center mb-4 tracking-wide">
             {steps[currentStep]}
           </h2>
 
@@ -171,13 +211,13 @@ export default function RegistroMultiStep() {
                 {currentStep === 0 && (
                   <>
                     <div>
-                      <label className="  text-xs font-medium block mb-1">
+                      <label className="text-xs font-medium block mb-1">
                         Nombre
                       </label>
                       <Field
                         name="name"
                         placeholder="Usuario"
-                        className="w-full px-4 py-3 border border-white/40 bg-white/10 rounded-lg placeholder:text-gray-300 focus:outline-none"
+                        className="w-full px-4 py-1 border border-black/10 bg-black/30 rounded-lg placeholder:text-gray-300 focus:outline-none"
                       />
                       <ErrorMessage
                         name="name"
@@ -186,13 +226,13 @@ export default function RegistroMultiStep() {
                       />
                     </div>
                     <div>
-                      <label className="  text-xs font-medium block mb-1">
+                      <label className="text-xs font-medium block mb-1">
                         Apellido
                       </label>
                       <Field
                         name="lastName"
                         placeholder="Usuario"
-                        className="w-full px-4 py-3 border border-white/40 bg-white/10 rounded-lg placeholder:text-gray-300 focus:outline-none"
+                        className="w-full px-4 py-1 border border-black/10 bg-black/30 rounded-lg placeholder:text-gray-300 focus:outline-none"
                       />
                       <ErrorMessage
                         name="lastName"
@@ -201,14 +241,14 @@ export default function RegistroMultiStep() {
                       />
                     </div>
                     <div>
-                      <label className="  text-xs font-medium block mb-1">
+                      <label className="text-xs font-medium block mb-1">
                         Correo electrónico
                       </label>
                       <Field
                         name="email"
                         type="email"
                         placeholder="correo@ejemplo.com"
-                        className="w-full px-4 py-3 border border-white/40 bg-white/10 rounded-lg placeholder:text-gray-300 focus:outline-none"
+                        className="w-full px-4 py-1 border border-black/10 bg-black/30 rounded-lg placeholder:text-gray-300 focus:outline-none"
                       />
                       <ErrorMessage
                         name="email"
@@ -217,14 +257,14 @@ export default function RegistroMultiStep() {
                       />
                     </div>
                     <div>
-                      <label className="  text-xs font-medium block mb-1">
+                      <label className="text-xs font-medium block mb-1">
                         Contraseña
                       </label>
                       <Field
                         name="password"
                         type="password"
                         placeholder="••••••••"
-                        className="w-full px-4 py-3 border border-white/40 bg-white/10 rounded-lg placeholder:text-gray-300 focus:outline-none"
+                        className="w-full px-4 py-1 border border-black/10 bg-black/30 rounded-lg placeholder:text-gray-300 focus:outline-none"
                       />
                       <ErrorMessage
                         name="password"
@@ -237,7 +277,7 @@ export default function RegistroMultiStep() {
 
                 {currentStep === 1 && (
                   <div>
-                    <label className="  text-xs font-medium block mb-1">
+                    <label className="text-xs font-medium block mb-1">
                       Rol
                     </label>
                     <Select
@@ -273,13 +313,13 @@ export default function RegistroMultiStep() {
                 {currentStep === 2 && (
                   <>
                     <div>
-                      <label className="  text-xs font-medium block mb-1">
+                      <label className="text-xs font-medium block mb-1">
                         Imagen de perfil
                       </label>
                       <Field
                         name="profileImage"
                         placeholder="https://..."
-                        className="w-full px-4 py-3 border border-white/40 bg-white/10 rounded-lg placeholder:text-gray-300 focus:outline-none"
+                        className="w-full px-4 py-1 border border-black/10 bg-black/30 rounded-lg placeholder:text-gray-300 focus:outline-none"
                       />
                       <ErrorMessage
                         name="profileImage"
@@ -288,17 +328,17 @@ export default function RegistroMultiStep() {
                       />
                     </div>
                     <div>
-                      <label className="  text-xs font-medium block mb-1">
+                      <label className="text-xs font-medium block mb-1">
                         Título
                       </label>
                       <Field
                         name="title"
                         placeholder="Chef venezolano"
-                        className="w-full px-4 py-3 border border-white/40 bg-white/10 rounded-lg placeholder:text-gray-300 focus:outline-none"
+                        className="w-full px-4 py-1 border border-black/10 bg-black/30 rounded-lg placeholder:text-gray-300 focus:outline-none"
                       />
                     </div>
                     <div>
-                      <label className="  text-xs font-medium block mb-1">
+                      <label className="text-xs font-medium block mb-1">
                         Descripción
                       </label>
                       <Field
@@ -306,36 +346,36 @@ export default function RegistroMultiStep() {
                         name="description"
                         placeholder="Cuéntanos algo sobre ti..."
                         rows={3}
-                        className="w-full px-4 py-3 border border-white/40 bg-white/10 rounded-lg placeholder:text-gray-300 focus:outline-none"
+                        className="w-full px-4 py-1 border border-black/10 bg-black/30 rounded-lg placeholder:text-gray-300 focus:outline-none"
                       />
                     </div>
                     <div>
-                      <label className="  text-xs font-medium block mb-1">
+                      <label className="text-xs font-medium block mb-1">
                         Ubicación
                       </label>
                       <Field
                         name="location"
                         placeholder="Dallas, TX"
-                        className="w-full px-4 py-3 border border-white/40 bg-white/10 rounded-lg placeholder:text-gray-300 focus:outline-none"
+                        className="w-full px-4 py-1 border border-black/10 bg-black/30 rounded-lg placeholder:text-gray-300 focus:outline-none"
                       />
                     </div>
                     <div>
-                      <label className="  text-xs font-medium block mb-1">
+                      <label className="text-xs font-medium block mb-1">
                         País
                       </label>
                       <Field
                         name="country"
                         placeholder="Estados Unidos"
-                        className="w-full px-4 py-3 border border-white/40 bg-white/10 rounded-lg placeholder:text-gray-300 focus:outline-none"
+                        className="w-full px-4 py-1 border border-black/10 bg-black/30 rounded-lg placeholder:text-gray-300 focus:outline-none"
                       />
                     </div>
                     {loadingComunidades ? (
-                      <p className="  text-xs text-gray-300">
+                      <p className="text-xs text-gray-300">
                         Cargando comunidades...
                       </p>
                     ) : (
                       <div>
-                        <label className="  text-xs font-medium block mb-1">
+                        <label className="text-xs font-medium block mb-1">
                           Comunidad
                         </label>
                         <Select
@@ -373,7 +413,7 @@ export default function RegistroMultiStep() {
                 )}
 
                 {currentStep === 3 && (
-                  <div className="space-y-4  text-xs text-gray-200">
+                  <div className="space-y-4 text-xs text-gray-200">
                     <p className="text-center">
                       Revisa tus datos antes de registrarte.
                     </p>
@@ -459,7 +499,7 @@ export default function RegistroMultiStep() {
                     <button
                       type="button"
                       onClick={prevStep}
-                      className="w-full bg-white/10 border border-white/20 text-white py-3 rounded-lg font-semibold hover:bg-white/20 transition"
+                      className="w-full bg-white/10 border border-white/20 text-white py-1 rounded-lg font-semibold hover:bg-white/20 transition"
                     >
                       Atrás
                     </button>
@@ -467,7 +507,7 @@ export default function RegistroMultiStep() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-orange-600 hover:bg-orange-700 text-white py-3 rounded-lg font-semibold transition"
+                    className="w-full bg-orange-600 text-xs md:text-sm hover:bg-orange-700 text-white py-2 rounded-lg font-semibold transition"
                   >
                     {currentStep === steps.length - 1
                       ? "Registrarse"
@@ -477,28 +517,27 @@ export default function RegistroMultiStep() {
               </Form>
             )}
           </Formik>
+
           <div className="text-center mt-4">
-            <p className="text-gray-400  text-xs mb-2">¿Ya tienes cuenta?</p>
+            <p className="text-gray-900 text-xs mb-2">¿Ya tienes cuenta?</p>
             <Link
               to="/login"
-              className="block text-center bg-white/10 border border-white/20 text-white py-3 rounded-lg font-semibold hover:bg-white/20 transition"
+              className="block text-xs md:text-sm text-center border border-black/10 bg-black/30 text-white py-2 rounded-lg font-semibold hover:bg-white/20 transition"
             >
               Volver al inicio de sesión
             </Link>
           </div>
-        </div>
-        {/* Icono de la app */}
-        <div className=" flex justify-center  relative z-10">
-          <div className=" flex justify-center relative z-10">
-            <div className="relative inline-block">
+          <div className="flex justify-center mt-8 relative z-10">
+            <div className="relative inline-block orbit-wrapper">
               <img
                 src={icono}
                 alt="Logo Communities"
-                className="h-24 opacity-80 relative z-20"
+                className="h-24 opacity-90 relative z-20 logo-pulse select-none pointer-events-none"
+                draggable="false"
               />
-              <span className="orbit-sphere sphere1"></span>
-              <span className="orbit-sphere sphere2"></span>
-              <span className="orbit-sphere sphere3"></span>
+              <span className="orbit-sphere sphere1" />
+              <span className="orbit-sphere sphere2" />
+              <span className="orbit-sphere sphere3" />
             </div>
           </div>
         </div>

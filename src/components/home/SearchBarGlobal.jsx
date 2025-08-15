@@ -51,6 +51,8 @@ export default function SearchBarGlobal({
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           className="
+          text-xs
+          md:text-sm
             flex-1
             bg-transparent
             border-none

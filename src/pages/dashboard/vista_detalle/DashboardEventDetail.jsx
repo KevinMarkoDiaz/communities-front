@@ -128,7 +128,7 @@ export default function DashboardEventDetail() {
 
       {/* Métricas */}
       <section className="bg-white md:border border-gray-200 rounded-2xl md:p-6 md:shadow space-y-4">
-        <h3 className="text-xl font-bold">Métricas del evento</h3>
+        <h3 className=" text-lg font-bold">Métricas del evento</h3>
         <p className="  text-xs text-gray-500">
           Aquí podrás visualizar estadísticas de visitas y engagement.
         </p>

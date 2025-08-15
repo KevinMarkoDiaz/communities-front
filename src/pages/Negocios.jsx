@@ -83,7 +83,7 @@ export default function Negocios() {
           <NegociosSugeridos />
 
           <div>
-            <h4 className="text-xl md:text-xl font-bold text-black tracking-tight leading-snug my-4">
+            <h4 className=" text-lg md: text-lg font-bold text-black tracking-tight leading-snug my-4">
               Busca los negocios que te conectan con tu comunidad
             </h4>
             <BusquedaGlobalWrapper
@@ -137,7 +137,7 @@ export default function Negocios() {
                     alt="Sin negocios"
                     className="w-32 md:w-60 xl:w-120 opacity-90"
                   />
-                  <p className="text-gray-600  text-xs md:text-base xl:text-xl">
+                  <p className="text-gray-600  text-xs md:text-base xl: text-lg">
                     Ups... no encontramos ningún negocio en esta categoría
                     dentro de tu comunidad.
                     <br />
@@ -145,7 +145,7 @@ export default function Negocios() {
                   </p>
                   <Link
                     to="/dashboard/mis-negocios/crear"
-                    className="inline-block shadow-2xl bg-orange-500 hover:bg-orange-600 text-white  text-xs font-medium px-4 py-2 xl:text-xl rounded-2xl transition"
+                    className="inline-block shadow-2xl bg-orange-500 hover:bg-orange-600 text-white  text-xs font-medium px-4 py-2 xl: text-lg rounded-2xl transition"
                   >
                     ¿Tienes una buena idea para esta categoría? Publícala aquí
                   </Link>

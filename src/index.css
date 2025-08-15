@@ -53,44 +53,86 @@
 body {
   font-family: 'Inter', sans-serif;
 }
+.orbit-wrapper {
+  --orbit-radius-1: 40px;
+  --orbit-radius-2: 52px;
+  --orbit-radius-3: 66px;
+  --ellipse-y: 0.72;
+  --trail-blur: 10px;
+  --glow: 0 0 6px rgba(0,0,0,0.5); /* sombra oscura */
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+/* Pulso leve en logo */
+.logo-pulse {
+  animation: logoPulse 5.2s ease-in-out infinite;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.5));
+}
+
 .orbit-sphere {
   position: absolute;
-  top: 45%;
-  left: 40%;
-  width: 12px;
-  height: 15px;
+  top: 50%;
+  left: 50%;
+  width: 14px;
+  height: 14px;
   border-radius: 9999px;
   transform-origin: center center;
+  will-change: transform, box-shadow, opacity;
+  filter: drop-shadow(var(--glow));
 }
 
+.orbit-sphere::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-55%) scaleX(1.8) scaleY(0.7);
+  border-radius: 50%;
+  background: radial-gradient(60% 60% at 30% 50%, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0) 70%);
+  filter: blur(var(--trail-blur));
+  opacity: 0.0;
+  animation: trailFade 1.4s ease-out infinite;
+}
 
+/* Colores */
 .sphere1 {
-  animation: orbit1 4s linear infinite;
-  background: #FCD116;
-
+  background: radial-gradient(circle at 30% 30%, #fff 0%, #FCD116 35%, #453a00 100%);
+  animation: orbit1 7.8s linear infinite;
 }
 .sphere2 {
-  animation: orbit2 6s linear infinite;
-  background: #0038A8;
-
+  background: radial-gradient(circle at 30% 30%, #fff 0%, #0038A8 35%, #012266 100%);
+  animation: orbit2 8.6s linear infinite reverse;
 }
 .sphere3 {
-  animation: orbit3 8s linear infinite;
-  background: #CE1126;
-
+  background: radial-gradient(circle at 30% 30%, #fff 0%, #CE1126 35%, #530009 100%);
+  animation: orbit3 10.2s linear infinite;
 }
 
+/* Keyframes órbitas */
 @keyframes orbit1 {
-  0%   { transform: rotate(0deg) translateX(60px) rotate(0deg); }
-  100% { transform: rotate(360deg) translateX(60px) rotate(-360deg); }
+  0%   { transform: rotate(0deg) translateX(var(--orbit-radius-1)) scaleY(var(--ellipse-y)) rotate(0deg); }
+  100% { transform: rotate(360deg) translateX(var(--orbit-radius-1)) scaleY(var(--ellipse-y)) rotate(-360deg); }
 }
 @keyframes orbit2 {
-  0%   { transform: rotate(0deg) translateX(60px) rotate(0deg); }
-  100% { transform: rotate(360deg) translateX(60px) rotate(-360deg); }
+  0%   { transform: rotate(0deg) translateX(var(--orbit-radius-2)) scaleY(var(--ellipse-y)) rotate(0deg); }
+  100% { transform: rotate(360deg) translateX(var(--orbit-radius-2)) scaleY(var(--ellipse-y)) rotate(-360deg); }
 }
 @keyframes orbit3 {
-  0%   { transform: rotate(0deg) translateX(60px) rotate(0deg); }
-  100% { transform: rotate(360deg) translateX(60px) rotate(-360deg); }
+  0%   { transform: rotate(0deg) translateX(var(--orbit-radius-3)) scaleY(var(--ellipse-y)) rotate(0deg); }
+  100% { transform: rotate(360deg) translateX(var(--orbit-radius-3)) scaleY(var(--ellipse-y)) rotate(-360deg); }
+}
+
+/* Trail */
+@keyframes trailFade {
+  0% { opacity: 0.0; }
+  40% { opacity: 0.15; }
+  100% { opacity: 0.0; }
+}
+
+
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit-sphere, .logo-pulse { animation: none !important; }
 }
 
 

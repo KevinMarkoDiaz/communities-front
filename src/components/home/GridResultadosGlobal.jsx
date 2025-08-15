@@ -47,7 +47,7 @@ export default function GridResultadosGlobal({ resultados = [] }) {
 
   return (
     <section className="w-full max-w-7xl mx-auto flex flex-col gap-4 ">
-      <h2 className="text-xl font-semibold text-gray-800">
+      <h2 className=" text-lg font-semibold text-gray-800">
         🔍 Resultados de tu búsqueda
       </h2>
 

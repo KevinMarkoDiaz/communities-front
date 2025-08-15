@@ -26,7 +26,7 @@ export default function NotFound() {
 
       {/* Mensaje */}
       <motion.p
-        className="text-xl text-white mb-6"
+        className=" text-lg text-white mb-6"
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4, duration: 0.5 }}

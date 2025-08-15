@@ -33,7 +33,7 @@ const InboxList = () => {
     return (
       <div className="flex flex-col items-center text-center gap-5 py-16 px-4">
         <img src={ilust3} alt="Sin mensajes" className="w-40 opacity-90" />
-        <h2 className="text-xl font-semibold text-gray-700">
+        <h2 className=" text-lg font-semibold text-gray-700">
           📨 Tu bandeja está vacía
         </h2>
         <p className="text-gray-600  text-xs md:text-base max-w-xs">

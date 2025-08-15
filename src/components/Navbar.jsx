@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { FiMenu, FiX, FiChevronRight } from "react-icons/fi";
 import {
@@ -19,30 +19,41 @@ import NotificationButton from "./badges/NotificationButton";
 import { logout } from "../store/authSlice";
 import BotonPublicar from "./nav/BotonPublicar";
 import useDeviceSize from "../hooks/useDeviceSize";
-import { cerrarMenu, toggleMenu } from "../store/mobileMenuSlice";
+import { toggleMenu } from "../store/mobileMenuSlice";
 import InboxButton from "./mensajes/InboxButton";
 import { RiAdvertisementLine } from "react-icons/ri";
 
 export default function Header() {
   const usuario = useSelector((state) => state.auth.usuario);
   const mobileOpen = useSelector((state) => state.mobileMenu.isOpen);
+
   const [accionesOpen, setAccionesOpen] = useState(false);
+
+  // Mobile: ocultar header completo al bajar
   const [show, setShow] = useState(true);
-  const lastScrollY = useRef(0);
+  const lastScrollYMobile = useRef(0);
+
+  // Desktop/Tablet: colapsar subnav al bajar
+  const [subnavVisible, setSubnavVisible] = useState(true);
+  const lastScrollYDesktop = useRef(0);
+
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { isMobile, isDesktop } = useDeviceSize();
 
+  // Bloquear scroll del body cuando el menú mobile está abierto
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? "hidden" : "auto";
   }, [mobileOpen]);
 
+  // --- MOBILE: ocultar header completo al hacer scroll hacia abajo, mostrar al subir ---
   useEffect(() => {
-    if (window.innerWidth >= 768) return;
+    if (!isMobile) return;
 
-    const handleScroll = () => {
+    const handleScrollMobile = () => {
       const currentScrollY = window.scrollY;
-      const diff = currentScrollY - lastScrollY.current;
+      const diff = currentScrollY - lastScrollYMobile.current;
 
       const isTop = currentScrollY < 50;
       const isBottom =
@@ -50,19 +61,52 @@ export default function Header() {
 
       if (isTop || isBottom) {
         setShow(true);
-        lastScrollY.current = currentScrollY;
+        lastScrollYMobile.current = currentScrollY;
         return;
       }
 
       if (Math.abs(diff) < 10) return;
 
-      setShow(diff < 0);
-      lastScrollY.current = currentScrollY;
+      setShow(diff < 0); // subiendo => muestra; bajando => oculta
+      lastScrollYMobile.current = currentScrollY;
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    window.addEventListener("scroll", handleScrollMobile, { passive: true });
+    return () => window.removeEventListener("scroll", handleScrollMobile);
+  }, [isMobile]);
+
+  // --- DESKTOP/TABLET: colapsar SOLO el subnav (sin reservar altura) ---
+  useEffect(() => {
+    if (!isDesktop) return;
+
+    const handleScrollDesktop = () => {
+      if (mobileOpen) {
+        setSubnavVisible(true);
+        return;
+      }
+
+      const current = window.scrollY;
+      const diff = current - lastScrollYDesktop.current;
+
+      const isTop = current < 50;
+      const isBottom =
+        window.innerHeight + current >= document.body.offsetHeight - 50;
+
+      if (isTop || isBottom) {
+        setSubnavVisible(true);
+        lastScrollYDesktop.current = current;
+        return;
+      }
+
+      if (Math.abs(diff) < 48) return;
+
+      setSubnavVisible(diff < 0); // bajando => colapsa; subiendo => expande
+      lastScrollYDesktop.current = current;
+    };
+
+    window.addEventListener("scroll", handleScrollDesktop, { passive: true });
+    return () => window.removeEventListener("scroll", handleScrollDesktop);
+  }, [isDesktop, mobileOpen]);
 
   const navLinks = [
     { to: "/negocios", icon: <MdStore />, label: "Negocios" },
@@ -80,20 +124,24 @@ export default function Header() {
 
   const handleLogout = () => {
     dispatch(logout());
-    Navigate("/");
+    navigate("/");
   };
 
   return (
     <>
       {/* 🟠 Banner superior SOLO DESKTOP */}
-      <div className="hidden md:block w-full bg-orange-500 text-white text-center py-1 2xl:  text-xs z-50">
+      <div className="hidden md:block w-full bg-orange-500 text-white text-center py-1 text-xs z-50">
         ✨ Juntos construimos una comunidad que apoya, inspira y crece unida
       </div>
 
       {/* Nav principal */}
       <header
         className={`shadow sticky top-0 z-50 transition-transform duration-300 ${
-          show ? "translate-y-0" : "-translate-y-full"
+          isMobile
+            ? show
+              ? "translate-y-0"
+              : "-translate-y-full"
+            : "translate-y-0"
         } ${mobileOpen ? "bg-orange-600" : "bg-white"}`}
       >
         <div className="flex items-center justify-between px-4 lg:px-10 py-1">
@@ -102,7 +150,7 @@ export default function Header() {
             <img
               src={Icon}
               alt="Communities logo"
-              className={`h-20 hidden md:block ${
+              className={`2xl:h-20 h-12 hidden md:block ${
                 mobileOpen ? "filter brightness-0 invert" : ""
               }`}
             />
@@ -115,7 +163,7 @@ export default function Header() {
             />
           </Link>
 
-          {/* Links desktop (se mantienen igual) */}
+          {/* Links desktop */}
           <nav className="hidden md:flex gap-6 items-center">
             {navLinks.map((link) => (
               <Link
@@ -127,12 +175,10 @@ export default function Header() {
                     : "text-gray-800 hover:text-orange-500"
                 }`}
               >
-                <span className="text-xl md:text-xl lg:text-base">
+                <span className=" text-lg md: text-lg lg:text-base">
                   {link.icon}
                 </span>
-                <span className="text-[10px] md:text-xs 2xl:  text-xs">
-                  {link.label}
-                </span>
+                <span className="text-[10px] md:text-xs">{link.label}</span>
               </Link>
             ))}
 
@@ -148,18 +194,17 @@ export default function Header() {
                 mobileOpen
                   ? "bg-white text-orange-600 hover:bg-yellow-100"
                   : "bg-yellow-400 text-black hover:bg-orange-500"
-              } text-xs 2xl:  text-xs font-bold px-4 py-2 rounded transition`}
+              } text-xs font-bold px-4 py-2 rounded transition`}
             >
               {usuario ? "PERFIL" : "ENTRAR"}
             </Link>
           </nav>
 
-          {/* Botones header MOBILE (sin repetir enlaces extra) */}
+          {/* Botón menú MOBILE */}
           <div className="flex items-center gap-2 md:hidden">
-            {/* Quitamos Inbox/Notificaciones en mobile header para no duplicar */}
             <button
               onClick={() => dispatch(toggleMenu())}
-              className={`  text-xs 2xl:text-md p-2 rounded transition ${
+              className={`text-xs p-2 rounded transition ${
                 mobileOpen ? "text-white" : "text-black"
               }`}
               aria-label="Abrir menú"
@@ -169,37 +214,52 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Subnav solo desktop (igual que antes) */}
+        {/* Subnav SOLO DESKTOP — AHORA COLAPSA ALTURA */}
         <div
-          className={`hidden md:flex justify-center border-t border-gray-200 relative ${
-            mobileOpen ? "bg-orange-500" : "bg-gray-100"
-          }`}
+          className={`
+            hidden md:block border-t border-gray-200
+            ${mobileOpen ? "bg-orange-500" : "bg-gray-100"}
+            overflow-hidden transition-all 
+            ${
+              subnavVisible
+                ? "max-h-12 opacity-100 py-1"
+                : "max-h-0 opacity-0 py-0"
+            }
+          `}
+          aria-hidden={!subnavVisible}
         >
-          {subNavLinks.map((link, idx) => (
-            <Link
-              key={link.to}
-              to={link.to}
-              className={`text-xs font-medium px-3 py-2 transition relative ${
-                mobileOpen
-                  ? "text-white hover:text-yellow-200"
-                  : "text-gray-600 hover:text-orange-500"
-              }`}
-            >
-              {link.label}
-              {idx < subNavLinks.length - 1 && (
-                <span className="absolute right-0 top-1/2 transform -translate-y-1/2 w-px h-4 bg-gray-300" />
-              )}
-            </Link>
-          ))}
+          <div className="max-w-screen-2xl mx-auto px-4 lg:px-10">
+            <div className="flex justify-center relative">
+              {subNavLinks.map((link, idx) => (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  className={`text-xs font-medium px-3 py-2 transition relative ${
+                    mobileOpen
+                      ? "text-white hover:text-yellow-200"
+                      : "text-gray-600 hover:text-orange-500"
+                  }`}
+                >
+                  {link.label}
+                  {idx < subNavLinks.length - 1 && (
+                    <span className="absolute right-0 top-1/2 -translate-y-1/2 w-px h-4 bg-gray-300" />
+                  )}
+                </Link>
+              ))}
 
-          {/* Dropdown Acciones */}
-          <div className="flex items-center gap-2">
-            <BotonPublicar isOpen={accionesOpen} setIsOpen={setAccionesOpen} />
+              {/* Dropdown Acciones */}
+              <div className="flex items-center gap-2">
+                <BotonPublicar
+                  isOpen={accionesOpen}
+                  setIsOpen={setAccionesOpen}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </header>
 
-      {/* Overlay oscuro + Menú lateral MOBILE (sin admin ni duplicados) */}
+      {/* Overlay oscuro + Menú lateral MOBILE */}
       <div
         className={`fixed inset-0 z-30 bg-black/70 backdrop-blur-sm transition-opacity duration-300 ${
           mobileOpen
@@ -214,7 +274,7 @@ export default function Header() {
             ${mobileOpen ? "translate-x-0" : "-translate-x-full"}
             flex flex-col justify-between font-sans`}
         >
-          {/* Navegación principal (solo públicos + perfil/login) */}
+          {/* Navegación principal */}
           <div className="flex flex-col gap-6">
             <nav className="flex flex-col gap-4">
               <Link
@@ -222,7 +282,7 @@ export default function Header() {
                 onClick={() => dispatch(toggleMenu())}
                 className="flex items-center gap-3 text-base font-medium hover:text-yellow-300 transition relative z-10"
               >
-                <MdPerson className="  text-xs 2xl:text-md" />
+                <MdPerson className="text-xs" />
                 {usuario ? "Mi Perfil" : "Iniciar Sesión"}
               </Link>
 
@@ -231,7 +291,7 @@ export default function Header() {
                 onClick={() => dispatch(toggleMenu())}
                 className="flex items-center gap-3 text-base font-medium hover:text-yellow-300 transition relative z-10"
               >
-                <MdStore className="  text-xs 2xl:text-md" />
+                <MdStore className="text-xs" />
                 Negocios
               </Link>
 
@@ -240,7 +300,7 @@ export default function Header() {
                 onClick={() => dispatch(toggleMenu())}
                 className="flex items-center gap-3 text-base font-medium hover:text-yellow-300 transition relative z-10"
               >
-                <MdEvent className="  text-xs 2xl:text-md" />
+                <MdEvent className="text-xs" />
                 Eventos
               </Link>
 
@@ -249,7 +309,7 @@ export default function Header() {
                 onClick={() => dispatch(toggleMenu())}
                 className="flex items-center gap-3 text-base font-medium hover:text-yellow-300 transition relative z-10"
               >
-                <MdOutlineAdsClick className="  text-xs 2xl:text-md" />
+                <MdOutlineAdsClick className="text-xs" />
                 Mis banners
               </Link>
 
@@ -258,7 +318,7 @@ export default function Header() {
                 onClick={() => dispatch(toggleMenu())}
                 className="flex items-center gap-3 text-base font-medium hover:text-yellow-300 transition relative z-10"
               >
-                <MdLocalOffer className="  text-xs 2xl:text-md" />
+                <MdLocalOffer className="text-xs" />
                 Promociones
               </Link>
 
@@ -269,7 +329,7 @@ export default function Header() {
                     onClick={() => dispatch(toggleMenu())}
                     className="flex items-center gap-3 text-base font-medium hover:text-yellow-300 transition relative z-10"
                   >
-                    <MdGroups className="  text-xs 2xl:text-md" />
+                    <MdGroups className="text-xs" />
                     Comunidades
                   </Link>
 
@@ -278,7 +338,7 @@ export default function Header() {
                     onClick={() => dispatch(toggleMenu())}
                     className="flex items-center gap-3 text-base font-medium hover:text-yellow-300 transition relative z-10"
                   >
-                    <RiAdvertisementLine className="  text-xs 2xl:text-md" />
+                    <RiAdvertisementLine className="text-xs" />
                     Ads / Banners
                   </Link>
                 </>
@@ -291,7 +351,7 @@ export default function Header() {
             <Link
               to="/about"
               onClick={() => dispatch(toggleMenu())}
-              className="flex items-center gap-2 2xl:  text-xs font-normal hover:text-yellow-300 transition"
+              className="flex items-center gap-2 text-xs font-normal hover:text-yellow-300 transition"
             >
               <FiChevronRight className="text-base" />
               Acerca de nosotros
@@ -299,7 +359,7 @@ export default function Header() {
             <Link
               to="/contact"
               onClick={() => dispatch(toggleMenu())}
-              className="flex items-center gap-2 2xl:  text-xs font-normal hover:text-yellow-300 transition"
+              className="flex items-center gap-2 text-xs font-normal hover:text-yellow-300 transition"
             >
               <FiChevronRight className="text-base" />
               Contáctanos
@@ -307,15 +367,10 @@ export default function Header() {
             <Link
               to="/premium"
               onClick={() => dispatch(toggleMenu())}
-              className="relative w-fit flex  items-center gap-2 2xl:  text-xs font-semibold text-white rounded-lg pr-4 py-2 overflow-hidden transition"
+              className="relative w-fit flex items-center gap-2 text-xs font-semibold text-white rounded-lg pr-4 py-2 overflow-hidden transition"
             >
-              {/* Capa animada brillante */}
-              <span className="absolute top-0 left-0 right-0 bottom-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer" />
-
-              {/* Ícono */}
+              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer" />
               <FiChevronRight className="text-base relative z-10" />
-
-              {/* Texto */}
               <span className="relative text-green-400 z-10">
                 Suscripción Premium
               </span>
@@ -340,7 +395,7 @@ export default function Header() {
           <div className="w-full px-3 py-4">
             <button
               onClick={handleLogout}
-              className="w-full flex gap-2 2xl:  text-xs text-white relative z-10 transition rounded-full py-2"
+              className="w-full flex gap-2 text-xs text-white relative z-10 transition rounded-full py-2"
             >
               <MdLogout className="text-lg text-white" />
               <span>Cerrar sesión</span>
@@ -365,7 +420,7 @@ export default function Header() {
               active:scale-95
             "
           >
-            <MdAddCircle className="  text-xs 2xl:text-md" />
+            <MdAddCircle className="text-xs" />
             Crear Negocio
           </Link>
 

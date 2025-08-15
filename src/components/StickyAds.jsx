@@ -16,7 +16,7 @@ export default function StickyAds({ communityId }) {
                   : import.meta.env.VITE_ADSENSE_SLOT_SIDEBAR_2
               }
               enableGoogleAds={true}
-              className="bg-gradient-to-r from-yellow-50 to-orange-100 rounded-2xl  shadow-2xl"
+              className="bg-gradient-to-r from-[#fff7ec] to-[#f3e8ff]   shadow-2xl"
               containerStyle={{ minHeight: "250px" }}
               fixedHeight="250px"
               imgClassName="max-h-[246px] "

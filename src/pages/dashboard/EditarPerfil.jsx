@@ -13,14 +13,6 @@ export default function EditarPerfil() {
   const dispatch = useDispatch();
   const { usuario, loading } = useSelector((state) => state.auth);
 
-  if (loading || !usuario || !usuario.id) {
-    return (
-      <div className="flex items-center justify-center min-h-screen text-white">
-        Cargando perfil...
-      </div>
-    );
-  }
-
   const handleSubmit = async (valores) => {
     try {
       const formData = new FormData();

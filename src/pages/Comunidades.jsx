@@ -66,7 +66,7 @@ export default function Comunidades() {
         <ComunidadesDestacadas />
 
         <div>
-          <h4 className="text-xl sm:text-2xl font-bold text-black tracking-tight leading-snug my-4">
+          <h4 className=" text-lg sm:text-2xl font-bold text-black tracking-tight leading-snug my-4">
             Buscá tu comunidad de origen o afinidad
           </h4>
           <BusquedaGlobalWrapper
