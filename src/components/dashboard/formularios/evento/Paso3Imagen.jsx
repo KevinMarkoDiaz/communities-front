@@ -17,7 +17,7 @@ export default function Paso3Imagen() {
         <ErrorMessage
           name="image"
           component="div"
-          className="text-red-500 text-sm mt-1"
+          className="text-red-500  text-xs mt-1"
         />
       </div>
 

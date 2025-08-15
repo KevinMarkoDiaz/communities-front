@@ -90,7 +90,7 @@ export default function DashboardCommunityDetail() {
           </div>
 
           {comunidad.description && (
-            <p className="text-gray-700 text-sm lg:text-base leading-relaxed whitespace-pre-line">
+            <p className="text-gray-700  text-xs lg:text-base leading-relaxed whitespace-pre-line">
               {comunidad.description}
             </p>
           )}
@@ -103,7 +103,7 @@ export default function DashboardCommunityDetail() {
             )}
             {comunidad.language && (
               <span className="flex items-center gap-1">
-                <FaLanguage className="text-gray-500 text-sm" />
+                <FaLanguage className="text-gray-500  text-xs" />
                 <span>Idioma: {comunidad.language.toUpperCase()}</span>
               </span>
             )}
@@ -149,7 +149,7 @@ export default function DashboardCommunityDetail() {
         <h3 className="text-xl font-bold text-[#141C24]">
           Métricas de la comunidad
         </h3>
-        <p className="text-sm text-gray-500">
+        <p className="  text-xs text-gray-500">
           Aquí puedes visualizar las estadísticas de visitas y actividad.
         </p>
         <MetricsDashboard

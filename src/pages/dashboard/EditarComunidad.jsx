@@ -48,7 +48,7 @@ export default function EditarComunidad() {
               <h1 className="text-2xl font-bold text-black flex items-center gap-2">
                 Refresca tu identidad local
               </h1>
-              <p className="text-gray-700 text-sm sm:text-base">
+              <p className="text-gray-700  text-xs sm:text-base">
                 Une a las personas, celebra tu cultura y comparte tu historia
                 con el mundo 🌎
               </p>
@@ -72,7 +72,7 @@ export default function EditarComunidad() {
           <img src={icono} alt="Icono" className="h-8 md:h-12" />
           Dale vida a tu comunidad y conecta a los latinos en EE. UU.
         </p>
-        <p className="text-sm text-gray-600">
+        <p className="  text-xs text-gray-600">
           Crea un espacio donde todos se sientan como en casa.
         </p>
       </div>

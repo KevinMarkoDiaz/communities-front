@@ -78,7 +78,7 @@ export default function LegalPrivacidad() {
           en nuestra plataforma:
         </p>
         <div className="overflow-x-auto">
-          <table className="min-w-full text-left text-sm border border-gray-200">
+          <table className="min-w-full text-left  text-xs border border-gray-200">
             <thead className="bg-gray-100 text-gray-900">
               <tr>
                 <th className="px-4 py-2 border">Tipo</th>

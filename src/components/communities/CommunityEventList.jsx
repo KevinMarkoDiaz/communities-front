@@ -20,7 +20,7 @@ export default function CommunityEventList({ eventos }) {
               <p className="text-[#111418] text-base font-medium leading-normal truncate">
                 {evento.nombre}
               </p>
-              <p className="text-[#637588] text-sm font-normal leading-normal">
+              <p className="text-[#637588]  text-xs font-normal leading-normal">
                 {evento.fechaInicio} - {evento.fechaFin}
               </p>
             </div>

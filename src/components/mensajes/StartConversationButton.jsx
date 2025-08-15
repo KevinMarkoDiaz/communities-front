@@ -47,7 +47,7 @@ export default function StartConversationButton({ entityType, entityId }) {
     <button
       onClick={handleStartConversation}
       disabled={loading}
-      className={`flex items-center gap-2 px-4 py-1.5 rounded-xl transition-all shadow-md text-sm font-semibold
+      className={`flex items-center gap-2 px-4 py-1.5 rounded-xl transition-all shadow-md  text-xs font-semibold
         ${
           loading
             ? "bg-gray-100 text-gray-400 border border-gray-300 cursor-not-allowed"

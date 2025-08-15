@@ -5,10 +5,13 @@ export const crearSesionStripe = async () => {
   return res.data.url;
 };
 
-export const crearSesionStripeBanner = async (bannerId, months = 1) => {
+export async function crearSesionStripeBanner(bannerId /*, months=1 */) {
+  // El backend fija months=1 en metadata; si luego aceptas months dinámico, añade al body.
   const { data } = await axiosInstance.post(
-    "/stripe/create-banner-checkout-session",
-    { bannerId, months }
+    `/stripe/create-banner-checkout-session`,
+    { bannerId },
+    { withCredentials: true }
   );
-  return data.url; // devuelve la URL de Checkout
-};
+  // data: { url, sessionId }
+  return data?.url;
+}

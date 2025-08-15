@@ -41,13 +41,13 @@ export default function BotonPublicar({ isOpen, setIsOpen }) {
         <div className="absolute right-0 mt-2 bg-white border border-gray-200 shadow-lg rounded w-48 z-50">
           <Link
             to="/dashboard/mis-negocios/crear"
-            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            className="block px-4 py-2 text-xs text-gray-700 hover:bg-gray-100"
           >
             Crear Negocio
           </Link>
           <Link
             to="/dashboard/mis-eventos/crear"
-            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            className="block px-4 py-2 text-xs  text-gray-700 hover:bg-gray-100"
           >
             Crear Evento
           </Link>

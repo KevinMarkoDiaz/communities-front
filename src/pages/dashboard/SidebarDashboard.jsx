@@ -81,7 +81,7 @@ const SidebarDashboard = ({ usuario, handleLogout }) => {
             </h1>
           </div>
           <div className="hidden md:flex flex-col gap-1 px-4">
-            <p className="text-gray-100 text-sm font-bold leading-normal">
+            <p className="text-gray-100 text-xs font-bold leading-normal">
               {usuario?.name} {usuario?.title}
             </p>
           </div>
@@ -97,7 +97,7 @@ const SidebarDashboard = ({ usuario, handleLogout }) => {
             >
               <div className="flex items-center gap-3">
                 <span className="text-xl">{icon}</span>
-                <p className="hidden md:block text-sm font-medium leading-normal truncate">
+                <p className="hidden md:block text-xs font-medium leading-normal truncate">
                   {label}
                 </p>
               </div>
@@ -122,7 +122,7 @@ const SidebarDashboard = ({ usuario, handleLogout }) => {
               >
                 <div className="flex items-center gap-3">
                   <span className="text-xl">{icon}</span>
-                  <p className="hidden md:block text-sm font-medium leading-normal truncate">
+                  <p className="hidden md:block text-xs font-medium leading-normal truncate">
                     {label}
                   </p>
                 </div>
@@ -149,7 +149,7 @@ const SidebarDashboard = ({ usuario, handleLogout }) => {
           <span className="relative z-10 text-xl">
             <FaRocket />
           </span>
-          <p className="hidden md:block relative z-10 text-sm font-semibold">
+          <p className="hidden md:block relative z-10 text-xs font-semibold">
             Dale un impulso a tu cuenta
           </p>
         </NavLink>
@@ -159,7 +159,7 @@ const SidebarDashboard = ({ usuario, handleLogout }) => {
       <div className="sticky bottom-0 w-full px-3 py-3 z-20 bg-gradient-to-br from-red-400 via-red-500 to-orange-500">
         <button
           onClick={handleLogout}
-          className="w-full flex items-center justify-center gap-2 text-sm text-white hover:bg-black/40 hover:text-white transition rounded-full py-2"
+          className="w-full flex items-center justify-center gap-2 text-xs text-white hover:bg-black/40 hover:text-white transition rounded-full py-2"
         >
           <MdLogout className="text-lg" />
           <span>Cerrar sesión</span>

@@ -74,7 +74,7 @@ const StarRating = ({ targetType, targetId }) => {
   };
 
   return (
-    <div className="flex flex-col items-start gap-1 text-sm">
+    <div className="flex flex-col items-start gap-1  text-xs">
       <div className="flex items-center gap-1">
         {[1, 2, 3, 4, 5].map((star) => {
           const isFilled = hoverRating

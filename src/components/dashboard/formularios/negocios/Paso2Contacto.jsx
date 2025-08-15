@@ -5,7 +5,7 @@ export default function Paso2Contacto() {
     <div className="space-y-5">
       {/* Teléfono */}
       <div>
-        <label className="block text-sm font-medium text-white mb-1">
+        <label className="block  text-xs font-medium text-white mb-1">
           Teléfono
         </label>
         <Field
@@ -16,13 +16,13 @@ export default function Paso2Contacto() {
         <ErrorMessage
           name="contact.phone"
           component="div"
-          className="text-red-500 text-sm mt-1"
+          className="text-red-500  text-xs mt-1"
         />
       </div>
 
       {/* Email */}
       <div>
-        <label className="block text-sm font-medium text-white mb-1">
+        <label className="block  text-xs font-medium text-white mb-1">
           Email
         </label>
         <Field
@@ -34,13 +34,13 @@ export default function Paso2Contacto() {
         <ErrorMessage
           name="contact.email"
           component="div"
-          className="text-red-500 text-sm mt-1"
+          className="text-red-500  text-xs mt-1"
         />
       </div>
 
       {/* Website */}
       <div>
-        <label className="block text-sm font-medium text-white mb-1">
+        <label className="block  text-xs font-medium text-white mb-1">
           Sitio Web
         </label>
         <Field
@@ -51,7 +51,7 @@ export default function Paso2Contacto() {
         <ErrorMessage
           name="contact.website"
           component="div"
-          className="text-red-500 text-sm mt-1"
+          className="text-red-500  text-xs mt-1"
         />
       </div>
 
@@ -59,7 +59,7 @@ export default function Paso2Contacto() {
 
       {/* Facebook */}
       <div>
-        <label className="block text-sm font-medium text-white mb-1">
+        <label className="block  text-xs font-medium text-white mb-1">
           Facebook
         </label>
         <Field
@@ -70,13 +70,13 @@ export default function Paso2Contacto() {
         <ErrorMessage
           name="contact.socialMedia.facebook"
           component="div"
-          className="text-red-500 text-sm mt-1"
+          className="text-red-500  text-xs mt-1"
         />
       </div>
 
       {/* Instagram */}
       <div>
-        <label className="block text-sm font-medium text-white mb-1">
+        <label className="block  text-xs font-medium text-white mb-1">
           Instagram
         </label>
         <Field
@@ -87,13 +87,13 @@ export default function Paso2Contacto() {
         <ErrorMessage
           name="contact.socialMedia.instagram"
           component="div"
-          className="text-red-500 text-sm mt-1"
+          className="text-red-500  text-xs mt-1"
         />
       </div>
 
       {/* WhatsApp */}
       <div>
-        <label className="block text-sm font-medium text-white mb-1">
+        <label className="block  text-xs font-medium text-white mb-1">
           WhatsApp
         </label>
         <Field
@@ -104,7 +104,7 @@ export default function Paso2Contacto() {
         <ErrorMessage
           name="contact.socialMedia.whatsapp"
           component="div"
-          className="text-red-500 text-sm mt-1"
+          className="text-red-500  text-xs mt-1"
         />
       </div>
     </div>

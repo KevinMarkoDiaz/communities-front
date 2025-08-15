@@ -110,7 +110,7 @@ export default function MisNegocios() {
         </h3>
         <Link
           to="crear"
-          className="flex items-center gap-2 bg-black text-white px-3 py-2 rounded hover:bg-[#f4c753] hover:text-black transition text-sm font-semibold"
+          className="flex items-center gap-2 bg-black text-white px-3 py-2 rounded hover:bg-[#f4c753] hover:text-black transition  text-xs font-semibold"
         >
           <MdAddBusiness className="text-lg" />
           <p className="hidden md:block">Crear negocio</p>
@@ -120,7 +120,7 @@ export default function MisNegocios() {
       {misNegocios.length === 0 ? (
         <div className="flex flex-col items-center text-center gap-5 py-16">
           <img src={ilust2} alt="Sin negocios" className="w-40 opacity-90" />
-          <p className="text-gray-600 text-sm md:text-base max-w-xs">
+          <p className="text-gray-600  text-xs md:text-base max-w-xs">
             Aún no tienes ningún negocio creado.
             <br />
             Comparte tu proyecto con tu comunidad y haz que te encuentren
@@ -128,7 +128,7 @@ export default function MisNegocios() {
           </p>
           <Link
             to="/dashboard/mis-negocios/crear"
-            className="inline-block bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium px-4 py-2 rounded transition"
+            className="inline-block bg-orange-500 hover:bg-orange-600 text-white  text-xs font-medium px-4 py-2 rounded transition"
           >
             Crear mi primer negocio
           </Link>

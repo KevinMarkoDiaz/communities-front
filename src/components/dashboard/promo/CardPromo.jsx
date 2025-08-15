@@ -41,7 +41,7 @@ export default function CardPromo({ promo, onSelect }) {
         }`}
       >
         {/* Nombre */}
-        <h3 className="text-sm font-semibold line-clamp-2 leading-snug">
+        <h3 className="  text-xs font-semibold line-clamp-2 leading-snug">
           {name}
         </h3>
 

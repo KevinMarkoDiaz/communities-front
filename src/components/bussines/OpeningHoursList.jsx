@@ -28,10 +28,10 @@ export function OpeningHoursList({ hours }) {
                 : ""
             }`}
           >
-            <p className="text-[#8a7460] text-sm font-normal leading-normal capitalize">
+            <p className="text-[#8a7460]  text-xs font-normal leading-normal capitalize">
               {dias[day.toLowerCase()] || day}
             </p>
-            <p className="text-[#181411] text-sm font-normal leading-normal">
+            <p className="text-[#181411]  text-xs font-normal leading-normal">
               {closed ? "Cerrado" : `${open} - ${close}`}
             </p>
           </div>

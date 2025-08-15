@@ -4,9 +4,9 @@ export default function EventOrganizerCard({ organizer }) {
   return (
     <div className="bg-white rounded-xl p-4 shadow flex items-center justify-between">
       <div className="flex flex-col gap-1">
-        <p className="text-[#637588] text-sm">Organizado por</p>
+        <p className="text-[#637588]  text-xs">Organizado por</p>
         <p className="text-[#111418] text-base font-bold">{organizer.name}</p>
-        <p className="text-[#637588] text-sm">{organizer.description}</p>
+        <p className="text-[#637588]  text-xs">{organizer.description}</p>
       </div>
       {organizer.image && (
         <div

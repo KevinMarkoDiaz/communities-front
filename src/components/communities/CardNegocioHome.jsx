@@ -66,7 +66,7 @@ export default function CardNegocioHome({ negocio }) {
       </div>
 
       {/* Nombre */}
-      <p className="text-sm sm:text-m font-semibold break-words leading-snug min-h-[3.5rem]">
+      <p className="  text-xs sm:text-m font-semibold break-words leading-snug min-h-[3.5rem]">
         {negocio.name}
       </p>
 

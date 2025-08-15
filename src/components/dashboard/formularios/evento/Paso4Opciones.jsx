@@ -42,14 +42,14 @@ export default function Paso4Opciones() {
   }, [coords]);
 
   if (loading) {
-    return <p className="text-sm text-gray-500">Cargando opciones...</p>;
+    return <p className="  text-xs text-gray-500">Cargando opciones...</p>;
   }
 
   return (
     <div className="space-y-6">
       {/* Categorías */}
       <div>
-        <label className="block text-sm font-medium mb-1">Categorías</label>
+        <label className="block  text-xs font-medium mb-1">Categorías</label>
         <Select
           menuPlacement="top"
           isMulti
@@ -79,13 +79,13 @@ export default function Paso4Opciones() {
         <ErrorMessage
           name="categories"
           component="div"
-          className="text-red-500 text-sm mt-1"
+          className="text-red-500  text-xs mt-1"
         />
       </div>
 
       {/* Comunidades */}
       <div>
-        <label className="block text-sm font-medium mb-1">Comunidades</label>
+        <label className="block  text-xs font-medium mb-1">Comunidades</label>
         <Select
           menuPlacement="top"
           isMulti
@@ -115,13 +115,13 @@ export default function Paso4Opciones() {
         <ErrorMessage
           name="communities"
           component="div"
-          className="text-red-500 text-sm mt-1"
+          className="text-red-500  text-xs mt-1"
         />
       </div>
 
       {/* Sponsors */}
       <div>
-        <label className="block text-sm font-medium mb-1">
+        <label className="block  text-xs font-medium mb-1">
           Negocios auspiciantes (opcional)
         </label>
         <Select
@@ -153,13 +153,13 @@ export default function Paso4Opciones() {
         <ErrorMessage
           name="sponsors"
           component="div"
-          className="text-red-500 text-sm mt-1"
+          className="text-red-500  text-xs mt-1"
         />
       </div>
 
       {/* Estado */}
       <div>
-        <label className="block text-sm font-medium mb-1">
+        <label className="block  text-xs font-medium mb-1">
           Estado del evento
         </label>
         <Select
@@ -186,7 +186,7 @@ export default function Paso4Opciones() {
         <ErrorMessage
           name="status"
           component="div"
-          className="text-red-500 text-sm mt-1"
+          className="text-red-500  text-xs mt-1"
         />
       </div>
 
@@ -198,7 +198,7 @@ export default function Paso4Opciones() {
           id="featured"
           className="form-checkbox h-5 w-5 text-blue-600"
         />
-        <label htmlFor="featured" className="text-sm font-medium">
+        <label htmlFor="featured" className="  text-xs font-medium">
           Marcar como destacado
         </label>
       </div>
@@ -206,7 +206,7 @@ export default function Paso4Opciones() {
       {/* Organizer solo para admin */}
       {usuario.role === "admin" && (
         <div>
-          <label className="block text-sm font-medium mb-1">
+          <label className="block  text-xs font-medium mb-1">
             Organizador del evento
           </label>
           <SelectOrganizer
@@ -230,7 +230,7 @@ export default function Paso4Opciones() {
           <ErrorMessage
             name="organizer"
             component="div"
-            className="text-red-500 text-sm mt-1"
+            className="text-red-500  text-xs mt-1"
           />
         </div>
       )}
@@ -243,7 +243,7 @@ export default function Paso4Opciones() {
           id="isPublished"
           className="form-checkbox h-5 w-5 text-blue-600"
         />
-        <label htmlFor="isPublished" className="text-sm font-medium">
+        <label htmlFor="isPublished" className="  text-xs font-medium">
           Publicar evento al guardarlo
         </label>
       </div>

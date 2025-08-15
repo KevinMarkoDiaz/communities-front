@@ -48,7 +48,7 @@ export default function DashboardEventDetail() {
             {evento.title}
           </h2>
 
-          <p className="text-gray-700 text-sm lg:text-base leading-relaxed whitespace-pre-line">
+          <p className="text-gray-700  text-xs lg:text-base leading-relaxed whitespace-pre-line">
             {evento.description}
           </p>
 
@@ -129,7 +129,7 @@ export default function DashboardEventDetail() {
       {/* Métricas */}
       <section className="bg-white md:border border-gray-200 rounded-2xl md:p-6 md:shadow space-y-4">
         <h3 className="text-xl font-bold">Métricas del evento</h3>
-        <p className="text-sm text-gray-500">
+        <p className="  text-xs text-gray-500">
           Aquí podrás visualizar estadísticas de visitas y engagement.
         </p>
 

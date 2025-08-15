@@ -25,12 +25,12 @@ export default function ConfirmDeleteModal({
         </h2>
 
         {/* Descripción */}
-        <p className="text-sm text-gray-600">
+        <p className="  text-xs text-gray-600">
           Para confirmar, escribe el nombre exactamente como aparece.
         </p>
 
         {/* Nombre de referencia */}
-        <div className="text-sm font-medium text-gray-800 border border-gray-200 bg-gray-50 rounded px-3 py-1 w-fit">
+        <div className="  text-xs font-medium text-gray-800 border border-gray-200 bg-gray-50 rounded px-3 py-1 w-fit">
           {entityName}
         </div>
 
@@ -40,7 +40,7 @@ export default function ConfirmDeleteModal({
           placeholder="Escribe aquí el nombre completo"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
-          className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+          className="w-full border border-gray-300 rounded px-3 py-2  text-xs focus:outline-none focus:ring-2 focus:ring-orange-500"
         />
 
         {inputValue.trim() && inputValue.trim() !== entityName && (
@@ -53,7 +53,7 @@ export default function ConfirmDeleteModal({
         <div className="flex flex-col sm:flex-row justify-end gap-2 mt-2">
           <button
             onClick={onClose}
-            className="w-full sm:w-auto px-4 py-2 rounded border border-gray-300 text-gray-700 hover:bg-gray-100 transition text-sm"
+            className="w-full sm:w-auto px-4 py-2 rounded border border-gray-300 text-gray-700 hover:bg-gray-100 transition  text-xs"
           >
             Cancelar
           </button>
@@ -63,7 +63,7 @@ export default function ConfirmDeleteModal({
               setInputValue("");
             }}
             disabled={inputValue.trim() !== entityName}
-            className={`w-full sm:w-auto px-4 py-2 rounded text-sm font-semibold transition ${
+            className={`w-full sm:w-auto px-4 py-2 rounded  text-xs font-semibold transition ${
               inputValue.trim() === entityName
                 ? "bg-red-600 text-white hover:bg-red-700"
                 : "bg-gray-300 text-gray-500 cursor-not-allowed"

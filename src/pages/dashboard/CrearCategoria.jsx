@@ -86,7 +86,7 @@ export default function CrearCategoria() {
               <Form className="space-y-6">
                 {/* Nombre */}
                 <div>
-                  <label className="block text-sm font-medium text-white mb-1">
+                  <label className="block  text-xs font-medium text-white mb-1">
                     Nombre
                   </label>
                   <Field
@@ -97,13 +97,13 @@ export default function CrearCategoria() {
                   <ErrorMessage
                     name="name"
                     component="div"
-                    className="text-red-400 text-sm mt-1"
+                    className="text-red-400  text-xs mt-1"
                   />
                 </div>
 
                 {/* Descripción */}
                 <div>
-                  <label className="block text-sm font-medium text-white mb-1">
+                  <label className="block  text-xs font-medium text-white mb-1">
                     Descripción
                   </label>
                   <Field
@@ -116,7 +116,7 @@ export default function CrearCategoria() {
                   <ErrorMessage
                     name="description"
                     component="div"
-                    className="text-red-400 text-sm mt-1"
+                    className="text-red-400  text-xs mt-1"
                   />
                 </div>
 
@@ -130,7 +130,7 @@ export default function CrearCategoria() {
                   <ErrorMessage
                     name="icon"
                     component="div"
-                    className="text-red-400 text-sm mt-1"
+                    className="text-red-400  text-xs mt-1"
                   />
                 </div>
 

@@ -16,7 +16,7 @@ export default function Paso3Recursos() {
                 className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-start border-b pb-4"
               >
                 <div>
-                  <label className="block text-sm font-medium mb-1">
+                  <label className="block  text-xs font-medium mb-1">
                     Título
                   </label>
                   <Field
@@ -27,11 +27,11 @@ export default function Paso3Recursos() {
                   <ErrorMessage
                     name={`resources[${index}].title`}
                     component="div"
-                    className="text-red-500 text-sm mt-1"
+                    className="text-red-500  text-xs mt-1"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">URL</label>
+                  <label className="block  text-xs font-medium mb-1">URL</label>
                   <Field
                     name={`resources[${index}].url`}
                     placeholder="https://..."
@@ -40,11 +40,13 @@ export default function Paso3Recursos() {
                   <ErrorMessage
                     name={`resources[${index}].url`}
                     component="div"
-                    className="text-red-500 text-sm mt-1"
+                    className="text-red-500  text-xs mt-1"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Tipo</label>
+                  <label className="block  text-xs font-medium mb-1">
+                    Tipo
+                  </label>
                   <Field
                     name={`resources[${index}].type`}
                     as="select"
@@ -59,7 +61,7 @@ export default function Paso3Recursos() {
                   <ErrorMessage
                     name={`resources[${index}].type`}
                     component="div"
-                    className="text-red-500 text-sm mt-1"
+                    className="text-red-500  text-xs mt-1"
                   />
                 </div>
 
@@ -67,7 +69,7 @@ export default function Paso3Recursos() {
                   <button
                     type="button"
                     onClick={() => remove(index)}
-                    className="text-red-500 text-sm"
+                    className="text-red-500  text-xs"
                   >
                     Eliminar recurso
                   </button>
@@ -92,7 +94,7 @@ export default function Paso3Recursos() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium mb-1">Facebook</label>
+          <label className="block  text-xs font-medium mb-1">Facebook</label>
           <Field
             name="socialMediaLinks.facebook"
             placeholder="https://facebook.com/..."
@@ -101,7 +103,7 @@ export default function Paso3Recursos() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">Instagram</label>
+          <label className="block  text-xs font-medium mb-1">Instagram</label>
           <Field
             name="socialMediaLinks.instagram"
             placeholder="https://instagram.com/..."
@@ -110,7 +112,7 @@ export default function Paso3Recursos() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">WhatsApp</label>
+          <label className="block  text-xs font-medium mb-1">WhatsApp</label>
           <Field
             name="socialMediaLinks.whatsapp"
             placeholder="=1 9 00 233..."
@@ -119,7 +121,7 @@ export default function Paso3Recursos() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">YouTube</label>
+          <label className="block  text-xs font-medium mb-1">YouTube</label>
           <Field
             name="socialMediaLinks.youtube"
             placeholder="https://youtube.com/..."

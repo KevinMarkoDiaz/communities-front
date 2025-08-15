@@ -164,14 +164,14 @@ export default function EventoDetalle() {
             <BadgeEstadoEvento date={evento.date} />
           </div>
 
-          <p className="text-sm text-gray-500">
+          <p className="  text-xs text-gray-500">
             {new Date(evento.date).toLocaleDateString()} - {evento.time}
             {evento.location?.address &&
               ` · ${evento.location.address}, ${evento.location.city}`}
           </p>
 
           {!evento.isFree && evento.price > 0 && (
-            <p className="text-sm text-green-600 font-medium">
+            <p className="  text-xs text-green-600 font-medium">
               Precio: ${evento.price}
             </p>
           )}
@@ -207,7 +207,7 @@ export default function EventoDetalle() {
               href={evento.registrationLink}
               target="_blank"
               rel="noreferrer"
-              className="inline-block w-fit px-4 py-2 bg-black text-white text-sm rounded transition"
+              className="inline-block w-fit px-4 py-2 bg-black text-white  text-xs rounded transition"
             >
               Registrate
             </a>
@@ -217,7 +217,7 @@ export default function EventoDetalle() {
               href={evento.virtualLink}
               target="_blank"
               rel="noreferrer"
-              className="inline-block w-fit px-4 py-2 bg-green-600 text-white text-sm rounded transition"
+              className="inline-block w-fit px-4 py-2 bg-green-600 text-white  text-xs rounded transition"
             >
               Ingresar al evento virtual
             </a>
@@ -286,7 +286,7 @@ export default function EventoDetalle() {
                 <Link
                   key={community._id}
                   to={`/comunidades/${community._id}`}
-                  className="w-fit shadow-lg flex items-center gap-2 px-2 py-2 rounded-full bg-gray-100 text-sm text-gray-700 hover:bg-gray-200"
+                  className="w-fit shadow-lg flex items-center gap-2 px-2 py-2 rounded-full bg-gray-100  text-xs text-gray-700 hover:bg-gray-200"
                 >
                   <img
                     src={community.flagImage || "/placeholder-flag.png"}

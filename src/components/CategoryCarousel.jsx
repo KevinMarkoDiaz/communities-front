@@ -101,7 +101,7 @@ ${seleccionada ? "border-4 border-[#f4c753]" : "border border-transparent"}
                       </svg>
                     )}
                   </div>
-                  <p className="line-clamp-2 text-[#181411] text-sm font-medium leading-tight mt-1 transition-colors duration-200 ">
+                  <p className="line-clamp-2 text-[#181411]  text-xs font-medium leading-tight mt-1 transition-colors duration-200 ">
                     {cat.name}
                   </p>
                 </button>
@@ -112,7 +112,7 @@ ${seleccionada ? "border-4 border-[#f4c753]" : "border border-transparent"}
           <div className="px-4 pt-3">
             <button
               onClick={() => handleSeleccionCategoria("todas")}
-              className="mt-4 inline-block bg-white text-[#181411] font-semibold text-sm md:text-base px-4 py-2 border border-gray-300 rounded-lg shadow-md hover:bg-orange-500 hover:text-white transition-colors duration-200"
+              className="mt-4 inline-block bg-white text-[#181411] font-semibold  text-xs md:text-base px-4 py-2 border border-gray-300 rounded-lg shadow-md hover:bg-orange-500 hover:text-white transition-colors duration-200"
             >
               Todas las categorías
             </button>

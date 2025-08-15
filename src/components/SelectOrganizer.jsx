@@ -30,7 +30,7 @@ export default function SelectOrganizer({ value, onChange }) {
 
   return (
     <div className="space-y-3">
-      <label className="block text-sm font-medium">Organizador</label>
+      <label className="block  text-xs font-medium">Organizador</label>
 
       <div className="flex gap-2">
         <input

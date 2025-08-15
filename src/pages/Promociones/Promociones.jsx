@@ -45,7 +45,7 @@ export default function Promociones() {
   ) => {
     if (items.length === 0) {
       return (
-        <div className="text-center text-gray-400 text-sm italic">
+        <div className="text-center text-gray-400  text-xs italic">
           No hay promociones disponibles por ahora.
         </div>
       );

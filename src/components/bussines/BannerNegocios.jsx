@@ -21,7 +21,7 @@ export default function BannerNegocios({ scrollToRef }) {
         <div className="relative z-10 flex flex-col gap-6 sm:gap-8 min-h-[300px] items-start justify-end p-6 sm:p-10 text-white">
           <button
             onClick={handleScroll}
-            className="bg-[#fff] hover:shadow-xl transition text-black text-sm sm:text-base font-bold px-5 py-2 sm:py-3 rounded-full"
+            className="bg-[#fff] hover:shadow-xl transition text-black  text-xs sm:text-base font-bold px-5 py-2 sm:py-3 rounded-full"
           >
             Explorar negocios
           </button>

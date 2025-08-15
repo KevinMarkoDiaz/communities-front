@@ -47,7 +47,9 @@ export default function DropzoneGaleria({
 
   return (
     <div className="space-y-3">
-      <label className="block text-sm font-medium text-gray-100">{label}</label>
+      <label className="block  text-xs font-medium text-gray-100">
+        {label}
+      </label>
 
       <div
         {...getRootProps()}
@@ -61,7 +63,7 @@ export default function DropzoneGaleria({
       >
         <input {...getInputProps()} />
         <FaImages className="w-8 h-8 mx-auto mb-2 opacity-70" />
-        <p className="text-sm font-medium">
+        <p className="  text-xs font-medium">
           {isDragActive
             ? "Suelta las imágenes aquí..."
             : "Arrastra o toca para subir múltiples imágenes"}

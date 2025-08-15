@@ -111,7 +111,7 @@ export default function MisEventos() {
         </h3>
         <Link
           to="crear"
-          className="flex items-center gap-2 bg-black text-white px-3 py-2 rounded hover:bg-[#f4c753] hover:text-black transition text-sm font-semibold"
+          className="flex items-center gap-2 bg-black text-white px-3 py-2 rounded hover:bg-[#f4c753] hover:text-black transition  text-xs font-semibold"
         >
           <MdAdd className="text-lg" />
           <span className="hidden md:block">Crear evento</span>
@@ -122,14 +122,14 @@ export default function MisEventos() {
       {eventos.length === 0 ? (
         <div className="flex flex-col items-center text-center gap-5 py-16">
           <img src={ilust4} alt="Sin eventos" className="w-40 opacity-90" />
-          <p className="text-gray-600 text-sm md:text-base max-w-xs">
+          <p className="text-gray-600  text-xs md:text-base max-w-xs">
             Aún no has creado ningún evento.
             <br />
             Publica tus actividades y conecta con tu comunidad fácilmente.
           </p>
           <Link
             to="/dashboard/mis-eventos/crear"
-            className="inline-block bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium px-4 py-2 rounded transition"
+            className="inline-block bg-orange-500 hover:bg-orange-600 text-white  text-xs font-medium px-4 py-2 rounded transition"
           >
             Crear mi primer evento
           </Link>

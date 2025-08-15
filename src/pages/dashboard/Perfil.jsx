@@ -168,7 +168,7 @@ export default function PerfilPage() {
         </p>
         <Link
           to="/dashboard/perfil/editar"
-          className="inline-block bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium px-4 py-2 rounded-full transition shadow-lg"
+          className="inline-block bg-orange-500 hover:bg-orange-600 text-white  text-xs font-medium px-4 py-2 rounded-full transition shadow-lg"
         >
           Editar mi perfil
         </Link>

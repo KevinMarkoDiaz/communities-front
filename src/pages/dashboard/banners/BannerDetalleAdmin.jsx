@@ -187,7 +187,7 @@ export default function BannerDetalleAdmin({ banner, onDeleted, onUpdated }) {
           <h3 className="text-lg font-semibold text-[#141C24] truncate">
             {banner.title}
           </h3>
-          <p className="text-sm text-gray-600 truncate flex items-center gap-2">
+          <p className="  text-xs text-gray-600 truncate flex items-center gap-2">
             {banner.placement} · <StatusPill status={banner.status} />
             {banner.isFallback ? (
               <span className="text-xs">· Fallback</span>
@@ -207,14 +207,14 @@ export default function BannerDetalleAdmin({ banner, onDeleted, onUpdated }) {
         <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={() => openUrl(banner.redirectUrl)}
-            className="inline-flex items-center gap-1 px-3 py-2 text-sm rounded border border-gray-300 bg-white hover:bg-gray-50"
+            className="inline-flex items-center gap-1 px-3 py-2  text-xs rounded border border-gray-300 bg-white hover:bg-gray-50"
             title="Abrir destino"
           >
             <MdOpenInNew /> Destino
           </button>
           <button
             onClick={copyId}
-            className="inline-flex items-center gap-1 px-3 py-2 text-sm rounded border border-gray-300 bg-white hover:bg-gray-50"
+            className="inline-flex items-center gap-1 px-3 py-2  text-xs rounded border border-gray-300 bg-white hover:bg-gray-50"
             title="Copiar ID"
           >
             <MdContentCopy /> Copiar ID
@@ -231,7 +231,7 @@ export default function BannerDetalleAdmin({ banner, onDeleted, onUpdated }) {
             className="w-full h-auto object-contain"
           />
         ) : (
-          <div className="p-8 text-center text-gray-400 text-sm">
+          <div className="p-8 text-center text-gray-400  text-xs">
             Sin imagen
           </div>
         )}
@@ -274,7 +274,7 @@ export default function BannerDetalleAdmin({ banner, onDeleted, onUpdated }) {
       </div>
 
       {/* meta / métricas */}
-      <div className="grid md:grid-cols-2 gap-4 mt-4 text-sm">
+      <div className="grid md:grid-cols-2 gap-4 mt-4  text-xs">
         <div className="space-y-1">
           <div>
             <span className="font-medium">URL destino:</span>{" "}
@@ -343,7 +343,7 @@ export default function BannerDetalleAdmin({ banner, onDeleted, onUpdated }) {
             <button
               onClick={markUnderReview}
               disabled={loading}
-              className="inline-flex items-center gap-1 bg-slate-700 text-white text-sm px-3 py-2 rounded hover:bg-slate-800 transition"
+              className="inline-flex items-center gap-1 bg-slate-700 text-white  text-xs px-3 py-2 rounded hover:bg-slate-800 transition"
               title="Marcar En revisión"
             >
               <MdPlayCircle className="text-base" /> En revisión
@@ -353,7 +353,7 @@ export default function BannerDetalleAdmin({ banner, onDeleted, onUpdated }) {
             <button
               onClick={approve}
               disabled={loading}
-              className="inline-flex items-center gap-1 bg-emerald-600 text-white text-sm px-3 py-2 rounded hover:bg-emerald-700 transition"
+              className="inline-flex items-center gap-1 bg-emerald-600 text-white  text-xs px-3 py-2 rounded hover:bg-emerald-700 transition"
               title="Aprobar"
             >
               <MdCheckCircle className="text-base" /> Aprobar
@@ -368,7 +368,7 @@ export default function BannerDetalleAdmin({ banner, onDeleted, onUpdated }) {
             <button
               onClick={reject}
               disabled={loading}
-              className="inline-flex items-center gap-1 bg-gray-700 text-white text-sm px-3 py-2 rounded hover:bg-gray-800 transition"
+              className="inline-flex items-center gap-1 bg-gray-700 text-white  text-xs px-3 py-2 rounded hover:bg-gray-800 transition"
               title="Rechazar"
             >
               <MdCancel className="text-base" /> Rechazar
@@ -379,7 +379,7 @@ export default function BannerDetalleAdmin({ banner, onDeleted, onUpdated }) {
           <button
             onClick={toggleActive}
             disabled={loading}
-            className="inline-flex items-center gap-1 bg-white border border-gray-300 text-sm px-3 py-2 rounded hover:bg-gray-50 transition"
+            className="inline-flex items-center gap-1 bg-white border border-gray-300  text-xs px-3 py-2 rounded hover:bg-gray-50 transition"
             title="Activar/Desactivar"
           >
             {banner.isActive ? "Desactivar" : "Activar"}
@@ -390,7 +390,7 @@ export default function BannerDetalleAdmin({ banner, onDeleted, onUpdated }) {
             <button
               onClick={checkout}
               disabled={loading}
-              className="inline-flex items-center gap-1 bg-black text-white text-sm px-3 py-2 rounded hover:bg-[#f4c753] hover:text-black transition"
+              className="inline-flex items-center gap-1 bg-black text-white  text-xs px-3 py-2 rounded hover:bg-[#f4c753] hover:text-black transition"
               title="Crear Checkout"
             >
               Checkout
@@ -401,7 +401,7 @@ export default function BannerDetalleAdmin({ banner, onDeleted, onUpdated }) {
           <button
             onClick={del}
             disabled={loading}
-            className="inline-flex items-center gap-1 bg-red-600 text-white text-sm px-3 py-2 rounded hover:bg-red-700 transition ml-auto"
+            className="inline-flex items-center gap-1 bg-red-600 text-white  text-xs px-3 py-2 rounded hover:bg-red-700 transition ml-auto"
             title="Eliminar"
           >
             <MdDelete className="text-base" /> Eliminar

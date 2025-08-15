@@ -36,7 +36,7 @@ export default function ModalGuardarPromo({ promo, onClose }) {
 
         <div className="text-center space-y-4">
           <h2 className="text-xl font-bold text-sky-800">{promo.name}</h2>
-          <p className="text-gray-700 text-sm">{promo.description}</p>
+          <p className="text-gray-700  text-xs">{promo.description}</p>
 
           {!usuario ? (
             <p className="text-red-600 font-semibold">

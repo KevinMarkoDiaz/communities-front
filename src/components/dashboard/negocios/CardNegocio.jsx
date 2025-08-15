@@ -22,7 +22,7 @@ export default function CardNegocio({ negocio, onSelect }) {
         {/* Nombre */}
         <h3
           className="
-    text-sm font-semibold text-gray-700
+     text-xs font-semibold text-gray-700
     line-clamp-2 leading-snug  overflow-hidden
   "
         >

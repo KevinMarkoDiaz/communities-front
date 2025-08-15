@@ -46,7 +46,7 @@ export default function BannerFilters({
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="Buscar por título…"
-            className="pl-8 pr-3 py-2 border border-gray-300 rounded-md text-sm bg-white/80"
+            className="pl-8 pr-3 py-2 border border-gray-300 rounded-md  text-xs bg-white/80"
           />
         </div>
 
@@ -55,7 +55,7 @@ export default function BannerFilters({
           <select
             value={placement}
             onChange={(e) => setPlacement(e.target.value)}
-            className="px-2 py-2 border border-gray-300 rounded-md text-sm bg-white/80"
+            className="px-2 py-2 border border-gray-300 rounded-md  text-xs bg-white/80"
           >
             {placements.map((p) => (
               <option key={p.value} value={p.value}>
@@ -67,7 +67,7 @@ export default function BannerFilters({
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value)}
-            className="px-2 py-2 border border-gray-300 rounded-md text-sm bg-white/80"
+            className="px-2 py-2 border border-gray-300 rounded-md  text-xs bg-white/80"
             title="Estado"
           >
             {statusOptions.map((s) => (
@@ -77,7 +77,7 @@ export default function BannerFilters({
             ))}
           </select>
 
-          <label className="inline-flex items-center gap-2 text-sm text-gray-700">
+          <label className="inline-flex items-center gap-2  text-xs text-gray-700">
             <input
               type="checkbox"
               checked={activeOnly}
@@ -90,7 +90,7 @@ export default function BannerFilters({
 
       <button
         onClick={onReset}
-        className="inline-flex items-center gap-2 px-3 py-2 text-sm rounded border border-gray-300 bg-white hover:bg-gray-50"
+        className="inline-flex items-center gap-2 px-3 py-2  text-xs rounded border border-gray-300 bg-white hover:bg-gray-50"
       >
         <MdRestartAlt className="text-lg" />
         Reset

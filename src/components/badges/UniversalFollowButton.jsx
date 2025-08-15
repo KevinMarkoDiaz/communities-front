@@ -64,7 +64,7 @@ export default function UniversalFollowButton({ entityType, entityId }) {
       onClick={toggleFollow}
       disabled={loading || loadingFollows}
       title={isFollowed ? "Ya estás siguiendo" : "Seguir"}
-      className={`flex items-center gap-2 px-4 py-1.5 rounded-xl transition-all shadow-md text-sm font-semibold
+      className={`flex items-center gap-2 px-4 py-1.5 rounded-xl transition-all shadow-md  text-xs font-semibold
         ${
           isFollowed
             ? "bg-blue-100 hover:bg-blue-200 text-blue-800 border border-blue-300"

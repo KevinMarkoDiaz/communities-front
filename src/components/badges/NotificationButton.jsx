@@ -79,7 +79,7 @@ export default function NotificationButton({ className = "", onClick }) {
         <div className="absolute right-0 mt-2 w-80 bg-white border border-gray-200 rounded-xl shadow-xl z-50">
           <div className="max-h-80 overflow-y-auto">
             {items.length === 0 && (
-              <p className="p-4 text-gray-500 text-sm text-center">
+              <p className="p-4 text-gray-500  text-xs text-center">
                 No tienes notificaciones.
               </p>
             )}
@@ -88,7 +88,7 @@ export default function NotificationButton({ className = "", onClick }) {
                 key={n._id}
                 to={n.link}
                 onClick={() => setOpen(false)}
-                className={`flex items-start gap-2 px-4 py-3 text-sm transition-colors duration-200 border-b border-gray-100 ${
+                className={`flex items-start gap-2 px-4 py-3  text-xs transition-colors duration-200 border-b border-gray-100 ${
                   n.read ? "text-gray-500" : "text-gray-700 font-extralight"
                 } hover:bg-gray-50 hover:text-gray-800`}
               >
@@ -105,7 +105,7 @@ export default function NotificationButton({ className = "", onClick }) {
             </button>
             <Link
               to="/dashboard/notificaciones"
-              className="text-orange-500 text-sm font-semibold"
+              className="text-orange-500  text-xs font-semibold"
               onClick={() => setOpen(false)}
             >
               Ver todas

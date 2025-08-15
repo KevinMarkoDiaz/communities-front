@@ -15,7 +15,7 @@ export default function InboxButton({ className = "", onClick }) {
   console.log(conversations);
   return (
     <Link
-      to="/inbox"
+      to="/dashboard/inbox"
       onClick={onClick}
       className={`relative p-2 hover:text-orange-500 transition-colors duration-200 ${className}`}
       aria-label="Mensajes"

@@ -18,7 +18,7 @@ export default function Paso5SEO() {
 
       {/* Meta title */}
       <div>
-        <label className="block text-sm font-medium text-white mb-1">
+        <label className="block  text-xs font-medium text-white mb-1">
           Meta título
         </label>
         <Field
@@ -29,13 +29,13 @@ export default function Paso5SEO() {
         <ErrorMessage
           name="metaTitle"
           component="div"
-          className="text-red-400 text-sm mt-1"
+          className="text-red-400  text-xs mt-1"
         />
       </div>
 
       {/* Meta description */}
       <div>
-        <label className="block text-sm font-medium text-white mb-1">
+        <label className="block  text-xs font-medium text-white mb-1">
           Meta descripción
         </label>
         <Field
@@ -47,13 +47,13 @@ export default function Paso5SEO() {
         <ErrorMessage
           name="metaDescription"
           component="div"
-          className="text-red-400 text-sm mt-1"
+          className="text-red-400  text-xs mt-1"
         />
       </div>
 
       {/* Estado */}
       <div>
-        <label className="block text-sm font-medium text-white mb-1">
+        <label className="block  text-xs font-medium text-white mb-1">
           Estado de publicación
         </label>
         <Select
@@ -68,7 +68,7 @@ export default function Paso5SEO() {
         <ErrorMessage
           name="status"
           component="div"
-          className="text-red-400 text-sm mt-1"
+          className="text-red-400  text-xs mt-1"
         />
       </div>
 
@@ -79,7 +79,7 @@ export default function Paso5SEO() {
           name="isVerified"
           className="form-checkbox border-white/40 bg-white/10 text-orange-500 focus:ring-0 focus:outline-none"
         />
-        <label className="text-sm text-white">Marcar como verificada</label>
+        <label className="  text-xs text-white">Marcar como verificada</label>
       </div>
     </div>
   );

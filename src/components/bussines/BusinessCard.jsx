@@ -16,10 +16,10 @@ export function BusinessCard({
 
         {/* Contenido */}
         <div className="flex flex-col justify-between flex-grow gap-2 px-4 py-3">
-          <p className="text-xs md:text-sm text-gray-500 font-medium">
+          <p className="text-xs md:  text-xs text-gray-500 font-medium">
             {categoryName}
           </p>
-          <p className="text-sm md:text-lg font-semibold text-gray-900">
+          <p className="  text-xs md:text-lg font-semibold text-gray-900">
             {businessName}
           </p>
 

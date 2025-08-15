@@ -17,7 +17,7 @@ export default function CardCategoria({ categoria, onSelect }) {
             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
         ) : (
-          <div className="flex items-center justify-center w-full h-full text-gray-400 text-sm">
+          <div className="flex items-center justify-center w-full h-full text-gray-400  text-xs">
             Sin imagen
           </div>
         )}
@@ -28,7 +28,7 @@ export default function CardCategoria({ categoria, onSelect }) {
         {/* Nombre */}
         <h3
           className="
-    text-sm font-semibold text-gray-700
+     text-xs font-semibold text-gray-700
     line-clamp-2 leading-snug  overflow-hidden
   "
         >

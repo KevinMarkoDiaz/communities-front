@@ -33,7 +33,7 @@ export default function CardComunidad({ comunidad, onSelect }) {
         {/* Nombre */}
         <h3
           className="
-            text-sm font-semibold text-gray-700
+             text-xs font-semibold text-gray-700
             
             flex items-start md:items-center
           "

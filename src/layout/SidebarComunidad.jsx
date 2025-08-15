@@ -126,7 +126,7 @@ export default function SidebarComunidadMobile() {
               className="fixed bottom-5 2xl:bottom-20 right-4 z-50 w-[90vw] max-w-[360px] bg-gradient-to-b from-[#fff7ec] to-[#f3e8ff] p-4 rounded-2xl shadow-2xl border border-sky-300 h-[40vh] min-h-[350px] flex flex-col justify-between"
             >
               <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block  text-xs font-medium text-gray-700">
                   Comunidad
                 </label>
 

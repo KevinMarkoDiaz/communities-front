@@ -86,7 +86,7 @@ export default function LikeButton({
         ) : (
           <AiOutlineHeart className="text-4xl text-gray-400 transition" />
         )}
-        <span className="text-sm text-gray-500">{likesCount}</span>
+        <span className="  text-xs text-gray-500">{likesCount}</span>
       </button>
 
       {showHint && (

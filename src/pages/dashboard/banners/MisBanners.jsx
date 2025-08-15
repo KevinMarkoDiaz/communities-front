@@ -1,12 +1,11 @@
-// src/pages/dashboard/banners/MisBanners.jsx
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import DashboardSectionHeader from "../../../components/dashboard/negocios/DashboardSectionHeader";
 import SkeletonDashboardList from "../../../components/Skeleton/SkeletonDashboardList";
 import ilusta from "../../../assets/ilusta.svg";
 import ilust1 from "../../../assets/ilust1.svg";
-import { getMyAdBanners, createAdCheckout } from "../../../api/adsApi";
+import { getMyAdBanners } from "../../../api/adsApi";
 import { mostrarFeedback } from "../../../store/feedbackSlice";
 import { crearSesionStripeBanner } from "../../../api/stripeApi";
 
@@ -28,30 +27,136 @@ function StatusPill({ status }) {
   );
 }
 
+/* 🔶 Card moderna: imagen protagonista en desktop, solo nombre + vigencia + estado */
+function BannerCard({ banner, isHighlight, payingId, onPay }) {
+  return (
+    <div
+      className={[
+        "flex bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-shadow",
+        "h-24 md:h-32", // 🔒 Alto fijo (como antes)
+        isHighlight ? "ring-2 ring-emerald-400" : "border border-gray-200",
+      ].join(" ")}
+    >
+      {/* Imagen: ancho dinámico, alto fijo */}
+      <div className="relative flex items-center bg-gray-50 shrink-0 px-3 md:px-4 border-r border-gray-200">
+        {banner.imageUrl ? (
+          <img
+            src={banner.imageUrl}
+            alt={banner.title}
+            className="h-full w-auto object-contain max-w-[60vw] md:max-w-[40vw]" // ancho se adapta al banner
+            loading="lazy"
+          />
+        ) : (
+          <div className="h-full min-w-36 flex items-center justify-center text-xs text-gray-400">
+            Sin imagen
+          </div>
+        )}
+        {/* Estado sobre la imagen */}
+        <div className="absolute top-2 left-2">
+          <StatusPill status={banner.status} />
+        </div>
+      </div>
+
+      {/* Detalle ajustado a la derecha */}
+      <div className="flex-1 min-w-0 p-3 md:p-5 flex items-center">
+        <div className="w-full flex flex-col md:flex-row md:items-center md:justify-between gap-1 md:gap-3">
+          <div className="min-w-0">
+            <h3 className="  text-xs md:text-base font-semibold text-gray-900 truncate">
+              {banner.title}
+            </h3>
+            <p className="text-xs md:  text-xs text-gray-600">
+              Vigencia:{" "}
+              {banner.startAt
+                ? new Date(banner.startAt).toLocaleDateString()
+                : "—"}{" "}
+              –{" "}
+              {banner.endAt ? new Date(banner.endAt).toLocaleDateString() : "—"}
+            </p>
+          </div>
+
+          {(banner.status === "approved" ||
+            banner.status === "awaiting_payment") && (
+            <button
+              onClick={() => onPay(banner._id)}
+              disabled={!!payingId}
+              className={[
+                "inline-flex items-center justify-center gap-2 text-xs md:  text-xs px-3 py-2 rounded transition whitespace-nowrap",
+                payingId
+                  ? "bg-gray-400 text-white cursor-not-allowed"
+                  : "bg-black text-white hover:bg-[#f4c753] hover:text-black",
+              ].join(" ")}
+            >
+              {payingId === banner._id ? "Creando pago..." : "Pagar"}
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function MisBanners() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
   const { usuario } = useSelector((s) => s.auth);
+
+  const qs = useMemo(
+    () => new URLSearchParams(location.search),
+    [location.search]
+  );
+  const highlightId = qs.get("bannerId");
+  const checkoutStatus = qs.get("checkout"); // "success" | "cancel"
 
   const [banners, setBanners] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [payingId, setPayingId] = useState(null);
 
-  // Carga inicial
+  const load = async () => {
+    setLoading(true);
+    try {
+      const { banners: list } = await getMyAdBanners();
+      setBanners(list || []);
+    } catch (e) {
+      dispatch(
+        mostrarFeedback({
+          type: "error",
+          message: "No se pudieron cargar tus banners",
+        })
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Carga inicial + feedback si venimos de checkout
   useEffect(() => {
-    (async () => {
-      try {
-        const { banners: list } = await getMyAdBanners();
-        setBanners(list || []);
-      } catch {
-        // noop
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
+    load();
+    if (checkoutStatus === "success") {
+      dispatch(
+        mostrarFeedback({
+          type: "success",
+          message: "Pago completado correctamente",
+        })
+      );
+      const u = new URL(window.location.href);
+      u.searchParams.delete("checkout");
+      u.searchParams.delete("bannerId");
+      navigate(u.pathname, { replace: true });
+    } else if (checkoutStatus === "cancel") {
+      dispatch(mostrarFeedback({ type: "info", message: "Pago cancelado" }));
+      const u = new URL(window.location.href);
+      u.searchParams.delete("checkout");
+      u.searchParams.delete("bannerId");
+      navigate(u.pathname, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // solo al montar
 
   const pay = async (id) => {
     try {
-      const url = await crearSesionStripeBanner(id, 1); // 1 mes
+      setPayingId(id);
+      const url = await crearSesionStripeBanner(id);
       if (url) {
         window.location.href = url;
       } else {
@@ -66,6 +171,8 @@ export default function MisBanners() {
       dispatch(
         mostrarFeedback({ type: "error", message: "Error creando checkout" })
       );
+    } finally {
+      setPayingId(null);
     }
   };
 
@@ -74,7 +181,7 @@ export default function MisBanners() {
 
   return (
     <div className="max-w-[1200px] w-full mx-auto flex flex-col gap-8 md:gap-12 xl:gap-16 px-2">
-      {/* Header (mismo estilo que Comunidades) */}
+      {/* Header */}
       <div className="flex flex-col lg:flex-row gap-6 md:gap-8 xl:gap-10 lg:mt-16">
         <div className="flex-1">
           <DashboardSectionHeader
@@ -96,85 +203,49 @@ export default function MisBanners() {
         <hr className="flex-grow border-gray-200" />
       </div>
 
-      {/* Cabecera acciones */}
       <div className="flex justify-between items-center mb-4 md:mb-6">
         <h3 className="text-lg font-semibold text-[#141C24]">
           Lista de banners
         </h3>
         <Link
           to="/dashboard/mis-banners/crear"
-          className="flex items-center gap-2 bg-black text-white px-3 py-2 rounded hover:bg-[#f4c753] hover:text-black transition text-sm font-semibold"
+          className="flex items-center gap-2 bg-black text-white px-3 py-2 rounded hover:bg-[#f4c753] hover:text-black transition  text-xs font-semibold"
         >
           <span className="text-md">➕</span>
           <p className="hidden md:block">Crear banner</p>
         </Link>
       </div>
 
-      {/* Grid o estado vacío con ilustración */}
+      {/* Grid o vacío */}
       {banners.length === 0 ? (
         <div className="flex flex-col items-center text-center gap-5 py-16">
           <img src={ilust1} alt="Sin banners" className="w-40 opacity-90" />
-          <p className="text-gray-600 text-sm md:text-base max-w-xs">
+          <p className="text-gray-600  text-xs md:text-base max-w-xs">
             Aún no tienes banners.
             <br />
             Crea tu primer anuncio y empieza a darle visibilidad a tu marca.
           </p>
           <Link
             to="/dashboard/mis-banners/crear"
-            className="inline-block bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium px-4 py-2 rounded transition"
+            className="inline-block bg-orange-500 hover:bg-orange-600 text-white  text-xs font-medium px-4 py-2 rounded transition"
           >
             Crear mi primer banner
           </Link>
         </div>
       ) : (
         <div className="grid gap-4">
-          {banners.map((b) => (
-            <div
-              key={b._id}
-              className="rounded-lg border border-gray-200 bg-white p-3 md:p-4 flex gap-3"
-            >
-              <div className="w-36 h-20 bg-gray-50 flex items-center justify-center rounded overflow-hidden shrink-0">
-                {b.imageUrl ? (
-                  <img
-                    src={b.imageUrl}
-                    alt={b.title}
-                    className="w-full h-full object-contain"
-                    loading="lazy"
-                  />
-                ) : (
-                  <div className="text-xs text-gray-400 p-2">Sin imagen</div>
-                )}
-              </div>
-
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <h3 className="font-semibold truncate">{b.title}</h3>
-                  <StatusPill status={b.status} />
-                </div>
-
-                <div className="text-xs text-gray-600 truncate">
-                  {b.placement} · Imp: {b.impressions ?? 0} · Clicks:{" "}
-                  {b.clicks ?? 0}
-                </div>
-
-                <div className="text-xs text-gray-600">
-                  Vigencia:{" "}
-                  {b.startAt ? new Date(b.startAt).toLocaleDateString() : "—"} -{" "}
-                  {b.endAt ? new Date(b.endAt).toLocaleDateString() : "—"}
-                </div>
-
-                {(b.status === "approved" ||
-                  b.status === "awaiting_payment") && (
-                  <button
-                    onClick={() => pay(b._id)}
-                    className="mt-2 inline-flex items-center gap-2 bg-black text-white text-sm px-3 py-2 rounded hover:bg-[#f4c753] hover:text-black transition"
-                  >
-                    Pagar
-                  </button>
-                )}
-              </div>
-            </div>
-          ))}
+          {banners.map((b) => {
+            const isHighlight = Boolean(highlightId && b._id === highlightId);
+            return (
+              <BannerCard
+                key={b._id}
+                banner={b}
+                isHighlight={isHighlight}
+                payingId={payingId}
+                onPay={pay}
+              />
+            );
+          })}
         </div>
       )}
     </div>

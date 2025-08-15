@@ -124,7 +124,7 @@ export default function Comunidades() {
         </h3>
         <Link
           to="crear"
-          className="flex items-center gap-2 bg-black text-white px-3 py-2 rounded hover:bg-[#f4c753] hover:text-black transition text-sm font-semibold"
+          className="flex items-center gap-2 bg-black text-white px-3 py-2 rounded hover:bg-[#f4c753] hover:text-black transition  text-xs font-semibold"
         >
           <MdGroups className="text-lg" />
           <p className="hidden md:block">Crear comunidad</p>
@@ -135,14 +135,14 @@ export default function Comunidades() {
       {misComunidades.length === 0 ? (
         <div className="flex flex-col items-center text-center gap-5 py-16">
           <img src={ilust1} alt="Sin comunidades" className="w-40 opacity-90" />
-          <p className="text-gray-600 text-sm md:text-base max-w-xs">
+          <p className="text-gray-600  text-xs md:text-base max-w-xs">
             Aún no has creado ninguna comunidad.
             <br />
             Comparte tu cultura, conecta personas y haz crecer tu red.
           </p>
           <Link
             to="/dashboard/mis-comunidades/crear"
-            className="inline-block bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium px-4 py-2 rounded transition"
+            className="inline-block bg-orange-500 hover:bg-orange-600 text-white  text-xs font-medium px-4 py-2 rounded transition"
           >
             Crear mi primera comunidad
           </Link>

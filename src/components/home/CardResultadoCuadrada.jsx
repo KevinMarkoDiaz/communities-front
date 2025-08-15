@@ -50,7 +50,7 @@ export default function CardResultadoCuadrada({
           isPremium ? "h-[62px] bg-black text-white" : "h-1/3"
         }`}
       >
-        <h3 className="text-xs md:text-sm font-medium truncate leading-tight">
+        <h3 className="text-xs md:  text-xs font-medium truncate leading-tight">
           {title}
         </h3>
         <p

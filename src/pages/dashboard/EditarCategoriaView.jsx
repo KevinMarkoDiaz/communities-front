@@ -105,7 +105,7 @@ export default function EditarCategoriaView() {
               <h1 className="text-2xl font-bold text-[#141C24]">
                 Editar Categoría
               </h1>
-              <p className="text-gray-700 text-sm sm:text-base">
+              <p className="text-gray-700  text-xs sm:text-base">
                 Actualiza los detalles de tu categoría para mantener tu catálogo
                 organizado ✨
               </p>
@@ -137,7 +137,7 @@ export default function EditarCategoriaView() {
                   <Form className="space-y-6 text-white">
                     {/* Nombre */}
                     <div>
-                      <label className="block text-sm font-medium text-white mb-1">
+                      <label className="block  text-xs font-medium text-white mb-1">
                         Nombre
                       </label>
                       <Field
@@ -148,13 +148,13 @@ export default function EditarCategoriaView() {
                       <ErrorMessage
                         name="name"
                         component="div"
-                        className="text-red-400 text-sm mt-1"
+                        className="text-red-400  text-xs mt-1"
                       />
                     </div>
 
                     {/* Descripción */}
                     <div>
-                      <label className="block text-sm font-medium text-white mb-1">
+                      <label className="block  text-xs font-medium text-white mb-1">
                         Descripción
                       </label>
                       <Field
@@ -167,7 +167,7 @@ export default function EditarCategoriaView() {
                       <ErrorMessage
                         name="description"
                         component="div"
-                        className="text-red-400 text-sm mt-1"
+                        className="text-red-400  text-xs mt-1"
                       />
                     </div>
 
@@ -181,7 +181,7 @@ export default function EditarCategoriaView() {
                       <ErrorMessage
                         name="icon"
                         component="div"
-                        className="text-red-400 text-sm mt-1"
+                        className="text-red-400  text-xs mt-1"
                       />
                     </div>
 
@@ -205,7 +205,7 @@ export default function EditarCategoriaView() {
           <p className="text-[#141C24] text-base font-medium">
             🌟 Mantén tu catálogo actualizado y profesional.
           </p>
-          <p className="text-sm text-gray-600">
+          <p className="  text-xs text-gray-600">
             Las categorías ayudan a tus usuarios a encontrar lo que buscan
             fácilmente.
           </p>

@@ -104,7 +104,7 @@ export default function EditarPromoForm({ promo }) {
           <div className="flex-1 space-y-6">
             {/* Nombre */}
             <div>
-              <label className="block text-sm font-medium mb-1 text-white">
+              <label className="block  text-xs font-medium mb-1 text-white">
                 Nombre
               </label>
               <Field
@@ -115,13 +115,13 @@ export default function EditarPromoForm({ promo }) {
               <ErrorMessage
                 name="name"
                 component="div"
-                className="text-red-400 text-sm mt-1"
+                className="text-red-400  text-xs mt-1"
               />
             </div>
 
             {/* Descripción */}
             <div>
-              <label className="block text-sm font-medium mb-1 text-white">
+              <label className="block  text-xs font-medium mb-1 text-white">
                 Descripción
               </label>
               <Field
@@ -134,13 +134,13 @@ export default function EditarPromoForm({ promo }) {
               <ErrorMessage
                 name="description"
                 component="div"
-                className="text-red-400 text-sm mt-1"
+                className="text-red-400  text-xs mt-1"
               />
             </div>
 
             {/* Tipo */}
             <div>
-              <label className="block text-sm font-medium mb-1 text-white">
+              <label className="block  text-xs font-medium mb-1 text-white">
                 Tipo de promoción
               </label>
               <Select
@@ -182,14 +182,14 @@ export default function EditarPromoForm({ promo }) {
               <ErrorMessage
                 name="type"
                 component="div"
-                className="text-red-400 text-sm mt-1"
+                className="text-red-400  text-xs mt-1"
               />
             </div>
 
             {/* Fechas */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-1 text-white">
+                <label className="block  text-xs font-medium mb-1 text-white">
                   Desde
                 </label>
                 <Field
@@ -200,11 +200,11 @@ export default function EditarPromoForm({ promo }) {
                 <ErrorMessage
                   name="startDate"
                   component="div"
-                  className="text-red-400 text-sm mt-1"
+                  className="text-red-400  text-xs mt-1"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1 text-white">
+                <label className="block  text-xs font-medium mb-1 text-white">
                   Hasta
                 </label>
                 <Field
@@ -215,14 +215,14 @@ export default function EditarPromoForm({ promo }) {
                 <ErrorMessage
                   name="endDate"
                   component="div"
-                  className="text-red-400 text-sm mt-1"
+                  className="text-red-400  text-xs mt-1"
                 />
               </div>
             </div>
 
             {/* Comunidad */}
             <div>
-              <label className="block text-sm font-medium mb-1 text-white">
+              <label className="block  text-xs font-medium mb-1 text-white">
                 Comunidad
               </label>
               <Select
@@ -248,13 +248,13 @@ export default function EditarPromoForm({ promo }) {
               <ErrorMessage
                 name="community"
                 component="div"
-                className="text-red-400 text-sm mt-1"
+                className="text-red-400  text-xs mt-1"
               />
             </div>
 
             {/* Categoría */}
             <div>
-              <label className="block text-sm font-medium mb-1 text-white">
+              <label className="block  text-xs font-medium mb-1 text-white">
                 Categoría
               </label>
               <Select
@@ -278,7 +278,7 @@ export default function EditarPromoForm({ promo }) {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1 text-white">
+              <label className="block  text-xs font-medium mb-1 text-white">
                 Límite de cupones disponibles{" "}
                 <span className="text-white/60">(opcional)</span>
               </label>
@@ -291,12 +291,12 @@ export default function EditarPromoForm({ promo }) {
               <ErrorMessage
                 name="maxClaims"
                 component="div"
-                className="text-red-400 text-sm mt-1"
+                className="text-red-400  text-xs mt-1"
               />
             </div>
             {/* Imagen */}
             <div>
-              <label className="block text-sm font-medium mb-1 text-white">
+              <label className="block  text-xs font-medium mb-1 text-white">
                 Imagen destacada
               </label>
               <DropzoneImagen

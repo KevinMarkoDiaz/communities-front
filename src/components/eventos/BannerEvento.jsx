@@ -24,7 +24,7 @@ export default function BannerEvento({ scrollToRef }) {
         <div className="relative z-10 flex flex-col gap-6 sm:gap-8 h-full items-start justify-end p-6 sm:p-10 text-white">
           <button
             onClick={handleScroll}
-            className="bg-[#f45525] hover:bg-[#e64a1d] transition text-white text-sm sm:text-base font-bold px-5 py-2 sm:py-3 rounded-full"
+            className="bg-[#f45525] hover:bg-[#e64a1d] transition text-white  text-xs sm:text-base font-bold px-5 py-2 sm:py-3 rounded-full"
           >
             Ver eventos
           </button>

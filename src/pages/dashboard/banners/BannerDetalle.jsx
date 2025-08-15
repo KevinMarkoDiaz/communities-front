@@ -17,7 +17,7 @@ export default function BannerDetalle({ banner, onDelete }) {
           <h3 className="text-lg font-semibold text-[#141C24]">
             {banner.title}
           </h3>
-          <p className="text-sm text-gray-600">
+          <p className="  text-xs text-gray-600">
             {banner.placement} {banner.isFallback ? "· Fallback" : ""}{" "}
             {banner.isActive ? "· Activo" : "· Inactivo"}
           </p>
@@ -25,7 +25,7 @@ export default function BannerDetalle({ banner, onDelete }) {
         <div className="flex items-center gap-2">
           <Link
             to={`${banner._id}/editar`}
-            className="inline-flex items-center gap-1 bg-black text-white text-sm px-3 py-2 rounded hover:bg-[#f4c753] hover:text-black transition"
+            className="inline-flex items-center gap-1 bg-black text-white  text-xs px-3 py-2 rounded hover:bg-[#f4c753] hover:text-black transition"
             title="Editar"
           >
             <MdEdit className="text-base" />
@@ -33,7 +33,7 @@ export default function BannerDetalle({ banner, onDelete }) {
           </Link>
           <button
             onClick={() => onDelete(banner._id)}
-            className="inline-flex items-center gap-1 bg-red-600 text-white text-sm px-3 py-2 rounded hover:bg-red-700 transition"
+            className="inline-flex items-center gap-1 bg-red-600 text-white  text-xs px-3 py-2 rounded hover:bg-red-700 transition"
             title="Eliminar"
           >
             <MdDelete className="text-base" />
@@ -50,13 +50,13 @@ export default function BannerDetalle({ banner, onDelete }) {
             className="w-full h-auto object-contain"
           />
         ) : (
-          <div className="p-8 text-center text-gray-400 text-sm">
+          <div className="p-8 text-center text-gray-400  text-xs">
             Sin imagen
           </div>
         )}
       </div>
 
-      <div className="grid md:grid-cols-2 gap-4 mt-4 text-sm">
+      <div className="grid md:grid-cols-2 gap-4 mt-4  text-xs">
         <div className="space-y-1">
           <div>
             <span className="font-medium">URL destino:</span>{" "}

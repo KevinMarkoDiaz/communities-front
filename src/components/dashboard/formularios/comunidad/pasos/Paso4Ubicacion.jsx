@@ -9,7 +9,7 @@ export default function Paso4Ubicacion() {
 
       {/* Campo: Región */}
       <div>
-        <label className="block text-sm font-medium text-[#141C24] mb-1">
+        <label className="block  text-xs font-medium text-[#141C24] mb-1">
           Región / Área
         </label>
         <Field
@@ -20,7 +20,7 @@ export default function Paso4Ubicacion() {
         <ErrorMessage
           name="region"
           component="div"
-          className="text-red-500 text-sm mt-1"
+          className="text-red-500  text-xs mt-1"
         />
       </div>
 
@@ -31,7 +31,7 @@ export default function Paso4Ubicacion() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium mb-1">Dirección</label>
+          <label className="block  text-xs font-medium mb-1">Dirección</label>
           <Field
             name="location.address"
             placeholder="Calle 123"
@@ -40,12 +40,12 @@ export default function Paso4Ubicacion() {
           <ErrorMessage
             name="location.address"
             component="div"
-            className="text-red-500 text-sm mt-1"
+            className="text-red-500  text-xs mt-1"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">Ciudad</label>
+          <label className="block  text-xs font-medium mb-1">Ciudad</label>
           <Field
             name="location.city"
             placeholder="Dallas"
@@ -54,12 +54,12 @@ export default function Paso4Ubicacion() {
           <ErrorMessage
             name="location.city"
             component="div"
-            className="text-red-500 text-sm mt-1"
+            className="text-red-500  text-xs mt-1"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">Estado</label>
+          <label className="block  text-xs font-medium mb-1">Estado</label>
           <Field
             name="location.state"
             placeholder="Texas"
@@ -68,12 +68,12 @@ export default function Paso4Ubicacion() {
           <ErrorMessage
             name="location.state"
             component="div"
-            className="text-red-500 text-sm mt-1"
+            className="text-red-500  text-xs mt-1"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">
+          <label className="block  text-xs font-medium mb-1">
             Código postal
           </label>
           <Field
@@ -84,12 +84,12 @@ export default function Paso4Ubicacion() {
           <ErrorMessage
             name="location.zipCode"
             component="div"
-            className="text-red-500 text-sm mt-1"
+            className="text-red-500  text-xs mt-1"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">País</label>
+          <label className="block  text-xs font-medium mb-1">País</label>
           <Field
             name="location.country"
             placeholder="Estados Unidos"
@@ -98,7 +98,7 @@ export default function Paso4Ubicacion() {
           <ErrorMessage
             name="location.country"
             component="div"
-            className="text-red-500 text-sm mt-1"
+            className="text-red-500  text-xs mt-1"
           />
         </div>
       </div>
@@ -110,7 +110,7 @@ export default function Paso4Ubicacion() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium mb-1">Latitud</label>
+          <label className="block  text-xs font-medium mb-1">Latitud</label>
           <Field
             name="mapCenter.lat"
             placeholder="Ej: 32.7767"
@@ -121,12 +121,12 @@ export default function Paso4Ubicacion() {
           <ErrorMessage
             name="mapCenter.lat"
             component="div"
-            className="text-red-500 text-sm mt-1"
+            className="text-red-500  text-xs mt-1"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">Longitud</label>
+          <label className="block  text-xs font-medium mb-1">Longitud</label>
           <Field
             name="mapCenter.lng"
             placeholder="Ej: -96.7970"
@@ -137,7 +137,7 @@ export default function Paso4Ubicacion() {
           <ErrorMessage
             name="mapCenter.lng"
             component="div"
-            className="text-red-500 text-sm mt-1"
+            className="text-red-500  text-xs mt-1"
           />
         </div>
       </div>

@@ -42,7 +42,7 @@ export default function ModalFeedback() {
   return (
     <div className="fixed bottom-5 right-5 z-[999] flex items-end justify-end">
       <div
-        className={`rounded-xl px-5 py-4 text-sm font-semibold flex items-center gap-3 
+        className={`rounded-xl px-5 py-4  text-xs font-semibold flex items-center gap-3 
           shadow-2xl shadow-black/30 animate-slide-in-up
           ${colorClasses[type]}
         `}

@@ -94,9 +94,9 @@ export default function MetricsDashboard({
   }, [entityId, entityType, cacheKey]);
 
   if (loading && !general && !daily && !topViewers)
-    return <p className="p-2 text-sm">Cargando métricas...</p>;
+    return <p className="p-2  text-xs">Cargando métricas...</p>;
 
-  if (error) return <p className="text-red-600 p-2 text-sm">Error: {error}</p>;
+  if (error) return <p className="text-red-600 p-2  text-xs">Error: {error}</p>;
 
   return (
     <div className={`space-y-6 ${className}`}>
@@ -156,7 +156,7 @@ export default function MetricsDashboard({
       {/* Usuarios recurrentes */}
       {topViewers && topViewers.length > 0 && (
         <div className="bg-blue-50 border border-gray-200 rounded-lg p-4">
-          <h4 className="text-sm font-semibold mb-2 text-gray-600">
+          <h4 className="  text-xs font-semibold mb-2 text-gray-600">
             Usuarios más recurrentes
           </h4>
           <ul className="space-y-1">
@@ -176,7 +176,7 @@ export default function MetricsDashboard({
       {/* Visitas diarias */}
       {daily && daily.length > 0 && (
         <div className="bg-blue-50 border border-gray-200 rounded-lg p-4">
-          <h4 className="text-sm font-semibold mb-3 text-gray-600">
+          <h4 className="  text-xs font-semibold mb-3 text-gray-600">
             Visitas diarias
           </h4>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
@@ -198,7 +198,7 @@ export default function MetricsDashboard({
       {/* Resumen y Gráficas */}
       {summary && (
         <section className="bg-blue-50 border border-gray-200 rounded-lg p-4">
-          <h4 className="text-sm font-semibold mb-4 text-gray-600">
+          <h4 className="  text-xs font-semibold mb-4 text-gray-600">
             Resumen de actividad
           </h4>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

@@ -29,7 +29,7 @@ export default function CrearNegocio() {
               <h1 className="text-2xl font-bold text-black flex items-center gap-2">
                 Empezá a dar a conocer tu negocio
               </h1>
-              <p className="text-gray-700 text-sm sm:text-base">
+              <p className="text-gray-700  text-xs sm:text-base">
                 Comparte tu emprendimiento con la comunidad, atrae clientes y
                 haz crecer tu negocio en EE. UU. 🚀
               </p>
@@ -51,7 +51,7 @@ export default function CrearNegocio() {
           Da visibilidad a tu proyecto y conecta con latinos que apoyan tu
           pasión.
         </p>
-        <p className="text-sm text-gray-600">
+        <p className="  text-xs text-gray-600">
           Tu negocio puede marcar la diferencia en la vida de otros migrantes.
         </p>
       </div>

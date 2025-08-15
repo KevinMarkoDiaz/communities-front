@@ -27,7 +27,7 @@ export default function Paso4Horarios() {
               <div key={index} className="flex flex-col gap-2 border-b pb-4">
                 <label className="font-medium">{dia}</label>
 
-                <label className="flex items-center gap-2 text-sm">
+                <label className="flex items-center gap-2  text-xs">
                   <Field
                     type="checkbox"
                     name={`openingHours[${index}].closed`}

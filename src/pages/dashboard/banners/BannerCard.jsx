@@ -15,11 +15,11 @@ export default function BannerCard({ banner, active, onClick }) {
             loading="lazy"
           />
         ) : (
-          <div className="text-gray-400 text-sm p-4">Sin imagen</div>
+          <div className="text-gray-400  text-xs p-4">Sin imagen</div>
         )}
       </div>
       <div className="p-3">
-        <div className="text-sm font-semibold text-[#141C24] truncate">
+        <div className="  text-xs font-semibold text-[#141C24] truncate">
           {banner.title}
         </div>
         <div className="text-xs text-gray-600 mt-1 truncate">

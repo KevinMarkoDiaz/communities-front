@@ -23,13 +23,13 @@ export default function ResumenComunidades({ comunidades = [], onDelete }) {
     return (
       <div className="bg-[#F7F7F7] p-4 md:p-6 rounded-2xl h-full flex flex-col items-center justify-center text-center gap-4">
         <h3 className="text-gray-600 text-lg font-semibold">Tus comunidades</h3>
-        <p className="text-sm text-gray-500">
+        <p className="  text-xs text-gray-500">
           Aún no has creado ninguna comunidad. ¡Este es el momento perfecto para
           comenzar!
         </p>
         <Link
           to="/dashboard/comunidades/crear"
-          className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium px-4 py-2 rounded-full transition cursor-pointer"
+          className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white  text-xs font-medium px-4 py-2 rounded-full transition cursor-pointer"
         >
           🚀 Crear mi primera comunidad
         </Link>
@@ -67,7 +67,7 @@ export default function ResumenComunidades({ comunidades = [], onDelete }) {
               </div>
 
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-[#3F5374] truncate">
+                <p className="  text-xs font-medium text-[#3F5374] truncate">
                   {comunidad.name}
                 </p>
               </div>
@@ -105,7 +105,7 @@ export default function ResumenComunidades({ comunidades = [], onDelete }) {
             {visibleCount < comunidades.length && (
               <button
                 onClick={() => setVisibleCount((prev) => prev + 5)}
-                className="inline-flex items-center gap-1 text-sm font-medium text-orange-600 hover:text-orange-700 transition"
+                className="inline-flex items-center gap-1  text-xs font-medium text-orange-600 hover:text-orange-700 transition"
               >
                 Ver más
               </button>
@@ -113,7 +113,7 @@ export default function ResumenComunidades({ comunidades = [], onDelete }) {
             {visibleCount > 5 && (
               <button
                 onClick={() => setVisibleCount(5)}
-                className="inline-flex items-center gap-1 text-sm font-medium text-orange-600 hover:text-orange-700 transition"
+                className="inline-flex items-center gap-1  text-xs font-medium text-orange-600 hover:text-orange-700 transition"
               >
                 <FiChevronUp className="w-4 h-4" />
                 Ver menos

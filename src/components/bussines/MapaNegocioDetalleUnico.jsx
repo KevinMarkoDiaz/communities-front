@@ -120,7 +120,7 @@ export default function MapaNegocioDetalleUnico({ lat, lng, logo = "" }) {
     <div className="relative overflow-hidden rounded-xl shadow">
       {!isLoaded && (
         <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/70 backdrop-blur">
-          <span className="text-sm text-gray-600">Cargando mapa...</span>
+          <span className="  text-xs text-gray-600">Cargando mapa...</span>
         </div>
       )}
       <div

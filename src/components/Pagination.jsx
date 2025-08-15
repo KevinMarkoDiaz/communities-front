@@ -65,7 +65,7 @@ export default function Pagination({
               <button
                 key={page}
                 onClick={() => handlePage(page)}
-                className={`text-sm size-10 flex items-center justify-center rounded-full border font-medium transition duration-200 ${
+                className={`  text-xs size-10 flex items-center justify-center rounded-full border font-medium transition duration-200 ${
                   isActive
                     ? "bg-black text-white border-black"
                     : "text-gray-700 border-gray-300 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300"

@@ -42,7 +42,7 @@ export default function NotificationCenter() {
       {notificacionesVisibles.map((n) => (
         <div
           key={n._id}
-          className={`border shadow text-sm border-gray-200 rounded-xl p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3 transition hover:border-gray-300 ${
+          className={`border shadow  text-xs border-gray-200 rounded-xl p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3 transition hover:border-gray-300 ${
             n.read ? "bg-white" : "bg-blue-50"
           }`}
         >
@@ -62,7 +62,7 @@ export default function NotificationCenter() {
             <div className="flex gap-4">
               <Link
                 to={n.link}
-                className="text-orange-500 text-sm font-medium hover:text-orange-700"
+                className="text-orange-500  text-xs font-medium hover:text-orange-700"
                 onClick={() => markAsRead(n._id)}
               >
                 Ver detalle
@@ -96,7 +96,7 @@ export default function NotificationCenter() {
           {hayMas && (
             <button
               onClick={verMas}
-              className="text-sm text-orange-600 hover:text-orange-800 font-medium transition"
+              className="  text-xs text-orange-600 hover:text-orange-800 font-medium transition"
             >
               Ver más
             </button>
@@ -104,7 +104,7 @@ export default function NotificationCenter() {
           {puedeVerMenos && (
             <button
               onClick={verMenos}
-              className="text-sm text-gray-500 hover:text-gray-700 font-medium transition"
+              className="  text-xs text-gray-500 hover:text-gray-700 font-medium transition"
             >
               Ver menos
             </button>

@@ -271,7 +271,7 @@ export default function CrearEditarEventoForm({
                 </div>
 
                 {/* Nombre del paso (solo visible en md+) */}
-                <div className="ml-2 text-xs lg:text-sm hidden md:block">
+                <div className="ml-2 text-xs lg:  text-xs hidden md:block">
                   {nombre}
                 </div>
               </div>
@@ -281,7 +281,7 @@ export default function CrearEditarEventoForm({
           {/* Contenido dinámico */}
           <div className="flex-1 space-y-6">
             <div className="flex items-center justify-between mb-2">
-              <div className="text-sm font-medium">
+              <div className="  text-xs font-medium">
                 Paso {paso + 1} de {pasos.length}:{" "}
                 <span className="text-orange-400">{nombresPasos[paso]}</span>
               </div>

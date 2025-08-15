@@ -98,10 +98,6 @@ const router = createBrowserRouter([
       { path: "/premium", element: <PremiumInfo /> },
       { path: "/suscripcion-exitosa", element: <SuscripcionExitosa /> },
       { path: "/suscripcion-cancelada", element: <SuscripcionCancelada /> },
-
-      // Mensajería
-      { path: "/inbox", element: <InboxList /> },
-      { path: "/inbox/conversation/:id", element: <ChatView /> },
     ],
   },
 
@@ -155,6 +151,15 @@ const router = createBrowserRouter([
         path: "",
         element: <DashboardLayout />,
         children: [
+          // Mensajería
+          {
+            path: "inbox",
+            children: [
+              { path: "", element: <InboxList /> },
+              { path: "conversation/:id", element: <ChatView /> },
+            ],
+          },
+
           { path: "perfil", element: <Perfil /> },
           { path: "perfil/editar", element: <EditarPerfil /> },
           { path: "notificaciones", element: <Notificaciones /> },

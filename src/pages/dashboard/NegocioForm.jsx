@@ -425,7 +425,7 @@ export default function NegocioForm() {
                 >
                   {paso > index ? "✓" : index + 1}
                 </div>
-                <div className="ml-2 text-xs lg:text-sm hidden md:block">
+                <div className="ml-2 text-xs lg:  text-xs hidden md:block">
                   {nombre}
                 </div>
               </div>
@@ -435,7 +435,7 @@ export default function NegocioForm() {
           {/* Paso actual */}
           <div className="flex-1 space-y-6">
             <div className="flex items-center justify-between mb-2">
-              <div className="text-sm font-medium">
+              <div className="  text-xs font-medium">
                 Paso {paso + 1} de {steps.length}:{" "}
                 <span className="text-orange-400">{nombresPasos[paso]}</span>
               </div>

@@ -28,7 +28,7 @@ export default function DetallePromo({ promo, onClose, onDelete }) {
       {onClose && (
         <button
           onClick={onClose}
-          className="md:hidden absolute -top-0.5 right-4 text-gray-900 hover:text-black text-sm"
+          className="md:hidden absolute -top-0.5 right-4 text-gray-900 hover:text-black  text-xs"
         >
           Cerrar
         </button>

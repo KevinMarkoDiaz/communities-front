@@ -25,7 +25,7 @@ export function ContactCard({ contact }) {
             value
           )}
         </p>
-        <p className="text-gray-500 text-sm font-normal leading-normal line-clamp-1">
+        <p className="text-gray-500  text-xs font-normal leading-normal line-clamp-1">
           {label}
         </p>
       </div>

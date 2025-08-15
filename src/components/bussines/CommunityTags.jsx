@@ -6,7 +6,7 @@ export function CommunityTags({ tags }) {
       {tags.map((tag, idx) => (
         <div
           key={idx}
-          className="flex items-center h-8 px-4 rounded-full bg-[#f5f2f0] text-[#181411] text-sm font-medium"
+          className="flex items-center h-8 px-4 rounded-full bg-[#f5f2f0] text-[#181411]  text-xs font-medium"
         >
           {tag}
         </div>

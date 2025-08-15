@@ -20,7 +20,7 @@ export default function Paso1Datos() {
 
       {/* Nombre */}
       <div>
-        <label className="block text-sm font-medium text-white mb-1">
+        <label className="block  text-xs font-medium text-white mb-1">
           Nombre
         </label>
         <Field
@@ -31,13 +31,13 @@ export default function Paso1Datos() {
         <ErrorMessage
           name="name"
           component="div"
-          className="text-red-400 text-sm mt-1"
+          className="text-red-400  text-xs mt-1"
         />
       </div>
 
       {/* Apellido */}
       <div>
-        <label className="block text-sm font-medium text-white mb-1">
+        <label className="block  text-xs font-medium text-white mb-1">
           Apellido
         </label>
         <Field
@@ -48,13 +48,13 @@ export default function Paso1Datos() {
         <ErrorMessage
           name="lastName"
           component="div"
-          className="text-red-400 text-sm mt-1"
+          className="text-red-400  text-xs mt-1"
         />
       </div>
 
       {/* Título (React Select) */}
       <div>
-        <label className="block text-sm font-medium text-white mb-1">
+        <label className="block  text-xs font-medium text-white mb-1">
           Título
         </label>
         <Select
@@ -70,7 +70,7 @@ export default function Paso1Datos() {
         <ErrorMessage
           name="title"
           component="div"
-          className="text-red-400 text-sm mt-1"
+          className="text-red-400  text-xs mt-1"
         />
       </div>
     </div>

@@ -20,10 +20,10 @@ export default function CommunityBusinessList({ negocios }) {
               <p className="text-[#111418] text-base font-medium leading-normal truncate">
                 {negocio.nombre}
               </p>
-              <p className="text-[#637588] text-sm font-normal leading-normal truncate">
+              <p className="text-[#637588]  text-xs font-normal leading-normal truncate">
                 {negocio.categoria}
               </p>
-              <p className="text-[#637588] text-sm font-normal leading-normal truncate">
+              <p className="text-[#637588]  text-xs font-normal leading-normal truncate">
                 {negocio.ubicacion?.ciudad}, {negocio.ubicacion?.estado}
               </p>
             </div>

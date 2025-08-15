@@ -119,7 +119,7 @@ export default function PremiumInfo() {
               </li>
             </ul>
 
-            <div className="mt-4 text-sm text-gray-500">
+            <div className="mt-4  text-xs text-gray-500">
               Ideal para comenzar a dar visibilidad a tu proyecto y explorar
               todas las posibilidades de Communities.
             </div>
@@ -205,21 +205,21 @@ export default function PremiumInfo() {
           <div className="flex flex-col items-center text-center p-4 bg-white rounded-xl shadow">
             <FaShieldAlt size={28} className="text-orange-500 mb-2" />
             <h3 className="font-semibold">Pago Seguro</h3>
-            <p className="text-gray-500 text-sm">
+            <p className="text-gray-500  text-xs">
               Transacciones procesadas mediante Stripe con cifrado SSL.
             </p>
           </div>
           <div className="flex flex-col items-center text-center p-4 bg-white rounded-xl shadow">
             <FaUndo size={28} className="text-orange-500 mb-2" />
             <h3 className="font-semibold">Cancelación Flexible</h3>
-            <p className="text-gray-500 text-sm">
+            <p className="text-gray-500  text-xs">
               Cancela cuando quieras desde tu perfil sin penalizaciones.
             </p>
           </div>
           <div className="flex flex-col items-center text-center p-4 bg-white rounded-xl shadow">
             <FaHeadset size={28} className="text-orange-500 mb-2" />
             <h3 className="font-semibold">Soporte Prioritario</h3>
-            <p className="text-gray-500 text-sm">
+            <p className="text-gray-500  text-xs">
               Atención rápida y preferencial para usuarios Premium.
             </p>
           </div>

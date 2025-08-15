@@ -30,7 +30,7 @@ export default function CrearEvento() {
               <h1 className="text-2xl font-bold text-black flex items-center gap-2">
                 Crea un nuevo evento
               </h1>
-              <p className="text-gray-700 text-sm sm:text-base">
+              <p className="text-gray-700  text-xs sm:text-base">
                 Organizá una experiencia única para tu comunidad, celebrá tus
                 raíces y creá momentos que queden en la memoria de todos ✨
               </p>
@@ -52,7 +52,7 @@ export default function CrearEvento() {
           Comparte experiencias únicas y hacé crecer tu comunidad latina en
           EE. UU.
         </p>
-        <p className="text-sm text-gray-600">
+        <p className="  text-xs text-gray-600">
           Cada evento es una oportunidad para conectar y celebrar juntos.
         </p>
       </div>

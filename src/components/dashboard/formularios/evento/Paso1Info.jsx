@@ -16,7 +16,7 @@ export default function Paso1Info() {
     <div className="space-y-6">
       {/* Título */}
       <div>
-        <label className="block text-sm font-medium text-white mb-1">
+        <label className="block  text-xs font-medium text-white mb-1">
           Título del evento
         </label>
         <Field
@@ -27,13 +27,13 @@ export default function Paso1Info() {
         <ErrorMessage
           name="title"
           component="div"
-          className="text-red-400 text-sm mt-1"
+          className="text-red-400  text-xs mt-1"
         />
       </div>
 
       {/* Descripción */}
       <div>
-        <label className="block text-sm font-medium text-white mb-1">
+        <label className="block  text-xs font-medium text-white mb-1">
           Descripción
         </label>
         <Field
@@ -46,13 +46,13 @@ export default function Paso1Info() {
         <ErrorMessage
           name="description"
           component="div"
-          className="text-red-400 text-sm mt-1"
+          className="text-red-400  text-xs mt-1"
         />
       </div>
 
       {/* Etiquetas */}
       <div>
-        <label className="block text-sm font-medium text-white mb-1">
+        <label className="block  text-xs font-medium text-white mb-1">
           Etiquetas (separadas por coma)
         </label>
         <Field
@@ -63,13 +63,13 @@ export default function Paso1Info() {
         <ErrorMessage
           name="tags"
           component="div"
-          className="text-red-400 text-sm mt-1"
+          className="text-red-400  text-xs mt-1"
         />
       </div>
 
       {/* Idioma */}
       <div>
-        <label className="block text-sm font-medium text-white mb-1">
+        <label className="block  text-xs font-medium text-white mb-1">
           Idioma del evento
         </label>
         <Select
@@ -86,7 +86,7 @@ export default function Paso1Info() {
         <ErrorMessage
           name="language"
           component="div"
-          className="text-red-400 text-sm mt-1"
+          className="text-red-400  text-xs mt-1"
         />
       </div>
 
@@ -98,7 +98,7 @@ export default function Paso1Info() {
           id="isFree"
           className="h-5 w-5 text-orange-500 border-white/40 bg-white/10 rounded focus:ring-0"
         />
-        <label htmlFor="isFree" className="text-sm text-white font-medium">
+        <label htmlFor="isFree" className="  text-xs text-white font-medium">
           Evento gratuito
         </label>
       </div>
@@ -106,7 +106,7 @@ export default function Paso1Info() {
       {/* Precio */}
       {!values.isFree && (
         <div>
-          <label className="block text-sm font-medium text-white mb-1">
+          <label className="block  text-xs font-medium text-white mb-1">
             Precio
           </label>
           <Field
@@ -118,7 +118,7 @@ export default function Paso1Info() {
           <ErrorMessage
             name="price"
             component="div"
-            className="text-red-400 text-sm mt-1"
+            className="text-red-400  text-xs mt-1"
           />
         </div>
       )}

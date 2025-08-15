@@ -154,7 +154,7 @@ export default function EditarEvento() {
               <h1 className="text-2xl font-bold text-black flex items-center gap-2">
                 Poné al día tu evento
               </h1>
-              <p className="text-gray-700 text-sm sm:text-base">
+              <p className="text-gray-700  text-xs sm:text-base">
                 Editá la información de tu evento para mantener a tu comunidad
                 al tanto de cada detalle y asegurarte de que nadie se lo pierda.
               </p>
@@ -209,7 +209,7 @@ export default function EditarEvento() {
           <img src={icono} alt="Icono" className="h-8 md:h-12" />
           Actualiza tu evento y seguí fortaleciendo tu comunidad
         </p>
-        <p className="text-sm text-gray-600">
+        <p className="  text-xs text-gray-600">
           Cada cambio es una nueva oportunidad para conectar.
         </p>
       </div>

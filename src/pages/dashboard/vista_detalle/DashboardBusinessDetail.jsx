@@ -94,7 +94,7 @@ export default function DashboardBusinessDetail() {
           </div>
 
           {/* Descripción */}
-          <p className="text-gray-600 text-sm leading-relaxed whitespace-pre-line">
+          <p className="text-gray-600  text-xs leading-relaxed whitespace-pre-line">
             {negocio.description}
           </p>
 
@@ -129,7 +129,7 @@ export default function DashboardBusinessDetail() {
               <button
                 key={t.id}
                 onClick={() => setTab(t.id)}
-                className={`text-sm px-3 py-2 rounded-t font-medium transition ${
+                className={`  text-xs px-3 py-2 rounded-t font-medium transition ${
                   tab === t.id
                     ? "bg-white border border-b-0 border-gray-200 text-gray-800"
                     : "text-gray-500 hover:text-gray-700"
@@ -143,7 +143,7 @@ export default function DashboardBusinessDetail() {
           {/* Contenido dinámico */}
           <div className="pt-2">
             {tab === "info" && (
-              <div className="flex flex-col gap-2 text-sm text-gray-600">
+              <div className="flex flex-col gap-2  text-xs text-gray-600">
                 {negocio.location && (
                   <p>
                     Dirección: {negocio.location.address},{" "}
@@ -185,7 +185,7 @@ export default function DashboardBusinessDetail() {
                 {negocio.openingHours.map((h, i) => (
                   <li
                     key={h.day}
-                    className={`flex justify-between px-3 py-2 text-sm ${
+                    className={`flex justify-between px-3 py-2  text-xs ${
                       i % 2 === 0 ? "bg-blue-50" : "bg-white"
                     }`}
                   >
@@ -265,7 +265,7 @@ export default function DashboardBusinessDetail() {
       {/* Sección de métricas */}
       <section className="bg-white md:border border-gray-200 rounded-2xl md:p-6 md:shadow space-y-4">
         <h3 className="text-lg font-semibold text-gray-700">Métricas</h3>
-        <p className="text-sm text-gray-500">
+        <p className="  text-xs text-gray-500">
           Aquí puedes ver las estadísticas de visitas, seguidores y
           calificaciones.
         </p>

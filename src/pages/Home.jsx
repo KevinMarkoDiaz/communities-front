@@ -84,14 +84,14 @@ export default function Home() {
 
       {!comunidad ? (
         <div className="w-full max-w-5xl mx-auto px-4 mt-6 text-center">
-          <div className="bg-gradient-to-r from-yellow-50 to-purple-50 p-4 rounded-xl shadow text-sm text-gray-700 font-medium">
+          <div className="bg-gradient-to-r from-yellow-50 to-purple-50 p-4 rounded-xl shadow  text-xs text-gray-700 font-medium">
             🌍 Aún no seleccionaste una comunidad. Elegí la que más te
             represente para ver contenido relevante.
           </div>
         </div>
       ) : (
         <div className="w-full max-w-5xl mx-auto px-4 mt-6 text-center">
-          <div className="bg-gradient-to-r from-purple-50 to-yellow-50 p-4 rounded-xl shadow text-sm text-gray-800 font-semibold">
+          <div className="bg-gradient-to-r from-purple-50 to-yellow-50 p-4 rounded-xl shadow  text-xs text-gray-800 font-semibold">
             👋 Estás explorando la comunidad{" "}
             <span className="text-sky-600">{comunidad.name}</span>. ¡Todo lo que
             ves ahora está pensado para vos!
@@ -108,7 +108,7 @@ export default function Home() {
           />
           <button
             onClick={() => setActivePanel("map")}
-            className={`flex-1 z-10 text-center py-2 text-sm font-semibold rounded-md transition-colors duration-200 ${
+            className={`flex-1 z-10 text-center py-2  text-xs font-semibold rounded-md transition-colors duration-200 ${
               activePanel === "map" ? "text-white" : "text-orange-600"
             }`}
           >
@@ -116,7 +116,7 @@ export default function Home() {
           </button>
           <button
             onClick={() => setActivePanel("search")}
-            className={`flex-1 z-10 text-center py-2 text-sm font-semibold rounded-md transition-colors duration-200 ${
+            className={`flex-1 z-10 text-center py-2  text-xs font-semibold rounded-md transition-colors duration-200 ${
               activePanel === "search" ? "text-white" : "text-orange-600"
             }`}
           >

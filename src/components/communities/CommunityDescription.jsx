@@ -18,7 +18,7 @@ export default function CommunityDescription({ description }) {
         <p className="text-[#111418] text-base font-medium leading-normal line-clamp-1">
           Descripción
         </p>
-        <p className="text-[#637588] text-sm font-normal leading-normal line-clamp-5">
+        <p className="text-[#637588]  text-xs font-normal leading-normal line-clamp-5">
           {description}
         </p>
       </div>

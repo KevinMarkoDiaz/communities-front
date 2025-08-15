@@ -23,7 +23,7 @@ export default function Paso6Extras() {
       <ErrorMessage
         name="featuredImage"
         component="div"
-        className="text-red-500 text-sm"
+        className="text-red-500  text-xs"
       />
 
       {/* Imagen de perfil */}
@@ -36,12 +36,12 @@ export default function Paso6Extras() {
       <ErrorMessage
         name="profileImage"
         component="div"
-        className="text-red-500 text-sm"
+        className="text-red-500  text-xs"
       />
 
       {/* Etiquetas */}
       <div>
-        <label className="block text-sm font-medium text-white mb-1">
+        <label className="block  text-xs font-medium text-white mb-1">
           Etiquetas (separadas por coma)
         </label>
         <input
@@ -61,7 +61,7 @@ export default function Paso6Extras() {
         <ErrorMessage
           name="tags"
           component="div"
-          className="text-red-500 text-sm mt-1"
+          className="text-red-500  text-xs mt-1"
         />
       </div>
 
@@ -73,7 +73,7 @@ export default function Paso6Extras() {
           id="isVerified"
           className="form-checkbox h-5 w-5 text-orange-500 focus:ring-0 border-white/30"
         />
-        <label htmlFor="isVerified" className="text-sm text-white">
+        <label htmlFor="isVerified" className="  text-xs text-white">
           Marcar como verificado
         </label>
       </div>
@@ -89,7 +89,7 @@ export default function Paso6Extras() {
       <ErrorMessage
         name="images"
         component="div"
-        className="text-red-500 text-sm"
+        className="text-red-500  text-xs"
       />
     </div>
   );

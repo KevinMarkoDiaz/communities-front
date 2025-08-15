@@ -18,13 +18,13 @@ export default function Paso3Ubicacion() {
         <ErrorMessage
           name="profileImage"
           component="div"
-          className="text-red-400 text-sm mt-1"
+          className="text-red-400  text-xs mt-1"
         />
       </div>
 
       {/* Ubicación */}
       <div>
-        <label className="block text-sm font-medium text-white mb-1">
+        <label className="block  text-xs font-medium text-white mb-1">
           Ubicación
         </label>
         <Field
@@ -35,13 +35,13 @@ export default function Paso3Ubicacion() {
         <ErrorMessage
           name="location"
           component="div"
-          className="text-red-400 text-sm mt-1"
+          className="text-red-400  text-xs mt-1"
         />
       </div>
 
       {/* País */}
       <div>
-        <label className="block text-sm font-medium text-white mb-1">
+        <label className="block  text-xs font-medium text-white mb-1">
           País
         </label>
         <Field
@@ -52,7 +52,7 @@ export default function Paso3Ubicacion() {
         <ErrorMessage
           name="country"
           component="div"
-          className="text-red-400 text-sm mt-1"
+          className="text-red-400  text-xs mt-1"
         />
       </div>
     </div>

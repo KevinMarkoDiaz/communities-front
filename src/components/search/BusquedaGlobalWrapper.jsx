@@ -134,7 +134,7 @@ export default function BusquedaGlobalWrapper({
           <div className="flex justify-center">
             <button
               onClick={handleLimpiar}
-              className="mt-4 px-6 py-2 rounded-2xl bg-gray-200 text-gray-700 hover:bg-gray-300 text-sm transition"
+              className="mt-4 px-6 py-2 rounded-2xl bg-gray-200 text-gray-700 hover:bg-gray-300  text-xs transition"
             >
               Limpiar búsqueda
             </button>

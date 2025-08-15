@@ -29,7 +29,9 @@ export default function DropzoneImagen({
 
   return (
     <div className="space-y-2">
-      <label className="block text-sm font-medium text-gray-100">{label}</label>
+      <label className="block  text-xs font-medium text-gray-100">
+        {label}
+      </label>
 
       <div
         {...getRootProps()}
@@ -44,7 +46,7 @@ export default function DropzoneImagen({
         <input {...getInputProps()} />
 
         <FaCamera className="w-8 h-8 mb-2 opacity-70" />
-        <p className="text-sm font-medium text-xs text-gray-200">
+        <p className="  text-xs font-medium text-xs text-gray-200">
           {isDragActive
             ? "Suelta la imagen aquí..."
             : "Toca o arrastra una imagen desde tu galería"}

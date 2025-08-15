@@ -12,7 +12,7 @@ export default function Paso1Info() {
   return (
     <div className="space-y-5">
       <div>
-        <label className="block text-sm font-medium text-white mb-1">
+        <label className="block  text-xs font-medium text-white mb-1">
           Nombre de la comunidad
         </label>
         <Field
@@ -28,7 +28,7 @@ export default function Paso1Info() {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-white mb-1">
+        <label className="block  text-xs font-medium text-white mb-1">
           Descripción
         </label>
         <Field
@@ -45,7 +45,7 @@ export default function Paso1Info() {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-white mb-1">
+        <label className="block  text-xs font-medium text-white mb-1">
           Idioma
         </label>
         <Field
@@ -61,7 +61,7 @@ export default function Paso1Info() {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-white mb-1">
+        <label className="block  text-xs font-medium text-white mb-1">
           Tipo de comunidad
         </label>
         <Field name="tipo">

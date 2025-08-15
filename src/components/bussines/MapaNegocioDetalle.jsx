@@ -158,7 +158,7 @@ export default function MapaComunidadConApi() {
               class="w-10 h-10 rounded-full object-cover border border-white/10"
             />
             <div class="flex flex-col">
-              <h3 class="text-sm font-semibold text-gray-100">${n.name}</h3>
+              <h3 class="  text-xs font-semibold text-gray-100">${n.name}</h3>
               <p class="text-[11px] text-gray-100 leading-tight">${categoria}</p>
             </div>
           </div>
@@ -310,7 +310,7 @@ export default function MapaComunidadConApi() {
             usuarioTocoDropdown.current = true;
             setMostrarLeyenda((prev) => !prev);
           }}
-          className="flex items-center gap-1 bg-white text-gray-700 px-3 py-2 rounded shadow text-sm hover:bg-gray-100"
+          className="flex items-center gap-1 bg-white text-gray-700 px-3 py-2 rounded shadow  text-xs hover:bg-gray-100"
         >
           <PiChartPieSliceFill className="text-lg text-orange-500" />
           <p className="text-xs">Categorías</p>

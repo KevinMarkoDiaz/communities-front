@@ -13,7 +13,7 @@ export default function CommunityHero({ name, flagImage, description }) {
           {name}
         </h1>
         {description && (
-          <p className="text-sm sm:text-base font-normal leading-normal">
+          <p className="  text-xs sm:text-base font-normal leading-normal">
             {description}
           </p>
         )}

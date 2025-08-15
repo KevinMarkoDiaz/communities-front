@@ -64,7 +64,7 @@ export default function CardPromoHome({
 
       {/* Badge de cupón */}
       <div
-        className={`m-4 transform  transition-all duration-900 text-xs md:text-sm font-semibold text-center rounded-full py-1.5 px-4 self-center 
+        className={`m-4 transform  transition-all duration-900 text-xs md:  text-xs font-semibold text-center rounded-full py-1.5 px-4 self-center 
         ${
           isMobile
             ? "scale-105"

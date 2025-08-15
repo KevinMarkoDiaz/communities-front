@@ -54,7 +54,7 @@ export default function PasoUbicacion() {
           checked={isDeliveryOnly}
           onChange={onToggleDelivery}
         />
-        <span className="text-sm text-white">
+        <span className="  text-xs text-white">
           Solo delivery (sin ubicación física). Usaremos el centro del ZIP para
           ubicar el pin en el mapa.
         </span>
@@ -63,7 +63,7 @@ export default function PasoUbicacion() {
       {/* Si es SOLO DELIVERY, mostramos solo el ZIP principal */}
       {isDeliveryOnly ? (
         <div>
-          <label className="block text-sm font-medium text-white mb-1">
+          <label className="block  text-xs font-medium text-white mb-1">
             ZIP principal (5 dígitos)
           </label>
 
@@ -88,7 +88,7 @@ export default function PasoUbicacion() {
           <ErrorMessage
             name="primaryZip"
             component="div"
-            className="text-red-400 text-sm mt-1"
+            className="text-red-400  text-xs mt-1"
           />
 
           <p className="text-xs text-white/70 mt-2">
@@ -102,7 +102,7 @@ export default function PasoUbicacion() {
           <div
             className={isDeliveryOnly ? "opacity-60 pointer-events-none" : ""}
           >
-            <label className="block text-sm font-medium text-white mb-1">
+            <label className="block  text-xs font-medium text-white mb-1">
               Dirección
             </label>
             <Field
@@ -114,7 +114,7 @@ export default function PasoUbicacion() {
             <ErrorMessage
               name="location.address"
               component="div"
-              className="text-red-400 text-sm mt-1"
+              className="text-red-400  text-xs mt-1"
             />
           </div>
 
@@ -122,7 +122,7 @@ export default function PasoUbicacion() {
           <div
             className={isDeliveryOnly ? "opacity-60 pointer-events-none" : ""}
           >
-            <label className="block text-sm font-medium text-white mb-1">
+            <label className="block  text-xs font-medium text-white mb-1">
               Ciudad
             </label>
             <Field
@@ -134,7 +134,7 @@ export default function PasoUbicacion() {
             <ErrorMessage
               name="location.city"
               component="div"
-              className="text-red-400 text-sm mt-1"
+              className="text-red-400  text-xs mt-1"
             />
           </div>
 
@@ -142,7 +142,7 @@ export default function PasoUbicacion() {
           <div
             className={isDeliveryOnly ? "opacity-60 pointer-events-none" : ""}
           >
-            <label className="block text-sm font-medium text-white mb-1">
+            <label className="block  text-xs font-medium text-white mb-1">
               Estado
             </label>
             <Field
@@ -154,7 +154,7 @@ export default function PasoUbicacion() {
             <ErrorMessage
               name="location.state"
               component="div"
-              className="text-red-400 text-sm mt-1"
+              className="text-red-400  text-xs mt-1"
             />
           </div>
 
@@ -162,7 +162,7 @@ export default function PasoUbicacion() {
           <div
             className={isDeliveryOnly ? "opacity-60 pointer-events-none" : ""}
           >
-            <label className="block text-sm font-medium text-white mb-1">
+            <label className="block  text-xs font-medium text-white mb-1">
               Código Postal
             </label>
             <Field
@@ -174,7 +174,7 @@ export default function PasoUbicacion() {
             <ErrorMessage
               name="location.zipCode"
               component="div"
-              className="text-red-400 text-sm mt-1"
+              className="text-red-400  text-xs mt-1"
             />
           </div>
 
@@ -182,7 +182,7 @@ export default function PasoUbicacion() {
           <div
             className={isDeliveryOnly ? "opacity-60 pointer-events-none" : ""}
           >
-            <label className="block text-sm font-medium text-white mb-1">
+            <label className="block  text-xs font-medium text-white mb-1">
               País
             </label>
             <Field
@@ -194,7 +194,7 @@ export default function PasoUbicacion() {
             <ErrorMessage
               name="location.country"
               component="div"
-              className="text-red-400 text-sm mt-1"
+              className="text-red-400  text-xs mt-1"
             />
           </div>
         </>

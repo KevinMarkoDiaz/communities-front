@@ -19,7 +19,7 @@ export default function ModalCrearPromo({ onClose }) {
         <h2 className="text-lg font-bold text-[#141C24] mb-2">
           ¿Cómo crear una promoción?
         </h2>
-        <p className="text-gray-600 text-sm mb-4">
+        <p className="text-gray-600  text-xs mb-4">
           Para crear una promoción, primero debes ir a{" "}
           <strong>Mis negocios</strong> y seleccionarla desde la tarjeta del
           negocio correspondiente.
@@ -34,7 +34,7 @@ export default function ModalCrearPromo({ onClose }) {
 
           <div className="flex flex-col gap-3 p-5">
             {/* Nombre */}
-            <h3 className="text-sm font-semibold text-gray-700 truncate">
+            <h3 className="  text-xs font-semibold text-gray-700 truncate">
               Mi Negocio Ejemplo
             </h3>
             {/* Categoría */}

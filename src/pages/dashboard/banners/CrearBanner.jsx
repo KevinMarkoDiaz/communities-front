@@ -266,7 +266,7 @@ export default function CrearBanner() {
               <Form className="grid gap-6">
                 {/* Título */}
                 <div>
-                  <label className="block text-sm font-medium text-white mb-1">
+                  <label className="block  text-xs font-medium text-white mb-1">
                     Título
                   </label>
                   <Field
@@ -277,13 +277,13 @@ export default function CrearBanner() {
                   <ErrorMessage
                     name="title"
                     component="div"
-                    className="text-red-400 text-sm mt-1"
+                    className="text-red-400  text-xs mt-1"
                   />
                 </div>
 
                 {/* Placement (react-select simple) */}
                 <div>
-                  <label className="block text-sm font-medium text-white mb-1">
+                  <label className="block  text-xs font-medium text-white mb-1">
                     Placement
                   </label>
                   <Select
@@ -304,13 +304,13 @@ export default function CrearBanner() {
                   <ErrorMessage
                     name="placement"
                     component="div"
-                    className="text-red-400 text-sm mt-1"
+                    className="text-red-400  text-xs mt-1"
                   />
                 </div>
 
                 {/* URL destino */}
                 <div>
-                  <label className="block text-sm font-medium text-white mb-1">
+                  <label className="block  text-xs font-medium text-white mb-1">
                     URL de destino
                   </label>
                   <Field
@@ -321,7 +321,7 @@ export default function CrearBanner() {
                   <ErrorMessage
                     name="redirectUrl"
                     component="div"
-                    className="text-red-400 text-sm mt-1"
+                    className="text-red-400  text-xs mt-1"
                   />
                 </div>
 
@@ -329,11 +329,11 @@ export default function CrearBanner() {
                 <div className="flex items-center gap-6">
                   <label className="inline-flex items-center gap-2 text-white">
                     <Field type="checkbox" name="openInNewTab" />
-                    <span className="text-sm">Abrir en nueva pestaña</span>
+                    <span className="  text-xs">Abrir en nueva pestaña</span>
                   </label>
                   <label className="inline-flex items-center gap-2 text-white">
                     <Field type="checkbox" name="isFallback" />
-                    <span className="text-sm">Usar como fallback</span>
+                    <span className="  text-xs">Usar como fallback</span>
                   </label>
                 </div>
 
@@ -374,22 +374,22 @@ export default function CrearBanner() {
                   <ErrorMessage
                     name="image"
                     component="div"
-                    className="text-red-400 text-sm"
+                    className="text-red-400  text-xs"
                   />
                   <ErrorMessage
                     name="imageDesktop"
                     component="div"
-                    className="text-red-400 text-sm"
+                    className="text-red-400  text-xs"
                   />
                   <ErrorMessage
                     name="imageTablet"
                     component="div"
-                    className="text-red-400 text-sm"
+                    className="text-red-400  text-xs"
                   />
                   <ErrorMessage
                     name="imageMobile"
                     component="div"
-                    className="text-red-400 text-sm"
+                    className="text-red-400  text-xs"
                   />
 
                   <p className="text-xs text-gray-300">
@@ -404,7 +404,7 @@ export default function CrearBanner() {
                 <div className="grid sm:grid-cols-2 gap-4">
                   {/* Comunidades (MULTI, requerido) */}
                   <div className="sm:col-span-2">
-                    <label className="block text-sm font-medium text-white mb-1">
+                    <label className="block  text-xs font-medium text-white mb-1">
                       Comunidades (requerido)
                     </label>
                     <Select
@@ -427,7 +427,7 @@ export default function CrearBanner() {
                     <ErrorMessage
                       name="communities"
                       component="div"
-                      className="text-red-400 text-sm mt-1"
+                      className="text-red-400  text-xs mt-1"
                     />
                     <p className="text-xs text-gray-300 mt-2">
                       Se mostrará cuando el usuario pertenezca a cualquiera de
@@ -437,7 +437,7 @@ export default function CrearBanner() {
 
                   {/* Categorías (MULTI, opcional) */}
                   <div className="sm:col-span-2">
-                    <label className="block text-sm font-medium text-white mb-1">
+                    <label className="block  text-xs font-medium text-white mb-1">
                       Categorías (opcional)
                     </label>
                     <Select
@@ -457,13 +457,13 @@ export default function CrearBanner() {
 
                   {/* Negocios (CSV, opcional) */}
                   <div className="sm:col-span-2">
-                    <label className="block text-sm font-medium text-white mb-1">
+                    <label className="block  text-xs font-medium text-white mb-1">
                       Businesses (IDs) (opcional)
                     </label>
                     <Field
                       name="businessesCSV"
                       placeholder="id1,id2,id3"
-                      className="w-full px-3 py-2 border border-white/30 bg-white/10 rounded-lg text-white focus:outline-none text-sm"
+                      className="w-full px-3 py-2 border border-white/30 bg-white/10 rounded-lg text-white focus:outline-none  text-xs"
                     />
                     <p className="text-xs text-gray-300 mt-2">
                       IDs separados por coma. Si lo dejás vacío, no se restringe
@@ -475,7 +475,7 @@ export default function CrearBanner() {
                 {/* Parámetros opcionales */}
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-white mb-1">
+                    <label className="block  text-xs font-medium text-white mb-1">
                       Peso (rotación)
                     </label>
                     <Field
@@ -488,11 +488,11 @@ export default function CrearBanner() {
                     <ErrorMessage
                       name="weight"
                       component="div"
-                      className="text-red-400 text-sm mt-1"
+                      className="text-red-400  text-xs mt-1"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-white mb-1">
+                    <label className="block  text-xs font-medium text-white mb-1">
                       Máx. impresiones
                     </label>
                     <Field
@@ -505,11 +505,11 @@ export default function CrearBanner() {
                     <ErrorMessage
                       name="maxImpressions"
                       component="div"
-                      className="text-red-400 text-sm mt-1"
+                      className="text-red-400  text-xs mt-1"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-white mb-1">
+                    <label className="block  text-xs font-medium text-white mb-1">
                       Máx. clicks
                     </label>
                     <Field
@@ -522,11 +522,11 @@ export default function CrearBanner() {
                     <ErrorMessage
                       name="maxClicks"
                       component="div"
-                      className="text-red-400 text-sm mt-1"
+                      className="text-red-400  text-xs mt-1"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-white mb-1">
+                    <label className="block  text-xs font-medium text-white mb-1">
                       Inicio (UTC)
                     </label>
                     <Field
@@ -537,11 +537,11 @@ export default function CrearBanner() {
                     <ErrorMessage
                       name="startAt"
                       component="div"
-                      className="text-red-400 text-sm mt-1"
+                      className="text-red-400  text-xs mt-1"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-white mb-1">
+                    <label className="block  text-xs font-medium text-white mb-1">
                       Fin (UTC)
                     </label>
                     <Field
@@ -552,7 +552,7 @@ export default function CrearBanner() {
                     <ErrorMessage
                       name="endAt"
                       component="div"
-                      className="text-red-400 text-sm mt-1"
+                      className="text-red-400  text-xs mt-1"
                     />
                   </div>
                 </div>

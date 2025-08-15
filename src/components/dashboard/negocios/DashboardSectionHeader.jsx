@@ -20,7 +20,7 @@ export default function DashboardSectionHeader({
           {title}
         </h1>
         {description && (
-          <p className="text-sm lg:text-base text-gray-700 leading-relaxed">
+          <p className="  text-xs lg:text-base text-gray-700 leading-relaxed">
             {description}
           </p>
         )}

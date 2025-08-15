@@ -18,11 +18,13 @@ export async function listAdBanners({ placement, q, activeOnly, status } = {}) {
 }
 
 // ⬇️ NUEVO: mis banners (requiere endpoint en back: GET /ads/my-banners)
-export async function getMyAdBanners() {
-  const res = await axiosInstance.get("ads/my-banners", {
+export async function getMyAdBanners({ page = 1, limit = 50 } = {}) {
+  const { data } = await axiosInstance.get(`/ads/my-banners`, {
+    params: { page, limit },
     headers: { "Cache-Control": "no-cache" },
   });
-  return res.data; // { banners: [...] }
+  // data: { banners, page, pages, total }
+  return data;
 }
 
 // ⬇️ NUEVO: admin actions

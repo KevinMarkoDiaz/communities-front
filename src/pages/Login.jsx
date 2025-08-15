@@ -93,7 +93,7 @@ export default function Login() {
             {() => (
               <Form className="space-y-6">
                 <div>
-                  <label className="text-sm font-medium block mb-1">
+                  <label className="  text-xs font-medium block mb-1">
                     Correo electrónico
                   </label>
                   <Field
@@ -110,7 +110,7 @@ export default function Login() {
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium block mb-1">
+                  <label className="  text-xs font-medium block mb-1">
                     Contraseña
                   </label>
                   <Field
@@ -165,13 +165,13 @@ export default function Login() {
                 <div className="text-center">
                   <a
                     href="#"
-                    className="text-gray-300 text-sm underline hover:text-white transition"
+                    className="text-gray-300  text-xs underline hover:text-white transition"
                   >
                     ¿Olvidaste tu contraseña?
                   </a>
                 </div>
 
-                <div className="text-center text-gray-400 text-sm">
+                <div className="text-center text-gray-400  text-xs">
                   ¿No tienes cuenta?
                 </div>
 

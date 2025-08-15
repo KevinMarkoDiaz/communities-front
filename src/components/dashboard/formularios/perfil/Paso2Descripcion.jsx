@@ -7,7 +7,7 @@ export default function Paso2Descripcion() {
       <h3 className="text-white text-lg font-semibold">Sobre ti</h3>
 
       <div>
-        <label className="block text-sm font-medium text-white mb-1">
+        <label className="block  text-xs font-medium text-white mb-1">
           Descripción
         </label>
         <Field
@@ -20,7 +20,7 @@ export default function Paso2Descripcion() {
         <ErrorMessage
           name="description"
           component="div"
-          className="text-red-400 text-sm mt-1"
+          className="text-red-400  text-xs mt-1"
         />
       </div>
     </div>

@@ -46,7 +46,7 @@ export default function CardEventoGrid({
         {image ? (
           <img src={image} alt={title} className="w-full h-full object-cover" />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
+          <div className="w-full h-full flex items-center justify-center text-gray-400  text-xs">
             Sin imagen
           </div>
         )}
@@ -55,7 +55,7 @@ export default function CardEventoGrid({
       {/* Contenido */}
       <div className="flex flex-col justify-between px-4 py-3 flex-1">
         <div>
-          <h3 className="text-sm sm:text-base font-semibold leading-snug line-clamp-2">
+          <h3 className="  text-xs sm:text-base font-semibold leading-snug line-clamp-2">
             {title}
           </h3>
           {subtitle && (

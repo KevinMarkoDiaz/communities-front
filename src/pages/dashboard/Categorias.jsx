@@ -101,7 +101,7 @@ export default function Categorias() {
             />
           ) : (
             <div className="flex flex-col items-center justify-center bg-gradient-to-br from-gray-50 via-white to-gray-100 rounded-2xl shadow-lg p-6 md:p-8 xl:p-10 border border-gray-200 min-h-[260px] text-center">
-              <p className="text-gray-600 text-sm">
+              <p className="text-gray-600  text-xs">
                 No hay ninguna categoría seleccionada.
               </p>
               <p className="text-gray-500 text-xs mt-2">
@@ -128,7 +128,7 @@ export default function Categorias() {
         </h3>
         <Link
           to="crear"
-          className="flex items-center gap-2 bg-black text-white px-3 py-2 rounded hover:bg-[#f4c753] hover:text-black transition text-sm font-semibold"
+          className="flex items-center gap-2 bg-black text-white px-3 py-2 rounded hover:bg-[#f4c753] hover:text-black transition  text-xs font-semibold"
         >
           <MdCategory className="text-lg" />
           <p className="hidden md:block">Crear categoría</p>

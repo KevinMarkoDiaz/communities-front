@@ -56,7 +56,7 @@ function RenderLocation({ negocio }) {
   if (!addr && !city && !state) return null;
 
   return (
-    <p className="flex items-center text-sm text-gray-500 gap-2">
+    <p className="flex items-center  text-xs text-gray-500 gap-2">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         className="h-4 w-4 text-gray-400"
@@ -83,7 +83,7 @@ function BadgeEstadoNegocio({ openingHours }) {
 
   return (
     <div
-      className={`inline-flex items-center gap-2 p-3 rounded-xl text-sm font-semibold shadow-md transition-all
+      className={`inline-flex items-center gap-2 p-3 rounded-xl  text-xs font-semibold shadow-md transition-all
         ${abierto ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}
       `}
     >
@@ -223,7 +223,7 @@ export default function NegocioDetalle() {
         />
 
         {negocio.categories?.length > 0 && (
-          <p className="text-sm text-gray-500 italic">
+          <p className="  text-xs text-gray-500 italic">
             {negocio.categories
               .map((cat) => cat.description)
               .filter(Boolean)
@@ -242,7 +242,7 @@ export default function NegocioDetalle() {
             <button
               key={t.id}
               onClick={() => setTab(t.id)}
-              className={`text-sm px-3 py-2 rounded-t font-medium transition ${
+              className={`  text-xs px-3 py-2 rounded-t font-medium transition ${
                 tab === t.id
                   ? "bg-white border border-b-0 border-gray-200 text-gray-800"
                   : "text-gray-600 hover:text-gray-800"
@@ -281,7 +281,7 @@ export default function NegocioDetalle() {
                       >
                         {negocio.contact.socialMedia.instagram}
                       </a>
-                      <p className="text-gray-500 text-sm">Instagram</p>
+                      <p className="text-gray-500  text-xs">Instagram</p>
                     </div>
                   </div>
                 )}
@@ -299,7 +299,7 @@ export default function NegocioDetalle() {
                       >
                         {negocio.contact.socialMedia.facebook}
                       </a>
-                      <p className="text-gray-500 text-sm">Facebook</p>
+                      <p className="text-gray-500  text-xs">Facebook</p>
                     </div>
                   </div>
                 )}
@@ -317,7 +317,7 @@ export default function NegocioDetalle() {
                       >
                         {negocio.contact.socialMedia.twitter}
                       </a>
-                      <p className="text-gray-500 text-sm">Twitter</p>
+                      <p className="text-gray-500  text-xs">Twitter</p>
                     </div>
                   </div>
                 )}
@@ -335,7 +335,7 @@ export default function NegocioDetalle() {
                       >
                         {negocio.contact.socialMedia.youtube}
                       </a>
-                      <p className="text-gray-500 text-sm">YouTube</p>
+                      <p className="text-gray-500  text-xs">YouTube</p>
                     </div>
                   </div>
                 )}
@@ -356,7 +356,7 @@ export default function NegocioDetalle() {
                       >
                         {negocio.contact.socialMedia.whatsapp}
                       </a>
-                      <p className="text-gray-500 text-sm">WhatsApp</p>
+                      <p className="text-gray-500  text-xs">WhatsApp</p>
                     </div>
                   </div>
                 )}
@@ -379,7 +379,7 @@ export default function NegocioDetalle() {
               </h2>
               <Link
                 to={`/comunidades/${negocio.community._id}`}
-                className="w-fit flex items-center gap-2 p-2 rounded-full bg-gray-200 text-sm text-gray-700 hover:bg-gray-200"
+                className="w-fit flex items-center gap-2 p-2 rounded-full bg-gray-200  text-xs text-gray-700 hover:bg-gray-200"
               >
                 <img
                   src={negocio.community.flagImage || "/placeholder-flag.png"}

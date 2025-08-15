@@ -39,7 +39,7 @@ export default function RedimirCodigo() {
         <div className="flex-1">
           <div className="space-y-4">
             <h1 className="text-2xl font-bold text-sky-800">Redimir Código</h1>
-            <p className="text-gray-700 text-sm md:text-base max-w-lg">
+            <p className="text-gray-700  text-xs md:text-base max-w-lg">
               Ingresá el código único que te presentó un usuario para validar y
               marcar la promoción como redimida.
             </p>
@@ -86,13 +86,13 @@ export default function RedimirCodigo() {
       {/* Resultado */}
       {resultado && (
         <div className="max-w-md mx-auto bg-green-50 border border-green-300 p-4 rounded-lg space-y-2">
-          <p className="text-green-700 font-semibold text-sm">
+          <p className="text-green-700 font-semibold  text-xs">
             ✅ ¡Código redimido correctamente!
           </p>
-          <p className="text-gray-700 text-sm">
+          <p className="text-gray-700  text-xs">
             Promo: <strong>{resultado.promotion?.name}</strong>
           </p>
-          <p className="text-gray-700 text-sm">
+          <p className="text-gray-700  text-xs">
             Usuario: <strong>{resultado.user}</strong>
           </p>
           <p className="text-gray-500 text-xs">
@@ -103,7 +103,7 @@ export default function RedimirCodigo() {
 
       {/* Error */}
       {error && (
-        <div className="max-w-md mx-auto text-red-600 font-medium bg-red-50 border border-red-300 p-4 rounded-lg text-sm">
+        <div className="max-w-md mx-auto text-red-600 font-medium bg-red-50 border border-red-300 p-4 rounded-lg  text-xs">
           ❌ {error}
         </div>
       )}

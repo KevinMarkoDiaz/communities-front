@@ -112,7 +112,7 @@ export default function MisPromos() {
         </h3>
         <button
           onClick={() => setMostrarModalCrear(true)}
-          className="flex items-center gap-2 bg-black text-white px-3 py-2 rounded hover:bg-[#f4c753] hover:text-black transition text-sm font-semibold"
+          className="flex items-center gap-2 bg-black text-white px-3 py-2 rounded hover:bg-[#f4c753] hover:text-black transition  text-xs font-semibold"
         >
           <MdLocalOffer className="text-lg" />
           Crear promoción
@@ -123,14 +123,14 @@ export default function MisPromos() {
       {promos.length === 0 ? (
         <div className="flex flex-col items-center text-center gap-5 py-16">
           <img src={ilust5} alt="Sin promociones" className="w-40 opacity-90" />
-          <p className="text-gray-600 text-sm md:text-base max-w-xs">
+          <p className="text-gray-600  text-xs md:text-base max-w-xs">
             Aún no has creado ninguna promoción.
             <br />
             Destaca tus productos o servicios con ofertas especiales.
           </p>
           <button
             onClick={() => setMostrarModalCrear(true)}
-            className="inline-block bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium px-4 py-2 rounded transition"
+            className="inline-block bg-orange-500 hover:bg-orange-600 text-white  text-xs font-medium px-4 py-2 rounded transition"
           >
             Crear promoción
           </button>

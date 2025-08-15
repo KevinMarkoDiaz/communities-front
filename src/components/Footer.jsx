@@ -24,7 +24,7 @@ export default function Footer() {
           <h3 className="text-base font-bold uppercase tracking-wide">
             Institucional
           </h3>
-          <ul className="flex flex-col gap-2 text-sm">
+          <ul className="flex flex-col gap-2  text-xs">
             <li>
               <Link to="/about" className="hover:underline">
                 Sobre nosotros
@@ -41,7 +41,7 @@ export default function Footer() {
         {/* Legal */}
         <div className="space-y-3  border-white/20 pt-4 lg:border-t-0 lg:border-r lg:border-white/20 lg:pl-6 lg:pr-6">
           <h3 className="text-base font-bold uppercase tracking-wide">Legal</h3>
-          <ul className="flex flex-col gap-2 text-sm">
+          <ul className="flex flex-col gap-2  text-xs">
             <li>
               <Link to="/legal-privacy" className="hover:underline">
                 Privacidad
@@ -60,7 +60,7 @@ export default function Footer() {
           <h3 className="text-base font-bold uppercase tracking-wide">
             Navegación
           </h3>
-          <ul className="flex flex-col gap-2 text-sm">
+          <ul className="flex flex-col gap-2  text-xs">
             {[
               { to: "/", label: "Inicio" },
               { to: "/negocios", label: "Negocios" },
@@ -83,7 +83,7 @@ export default function Footer() {
           <h3 className="text-base font-bold uppercase tracking-wide">
             Síguenos
           </h3>
-          <p className="text-sm leading-snug max-w-xs">
+          <p className="  text-xs leading-snug max-w-xs">
             Conectá con nosotros en redes.
           </p>
           <div className="flex gap-3 flex-wrap pt-1">

@@ -7,7 +7,7 @@ export default function Paso2Detalles() {
     <div className="space-y-6">
       {/* Fecha */}
       <div>
-        <label className="block text-sm font-medium text-white mb-1">
+        <label className="block  text-xs font-medium text-white mb-1">
           Fecha del evento
         </label>
         <Field
@@ -18,7 +18,7 @@ export default function Paso2Detalles() {
         <ErrorMessage
           name="date"
           component="div"
-          className="text-red-400 text-sm mt-1"
+          className="text-red-400  text-xs mt-1"
         />
       </div>
 
@@ -26,7 +26,7 @@ export default function Paso2Detalles() {
       <div>
         <label
           htmlFor="time"
-          className="block text-sm font-medium text-white mb-1"
+          className="block  text-xs font-medium text-white mb-1"
         >
           Hora del evento
         </label>
@@ -39,7 +39,7 @@ export default function Paso2Detalles() {
         <ErrorMessage
           name="time"
           component="div"
-          className="text-red-400 text-sm mt-1"
+          className="text-red-400  text-xs mt-1"
         />
       </div>
 
@@ -51,7 +51,7 @@ export default function Paso2Detalles() {
           id="isOnline"
           className="form-checkbox h-5 w-5 text-orange-500"
         />
-        <label htmlFor="isOnline" className="text-sm font-medium text-white">
+        <label htmlFor="isOnline" className="  text-xs font-medium text-white">
           ¿Es un evento virtual?
         </label>
       </div>
@@ -59,7 +59,7 @@ export default function Paso2Detalles() {
       {/* Link virtual */}
       {values.isOnline && (
         <div>
-          <label className="block text-sm font-medium text-white mb-1">
+          <label className="block  text-xs font-medium text-white mb-1">
             Link del evento online
           </label>
           <Field
@@ -70,14 +70,14 @@ export default function Paso2Detalles() {
           <ErrorMessage
             name="virtualLink"
             component="div"
-            className="text-red-400 text-sm mt-1"
+            className="text-red-400  text-xs mt-1"
           />
         </div>
       )}
 
       {/* Link de registro */}
       <div>
-        <label className="block text-sm font-medium text-white mb-1">
+        <label className="block  text-xs font-medium text-white mb-1">
           Link de registro (opcional)
         </label>
         <Field
@@ -88,7 +88,7 @@ export default function Paso2Detalles() {
         <ErrorMessage
           name="registrationLink"
           component="div"
-          className="text-red-400 text-sm mt-1"
+          className="text-red-400  text-xs mt-1"
         />
       </div>
     </div>

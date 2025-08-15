@@ -81,7 +81,7 @@ const CommentsSection = ({ targetType, targetId }) => {
               border border-gray-200
               rounded-lg
               p-2
-              text-sm
+               text-xs
               placeholder:text-xs
               placeholder:text-gray-500
               focus:outline-none focus:ring-2 focus:ring-blue-200
@@ -120,7 +120,7 @@ const CommentsSection = ({ targetType, targetId }) => {
 
       {/* Comentarios existentes */}
       {comments.length === 0 && (
-        <p className="text-sm text-gray-500">No hay comentarios aún.</p>
+        <p className="  text-xs text-gray-500">No hay comentarios aún.</p>
       )}
 
       <ul className="space-y-4 w-full">
@@ -149,7 +149,7 @@ const CommentsSection = ({ targetType, targetId }) => {
                 {new Date(c.createdAt).toLocaleString()}
               </span>
             </div>
-            <p className="text-gray-500 text-sm">{c.content}</p>
+            <p className="text-gray-500  text-xs">{c.content}</p>
             {usuario && usuario.id === c.author?.id && (
               <button
                 onClick={() => handleDelete(c._id)}

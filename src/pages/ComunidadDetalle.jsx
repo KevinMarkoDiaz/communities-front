@@ -157,7 +157,7 @@ export default function ComunidadDetalle() {
               <button
                 key={tabId}
                 onClick={() => setTab(tabId)}
-                className={`text-sm px-3 py-2 rounded-t font-medium transition ${
+                className={`  text-xs px-3 py-2 rounded-t font-medium transition ${
                   tab === tabId
                     ? "bg-white border border-b-0 border-gray-200 text-gray-800"
                     : "text-gray-600 hover:text-gray-800"
@@ -179,7 +179,9 @@ export default function ComunidadDetalle() {
                   Negocios de la comunidad
                 </h2>
                 {negociosLoading ? (
-                  <p className="text-sm text-gray-500">Cargando negocios...</p>
+                  <p className="  text-xs text-gray-500">
+                    Cargando negocios...
+                  </p>
                 ) : negociosDeLaComunidad.length > 0 ? (
                   <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-4">
                     {negociosDeLaComunidad.map((neg) => (
@@ -189,7 +191,7 @@ export default function ComunidadDetalle() {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-gray-500">
+                  <p className="  text-xs text-gray-500">
                     No hay negocios registrados todavía.
                   </p>
                 )}
@@ -202,7 +204,7 @@ export default function ComunidadDetalle() {
                   Eventos de la comunidad
                 </h2>
                 {eventosLoading ? (
-                  <p className="text-sm text-gray-500">Cargando eventos...</p>
+                  <p className="  text-xs text-gray-500">Cargando eventos...</p>
                 ) : eventosDeLaComunidad.length > 0 ? (
                   <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4">
                     {eventosDeLaComunidad.map((ev) => (
@@ -221,7 +223,7 @@ export default function ComunidadDetalle() {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-gray-500">
+                  <p className="  text-xs text-gray-500">
                     No hay eventos registrados todavía.
                   </p>
                 )}
@@ -298,7 +300,7 @@ export default function ComunidadDetalle() {
                                     {socialIcons[link.type] || <FaGlobe />}
                                   </div>
                                   <div>
-                                    <h3 className="font-semibold text-gray-800 text-sm">
+                                    <h3 className="font-semibold text-gray-800  text-xs">
                                       {link.title}
                                     </h3>
                                     {link.description && (
@@ -316,7 +318,7 @@ export default function ComunidadDetalle() {
                     )}
                   </>
                 ) : (
-                  <p className="text-sm text-gray-500">
+                  <p className="  text-xs text-gray-500">
                     No hay enlaces registrados para esta comunidad.
                   </p>
                 )}

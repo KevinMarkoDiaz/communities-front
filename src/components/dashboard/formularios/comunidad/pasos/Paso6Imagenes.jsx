@@ -17,7 +17,7 @@ export default function Paso6Imagenes() {
       <ErrorMessage
         name="flagImage"
         component="div"
-        className="text-red-500 text-sm"
+        className="text-red-500  text-xs"
       />
 
       {/* Imagen destacada */}
@@ -29,7 +29,7 @@ export default function Paso6Imagenes() {
       <ErrorMessage
         name="bannerImage"
         component="div"
-        className="text-red-500 text-sm"
+        className="text-red-500  text-xs"
       />
     </div>
   );

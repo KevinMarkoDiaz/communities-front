@@ -171,7 +171,7 @@ export default function RegistroMultiStep() {
                 {currentStep === 0 && (
                   <>
                     <div>
-                      <label className="text-sm font-medium block mb-1">
+                      <label className="  text-xs font-medium block mb-1">
                         Nombre
                       </label>
                       <Field
@@ -186,7 +186,7 @@ export default function RegistroMultiStep() {
                       />
                     </div>
                     <div>
-                      <label className="text-sm font-medium block mb-1">
+                      <label className="  text-xs font-medium block mb-1">
                         Apellido
                       </label>
                       <Field
@@ -201,7 +201,7 @@ export default function RegistroMultiStep() {
                       />
                     </div>
                     <div>
-                      <label className="text-sm font-medium block mb-1">
+                      <label className="  text-xs font-medium block mb-1">
                         Correo electrónico
                       </label>
                       <Field
@@ -217,7 +217,7 @@ export default function RegistroMultiStep() {
                       />
                     </div>
                     <div>
-                      <label className="text-sm font-medium block mb-1">
+                      <label className="  text-xs font-medium block mb-1">
                         Contraseña
                       </label>
                       <Field
@@ -237,7 +237,7 @@ export default function RegistroMultiStep() {
 
                 {currentStep === 1 && (
                   <div>
-                    <label className="text-sm font-medium block mb-1">
+                    <label className="  text-xs font-medium block mb-1">
                       Rol
                     </label>
                     <Select
@@ -273,7 +273,7 @@ export default function RegistroMultiStep() {
                 {currentStep === 2 && (
                   <>
                     <div>
-                      <label className="text-sm font-medium block mb-1">
+                      <label className="  text-xs font-medium block mb-1">
                         Imagen de perfil
                       </label>
                       <Field
@@ -288,7 +288,7 @@ export default function RegistroMultiStep() {
                       />
                     </div>
                     <div>
-                      <label className="text-sm font-medium block mb-1">
+                      <label className="  text-xs font-medium block mb-1">
                         Título
                       </label>
                       <Field
@@ -298,7 +298,7 @@ export default function RegistroMultiStep() {
                       />
                     </div>
                     <div>
-                      <label className="text-sm font-medium block mb-1">
+                      <label className="  text-xs font-medium block mb-1">
                         Descripción
                       </label>
                       <Field
@@ -310,7 +310,7 @@ export default function RegistroMultiStep() {
                       />
                     </div>
                     <div>
-                      <label className="text-sm font-medium block mb-1">
+                      <label className="  text-xs font-medium block mb-1">
                         Ubicación
                       </label>
                       <Field
@@ -320,7 +320,7 @@ export default function RegistroMultiStep() {
                       />
                     </div>
                     <div>
-                      <label className="text-sm font-medium block mb-1">
+                      <label className="  text-xs font-medium block mb-1">
                         País
                       </label>
                       <Field
@@ -330,12 +330,12 @@ export default function RegistroMultiStep() {
                       />
                     </div>
                     {loadingComunidades ? (
-                      <p className="text-sm text-gray-300">
+                      <p className="  text-xs text-gray-300">
                         Cargando comunidades...
                       </p>
                     ) : (
                       <div>
-                        <label className="text-sm font-medium block mb-1">
+                        <label className="  text-xs font-medium block mb-1">
                           Comunidad
                         </label>
                         <Select
@@ -373,7 +373,7 @@ export default function RegistroMultiStep() {
                 )}
 
                 {currentStep === 3 && (
-                  <div className="space-y-4 text-sm text-gray-200">
+                  <div className="space-y-4  text-xs text-gray-200">
                     <p className="text-center">
                       Revisa tus datos antes de registrarte.
                     </p>
@@ -478,7 +478,7 @@ export default function RegistroMultiStep() {
             )}
           </Formik>
           <div className="text-center mt-4">
-            <p className="text-gray-400 text-sm mb-2">¿Ya tienes cuenta?</p>
+            <p className="text-gray-400  text-xs mb-2">¿Ya tienes cuenta?</p>
             <Link
               to="/login"
               className="block text-center bg-white/10 border border-white/20 text-white py-3 rounded-lg font-semibold hover:bg-white/20 transition"

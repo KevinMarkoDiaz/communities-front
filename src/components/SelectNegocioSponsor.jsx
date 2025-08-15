@@ -23,7 +23,7 @@ export default function SelectNegocioSponsor({ value, onChange }) {
 
   return (
     <div className="mt-4">
-      <label className="block text-sm font-medium mb-1">
+      <label className="block  text-xs font-medium mb-1">
         Buscar negocios sponsors (opcional)
       </label>
       <AsyncSelect
@@ -38,7 +38,7 @@ export default function SelectNegocioSponsor({ value, onChange }) {
         onChange={onChange}
         isLoading={loading}
         placeholder="Escribe para buscar..."
-        className="text-sm"
+        className="  text-xs"
       />
     </div>
   );

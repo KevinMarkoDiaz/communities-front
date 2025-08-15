@@ -42,14 +42,14 @@ export default function HeaderPerfil({ usuario }) {
             </p>
 
             {title && (
-              <p className="text-[#6b7280] text-xs sm:text-sm font-medium flex items-center gap-1">
+              <p className="text-[#6b7280] text-xs sm:  text-xs font-medium flex items-center gap-1">
                 <FiUser className="text-gray-400" />
                 {title}
               </p>
             )}
 
             {location && (
-              <p className="text-[#6b7280] text-xs sm:text-sm font-normal flex items-center gap-1">
+              <p className="text-[#6b7280] text-xs sm:  text-xs font-normal flex items-center gap-1">
                 <FiMapPin className="text-gray-400" />
                 {location}, {country}
               </p>
@@ -63,7 +63,7 @@ export default function HeaderPerfil({ usuario }) {
 
         {/* Descripción */}
         {description && (
-          <div className="text-sm text-gray-600 leading-snug md:ml-6 md:mt-0 md:text-center md:mx-auto">
+          <div className="  text-xs text-gray-600 leading-snug md:ml-6 md:mt-0 md:text-center md:mx-auto">
             {description}
           </div>
         )}

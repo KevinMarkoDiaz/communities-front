@@ -29,7 +29,7 @@ export default function CrearCategoriaView() {
           <div className="flex items-start justify-between gap-4 flex-wrap sm:flex-nowrap p-4">
             <div className="flex-1 space-y-2">
               <h1 className="text-2xl font-bold text-black">Crear Categoría</h1>
-              <p className="text-gray-700 text-sm sm:text-base">
+              <p className="text-gray-700  text-xs sm:text-base">
                 Crea nuevas categorías para organizar mejor los negocios,
                 eventos y promociones de tu comunidad latina ✨
               </p>
@@ -53,7 +53,7 @@ export default function CrearCategoriaView() {
           Las categorías ayudan a que los usuarios encuentren fácilmente lo que
           buscan.
         </p>
-        <p className="text-sm text-gray-600">
+        <p className="  text-xs text-gray-600">
           Cada categoría es una oportunidad de dar visibilidad a la cultura y
           los servicios de tu comunidad.
         </p>

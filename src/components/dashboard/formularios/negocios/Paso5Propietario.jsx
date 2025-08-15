@@ -55,7 +55,7 @@ export default function Paso5Propietario() {
 
       {isBusinessOwner && (
         <div>
-          <label className="block text-sm font-medium text-white mb-1">
+          <label className="block  text-xs font-medium text-white mb-1">
             Nombre del propietario
           </label>
           <input
@@ -69,7 +69,7 @@ export default function Paso5Propietario() {
       {isAdmin && (
         <div className="space-y-3">
           <div>
-            <label className="block text-sm font-medium text-white mb-1">
+            <label className="block  text-xs font-medium text-white mb-1">
               Buscar usuario por nombre
             </label>
             <div className="flex gap-2">
@@ -109,7 +109,7 @@ export default function Paso5Propietario() {
 
       {values.ownerDisplay?.name && (
         <div>
-          <p className="text-sm text-white">
+          <p className="  text-xs text-white">
             <strong>Seleccionado:</strong> {values.ownerDisplay.name}
           </p>
           {values.ownerDisplay.image && (

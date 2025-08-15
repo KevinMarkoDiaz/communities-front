@@ -10,7 +10,7 @@ export default function Paso2Cultura() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div>
-          <label className="block text-sm font-medium mb-1">Nombre</label>
+          <label className="block  text-xs font-medium mb-1">Nombre</label>
           <Field
             name="originCountryInfo.name"
             placeholder="Usa"
@@ -19,12 +19,12 @@ export default function Paso2Cultura() {
           <ErrorMessage
             name="originCountryInfo.name"
             component="div"
-            className="text-red-500 text-sm mt-1"
+            className="text-red-500  text-xs mt-1"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">Bandera</label>
+          <label className="block  text-xs font-medium mb-1">Bandera</label>
           <DropzoneImagen
             value={values.originCountryInfo?.flag || ""}
             onChange={(file) => setFieldValue("originCountryInfo.flag", file)}
@@ -34,12 +34,12 @@ export default function Paso2Cultura() {
           <ErrorMessage
             name="originCountryInfo.flag"
             component="div"
-            className="text-red-500 text-sm mt-1"
+            className="text-red-500  text-xs mt-1"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">Capital</label>
+          <label className="block  text-xs font-medium mb-1">Capital</label>
           <Field
             name="originCountryInfo.capital"
             placeholder="Bs As"
@@ -48,7 +48,7 @@ export default function Paso2Cultura() {
           <ErrorMessage
             name="originCountryInfo.capital"
             component="div"
-            className="text-red-500 text-sm mt-1"
+            className="text-red-500  text-xs mt-1"
           />
         </div>
       </div>
@@ -67,7 +67,7 @@ export default function Paso2Cultura() {
                 <button
                   type="button"
                   onClick={() => remove(index)}
-                  className="text-red-500 text-sm"
+                  className="text-red-500  text-xs"
                 >
                   Eliminar
                 </button>
@@ -94,7 +94,7 @@ export default function Paso2Cultura() {
                 className="grid grid-cols-1 lg:grid-cols-3 gap-4 border-b pb-6"
               >
                 <div>
-                  <label className="text-sm font-medium">Nombre</label>
+                  <label className="  text-xs font-medium">Nombre</label>
                   <Field
                     name={`food[${index}].name`}
                     placeholder="tacos"
@@ -103,7 +103,7 @@ export default function Paso2Cultura() {
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium">Descripción</label>
+                  <label className="  text-xs font-medium">Descripción</label>
                   <Field
                     name={`food[${index}].description`}
                     placeholder="Típico alimento a base de maíz"
@@ -112,7 +112,7 @@ export default function Paso2Cultura() {
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium">Imagen</label>
+                  <label className="  text-xs font-medium">Imagen</label>
                   <DropzoneImagen
                     value={item?.image || ""}
                     onChange={(file) =>
@@ -126,7 +126,7 @@ export default function Paso2Cultura() {
                   <button
                     type="button"
                     onClick={() => remove(index)}
-                    className="text-red-500 text-sm mt-2"
+                    className="text-red-500  text-xs mt-2"
                   >
                     Eliminar plato
                   </button>

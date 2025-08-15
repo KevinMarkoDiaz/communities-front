@@ -8,7 +8,7 @@ import {
   clearMessages,
 } from "../../store/messagesSlice";
 import { fetchConversations } from "../../store/conversationsSlice";
-import ilustrA from "../../assets/ilusta.svg";
+import ilustrA from "../../assets/ilust1.svg";
 import spin1 from "../../assets/spin1.svg";
 import spin2 from "../../assets/spin2.svg";
 import spin3 from "../../assets/spin3.svg";
@@ -109,17 +109,17 @@ const ChatView = () => {
   }
 
   return (
-    <div className="max-w-8xl mx-auto p-4 flex flex-col md:flex-row gap-6 md:gap-8">
+    <div className="max-w-[1200px] mx-auto md:p-4 flex flex-col md:flex-row gap-4 md:gap-8">
       {/* 🟠 Chat principal */}
       <div className="w-full md:w-2/3 flex flex-col gap-4">
-        <h2 className="text-2xl md:text-3xl font-semibold text-gray-800 tracking-tight flex items-center gap-2">
+        <h2 className="text-lg md:text-2xl font-semibold text-gray-800 tracking-tight flex items-center gap-2">
           🗨️ <span className="text-orange-500 font-bold">Conversación</span>
         </h2>
 
         {/* Cabecera del chat */}
-        <div className="flex flex-col p-3 gap-3 rounded-lg border border-gray-200 bg-white">
+        <div className="flex flex-col p-3 gap-3 rounded-lg border border-gray-200 bg-white max-w-[90vw]">
           {/* Participante visible */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 ">
             <img
               src={
                 isInitiator
@@ -133,8 +133,8 @@ const ChatView = () => {
               {isInitiator && (
                 <span className="text-xs text-gray-400">{tipoLabel}:</span>
               )}
-              <p className="text-sm text-gray-700">
-                {isInitiator ? entityLabel : usuario?.name || "Usuario"}
+              <p className="text-xs text-gray-700">
+                {isInitiator ? entityLabel : participant?.name || "Usuario"}
               </p>
             </div>
           </div>
@@ -148,7 +148,7 @@ const ChatView = () => {
                 className="w-12 h-12 rounded-full object-cover border border-gray-300"
               />
               <span
-                className="text-sm font-medium text-gray-700 truncate"
+                className="text-xs font-medium text-gray-700 truncate"
                 title={usuario?.name}
               >
                 {usuario?.name}
@@ -158,63 +158,63 @@ const ChatView = () => {
         </div>
 
         {/* Chat con fondo SVGs */}
-        <div className="relative flex-1 min-h-[60vh]">
+        <div className="relative flex-1 min-h-[80svh] md:min-h-[60svh] max-w-[98vw] md::min-w-[360px] lg:min-w-[30vw] ">
           {/* 🎨 Fondo SVG decorativo */}
-          <div className="absolute inset-0 overflow-hidden pointer-events-none z-11">
+          <div className="absolute inset-0 overflow-x-hidden pointer-events-none z-0">
             <img
               src={spin1}
               alt=""
-              className="absolute top-[180px] left-[190px] w-24 opacity-15"
+              className="absolute top-[180px] left-[190px] md:w-24 w-12 opacity-15"
             />
             <img
               src={spin2}
               alt=""
-              className="absolute top-[16%] left-[80%] w-22  opacity-15"
+              className="absolute top-[16%] left-[80%] md:w-22 w-12 opacity-15"
             />
             <img
               src={spin3}
               alt=""
-              className="absolute top-[60%] left-[50%] w-20 opacity-15 "
+              className="absolute top-[60%] left-[50%] md:w-20 w-12 opacity-15"
             />
             <img
               src={spin4}
               alt=""
-              className="absolute bottom-[10%] right-[15%] w-20 opacity-15 "
+              className="absolute bottom-[10%] right-[15%] md:w-20 w-12 opacity-15"
             />
             <img
               src={spin5}
               alt=""
-              className="absolute top-[40%] right-[50%] w-20 opacity-15  rotate-12"
+              className="absolute top-[40%] right-[50%] md:w-20 w-12 opacity-15 rotate-12"
             />
             <img
               src={spin1}
               alt=""
-              className="absolute top-[40%] left-[10%] w-24 opacity-15 rotate-62"
+              className="absolute top-[40%] left-[10%] md:w-24 w-12 opacity-15 rotate-62"
             />
             <img
               src={spin2}
               alt=""
-              className="absolute top-[86%] left-[30%] w-22 rotate-22  opacity-15"
+              className="absolute top-[86%] left-[30%] md:w-22 w-12 rotate-22 opacity-15"
             />
             <img
               src={spin3}
               alt=""
-              className="absolute top-[5%] left-[5%] w-20 opacity-15 rotate-22"
+              className="absolute top-[5%] left-[5%] md:w-20 w-12 opacity-15 rotate-22"
             />
             <img
               src={spin4}
               alt=""
-              className="absolute bottom-[50%] right-[95%] w-20 opacity-15 "
+              className="absolute bottom-[50%] right-[95%] w-12 md:w-20 opacity-15"
             />
             <img
               src={spin5}
               alt=""
-              className="absolute top-[40%] right-[0%] w-20 opacity-15  rotate-12"
+              className="absolute top-[40%] right-[0%] w-12 md:w-20 opacity-15 rotate-12"
             />
           </div>
 
           {/* 💬 Contenido del chat */}
-          <div className="relative z-10 shadow-lg overflow-y-auto space-y-2 bg-gray-50 p-3 rounded-xl border border-gray-200 shadow-inner h-full">
+          <div className="relative z-10  overflow-y-auto space-y-2 p-3  max-h-[70svh] md:max-h-[68vh]  max-w-[90vw]md:p-4 lg:p-8 p-1">
             {items.length === 0 && (
               <p className="text-gray-500 text-center">No hay mensajes aún.</p>
             )}
@@ -223,32 +223,32 @@ const ChatView = () => {
               return (
                 <div
                   key={msg._id}
-                  className={`flex w-full z-15 ${
+                  className={`flex w-full ${
                     esMio ? "justify-end" : "justify-start"
                   } items-end gap-2`}
                 >
                   {!esMio && !isInitiator && (
                     <img
-                      src={usuario?.profileImage || participant?.profileImage}
+                      src={participant?.profileImage}
                       alt="Participante"
-                      className="w-10 h-10 rounded-full object-cover"
+                      className="w-12 h-12 rounded-full object-cover  shadow-lg"
                     />
                   )}
                   {!esMio && isInitiator && (
                     <img
                       src={entityImage}
                       alt="Participante"
-                      className="w-10 h-10 rounded-full object-cover"
+                      className="w-12 h-12 rounded-full object-cover"
                     />
                   )}
                   <div
-                    className={`max-w-xs p-3 rounded-xl z-15 shadow-md ${
+                    className={`max-w-[78%] sm:max-w-xs p-3 rounded-xl shadow-md ${
                       esMio
                         ? "bg-orange-500 text-white"
                         : "bg-white border border-gray-200 text-gray-800"
                     }`}
                   >
-                    <p className="text-sm">{msg.text}</p>
+                    <p className="text-xs 2xl:text-xs">{msg.text}</p>
                     <div className="text-[10px] text-gray-300 mt-1 flex items-center justify-between">
                       <span>{formatTimeAgo(msg.createdAt)}</span>
                       {esMio && msg.isRead && (
@@ -265,7 +265,7 @@ const ChatView = () => {
                           : entityImage
                       }
                       alt="Yo"
-                      className="w-10 h-10 rounded-full object-cover"
+                      className="w-12 h-12 rounded-full object-cover"
                     />
                   )}
                 </div>
@@ -277,18 +277,18 @@ const ChatView = () => {
         </div>
 
         {/* Formulario de envío */}
-        <form onSubmit={handleSend} className="flex mt-2">
+        <form onSubmit={handleSend} className="flex mt-2 max-w-[90vw]">
           <input
             type="text"
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="Escribe tu mensaje..."
-            className="flex-1 border border-gray-300 rounded-l-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
+            className="flex-1 border text-xs 2xl:text-xs border-gray-300 rounded-l-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 max-w-[90vw]"
           />
           <button
             type="submit"
             disabled={sending}
-            className="bg-orange-500 text-white px-4 py-2 rounded-r-xl hover:bg-orange-600 disabled:opacity-50 transition"
+            className="bg-orange-500 text-xs text-white px-4 py-2 rounded-r-xl hover:bg-orange-600 disabled:opacity-50 transition"
           >
             {sending ? "Enviando..." : "Enviar"}
           </button>
@@ -296,11 +296,11 @@ const ChatView = () => {
       </div>
 
       {/* 🟢 Caja de Tips */}
-      <div className="w-full md:w-[600px] flex flex-col bg-orange-50 border border-orange-100 rounded-xl p-6 gap-4 shadow-sm">
+      <div className="w-full md:max-w-[300px] 2xl:max-w-[600px] md:basis-[520px] md:flex-none  lg:basis-[560px] flex flex-col bg-orange-50 border border-orange-100 rounded-xl p-2 md:p-6 gap-4 shadow-sm">
         <img
           src={ilustrA}
           alt="Tips"
-          className="w-44 h-auto mx-auto hidden md:block"
+          className="w-44 md:w-84 h-auto mx-auto hidden md:block"
         />
 
         <h3 className="text-orange-600 font-semibold text-base text-center">
@@ -328,9 +328,9 @@ const ChatView = () => {
           ].map((tip, idx) => (
             <details
               key={idx}
-              className="group border border-orange-100 rounded-lg bg-white px-4 py-2"
+              className="group border border-orange-100 rounded-lg bg-white px-2 md:px-4 py-2 max-w-[90vw]"
             >
-              <summary className="cursor-pointer flex justify-between items-center font-medium text-gray-800 hover:text-orange-600">
+              <summary className="cursor-pointer  text-xs 2xl:text-xs flex justify-between items-center font-medium text-gray-800 hover:text-orange-600">
                 {tip.title}
                 <svg
                   className="w-4 h-4 ml-2 transition-transform duration-200 group-open:rotate-180"
@@ -346,7 +346,9 @@ const ChatView = () => {
                   />
                 </svg>
               </summary>
-              <p className="mt-2 text-sm text-gray-600">{tip.text}</p>
+              <p className="mt-2  text-xs 2xl:text-xs text-gray-600">
+                {tip.text}
+              </p>
             </details>
           ))}
         </div>

@@ -23,7 +23,7 @@ export default function SuscripcionCancelada() {
             Parece que cancelaste el proceso o hubo un pequeño inconveniente.
           </p>
 
-          <p className="text-gray-500 text-sm">
+          <p className="text-gray-500  text-xs">
             No pasa nada, puedes volver a intentarlo cuando prefieras. Mientras
             tanto, tu cuenta sigue activa en el plan gratuito.
           </p>
@@ -31,14 +31,14 @@ export default function SuscripcionCancelada() {
           <div className="mt-6 flex flex-col sm:flex-row gap-3">
             <button
               onClick={() => navigate("/premium")}
-              className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-full text-sm font-semibold transition"
+              className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-full  text-xs font-semibold transition"
             >
               Intentar de nuevo
             </button>
 
             <button
               onClick={() => navigate("/dashboard/perfil")}
-              className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-2 rounded-full text-sm font-semibold transition"
+              className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-2 rounded-full  text-xs font-semibold transition"
             >
               Ir a mi perfil
             </button>

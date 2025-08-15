@@ -179,7 +179,7 @@ export default function MetricsChartsTabs({
                 </PieChart>
               </ResponsiveContainer>
             ) : (
-              <div className="text-sm text-gray-500 text-center w-full py-8">
+              <div className="  text-xs text-gray-500 text-center w-full py-8">
                 No hay datos de visitas para mostrar.
               </div>
             )}
@@ -229,7 +229,7 @@ export default function MetricsChartsTabs({
                 </BarChart>
               </ResponsiveContainer>
             ) : (
-              <div className="text-sm text-gray-500 text-center w-full py-8">
+              <div className="  text-xs text-gray-500 text-center w-full py-8">
                 No hay usuarios recurrentes registrados en este periodo.
               </div>
             )}

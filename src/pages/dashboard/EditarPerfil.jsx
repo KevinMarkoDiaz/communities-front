@@ -85,7 +85,7 @@ export default function EditarPerfil() {
                 <h1 className="text-2xl font-bold text-black flex items-center gap-2">
                   Actualiza tu perfil
                 </h1>
-                <p className="text-gray-700 text-sm sm:text-base">
+                <p className="text-gray-700  text-xs sm:text-base">
                   Mantén tu información al día para conectar mejor con otras
                   personas y negocios dentro de la comunidad.
                 </p>
@@ -108,7 +108,7 @@ export default function EditarPerfil() {
             <img src={icono} alt="Icono" className="h-8 md:h-12" />
             Tu historia merece ser contada.
           </p>
-          <p className="text-sm text-gray-600">
+          <p className="  text-xs text-gray-600">
             Comparte quién eres y fortalece los lazos con tu comunidad.
           </p>
         </div>

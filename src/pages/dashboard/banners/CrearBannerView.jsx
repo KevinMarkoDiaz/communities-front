@@ -24,7 +24,7 @@ export default function CrearBannerView() {
           <div className="flex items-start justify-between gap-4 flex-wrap sm:flex-nowrap p-4">
             <div className="flex-1 space-y-2">
               <h1 className="text-2xl font-bold text-black">Crear Banner</h1>
-              <p className="text-gray-700 text-sm sm:text-base">
+              <p className="text-gray-700  text-xs sm:text-base">
                 Sube el arte y configura la segmentación, vigencia y límites del
                 anuncio ✨
               </p>

@@ -27,7 +27,7 @@ export function Paso8EnlacesExternos() {
                 className="grid grid-cols-1 sm:grid-cols-4 gap-4 items-start border-b pb-4"
               >
                 <div>
-                  <label className="block text-sm font-medium mb-1">
+                  <label className="block  text-xs font-medium mb-1">
                     Título
                   </label>
                   <Field
@@ -38,12 +38,12 @@ export function Paso8EnlacesExternos() {
                   <ErrorMessage
                     name={`externalLinks[${index}].title`}
                     component="div"
-                    className="text-red-500 text-sm mt-1"
+                    className="text-red-500  text-xs mt-1"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-1">URL</label>
+                  <label className="block  text-xs font-medium mb-1">URL</label>
                   <Field
                     name={`externalLinks[${index}].url`}
                     placeholder="https://..."
@@ -52,12 +52,14 @@ export function Paso8EnlacesExternos() {
                   <ErrorMessage
                     name={`externalLinks[${index}].url`}
                     component="div"
-                    className="text-red-500 text-sm mt-1"
+                    className="text-red-500  text-xs mt-1"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-1">Tipo</label>
+                  <label className="block  text-xs font-medium mb-1">
+                    Tipo
+                  </label>
                   <Select
                     name={`externalLinks[${index}].type`}
                     options={tipoOpciones}
@@ -78,12 +80,12 @@ export function Paso8EnlacesExternos() {
                   <ErrorMessage
                     name={`externalLinks[${index}].type`}
                     component="div"
-                    className="text-red-500 text-sm mt-1"
+                    className="text-red-500  text-xs mt-1"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-1">
+                  <label className="block  text-xs font-medium mb-1">
                     Descripción (opcional)
                   </label>
                   <Field
@@ -94,7 +96,7 @@ export function Paso8EnlacesExternos() {
                   <ErrorMessage
                     name={`externalLinks[${index}].description`}
                     component="div"
-                    className="text-red-500 text-sm mt-1"
+                    className="text-red-500  text-xs mt-1"
                   />
                 </div>
 
@@ -102,7 +104,7 @@ export function Paso8EnlacesExternos() {
                   <button
                     type="button"
                     onClick={() => remove(index)}
-                    className="text-red-500 text-sm"
+                    className="text-red-500  text-xs"
                   >
                     Eliminar enlace
                   </button>

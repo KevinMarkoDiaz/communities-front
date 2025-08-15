@@ -56,7 +56,7 @@ export default function Cupones() {
       {!loading && lista.length === 0 ? (
         <div className="flex flex-col items-center text-center gap-5 py-16">
           <img src={ilust2} alt="Sin cupones" className="w-40 opacity-90" />
-          <p className="text-gray-600 text-sm md:text-base max-w-xs">
+          <p className="text-gray-600  text-xs md:text-base max-w-xs">
             Aún no has guardado ningún cupón. <br /> Explorá promociones y
             guardá tus favoritas para redimirlas luego.
           </p>
@@ -89,7 +89,7 @@ export default function Cupones() {
 
                   <div className="space-y-2">
                     <div className="flex items-center justify-between bg-[#39ff1415] border border-[#39FF14] p-2 rounded-lg">
-                      <span className="font-mono tracking-widest text-sm text-white">
+                      <span className="font-mono tracking-widest  text-xs text-white">
                         {code}
                       </span>
                       <button
@@ -101,7 +101,7 @@ export default function Cupones() {
                       </button>
                     </div>
 
-                    <div className="text-sm font-medium">
+                    <div className="  text-xs font-medium">
                       {redeemed ? (
                         <p className="text-green-400 flex items-center gap-1">
                           <FaCheckCircle className="text-green-300" /> Redimido{" "}
@@ -150,10 +150,10 @@ export default function Cupones() {
               <h2 className="text-lg font-bold text-gray-800">
                 {promoActiva.promotion.name}
               </h2>
-              <p className="text-gray-600 text-sm">
+              <p className="text-gray-600  text-xs">
                 {promoActiva.promotion.description}
               </p>
-              <div className="text-sm text-gray-700">
+              <div className="  text-xs text-gray-700">
                 <span className="font-medium">Código: </span>
                 <span className="font-mono px-2 py-1 rounded border border-[#2ecc71] bg-[#2ecc7115] text-[#2ecc71] tracking-wider">
                   {promoActiva.code}

@@ -83,7 +83,7 @@ export default function CrearPromo() {
                   ? "Hazla aún más irresistible"
                   : "Comparte tu próxima gran oferta"}
               </h1>
-              <p className="text-gray-700 text-sm sm:text-base max-w-xl">
+              <p className="text-gray-700  text-xs sm:text-base max-w-xl">
                 {esEdicion
                   ? "Modifica los detalles de tu promoción para mantenerla actualizada y relevante."
                   : "Comparte ofertas especiales y promociones exclusivas que ayuden a tu negocio a conectar con la comunidad latina 💫"}
@@ -117,7 +117,7 @@ export default function CrearPromo() {
             ? "Mantén tus promociones al día y aumenta su impacto."
             : "Destaca tus productos y fortalece la identidad de tu comunidad."}
         </p>
-        <p className="text-sm text-gray-600">
+        <p className="  text-xs text-gray-600">
           {esEdicion
             ? "Actualizar tu promoción ayuda a tus clientes a conocer tus novedades."
             : "Cada promoción es una oportunidad de crecer juntos."}

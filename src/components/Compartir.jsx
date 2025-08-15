@@ -98,7 +98,7 @@ export default function Compartir({
         </button>
 
         {copiado && (
-          <span className="text-sm text-green-600 font-medium ml-1 animate-fade-in">
+          <span className="  text-xs text-green-600 font-medium ml-1 animate-fade-in">
             ¡Enlace copiado!
           </span>
         )}

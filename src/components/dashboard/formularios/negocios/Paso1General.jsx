@@ -14,7 +14,7 @@ export default function Paso1General({ categorias = [], comunidades = [] }) {
     <div className="space-y-5">
       {/* Nombre */}
       <div>
-        <label className="block text-sm font-medium text-white mb-1">
+        <label className="block  text-xs font-medium text-white mb-1">
           Nombre
         </label>
         <Field
@@ -25,13 +25,13 @@ export default function Paso1General({ categorias = [], comunidades = [] }) {
         <ErrorMessage
           name="name"
           component="div"
-          className="text-red-500 text-sm mt-1"
+          className="text-red-500  text-xs mt-1"
         />
       </div>
 
       {/* Descripción */}
       <div>
-        <label className="block text-sm font-medium text-white mb-1">
+        <label className="block  text-xs font-medium text-white mb-1">
           Descripción
         </label>
         <Field
@@ -43,13 +43,13 @@ export default function Paso1General({ categorias = [], comunidades = [] }) {
         <ErrorMessage
           name="description"
           component="div"
-          className="text-red-500 text-sm mt-1"
+          className="text-red-500  text-xs mt-1"
         />
       </div>
 
       {/* Categorías (múltiples) */}
       <div>
-        <label className="block text-sm font-medium text-white mb-1">
+        <label className="block  text-xs font-medium text-white mb-1">
           Categorías
         </label>
         <Select
@@ -74,13 +74,13 @@ export default function Paso1General({ categorias = [], comunidades = [] }) {
         <ErrorMessage
           name="categories"
           component="div"
-          className="text-red-500 text-sm mt-1"
+          className="text-red-500  text-xs mt-1"
         />
       </div>
 
       {/* Comunidad */}
       <div>
-        <label className="block text-sm font-medium text-white mb-1">
+        <label className="block  text-xs font-medium text-white mb-1">
           Comunidad
         </label>
         <Select
@@ -106,7 +106,7 @@ export default function Paso1General({ categorias = [], comunidades = [] }) {
         <ErrorMessage
           name="community"
           component="div"
-          className="text-red-500 text-sm mt-1"
+          className="text-red-500  text-xs mt-1"
         />
       </div>
     </div>
