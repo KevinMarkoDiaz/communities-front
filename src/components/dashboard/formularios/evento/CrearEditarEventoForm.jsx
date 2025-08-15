@@ -1,3 +1,4 @@
+// src/components/.../CrearEditarEventoForm.jsx
 import { useState } from "react";
 import { Formik, Form } from "formik";
 import { AnimatePresence, motion } from "framer-motion";
@@ -22,7 +23,6 @@ const nombresPasos = [
   "Imágenes",
   "Opciones Finales",
 ];
-
 const pasos = [
   Paso1Info,
   PasoUbicacion,
@@ -39,36 +39,34 @@ const esquemaValidacion = [
   }),
   Yup.object({
     isOnline: Yup.boolean(),
-
     location: Yup.object({
       address: Yup.string().when("isOnline", {
         is: false,
-        then: (schema) => schema.required("Dirección obligatoria"),
-        otherwise: (schema) => schema.notRequired(),
+        then: (s) => s.required("Dirección obligatoria"),
+        otherwise: (s) => s.notRequired(),
       }),
       city: Yup.string().when("isOnline", {
         is: false,
-        then: (schema) => schema.required("Ciudad obligatoria"),
-        otherwise: (schema) => schema.notRequired(),
+        then: (s) => s.required("Ciudad obligatoria"),
+        otherwise: (s) => s.notRequired(),
       }),
       state: Yup.string().when("isOnline", {
         is: false,
-        then: (schema) => schema.required("Estado obligatorio"),
-        otherwise: (schema) => schema.notRequired(),
+        then: (s) => s.required("Estado obligatorio"),
+        otherwise: (s) => s.notRequired(),
       }),
       zipCode: Yup.string().when("isOnline", {
         is: false,
-        then: (schema) => schema.required("Código postal obligatorio"),
-        otherwise: (schema) => schema.notRequired(),
+        then: (s) => s.required("Código postal obligatorio"),
+        otherwise: (s) => s.notRequired(),
       }),
       country: Yup.string().when("isOnline", {
         is: false,
-        then: (schema) => schema.required("País obligatorio"),
-        otherwise: (schema) => schema.notRequired(),
+        then: (s) => s.required("País obligatorio"),
+        otherwise: (s) => s.notRequired(),
       }),
     }),
   }),
-
   Yup.object({
     date: Yup.date().required("Fecha obligatoria"),
     time: Yup.string().required("Hora obligatoria"),
@@ -77,9 +75,9 @@ const esquemaValidacion = [
       .transform((v) => (v === "" ? null : v))
       .when("isOnline", {
         is: true,
-        then: (schema) =>
-          schema.required("El link virtual es obligatorio").url("URL inválida"),
-        otherwise: (schema) => schema.nullable().notRequired(),
+        then: (s) =>
+          s.required("El link virtual es obligatorio").url("URL inválida"),
+        otherwise: (s) => s.nullable().notRequired(),
       }),
     registrationLink: Yup.string()
       .transform((v) => (v === "" ? null : v))
@@ -127,6 +125,7 @@ const valoresIniciales = {
     state: "",
     zipCode: "",
     country: "USA",
+    // PasoUbicacion puede agregar coordinates.lat/lng en runtime
   },
   image: null,
   images: [],
@@ -143,8 +142,8 @@ const valoresIniciales = {
   status: "activo",
   featured: false,
   isPublished: false,
-  organizer: "",
-  organizerModel: "",
+  organizer: "", // siempre string (ObjectId). No guardes objeto aquí.
+  organizerModel: "", // "User" | "Business" | "Community"
 };
 
 export default function CrearEditarEventoForm({
@@ -162,7 +161,7 @@ export default function CrearEditarEventoForm({
     try {
       const formData = new FormData();
 
-      // 1) Files
+      // ========= 1) Files =========
       if (values.image && typeof values.image !== "string") {
         formData.append("featuredImage", values.image);
       }
@@ -172,7 +171,8 @@ export default function CrearEditarEventoForm({
         });
       }
 
-      // 2) Normalizaciones base
+      // ========= 2) Normalizaciones =========
+      // tags: "a,b,c" -> ["a","b","c"]
       const tagsArray = values.tags
         ? values.tags
             .split(",")
@@ -180,88 +180,134 @@ export default function CrearEditarEventoForm({
             .filter(Boolean)
         : [];
 
-      // Clonar para no mutar Formik
-      const data = {
-        ...values,
-        tags: tagsArray,
-        price: Number(values.price || 0),
-      };
+      // organizer: soporta string u objeto {value, model}
+      const organizerId =
+        typeof values.organizer === "object" && values.organizer !== null
+          ? values.organizer.value || values.organizer._id || ""
+          : values.organizer || "";
 
-      // No enviar estos porque ya van como archivos
-      delete data.image;
-      delete data.images;
+      // organizerModel si viene del select (guardas en values.organizer.model?)
+      const organizerModelFromSelect =
+        typeof values.organizer === "object" && values.organizer !== null
+          ? values.organizer.model
+          : values.organizerModel;
 
-      // 3) Organizer / organizerModel
-      //    - Si admin y seleccionó un organizer desde un <Select> tipo { value, label, model }
-      if (usuario.role === "admin" && values.organizer?.value) {
-        data.organizer = String(values.organizer.value);
-        data.organizerModel =
-          values.organizer.model === "Business" ? "Business" : "User";
+      // Si eres admin y seleccionaste un organizador explícito → úsalo
+      let organizer = organizerId ? String(organizerId) : "";
+      let organizerModel = organizerModelFromSelect || "";
+
+      // Si no hay organizer válido, usa fallback:
+      if (!organizer || !/^[0-9a-fA-F]{24}$/.test(organizer)) {
+        if (usuario?.role === "admin") {
+          // Admin debe seleccionar uno válido
+          dispatch(
+            mostrarFeedback({
+              message: "Selecciona un organizador válido",
+              type: "error",
+            })
+          );
+          actions.setSubmitting(false);
+          return;
+        } else {
+          // No admin → propio user
+          organizer = String(usuario?._id || "");
+          const rol = usuario?.role?.toLowerCase();
+          organizerModel =
+            rol === "business" || rol === "business_owner"
+              ? "Business"
+              : "User";
+        }
       } else {
-        // No admin: usar el propio usuario
-        data.organizer = String(usuario?._id || "");
-        // infiere el modelo según tu app (ajusta si tu store usa otra key)
-        const rol = usuario?.role?.toLowerCase();
-        data.organizerModel =
-          rol === "business" || rol === "business_owner" ? "Business" : "User";
+        // Si organizer es válido pero no enviaste model, infiere "User" por defecto
+        if (!organizerModel) organizerModel = "User";
       }
 
-      // 4) Limpiar campos que no están en el schema (venían del form viejo)
-      delete data.isDeliveryOnly;
-      delete data.primaryZip;
+      // precio
+      const price = Number(values.price || 0);
 
-      // 5) location.coordinates → NO mandar objeto; o crear geoJSON arriba
-      //    Si hay números válidos, creamos `coordinates` (geoJSON) y removemos location.coordinates
-      const latRaw = values?.location?.coordinates?.lat;
-      const lngRaw = values?.location?.coordinates?.lng;
-      const lat = latRaw === "" ? null : Number(latRaw);
-      const lng = lngRaw === "" ? null : Number(lngRaw);
-
-      // Si el evento es online, limpiar dirección y geo
-      if (data.isOnline) {
-        data.location = {
+      // ========= 3) Location & coords =========
+      // Si online, limpia dirección
+      let location = { ...(values.location || {}) };
+      if (values.isOnline) {
+        location = {
           address: "",
           city: "",
           state: "",
           zipCode: "",
-          country: data.location?.country || "USA",
+          country: location.country || "USA",
         };
-        delete data.coordinates; // geoJSON top-level
       } else {
-        // Evento presencial: si hay lat/lng válidos, arma geoJSON; si no, deja que el backend geocodifique
+        // si PasoUbicacion puso coords.lat/lng, arma geoJSON top-level `coordinates`
+        const latRaw = location?.coordinates?.lat;
+        const lngRaw = location?.coordinates?.lng;
+        const lat = latRaw === "" ? null : Number(latRaw);
+        const lng = lngRaw === "" ? null : Number(lngRaw);
         if (
-          !Number.isNaN(lat) &&
-          !Number.isNaN(lng) &&
           lat !== null &&
-          lng !== null
+          lng !== null &&
+          !Number.isNaN(lat) &&
+          !Number.isNaN(lng)
         ) {
-          data.coordinates = { type: "Point", coordinates: [lng, lat] };
-        } else {
-          // sin coordenadas explícitas → no mandes geoJSON, backend puede geocodificar
-          delete data.coordinates;
+          // Tu backend de eventos puede aceptar coordinates geoJSON en top-level o dentro de location; si no, quítalo.
+          // Aquí preferimos que el back geocodifique por address, así que NO lo mandamos.
+          // Si tu back sí espera geoJSON, descomenta:
+          // formData.append("coordinates", JSON.stringify({ type: "Point", coordinates: [lng, lat] }));
         }
+        // Nunca mandes location.coordinates como objeto anidado
+        if (location?.coordinates) delete location.coordinates;
       }
-      // En todos los casos, NO mandes location.coordinates como objeto (Zod se queja)
-      if (data.location?.coordinates) delete data.location.coordinates;
 
-      // 6) Arrays de IDs → string
-      const toStringArray = (arr) =>
-        Array.isArray(arr) ? arr.map((x) => String(x)) : [];
+      // ========= 4) Helpers para anexar seguro =========
+      const appendIf = (k, v) => {
+        if (v === null || v === undefined) return;
+        if (typeof v === "string" && v.trim() === "") return;
+        formData.append(
+          k,
+          typeof v === "object" ? JSON.stringify(v) : String(v)
+        );
+      };
+      const appendArrayAsJSON = (k, arr) => {
+        const a = Array.isArray(arr) ? arr : [];
+        if (!a.length) return;
+        formData.append(k, JSON.stringify(a.map(String)));
+      };
 
-      data.categories = toStringArray(data.categories);
-      data.communities = toStringArray(data.communities);
-      data.sponsors = toStringArray(data.sponsors);
-      data.likes = toStringArray(data.likes);
+      // ========= 5) Campos primitivos =========
+      appendIf("title", values.title);
+      appendIf("description", values.description);
+      appendIf("date", values.date);
+      appendIf("time", values.time);
 
-      // 7) Links vacíos → undefined (tu schema hace set: "" => undefined)
-      if (!data.registrationLink) delete data.registrationLink;
-      if (!data.virtualLink) delete data.virtualLink;
+      // Online / links
+      appendIf("isOnline", values.isOnline);
+      if (values.isOnline) {
+        appendIf("virtualLink", values.virtualLink);
+      }
+      appendIf("registrationLink", values.registrationLink);
 
-      // 8) Adjuntar JSON al FormData
-      formData.append("data", JSON.stringify(data));
+      // Organizer
+      formData.append("organizer", organizer);
+      formData.append("organizerModel", organizerModel);
 
-      formData.append("organizer", data.organizer);
-      formData.append("organizerModel", data.organizerModel);
+      // Location
+      appendIf("location", location);
+
+      // Precio y banderas
+      appendIf("isFree", values.isFree);
+      if (!values.isFree) appendIf("price", price);
+      appendIf("language", values.language);
+      appendIf("status", values.status);
+      appendIf("featured", values.featured);
+      appendIf("isPublished", values.isPublished);
+
+      // Arrays
+      appendArrayAsJSON("categories", values.categories);
+      appendArrayAsJSON("communities", values.communities);
+      appendArrayAsJSON("sponsors", values.sponsors);
+      appendArrayAsJSON("likes", values.likes);
+      appendArrayAsJSON("tags", tagsArray);
+
+      // ========= 6) Dispatch =========
       await dispatch(createEventThunk(formData)).unwrap();
 
       dispatch(
@@ -300,7 +346,7 @@ export default function CrearEditarEventoForm({
       validateOnBlur={false}
       validateOnChange={false}
     >
-      {({ values, setErrors }) => (
+      {({ values }) => (
         <Form className="flex flex-col md:flex-row gap-8 w-full max-w-5xl mx-auto p-4 md:p-8 bg-black/40 backdrop-blur-lg md:rounded-2xl shadow-2xl text-white">
           {/* Sidebar de pasos */}
           <div className="flex flex-row md:flex-col w-full md:w-20 lg:w-36 space-x-4 md:space-x-0 md:space-y-8">
@@ -309,34 +355,22 @@ export default function CrearEditarEventoForm({
                 key={index}
                 className="relative flex flex-row items-center md:items-start"
               >
-                {/* Conector */}
                 {index !== nombresPasos.length - 1 && (
-                  <>
-                    {/* Línea horizontal para mobile */}
-                    {/* Línea vertical para md+ */}
-                    <span className="absolute hidden md:block left-3 top-6 h-[2rem] w-px bg-white/20" />
-                  </>
+                  <span className="absolute hidden md:block left-3 top-6 h-[2rem] w-px bg-white/20" />
                 )}
-
-                {/* Círculo con número o check */}
                 <div
                   className={`w-6 h-6 flex items-center justify-center rounded-full border-2 shrink-0
-          ${
-            paso === index
-              ? "border-orange-500 bg-orange-500 text-black"
-              : paso > index
-              ? "border-green-500 bg-green-500 text-black"
-              : "border-white/30 text-white"
-          }
-        `}
+                    ${
+                      paso === index
+                        ? "border-orange-500 bg-orange-500 text-black"
+                        : paso > index
+                        ? "border-green-500 bg-green-500 text-black"
+                        : "border-white/30 text-white"
+                    }`}
                 >
                   {paso > index ? "✓" : index + 1}
                 </div>
-
-                {/* Nombre del paso (solo visible en md+) */}
-                <div className="ml-2 text-xs lg:  text-xs hidden md:block">
-                  {nombre}
-                </div>
+                <div className="ml-2 text-xs hidden md:block">{nombre}</div>
               </div>
             ))}
           </div>
@@ -344,7 +378,7 @@ export default function CrearEditarEventoForm({
           {/* Contenido dinámico */}
           <div className="flex-1 space-y-6">
             <div className="flex items-center justify-between mb-2">
-              <div className="  text-xs font-medium">
+              <div className="text-xs font-medium">
                 Paso {paso + 1} de {pasos.length}:{" "}
                 <span className="text-orange-400">{nombresPasos[paso]}</span>
               </div>

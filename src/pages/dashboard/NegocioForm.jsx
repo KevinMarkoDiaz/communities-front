@@ -1,4 +1,4 @@
-// NegocioForm.jsx adaptado
+// src/pages/NegocioForm.jsx
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Formik, Form } from "formik";
@@ -46,7 +46,7 @@ export default function NegocioForm() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const user = useSelector((state) => state.auth.usuario); // Usuario autenticado
+  const user = useSelector((state) => state.auth.usuario);
   const comunidades = useSelector((state) => state.comunidades.lista);
   const categorias = useSelector((state) => state.categorias.data);
   const comunidadesLoaded = useSelector((state) => state.comunidades.loaded);
@@ -64,10 +64,8 @@ export default function NegocioForm() {
       website: "",
       socialMedia: { facebook: "", instagram: "", whatsapp: "" },
     },
-    // 🔵 NUEVO: flags de delivery
     isDeliveryOnly: false,
     primaryZip: "",
-
     location: {
       address: "",
       city: "",
@@ -99,7 +97,7 @@ export default function NegocioForm() {
   useEffect(() => {
     if (!categoriasLoaded) dispatch(fetchCategorias());
     if (!comunidadesLoaded) dispatch(fetchComunidades());
-  }, [dispatch]);
+  }, [dispatch, categoriasLoaded, comunidadesLoaded]);
 
   useEffect(() => {
     if (id) {
@@ -110,7 +108,6 @@ export default function NegocioForm() {
           setInitialValues((prev) => ({
             ...prev,
             ...negocio,
-            // 🔁 Mapea refs
             categories: (negocio.categories || []).map((cat) => cat._id || cat),
             community: negocio.community?._id || negocio.community,
             ownerId: negocio.owner?._id || negocio.owner,
@@ -118,10 +115,8 @@ export default function NegocioForm() {
               name: negocio.owner?.name || "",
               image: negocio.owner?.profileImage || "",
             },
-            // 🔵 Trae flags de delivery si existen en backend
             isDeliveryOnly: Boolean(negocio.isDeliveryOnly),
             primaryZip: negocio.primaryZip || "",
-            // Asegura shape de location esperado por el form
             location: {
               address: negocio.location?.address || "",
               city: negocio.location?.city || "",
@@ -129,8 +124,9 @@ export default function NegocioForm() {
               zipCode: negocio.location?.zipCode || "",
               country: negocio.location?.country || "",
               coordinates: {
+                // backend guarda [lng, lat]
                 lat:
-                  negocio.location?.coordinates?.coordinates?.[1] ?? // [lng, lat]
+                  negocio.location?.coordinates?.coordinates?.[1] ??
                   negocio.location?.coordinates?.lat ??
                   "",
                 lng:
@@ -150,19 +146,18 @@ export default function NegocioForm() {
           );
         })
         .finally(() => setCargando(false));
-    } else if (user?.role !== "admin") {
-      // Si no es admin y está creando, asignar su propio ID como dueño
+    } else if (user?.role !== "admin" && user?._id) {
       setInitialValues((prev) => ({
         ...prev,
         ownerId: user._id,
         ownerDisplay: { name: user.name, image: user.profileImage },
       }));
     }
-  }, [id, user]);
+  }, [id, user, dispatch]);
 
   if (cargando) return <SkeletonNegocioForm />;
 
-  // ✅ Validación condicional del PASO 3 (Ubicación)
+  // Validación por paso
   const validationSchema = [
     Yup.object({
       name: Yup.string().required("Nombre requerido"),
@@ -184,7 +179,6 @@ export default function NegocioForm() {
         }).nullable(),
       }).required(),
     }),
-    // 🧠 Aquí está la lógica delivery vs dirección
     Yup.object({
       isDeliveryOnly: Yup.boolean().default(false),
       primaryZip: Yup.string().when("isDeliveryOnly", {
@@ -197,7 +191,6 @@ export default function NegocioForm() {
       }),
       location: Yup.object().when("isDeliveryOnly", {
         is: true,
-        // Solo delivery: NO obligamos address/city/state/zip/country
         then: (schema) =>
           schema.shape({
             address: Yup.string().nullable(true),
@@ -206,11 +199,11 @@ export default function NegocioForm() {
             zipCode: Yup.string().nullable(true),
             country: Yup.string().nullable(true),
             coordinates: Yup.object({
-              lat: Yup.number().nullable(),
-              lng: Yup.number().nullable(),
+              // permisivo en el form; el backend recalcula si hace falta
+              lat: Yup.mixed().nullable(true),
+              lng: Yup.mixed().nullable(true),
             }).nullable(true),
           }),
-        // Presencial: dirección completa obligatoria
         otherwise: (schema) =>
           schema.shape({
             address: Yup.string().required("Dirección requerida"),
@@ -219,8 +212,8 @@ export default function NegocioForm() {
             zipCode: Yup.string().required("Código postal requerido"),
             country: Yup.string().required("País requerido"),
             coordinates: Yup.object({
-              lat: Yup.number().nullable(),
-              lng: Yup.number().nullable(),
+              lat: Yup.mixed().nullable(true),
+              lng: Yup.mixed().nullable(true),
             }).nullable(true),
           }),
       }),
@@ -283,6 +276,10 @@ export default function NegocioForm() {
     }),
   ];
 
+  // helper para limpiar ZIP a 5 dígitos
+  const cleanZip = (z) =>
+    (String(z || "").match(/\d/g) || []).join("").slice(0, 5);
+
   return (
     <Formik
       enableReinitialize
@@ -303,62 +300,86 @@ export default function NegocioForm() {
               featuredImage,
               profileImage,
               images,
-              ownerDisplay,
               ownerId,
-              ...rest
+              categories, // 👈 lo sacamos para no duplicarlo
+              ...restRaw
             } = values;
 
-            // 🧹 Ajuste seguro para delivery-only:
-            // Evitamos mandar dirección completa si es solo delivery (no rompe tu backend)
-            let safePayload = { ...rest };
+            // ❌ Nunca mandes owner (puede venir de ...negocio en initialValues)
+            const { owner, ...rest } = restRaw;
+
+            // 🧹 No mandes coordinates; el backend geocodifica
+            const safePayload = { ...rest };
+            if (safePayload?.location?.coordinates) {
+              delete safePayload.location.coordinates;
+            }
+
+            // Delivery-only: solo manda primaryZip válido y no mandes location
             if (rest.isDeliveryOnly) {
-              safePayload.location = {
-                // puedes dejar vacíos estos campos; el backend usará primaryZip
-                address: "",
-                city: "",
-                state: "",
-                zipCode: rest.location?.zipCode || "",
-                country: rest.location?.country || "",
-                coordinates: { lat: "", lng: "" },
-              };
+              const zip = cleanZip(rest.primaryZip || rest.location?.zipCode);
+              if (zip.length !== 5) {
+                dispatch(
+                  mostrarFeedback({
+                    message: "ZIP requerido de 5 dígitos",
+                    type: "error",
+                  })
+                );
+                setSubmitting(false);
+                return;
+              }
+              safePayload.primaryZip = zip;
+              delete safePayload.location; // importantísimo
+            } else {
+              // no delivery-only → no mandes primaryZip vacío
+              const z = cleanZip(safePayload.primaryZip);
+              if (z.length === 5) safePayload.primaryZip = z;
+              else delete safePayload.primaryZip;
             }
 
             const formData = new FormData();
 
+            // Imágenes principales
             if (featuredImage instanceof File)
               formData.append("featuredImage", featuredImage);
-            else formData.append("featuredImageUrl", featuredImage);
+            else if (featuredImage)
+              formData.append("featuredImageUrl", featuredImage);
 
             if (profileImage instanceof File)
               formData.append("profileImage", profileImage);
-            else formData.append("profileImageUrl", profileImage);
+            else if (profileImage)
+              formData.append("profileImageUrl", profileImage);
 
+            // Galería
             const existingImages = images.filter(
               (img) => typeof img === "string"
             );
             if (existingImages.length) {
               formData.append("existingImages", JSON.stringify(existingImages));
             }
-
             images
               .filter((img) => img instanceof File)
               .forEach((img) => formData.append("images", img));
 
-            const finalOwnerId = user?.role === "admin" ? ownerId : user._id;
+            // Owner SOLO en creación
+            const finalOwnerId = user?.role === "admin" ? ownerId : user?._id;
             if (!id && finalOwnerId) {
               formData.append("ownerId", finalOwnerId);
             }
 
-            const categoryIds = values.categories.map((id) => id.toString());
-            formData.append("categories", JSON.stringify(categoryIds));
+            // ✅ Categories SOLO como múltiples campos, NO en safePayload
+            const onlyIds = (categories || [])
+              .map(String)
+              .filter((x) => /^[0-9a-fA-F]{24}$/.test(x));
+            onlyIds.forEach((cid) => formData.append("categories", cid));
 
-            // 🔑 Mandamos todo lo demás (incluye isDeliveryOnly y primaryZip)
+            // 🚫 NO reinsertar 'categories' en safePayload
+            // Adjunta el resto del payload evitando vacíos
             Object.entries(safePayload).forEach(([key, val]) => {
+              if (val === "" || val === null || typeof val === "undefined")
+                return;
               formData.append(
                 key,
-                typeof val === "object"
-                  ? JSON.stringify(val)
-                  : String(val ?? "")
+                typeof val === "object" ? JSON.stringify(val) : String(val)
               );
             });
 
@@ -395,7 +416,7 @@ export default function NegocioForm() {
       }}
     >
       {({ validateForm }) => (
-        <Form className="flex flex-col md:flex-row gap-8 w-full max-w-5xl mx-auto p-4 md:p-8 md:rounded-2xl bg-black/40 backdrop-blur-lg  shadow-2xl text-white">
+        <Form className="flex flex-col md:flex-row gap-8 w-full max-w-5xl mx-auto p-4 md:p-8 md:rounded-2xl bg-black/40 backdrop-blur-lg shadow-2xl text-white">
           {/* Sidebar de pasos */}
           <div className="flex flex-row md:flex-col w-full md:w-20 lg:w-36 space-x-4 md:space-x-0 md:space-y-8">
             {nombresPasos.map((nombre, index) => (
@@ -412,20 +433,19 @@ export default function NegocioForm() {
                     />
                   </>
                 )}
-
                 <div
                   className={`flex items-center justify-center w-6 h-6 rounded-full border-2 shrink-0
-                  ${
-                    paso === index
-                      ? "border-orange-500 bg-orange-500 text-black"
-                      : paso > index
-                      ? "border-green-500 bg-green-500 text-black"
-                      : "border-white/30 text-white"
-                  }`}
+                    ${
+                      paso === index
+                        ? "border-orange-500 bg-orange-500 text-black"
+                        : paso > index
+                        ? "border-green-500 bg-green-500 text-black"
+                        : "border-white/30 text-white"
+                    }`}
                 >
                   {paso > index ? "✓" : index + 1}
                 </div>
-                <div className="ml-2 text-xs lg:  text-xs hidden md:block">
+                <div className="ml-2 text-xs lg: text-xs hidden md:block">
                   {nombre}
                 </div>
               </div>
@@ -435,16 +455,14 @@ export default function NegocioForm() {
           {/* Paso actual */}
           <div className="flex-1 space-y-6">
             <div className="flex items-center justify-between mb-2">
-              <div className="  text-xs font-medium">
+              <div className=" text-xs font-medium">
                 Paso {paso + 1} de {steps.length}:{" "}
                 <span className="text-orange-400">{nombresPasos[paso]}</span>
               </div>
               <div className="w-1/3 h-2 bg-white/10 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-orange-500 transition-all"
-                  style={{
-                    width: `${((paso + 1) / steps.length) * 100}%`,
-                  }}
+                  style={{ width: `${((paso + 1) / steps.length) * 100}%` }}
                 />
               </div>
             </div>
@@ -459,8 +477,6 @@ export default function NegocioForm() {
               >
                 <PasoActual
                   {...(paso === 0 ? { categorias, comunidades } : {})}
-                  // 🏷️ Si tu Paso3Ubicacion soporta banderas/props, aquí puedes pasarle una:
-                  // enableDeliveryToggle
                   soloLectura={paso === 4 && user?.role !== "admin"}
                 />
               </motion.div>
@@ -485,7 +501,8 @@ export default function NegocioForm() {
                     if (paso < steps.length - 1) {
                       setPaso((p) => p + 1);
                     } else {
-                      document.querySelector("form").requestSubmit();
+                      // envía el formulario
+                      document.querySelector("form")?.requestSubmit();
                     }
                   }
                 }}
