@@ -19,7 +19,7 @@ import NotificationButton from "./badges/NotificationButton";
 import { logout } from "../store/authSlice";
 import BotonPublicar from "./nav/BotonPublicar";
 import useDeviceSize from "../hooks/useDeviceSize";
-import { toggleMenu } from "../store/mobileMenuSlice";
+import { cerrarMenu, toggleMenu } from "../store/mobileMenuSlice";
 import InboxButton from "./mensajes/InboxButton";
 import { RiAdvertisementLine } from "react-icons/ri";
 
@@ -182,11 +182,6 @@ export default function Header() {
               </Link>
             ))}
 
-            <div className="md:flex">
-              {usuario && <InboxButton />}
-              {usuario && isDesktop && <NotificationButton />}
-            </div>
-
             {/* Perfil */}
             <Link
               to={usuario ? "/dashboard/perfil" : "/login"}
@@ -202,9 +197,25 @@ export default function Header() {
 
           {/* Botón menú MOBILE */}
           <div className="flex items-center gap-2 md:hidden">
+            {usuario && (
+              <InboxButton
+                className={`text-md p-2 rounded transition ${
+                  mobileOpen ? "text-white" : "text-black"
+                }`}
+                onClick={() => dispatch(cerrarMenu())}
+              />
+            )}
+            {usuario && (
+              <NotificationButton
+                className={`text-md p-2 rounded transition ${
+                  mobileOpen ? "text-white" : "text-black"
+                }`}
+                onClick={() => dispatch(cerrarMenu())}
+              />
+            )}
             <button
               onClick={() => dispatch(toggleMenu())}
-              className={`text-xs p-2 rounded transition ${
+              className={`text-md p-2 rounded transition ${
                 mobileOpen ? "text-white" : "text-black"
               }`}
               aria-label="Abrir menú"
@@ -282,7 +293,7 @@ export default function Header() {
                 onClick={() => dispatch(toggleMenu())}
                 className="flex items-center gap-3 text-base font-medium hover:text-yellow-300 transition relative z-10"
               >
-                <MdPerson className="text-xs" />
+                <MdPerson className="text-sm" />
                 {usuario ? "Mi Perfil" : "Iniciar Sesión"}
               </Link>
 
@@ -291,7 +302,7 @@ export default function Header() {
                 onClick={() => dispatch(toggleMenu())}
                 className="flex items-center gap-3 text-base font-medium hover:text-yellow-300 transition relative z-10"
               >
-                <MdStore className="text-xs" />
+                <MdStore className="text-sm" />
                 Negocios
               </Link>
 
@@ -300,7 +311,7 @@ export default function Header() {
                 onClick={() => dispatch(toggleMenu())}
                 className="flex items-center gap-3 text-base font-medium hover:text-yellow-300 transition relative z-10"
               >
-                <MdEvent className="text-xs" />
+                <MdEvent className="text-sm" />
                 Eventos
               </Link>
 
@@ -309,7 +320,7 @@ export default function Header() {
                 onClick={() => dispatch(toggleMenu())}
                 className="flex items-center gap-3 text-base font-medium hover:text-yellow-300 transition relative z-10"
               >
-                <MdOutlineAdsClick className="text-xs" />
+                <MdOutlineAdsClick className="text-sm" />
                 Mis banners
               </Link>
 
@@ -318,7 +329,7 @@ export default function Header() {
                 onClick={() => dispatch(toggleMenu())}
                 className="flex items-center gap-3 text-base font-medium hover:text-yellow-300 transition relative z-10"
               >
-                <MdLocalOffer className="text-xs" />
+                <MdLocalOffer className="text-sm" />
                 Promociones
               </Link>
 
@@ -329,7 +340,7 @@ export default function Header() {
                     onClick={() => dispatch(toggleMenu())}
                     className="flex items-center gap-3 text-base font-medium hover:text-yellow-300 transition relative z-10"
                   >
-                    <MdGroups className="text-xs" />
+                    <MdGroups className="text-sm" />
                     Comunidades
                   </Link>
 
@@ -338,7 +349,7 @@ export default function Header() {
                     onClick={() => dispatch(toggleMenu())}
                     className="flex items-center gap-3 text-base font-medium hover:text-yellow-300 transition relative z-10"
                   >
-                    <RiAdvertisementLine className="text-xs" />
+                    <RiAdvertisementLine className="text-sm" />
                     Ads / Banners
                   </Link>
                 </>
@@ -378,16 +389,17 @@ export default function Header() {
           </div>
 
           {/* Logo decorativo */}
-          <div className="mt-6 flex justify-center relative z-10">
-            <div className="relative inline-block">
+          <div className="flex justify-center mt-8 relative z-10">
+            <div className="relative inline-block orbit-wrapper">
               <img
                 src={Icono}
                 alt="Logo Communities"
-                className="h-24 opacity-80 relative z-20"
+                className="h-24 opacity-90 relative z-20 logo-pulse select-none pointer-events-none"
+                draggable="false"
               />
-              <span className="orbit-sphere sphere1"></span>
-              <span className="orbit-sphere sphere2"></span>
-              <span className="orbit-sphere sphere3"></span>
+              <span className="orbit-sphere sphere1" />
+              <span className="orbit-sphere sphere2" />
+              <span className="orbit-sphere sphere3" />
             </div>
           </div>
 

@@ -30,7 +30,7 @@ export default function StartConversationButton({ entityType, entityId }) {
         entityId,
       });
       const conversationId = res.data._id;
-      navigate(`/inbox/conversation/${conversationId}`);
+      navigate(`/dashboard/inbox/conversation/${conversationId}`);
     } catch (error) {
       dispatch(
         mostrarFeedback({

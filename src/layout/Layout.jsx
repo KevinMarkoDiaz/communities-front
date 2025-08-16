@@ -35,13 +35,7 @@ export default function Layout() {
     "/inbox/conversation",
   ];
 
-  const hiddenSideAdsRoutes = ["/comunidades"];
-
   const hideAds = hiddenAdsRoutes.some((route) =>
-    location.pathname.startsWith(route)
-  );
-
-  const hideSideAds = hiddenSideAdsRoutes.some((route) =>
     location.pathname.startsWith(route)
   );
 
@@ -75,7 +69,7 @@ export default function Layout() {
           <Outlet />
         </div>
 
-        {!hideAds && !hideSideAds && (
+        {!hideAds && (
           <div className="hidden lg:block">
             <StickyAds communityId={selectedCommunityId} />
           </div>
