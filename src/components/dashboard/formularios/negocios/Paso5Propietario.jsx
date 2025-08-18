@@ -13,16 +13,16 @@ export default function Paso5Propietario() {
   const isAdmin = usuario?.role === "admin";
   const isBusinessOwner = usuario?.role === "business_owner";
 
-  // Si es business_owner, setea automáticamente
+  // Si es business_owner o user, setea automáticamente
   useEffect(() => {
-    if (isBusinessOwner && usuario?._id) {
+    if (!isAdmin && usuario?._id) {
       setFieldValue("ownerId", usuario._id);
       setFieldValue("ownerDisplay", {
         name: usuario.name,
         image: usuario.profileImage || "",
       });
     }
-  }, [usuario, isBusinessOwner, setFieldValue]);
+  }, [usuario, isAdmin, setFieldValue]);
 
   const handleBuscar = async () => {
     if (!search.trim()) return;
@@ -53,23 +53,20 @@ export default function Paso5Propietario() {
         Propietario del negocio
       </h3>
 
-      {isBusinessOwner && (
-        <div>
-          <label className="block  text-xs font-medium text-white mb-1">
-            Nombre del propietario
-          </label>
-          <input
-            value={values.ownerDisplay.name}
-            disabled
-            className="form-input w-full bg-white/10 border border-white/30 rounded-lg h-12 px-4 text-gray-300 cursor-not-allowed"
-          />
+      {/* Caso no admin */}
+      {!isAdmin && (
+        <div className="p-3 bg-black/30 border border-white/20 rounded-lg text-sm text-white">
+          Este negocio estará relacionado a tu cuenta en Communidades
+          <br />
+          <span className="font-semibold">{usuario?.name}</span>
         </div>
       )}
 
+      {/* Caso admin */}
       {isAdmin && (
         <div className="space-y-3">
           <div>
-            <label className="block  text-xs font-medium text-white mb-1">
+            <label className="block text-xs font-medium text-white mb-1">
               Buscar usuario por nombre
             </label>
             <div className="flex gap-2">
@@ -109,7 +106,7 @@ export default function Paso5Propietario() {
 
       {values.ownerDisplay?.name && (
         <div>
-          <p className="  text-xs text-white">
+          <p className="text-xs text-white">
             <strong>Seleccionado:</strong> {values.ownerDisplay.name}
           </p>
           {values.ownerDisplay.image && (

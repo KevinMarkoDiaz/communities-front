@@ -163,10 +163,13 @@ export default function NegocioForm() {
       name: Yup.string().required("Nombre requerido"),
       description: Yup.string().required("Descripción requerida"),
       categories: Yup.array()
-        .of(Yup.string().matches(/^[0-9a-fA-F]{24}$/))
-        .min(1, "Selecciona al menos una categoría"),
+        .of(
+          Yup.string().matches(/^[0-9a-fA-F]{24}$/, "ID de categoría inválido")
+        )
+        .min(2, "Selecciona al menos dos categorías"),
       community: Yup.string().required("Comunidad requerida"),
     }),
+
     Yup.object({
       contact: Yup.object({
         phone: Yup.string().required("Teléfono requerido"),
@@ -294,124 +297,172 @@ export default function NegocioForm() {
           return;
         }
 
-        if (paso === steps.length - 1) {
-          try {
-            const {
-              featuredImage,
-              profileImage,
-              images,
-              ownerId,
-              categories, // 👈 lo sacamos para no duplicarlo
-              ...restRaw
-            } = values;
+        // Solo enviar al guardar en el último paso
+        if (paso !== steps.length - 1) {
+          setSubmitting(false);
+          return;
+        }
 
-            // ❌ Nunca mandes owner (puede venir de ...negocio en initialValues)
-            const { owner, ...rest } = restRaw;
+        try {
+          const {
+            featuredImage,
+            profileImage,
+            images, // mezcla de strings (URLs) y Files
+            ownerId,
+            categories, // lo enviamos por separado como múltiples claves
+            ...restRaw
+          } = values;
 
-            // 🧹 No mandes coordinates; el backend geocodifica
-            const safePayload = { ...rest };
-            if (safePayload?.location?.coordinates) {
-              delete safePayload.location.coordinates;
-            }
+          // Nunca mandes owner desde el front
+          const { owner, ...rest } = restRaw;
 
-            // Delivery-only: solo manda primaryZip válido y no mandes location
-            if (rest.isDeliveryOnly) {
-              const zip = cleanZip(rest.primaryZip || rest.location?.zipCode);
-              if (zip.length !== 5) {
-                dispatch(
-                  mostrarFeedback({
-                    message: "ZIP requerido de 5 dígitos",
-                    type: "error",
-                  })
-                );
-                setSubmitting(false);
-                return;
-              }
-              safePayload.primaryZip = zip;
-              delete safePayload.location; // importantísimo
-            } else {
-              // no delivery-only → no mandes primaryZip vacío
-              const z = cleanZip(safePayload.primaryZip);
-              if (z.length === 5) safePayload.primaryZip = z;
-              else delete safePayload.primaryZip;
-            }
+          // Claves que NO deben viajar al backend en update
+          const DROP_KEYS = new Set([
+            "_id",
+            "id",
+            "createdAt",
+            "updatedAt",
+            "__v",
+            "ownerDisplay",
+            "likes",
+            "feedback",
+            "isPremium",
+            "locationPrecision",
+          ]);
 
-            const formData = new FormData();
+          // Construye payload base y limpia campos no permitidos
+          const safePayload = { ...rest };
+          Object.keys(safePayload).forEach((k) => {
+            if (DROP_KEYS.has(k)) delete safePayload[k];
+          });
 
-            // Imágenes principales
-            if (featuredImage instanceof File)
-              formData.append("featuredImage", featuredImage);
-            else if (featuredImage)
-              formData.append("featuredImageUrl", featuredImage);
+          // No mandes coordinates; el backend recalcula
+          if (safePayload?.location?.coordinates) {
+            delete safePayload.location.coordinates;
+          }
 
-            if (profileImage instanceof File)
-              formData.append("profileImage", profileImage);
-            else if (profileImage)
-              formData.append("profileImageUrl", profileImage);
+          // Delivery-only: ZIP obligatorio y NO mandar location
+          const cleanZip = (z) =>
+            (String(z || "").match(/\d/g) || []).join("").slice(0, 5);
 
-            // Galería
-            const existingImages = images.filter(
-              (img) => typeof img === "string"
+          if (safePayload.isDeliveryOnly) {
+            const zip = cleanZip(
+              safePayload.primaryZip || safePayload.location?.zipCode
             );
-            if (existingImages.length) {
-              formData.append("existingImages", JSON.stringify(existingImages));
-            }
-            images
-              .filter((img) => img instanceof File)
-              .forEach((img) => formData.append("images", img));
-
-            // Owner SOLO en creación
-            const finalOwnerId = user?.role === "admin" ? ownerId : user?._id;
-            if (!id && finalOwnerId) {
-              formData.append("ownerId", finalOwnerId);
-            }
-
-            // ✅ Categories SOLO como múltiples campos, NO en safePayload
-            const onlyIds = (categories || [])
-              .map(String)
-              .filter((x) => /^[0-9a-fA-F]{24}$/.test(x));
-            onlyIds.forEach((cid) => formData.append("categories", cid));
-
-            // 🚫 NO reinsertar 'categories' en safePayload
-            // Adjunta el resto del payload evitando vacíos
-            Object.entries(safePayload).forEach(([key, val]) => {
-              if (val === "" || val === null || typeof val === "undefined")
-                return;
-              formData.append(
-                key,
-                typeof val === "object" ? JSON.stringify(val) : String(val)
-              );
-            });
-
-            if (id) {
-              await dispatch(updateBusinessThunk({ id, formData })).unwrap();
+            if (zip.length !== 5) {
               dispatch(
                 mostrarFeedback({
-                  message: "Negocio actualizado con éxito",
-                  type: "success",
+                  message:
+                    "ZIP requerido de 5 dígitos para negocios solo delivery",
+                  type: "error",
                 })
               );
-            } else {
-              await dispatch(createBusinessThunk(formData)).unwrap();
-              dispatch(
-                mostrarFeedback({
-                  message: "Negocio creado con éxito",
-                  type: "success",
-                })
-              );
+              setSubmitting(false);
+              return;
             }
+            safePayload.primaryZip = zip;
+            delete safePayload.location; // el back geocodifica por ZIP
+          } else {
+            // No delivery-only → limpia primaryZip si no es válido
+            const z = cleanZip(safePayload.primaryZip);
+            if (z.length === 5) safePayload.primaryZip = z;
+            else delete safePayload.primaryZip;
+          }
 
-            navigate("/dashboard/mis-negocios");
-          } catch (err) {
+          // Asegura tipos boolean que pueden venir como string en el form
+          if (typeof safePayload.isVerified !== "undefined") {
+            safePayload.isVerified = Boolean(safePayload.isVerified);
+          }
+          if (typeof safePayload.isDeliveryOnly !== "undefined") {
+            safePayload.isDeliveryOnly = Boolean(safePayload.isDeliveryOnly);
+          }
+
+          const formData = new FormData();
+
+          // Portada (usar SIEMPRE la misma clave "featuredImage")
+          if (featuredImage instanceof File) {
+            formData.append("featuredImage", featuredImage);
+          } else if (
+            typeof featuredImage === "string" &&
+            featuredImage.trim()
+          ) {
+            // si no cambió, enviamos la URL para que el back la conserve
+            formData.append("featuredImage", featuredImage.trim());
+          }
+
+          // Perfil (usar SIEMPRE la misma clave "profileImage")
+          if (profileImage instanceof File) {
+            formData.append("profileImage", profileImage);
+          } else if (typeof profileImage === "string" && profileImage.trim()) {
+            formData.append("profileImage", profileImage.trim());
+          }
+
+          // Galería: manda EXACTAMENTE lo que el usuario dejó (strings)
+          // + los Files que agregó; el back respetará existingImages como set final
+          const existingImages = (images || []).filter(
+            (img) => typeof img === "string"
+          );
+          formData.append("existingImages", JSON.stringify(existingImages));
+
+          (images || [])
+            .filter((img) => img instanceof File)
+            .forEach((file) => formData.append("images", file));
+
+          // Owner SOLO en creación
+          const finalOwnerId = user?.role === "admin" ? ownerId : user?._id;
+          if (!id && finalOwnerId) {
+            formData.append("ownerId", finalOwnerId);
+          }
+
+          // Categorías: múltiple clave "categories"
+          const onlyIds = (categories || [])
+            .map(String)
+            .filter((x) => /^[0-9a-fA-F]{24}$/.test(x));
+          onlyIds.forEach((cid) => formData.append("categories", cid));
+
+          // Adjunta el resto del payload evitando vacíos y serializando objetos
+          Object.entries(safePayload).forEach(([key, val]) => {
+            if (val === "" || val === null || typeof val === "undefined")
+              return;
+            formData.append(
+              key,
+              typeof val === "object" ? JSON.stringify(val) : String(val)
+            );
+          });
+
+          // (Opcional) Debug del FormData:
+          // for (const [k, v] of formData.entries()) {
+          //   console.log("FD >", k, v instanceof File ? `File(${v.name})` : v);
+          // }
+
+          if (id) {
+            await dispatch(updateBusinessThunk({ id, formData })).unwrap();
             dispatch(
               mostrarFeedback({
-                message: err?.message || "Error al guardar el negocio",
-                type: "error",
+                message: "Negocio actualizado con éxito",
+                type: "success",
               })
             );
-          } finally {
-            setSubmitting(false);
+          } else {
+            await dispatch(createBusinessThunk(formData)).unwrap();
+            dispatch(
+              mostrarFeedback({
+                message: "Negocio creado con éxito",
+                type: "success",
+              })
+            );
           }
+
+          navigate("/dashboard/mis-negocios");
+        } catch (err) {
+          dispatch(
+            mostrarFeedback({
+              message: err?.message || "Error al guardar el negocio",
+              type: "error",
+            })
+          );
+        } finally {
+          setSubmitting(false);
         }
       }}
     >
