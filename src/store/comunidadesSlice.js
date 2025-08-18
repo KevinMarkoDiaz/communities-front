@@ -5,6 +5,7 @@ import {
   createCommunity,
   updateCommunity,
   getCommunityById,
+  deleteCommunity, // 👈 NUEVO
 } from "../api/communityApi";
 import { mostrarFeedback } from "./feedbackSlice";
 import { resetApp } from "./appActions";
@@ -76,17 +77,11 @@ export const fetchCommunityById = createAsyncThunk(
   }
 );
 
-// 🟢 Crear comunidad (con feedback "loading" al iniciar)
+// 🟢 Crear comunidad
 export const createCommunityThunk = createAsyncThunk(
   "comunidades/create",
   async (formData, { rejectWithValue, dispatch }) => {
-    dispatch(
-      mostrarFeedback({
-        message: "Procesando...",
-        type: "loading",
-      })
-    );
-
+    dispatch(mostrarFeedback({ message: "Procesando...", type: "loading" }));
     try {
       const response = await createCommunity(formData);
       dispatch(
@@ -108,17 +103,11 @@ export const createCommunityThunk = createAsyncThunk(
   }
 );
 
-// 🟡 Actualizar comunidad (con feedback "loading" al iniciar)
+// 🟡 Actualizar comunidad
 export const updateCommunityThunk = createAsyncThunk(
   "comunidades/update",
   async ({ id, formData }, { rejectWithValue, dispatch }) => {
-    dispatch(
-      mostrarFeedback({
-        message: "Procesando...",
-        type: "loading",
-      })
-    );
-
+    dispatch(mostrarFeedback({ message: "Procesando...", type: "loading" }));
     try {
       const response = await updateCommunity(id, formData);
       dispatch(
@@ -133,6 +122,33 @@ export const updateCommunityThunk = createAsyncThunk(
         mostrarFeedback({
           message:
             err?.response?.data?.message || "Error al actualizar comunidad",
+          type: "error",
+        })
+      );
+      return rejectWithValue(err?.response?.data?.message || err.message);
+    }
+  }
+);
+
+// 🔴 Eliminar comunidad (NUEVO)
+export const deleteComunidad = createAsyncThunk(
+  "comunidades/delete",
+  async (id, { rejectWithValue, dispatch }) => {
+    dispatch(mostrarFeedback({ message: "Eliminando...", type: "loading" }));
+    try {
+      const resp = await deleteCommunity(id);
+      dispatch(
+        mostrarFeedback({
+          message: resp?.msg || "Comunidad eliminada",
+          type: "success",
+        })
+      );
+      return { id };
+    } catch (err) {
+      dispatch(
+        mostrarFeedback({
+          message:
+            err?.response?.data?.message || "Error al eliminar comunidad",
           type: "error",
         })
       );
@@ -219,6 +235,14 @@ const comunidadesSlice = createSlice({
         state.loadingDetalle = false;
         state.error = action.payload;
         state.comunidadActual = null;
+      })
+
+      // 🔴 Delete comunidad
+      .addCase(deleteComunidad.fulfilled, (state, action) => {
+        const id = action.payload.id;
+        state.lista = state.lista.filter((c) => c._id !== id);
+        state.misComunidades = state.misComunidades.filter((c) => c._id !== id);
+        if (state.comunidadActual?._id === id) state.comunidadActual = null;
       });
   },
 });

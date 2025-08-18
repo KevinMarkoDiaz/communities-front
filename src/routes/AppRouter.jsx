@@ -128,6 +128,7 @@ const router = createBrowserRouter([
               { path: "", element: <Comunidades /> },
               { path: "crear", element: <CrearComunidad /> },
               { path: ":id/editar", element: <EditarComunidad /> },
+              { path: ":id", element: <DashboardCommunityDetail /> }, // 📌 NUEVO
             ],
           },
           {
@@ -216,10 +217,7 @@ const router = createBrowserRouter([
           // Comunidades del usuario
           {
             path: "comunidades",
-            children: [
-              { path: "", element: <Comunidades /> },
-              { path: ":id", element: <DashboardCommunityDetail /> }, // 📌 NUEVO
-            ],
+            children: [{ path: "", element: <Comunidades /> }],
           },
         ],
       },

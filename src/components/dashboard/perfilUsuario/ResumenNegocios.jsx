@@ -1,43 +1,80 @@
+// components/dashboard/negocios/ResumenNegocios.jsx
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { FiEdit2, FiTrash2, FiChevronUp } from "react-icons/fi";
+
 import ConfirmDeleteModal from "../../ConfirmDeleteModal";
+import { deleteNegocio } from "../../../store/negociosSlice";
+import { mostrarFeedback } from "../../../store/feedbackSlice";
 
 export default function ResumenNegocios({ negocios = [], onDelete }) {
   const navigate = useNavigate();
-  const [visibleCount, setVisibleCount] = useState(5);
+  const dispatch = useDispatch();
 
+  const [visibleCount, setVisibleCount] = useState(5);
   const [showModal, setShowModal] = useState(false);
   const [negocioSeleccionado, setNegocioSeleccionado] = useState(null);
+  const negociosMostrados = (negocios || []).slice(0, visibleCount);
 
   const handleEditar = (id) => {
     navigate(`/dashboard/mis-negocios/${id}/editar`);
   };
 
-  const handleEliminar = (negocio) => {
+  const handleEliminarClick = (negocio) => {
     setNegocioSeleccionado(negocio);
     setShowModal(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!negocioSeleccionado?._id) return;
+    const id = negocioSeleccionado._id;
+
+    try {
+      if (typeof onDelete === "function") {
+        // Deja que el padre controle la actualización de la lista
+        await onDelete(id);
+      } else {
+        // Autogestionado con Redux
+        await dispatch(deleteNegocio(id)).unwrap();
+      }
+
+      dispatch(
+        mostrarFeedback({
+          message: `Negocio "${negocioSeleccionado.name}" eliminado`,
+          type: "success",
+        })
+      );
+    } catch (error) {
+      dispatch(
+        mostrarFeedback({
+          message: "Error al eliminar negocio",
+          type: "error",
+        })
+      );
+    } finally {
+      setShowModal(false);
+      setNegocioSeleccionado(null);
+    }
   };
 
   if (!negocios || negocios.length === 0) {
     return (
       <div className="bg-[#F7F7F7] h-full p-4 md:p-6 rounded-2xl flex flex-col items-center justify-center text-center gap-4">
         <h3 className="text-gray-600 text-lg font-bold pb-2">Tus negocios</h3>
-        <p className="  text-xs text-gray-500">
+        <p className="text-xs text-gray-500">
           No tienes negocios registrados aún. ¡Es momento de dar a conocer tu
           proyecto!
         </p>
         <Link
           to="/dashboard/mis-negocios/crear"
-          className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white  text-xs font-medium px-4 py-2 rounded-full transition cursor-pointer"
+          className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white text-xs font-medium px-4 py-2 rounded-full transition cursor-pointer"
         >
           ✨ Crear mi primer negocio
         </Link>
       </div>
     );
   }
-
-  const negociosMostrados = negocios.slice(0, visibleCount);
 
   return (
     <>
@@ -67,7 +104,7 @@ export default function ResumenNegocios({ negocios = [], onDelete }) {
               </div>
 
               <div className="flex-1 min-w-0">
-                <p className="  text-xs font-medium text-[#3F5374] truncate">
+                <p className="text-xs font-medium text-[#3F5374] truncate">
                   {negocio.name}
                 </p>
               </div>
@@ -85,7 +122,7 @@ export default function ResumenNegocios({ negocios = [], onDelete }) {
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleEliminar(negocio);
+                    handleEliminarClick(negocio);
                   }}
                   className="p-1 text-gray-500 hover:text-red-500 transition"
                 >
@@ -105,7 +142,7 @@ export default function ResumenNegocios({ negocios = [], onDelete }) {
             {visibleCount < negocios.length && (
               <button
                 onClick={() => setVisibleCount((prev) => prev + 5)}
-                className="inline-flex items-center gap-1  text-xs font-medium text-orange-600 hover:text-orange-700 transition"
+                className="inline-flex items-center gap-1 text-xs font-medium text-orange-600 hover:text-orange-700 transition"
               >
                 Ver más
               </button>
@@ -113,7 +150,7 @@ export default function ResumenNegocios({ negocios = [], onDelete }) {
             {visibleCount > 5 && (
               <button
                 onClick={() => setVisibleCount(5)}
-                className="inline-flex items-center gap-1  text-xs font-medium text-orange-600 hover:text-orange-700 transition"
+                className="inline-flex items-center gap-1 text-xs font-medium text-orange-600 hover:text-orange-700 transition"
               >
                 <FiChevronUp className="w-4 h-4" />
                 Ver menos
@@ -123,15 +160,12 @@ export default function ResumenNegocios({ negocios = [], onDelete }) {
         )}
       </div>
 
-      {/* ✅ Modal de confirmación */}
+      {/* Modal de confirmación */}
       {negocioSeleccionado && (
         <ConfirmDeleteModal
           open={showModal}
           onClose={() => setShowModal(false)}
-          onConfirm={() => {
-            setShowModal(false);
-            onDelete(negocioSeleccionado._id);
-          }}
+          onConfirm={handleConfirmDelete}
           entityName={negocioSeleccionado.name}
           title="Eliminar negocio"
           description="Para confirmar, escribe el nombre exacto del negocio:"

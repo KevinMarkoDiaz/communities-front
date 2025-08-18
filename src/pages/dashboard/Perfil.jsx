@@ -114,7 +114,7 @@ export default function PerfilPage() {
                 {
                   label: "Tus comunidades",
                   value: comunidades?.length || 0,
-                  path: "/dashboard/mis-comunidades",
+                  path: "/dashboard-admin/mis-comunidades",
                   requireAdmin: true,
                 },
                 {
