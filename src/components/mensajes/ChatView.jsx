@@ -29,17 +29,21 @@ function formatTimeAgo(dateString) {
 const ChatView = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const { items, loading, error, sending } = useSelector(
-    (state) => state.messages
-  );
-  const { usuario } = useSelector((state) => state.auth);
-  const { items: conversations } = useSelector((state) => state.conversations);
-  const { negocios } = useSelector((state) => state.comunidadSeleccionada);
-  const { data: eventos } = useSelector((state) => state.eventos);
+
+  const { items, loading, error, sending } = useSelector((s) => s.messages);
+  const { usuario } = useSelector((s) => s.auth);
+  const { items: conversations = [] } =
+    useSelector((s) => s.conversations) || {};
+  const { negocios } = useSelector((s) => s.comunidadSeleccionada) || {};
+  const { data: eventos } = useSelector((s) => s.eventos) || {};
 
   const [text, setText] = useState("");
   const messagesEndRef = useRef(null);
+  const firstNonEmptyRefetched = useRef(false);
 
+  const myId = usuario?._id || usuario?.id;
+
+  // 🔄 Carga mensajes y conversaciones siempre al montar / id cambia
   useEffect(() => {
     dispatch(fetchMessages(id));
     dispatch(fetchConversations());
@@ -49,54 +53,85 @@ const ChatView = () => {
     };
   }, [dispatch, id]);
 
+  // 👀 Scroll al final + marcar leídos (con checks defensivos)
   useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-    }
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
 
-    items.forEach((msg) => {
-      if (!msg.isRead && !isMyMessage(msg)) {
+    items?.forEach?.((msg) => {
+      if (!msg?.isRead && msg?.sender?._id !== myId) {
         dispatch(markMessageRead(msg._id));
       }
     });
-  }, [items, dispatch]);
+  }, [items, dispatch, myId]);
 
+  // ✉️ Enviar
   const handleSend = async (e) => {
     e.preventDefault();
     if (!text.trim()) return;
     await dispatch(sendMessage({ conversationId: id, text }));
     setText("");
+    // después de enviar, pedimos conversaciones otra vez (puede que ahora ya exista)
+    dispatch(fetchConversations());
   };
 
-  const isMyMessage = (msg) => {
-    return msg?.sender?._id === usuario?.id;
-  };
+  const isMyMessage = (msg) => msg?.sender?._id === myId;
 
+  // 📌 Buscar la conversación; puede NO existir todavía
   const conversation = conversations.find((c) => c._id === id);
 
-  // 🧠 Determinar si el usuario es quien inició la conversación
-  const isInitiator = conversation?.user?._id === usuario?.id;
+  // 🧠 Quien inició (si aún no hay convo, asumimos false para evitar crashear)
+  const isInitiator = conversation?.user?._id === myId;
 
   const participant = isInitiator ? conversation?.entityId : conversation?.user;
 
-  // 🔍 Buscar entidad (si aplica)
+  // 🔍 Resolver entidad (si aplica y si ya tenemos datos)
   let entity = null;
-  if (conversation?.tipo === "business") {
-    entity = negocios?.find((n) => n._id === conversation?.entityId);
-  } else if (conversation?.tipo === "event") {
-    entity = eventos?.find((e) => e.id === conversation?.entityId);
+  const tipo = conversation?.tipo; // 'business' | 'event' | undefined al inicio
+  if (tipo === "business") {
+    entity = negocios?.find?.((n) => n._id === conversation?.entityId) || null;
+  } else if (tipo === "event") {
+    entity =
+      eventos?.find?.((e) => (e._id || e.id) === conversation?.entityId) ||
+      null;
   }
 
-  const tipoLabel = conversation?.tipo === "business" ? "Negocio" : "Evento";
-  const entityLabel =
-    conversation?.tipo === "business"
-      ? entity?.name || "Negocio"
-      : entity?.title || "Evento";
+  const tipoLabel =
+    tipo === "business"
+      ? "Negocio"
+      : tipo === "event"
+      ? "Evento"
+      : "Conversación nueva";
 
+  const entityLabel =
+    tipo === "business"
+      ? entity?.name || "Negocio"
+      : tipo === "event"
+      ? entity?.title || "Evento"
+      : "Conversación";
+
+  const placeholderAvatar = "/avatar-placeholder.png";
+  const placeholderCover = "/placeholder.svg";
+
+  const participantAvatar = participant?.profileImage || placeholderAvatar;
   const entityImage =
-    conversation?.tipo === "business"
-      ? entity?.profileImage ?? "/placeholder.svg"
-      : entity?.featuredImage ?? "/placeholder.svg";
+    tipo === "business"
+      ? entity?.profileImage ?? placeholderCover
+      : tipo === "event"
+      ? entity?.featuredImage ?? placeholderCover
+      : placeholderCover;
+
+  // 🔁 Refetch suave cuando llegan los primeros mensajes (caso: convo creada server-side después del 1er send)
+  useEffect(() => {
+    if (
+      !firstNonEmptyRefetched.current &&
+      Array.isArray(items) &&
+      items.length > 0 &&
+      !conversation
+    ) {
+      firstNonEmptyRefetched.current = true;
+      dispatch(fetchConversations());
+    }
+  }, [items, conversation, dispatch]);
 
   if (loading) {
     return (
@@ -117,45 +152,52 @@ const ChatView = () => {
         </h2>
 
         {/* Cabecera del chat */}
-        <div className="flex flex-col p-3 gap-3 rounded-lg border border-gray-200 bg-white max-w-[90vw]">
-          {/* Participante visible */}
-          <div className="flex items-center gap-2 ">
-            <img
-              src={
-                isInitiator
-                  ? entityImage
-                  : participant?.profileImage || "/avatar-placeholder.png"
-              }
-              alt="Participante"
-              className="w-12 h-12 rounded-full object-cover"
-            />
-            <div className="flex flex-col">
-              {isInitiator && (
-                <span className="text-xs text-gray-400">{tipoLabel}:</span>
-              )}
-              <p className="text-xs text-gray-700">
-                {isInitiator ? entityLabel : participant?.name || "Usuario"}
-              </p>
-            </div>
-          </div>
-
-          {/* Info adicional (solo si el otro participante es una entidad) */}
-          {isInitiator && (
-            <div className="flex items-center gap-2">
+        {/* Cabecera del chat (mostrar solo cuando ya hay conversación y al menos 1 mensaje) */}
+        {conversation && (items?.length || 0) > 0 ? (
+          <div className="flex flex-col p-3 gap-3 rounded-lg border border-gray-200 bg-white max-w-[90vw]">
+            {/* Participante visible */}
+            <div className="flex items-center gap-2 ">
               <img
-                src={usuario?.profileImage}
-                alt={usuario?.name}
-                className="w-12 h-12 rounded-full object-cover border border-gray-300"
+                src={isInitiator ? entityImage : participantAvatar}
+                alt="Participante"
+                className="w-12 h-12 rounded-full object-cover"
+                onError={(e) =>
+                  (e.currentTarget.src = "/avatar-placeholder.png")
+                }
               />
-              <span
-                className="text-xs font-medium text-gray-700 truncate"
-                title={usuario?.name}
-              >
-                {usuario?.name}
-              </span>
+              <div className="flex flex-col">
+                {isInitiator && (
+                  <span className="text-xs text-gray-400">{tipoLabel}:</span>
+                )}
+                <p className="text-xs text-gray-700">
+                  {isInitiator
+                    ? entityLabel
+                    : participant?.name || participant?.username || "Usuario"}
+                </p>
+              </div>
             </div>
-          )}
-        </div>
+
+            {/* Info adicional (solo si el otro participante es una entidad) */}
+            {isInitiator && (
+              <div className="flex items-center gap-2">
+                <img
+                  src={usuario?.profileImage || "/avatar-placeholder.png"}
+                  alt={usuario?.name || "Yo"}
+                  className="w-12 h-12 rounded-full object-cover border border-gray-300"
+                  onError={(e) =>
+                    (e.currentTarget.src = "/avatar-placeholder.png")
+                  }
+                />
+                <span
+                  className="text-xs font-medium text-gray-700 truncate"
+                  title={usuario?.name}
+                >
+                  {usuario?.name || "Yo"}
+                </span>
+              </div>
+            )}
+          </div>
+        ) : null}
 
         {/* Chat con fondo SVGs */}
         <div className="relative flex-1 min-h-[80svh] md:min-h-[60svh] max-w-[98vw] md::min-w-[360px] lg:min-w-[30vw] ">
@@ -215,10 +257,10 @@ const ChatView = () => {
 
           {/* 💬 Contenido del chat */}
           <div className="relative z-10  overflow-y-auto space-y-2 p-3  max-h-[70svh] md:max-h-[68vh]  max-w-[90vw]md:p-4 lg:p-8 p-1">
-            {items.length === 0 && (
+            {(!items || items.length === 0) && (
               <p className="text-gray-500 text-center">No hay mensajes aún.</p>
             )}
-            {items.map((msg) => {
+            {items?.map?.((msg) => {
               const esMio = isMyMessage(msg);
               return (
                 <div
@@ -229,9 +271,10 @@ const ChatView = () => {
                 >
                   {!esMio && !isInitiator && (
                     <img
-                      src={participant?.profileImage}
+                      src={participantAvatar}
                       alt="Participante"
                       className="w-12 h-12 rounded-full object-cover  shadow-lg"
+                      onError={(e) => (e.currentTarget.src = placeholderAvatar)}
                     />
                   )}
                   {!esMio && isInitiator && (
@@ -239,6 +282,7 @@ const ChatView = () => {
                       src={entityImage}
                       alt="Participante"
                       className="w-12 h-12 rounded-full object-cover"
+                      onError={(e) => (e.currentTarget.src = placeholderAvatar)}
                     />
                   )}
                   <div
@@ -261,11 +305,12 @@ const ChatView = () => {
                     <img
                       src={
                         isInitiator
-                          ? usuario?.profileImage || participant?.profileImage
+                          ? usuario?.profileImage || participantAvatar
                           : entityImage
                       }
                       alt="Yo"
                       className="w-12 h-12 rounded-full object-cover"
+                      onError={(e) => (e.currentTarget.src = placeholderAvatar)}
                     />
                   )}
                 </div>

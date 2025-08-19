@@ -1,5 +1,5 @@
 // src/hooks/useInitData.js
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { obtenerNegocios } from "../store/negociosSlice";
 import { obtenerEventos } from "../store/eventosSlice";
@@ -9,36 +9,47 @@ import { obtenerUbicacionUsuario } from "../store/ubicacionSlice";
 export function useInitData() {
   const dispatch = useDispatch();
 
-  const negociosLoaded = useSelector((state) => state.negocios.loaded);
-  const eventosLoaded = useSelector((state) => state.eventos.loaded);
-  const comunidadesLoaded = useSelector((state) => state.comunidades.loaded);
-  const { coords, cargando } = useSelector((state) => state.ubicacion);
+  const { coords, cargando } = useSelector((s) => s.ubicacion);
 
-  // Obtener ubicación solo si no existe
+  // --- refs para evitar dobles disparos simultáneos, pero garantizando fetch on mount
+  const didMountFetchRef = useRef(false);
+  const didLocationFetchRef = useRef(false);
+
+  // 1) Siempre intenta obtener ubicación al montar si no la tenés
   useEffect(() => {
     if (!coords && !cargando) {
       dispatch(obtenerUbicacionUsuario());
     }
   }, [dispatch, coords, cargando]);
 
-  // Obtener negocios si no están cargados
-  useEffect(() => {
-    if (!negociosLoaded) {
-      dispatch(obtenerNegocios(coords));
-    }
-  }, [dispatch, negociosLoaded, coords]);
+  // Helper para armar payloads con lat/lng opcionales
+  const getLoc = () => (coords ? { lat: coords.lat, lng: coords.lng } : {});
 
-  // Obtener eventos si no están cargados
+  // 2) FETCH ON MOUNT (siempre), sin depender de "loaded"
   useEffect(() => {
-    if (!eventosLoaded && coords) {
-      dispatch(obtenerEventos(coords));
-    }
-  }, [dispatch, eventosLoaded, coords]);
+    if (didMountFetchRef.current) return;
+    didMountFetchRef.current = true;
 
-  // Obtener comunidades SOLO cuando coords esté listo y aún no se hayan cargado
+    const loc = getLoc();
+
+    // Negocios / Eventos / Comunidades — page 1, forzando recarga
+    dispatch(obtenerNegocios({ ...loc, page: 1, force: true }));
+    dispatch(obtenerEventos({ ...loc, page: 1, force: true }));
+    dispatch(fetchComunidades({ ...loc, page: 1, force: true }));
+  }, [dispatch]); // <- sólo al montar
+
+  // 3) Cuando llegan coords por primera vez (o cambian), refrescar con ubicación precisa
   useEffect(() => {
-    if (!comunidadesLoaded && coords) {
-      dispatch(fetchComunidades(coords)); // ✅ con ubicación
-    }
-  }, [dispatch, comunidadesLoaded, coords]);
+    if (!coords) return;
+
+    // si ya refrescamos por coords una vez, no vuelvas a spamear en renders siguientes
+    if (didLocationFetchRef.current) return;
+    didLocationFetchRef.current = true;
+
+    const loc = { lat: coords.lat, lng: coords.lng };
+
+    dispatch(obtenerNegocios({ ...loc, page: 1, force: true }));
+    dispatch(obtenerEventos({ ...loc, page: 1, force: true }));
+    dispatch(fetchComunidades({ ...loc, page: 1, force: true }));
+  }, [coords, dispatch]);
 }
