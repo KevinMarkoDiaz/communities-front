@@ -5,23 +5,38 @@ import Resumen from "../../components/dashboard/perfilUsuario/Resumen";
 import ResumenComunidades from "../../components/dashboard/perfilUsuario/ResumenComunidades";
 import ResumenNegocios from "../../components/dashboard/perfilUsuario/ResumenNegocios";
 import ResumenEventos from "../../components/dashboard/perfilUsuario/ResumenEventos";
-import { fetchMisComunidades } from "../../store/comunidadesSlice";
+import {
+  fetchComunidades,
+  fetchMisComunidades,
+} from "../../store/comunidadesSlice";
 import { fetchMisNegocios } from "../../store/negociosSlice";
 import { fetchMisEventos } from "../../store/eventosSlice";
 import PerfilSkeleton from "../../components/Skeleton/PerfilSkeleton";
 import ilust3 from "../../assets/ilust3.svg";
 import { Link } from "react-router-dom";
 import { fetchCategorias } from "../../store/categoriasSlice";
+import { obtenerUbicacionUsuario } from "../../store/ubicacionSlice";
 
 export default function PerfilPage() {
   const dispatch = useDispatch();
   const usuario = useSelector((state) => state.auth.usuario);
-  const categorias = useSelector((state) => state.categorias.data || []);
 
-  const comunidades = useSelector((state) => state.comunidades.misComunidades);
+  const categorias = useSelector((state) => state.categorias.data || []);
+  const categoriasLoaded = useSelector((state) => state.categorias.loaded);
+
+  // 🔹 Comunidades globales (listado)
+  const comunidadesGlobal = useSelector(
+    (state) => state.comunidades.lista || []
+  );
+  const comunidadesLoaded = useSelector((state) => state.comunidades.loaded);
+  const { coords, cargando } = useSelector((state) => state.ubicacion);
+
+  // 🔹 Recursos del usuario
+  const comunidades = useSelector(
+    (state) => state.comunidades.misComunidades || []
+  );
   const negocios = useSelector((state) => state.negocios.misNegocios || []);
   const eventos = useSelector((state) => state.eventos.misEventos || []);
-  const categoriasLoaded = useSelector((state) => state.categorias.loaded);
 
   const loadingComunidades = useSelector(
     (state) => state.comunidades.loadingMis
@@ -30,45 +45,69 @@ export default function PerfilPage() {
   const loadingEventos = useSelector((state) => state.eventos.misLoading);
 
   const [tab, setTab] = useState("negocios");
-
   const isAdmin = ["admin"].includes(usuario?.role);
 
-  // Referencias para evitar llamadas dobles
+  // Refs para evitar dobles fetch
+  const fetchedComunidadesGlobal = useRef(false);
   const fetchedComunidades = useRef(false);
   const fetchedNegocios = useRef(false);
   const fetchedEventos = useRef(false);
+
   useEffect(() => {
-    if (!categoriasLoaded) {
+    if (!coords && !cargando) {
+      dispatch(obtenerUbicacionUsuario());
+    }
+  }, [dispatch, coords, cargando]);
+
+  // 🔸 Categorías: pedir solo si no cargadas o vacías
+  useEffect(() => {
+    if (!categoriasLoaded || categorias.length === 0) {
       dispatch(fetchCategorias());
     }
-  }, [categoriasLoaded, dispatch]);
+  }, [categoriasLoaded, categorias.length, dispatch]);
+
+  // 🔸 Comunidades globales: pedir si hay coords y aún no hay lista
+  useEffect(() => {
+    if (!coords) return;
+
+    const noHayLista =
+      !Array.isArray(comunidadesGlobal) || comunidadesGlobal.length === 0;
+    const noCargadas = !comunidadesLoaded;
+
+    if ((noHayLista || noCargadas) && !fetchedComunidadesGlobal.current) {
+      fetchedComunidadesGlobal.current = true;
+      dispatch(fetchComunidades({ lat: coords.lat, lng: coords.lng, page: 1 }));
+    }
+  }, [coords, comunidadesGlobal, comunidadesLoaded, dispatch]);
+
+  // 🔸 Recursos del usuario
   useEffect(() => {
     if (
       !fetchedComunidades.current &&
       comunidades.length === 0 &&
       !loadingComunidades
     ) {
-      dispatch(fetchMisComunidades());
       fetchedComunidades.current = true;
+      dispatch(fetchMisComunidades());
     }
 
     if (!fetchedNegocios.current && negocios.length === 0 && !loadingNegocios) {
-      dispatch(fetchMisNegocios());
       fetchedNegocios.current = true;
+      dispatch(fetchMisNegocios());
     }
 
     if (!fetchedEventos.current && eventos.length === 0 && !loadingEventos) {
-      dispatch(fetchMisEventos());
       fetchedEventos.current = true;
+      dispatch(fetchMisEventos());
     }
   }, [
-    dispatch,
     comunidades.length,
     negocios.length,
     eventos.length,
     loadingComunidades,
     loadingNegocios,
     loadingEventos,
+    dispatch,
   ]);
 
   if (loadingComunidades || loadingNegocios || loadingEventos) {

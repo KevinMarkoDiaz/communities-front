@@ -52,52 +52,81 @@ export default function EditarEvento() {
     try {
       const formData = new FormData();
 
-      if (valores.image && typeof valores.image !== "string") {
+      // Featured
+      if (valores.image instanceof File) {
         formData.append("featuredImage", valores.image);
+      } else if (typeof valores.image === "string" && valores.image.trim()) {
+        formData.append("featuredImage", valores.image.trim());
       }
 
-      if (Array.isArray(valores.images)) {
-        valores.images.forEach((img) => {
-          if (img instanceof File) {
-            formData.append("images", img);
-          }
-        });
-      }
+      // Galería mixta
+      const allImages = Array.isArray(valores.images) ? valores.images : [];
+      const existingImages = allImages.filter((x) => typeof x === "string");
+      const newFiles = allImages.filter((x) => x instanceof File);
+      newFiles.forEach((f) => formData.append("images", f));
 
+      // Normalizaciones
       const tagsArray = valores.tags
-        ? valores.tags.split(",").map((tag) => tag.trim())
+        ? valores.tags
+            .split(",")
+            .map((t) => t.trim())
+            .filter(Boolean)
         : [];
 
-      const organizerId = valores.organizer?.value || usuario._id;
-      const organizerModel = valores.organizer?.model || "User";
+      const organizerId =
+        typeof valores.organizer === "object" && valores.organizer
+          ? valores.organizer.value || valores.organizer._id || ""
+          : valores.organizer || "";
+      const organizerModelFromSelect =
+        typeof valores.organizer === "object" && valores.organizer
+          ? valores.organizer.model
+          : valores.organizerModel;
 
+      const organizer = String(organizerId || "");
+      const organizerModel = organizerModelFromSelect || "User";
+
+      let location = { ...(valores.location || {}) };
+      if (valores.isOnline) {
+        location = {
+          address: "",
+          city: "",
+          state: "",
+          zipCode: "",
+          country: location.country || "USA",
+        };
+      } else if (location?.coordinates) {
+        delete location.coordinates;
+      }
+
+      // 👉 Aquí metemos existingImages en data
       const data = {
         title: valores.title,
         description: valores.description,
         date: valores.date,
         time: valores.time,
-        location: valores.location,
-        communities: valores.communities,
-        businesses: valores.businesses || [],
-        categories: valores.categories,
+        location,
+        communities: (valores.communities || []).map(String),
+        businesses: (valores.businesses || []).map(String),
+        categories: (valores.categories || []).map(String),
         tags: tagsArray,
         language: valores.language || "es",
-        price: Number(valores.price),
-        isFree: valores.isFree,
-        isOnline: valores.isOnline,
+        price: Number(valores.price || 0),
+        isFree: !!valores.isFree,
+        isOnline: !!valores.isOnline,
         status: valores.status || "activo",
-        featured: valores.featured || false,
-        isPublished: valores.isPublished || false,
+        featured: !!valores.featured,
+        isPublished: !!valores.isPublished,
         registrationLink: valores.registrationLink || "",
-        sponsors: valores.sponsors || [],
-        organizer: organizerId,
+        sponsors: (valores.sponsors || []).map(String),
+        organizer,
         organizerModel,
+        // ⬇️ clave para el back:
+        existingImages, // <— AQUI
       };
 
       if (valores.isOnline && valores.virtualLink) {
         data.virtualLink = valores.virtualLink;
       }
-
       if (valores.coordinates) {
         data.coordinates = valores.coordinates;
       }
@@ -112,12 +141,11 @@ export default function EditarEvento() {
           type: "success",
         })
       );
-
       navigate("/dashboard/mis-eventos");
     } catch (err) {
       dispatch(
         mostrarFeedback({
-          message: err || "❌ No se pudo actualizar el evento",
+          message: err?.message || "❌ No se pudo actualizar el evento",
           type: "error",
         })
       );

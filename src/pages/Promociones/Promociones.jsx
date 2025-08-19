@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllPromos } from "../../store/promocionesSlice";
+import { Helmet } from "react-helmet-async";
 
+import { fetchAllPromos } from "../../store/promocionesSlice";
 import CardPromoHome from "../../components/promo/CardPromoHome";
 import ScrollCarousel from "../../components/ScrollCarousel";
 import ModalGuardarPromo from "../../components/modal/ModalGuardarPromo";
 import FadeInOnScroll from "../../components/FadeInOnScroll";
-
-import { Helmet } from "react-helmet-async";
 
 export default function Promociones() {
   const dispatch = useDispatch();
@@ -45,17 +44,17 @@ export default function Promociones() {
   ) => {
     if (items.length === 0) {
       return (
-        <div className="text-center text-gray-400  text-xs italic">
+        <div className="text-center text-gray-400 text-xs italic">
           No hay promociones disponibles por ahora.
         </div>
       );
     }
 
     return (
-      <section className="">
+      <section>
         <FadeInOnScroll direction="up" duration={600} delay={100}>
           <div className="text-left mb-4">
-            <h2 className="text-md md: text-lg font-bold text-gray-800 relative inline-block">
+            <h2 className="text-md md:text-lg font-bold text-gray-800 relative inline-block">
               <span className="relative z-10">{`${linea1} ${linea2}`}</span>
               <span
                 className="absolute bottom-0 h-2 bg-lime-300/60 z-0 rounded"
@@ -63,26 +62,45 @@ export default function Promociones() {
                   transform: "skewX(-12deg)",
                   left: "-4px",
                   right: "-4px",
-                  boxShadow: "0 4px 6px -2px rgba(0, 0, 0, 0.2)", // sombra solo hacia abajo
+                  boxShadow: "0 4px 6px -2px rgba(0, 0, 0, 0.2)",
                 }}
               />
             </h2>
           </div>
         </FadeInOnScroll>
 
-        {/* Carrusel */}
         <ScrollCarousel
           className="relative overflow-visible"
           {...carouselProps}
         >
           {items
-            .filter((promo) => promo && promo.business && promo.business._id)
+            .filter((promo) => !!promo)
             .map((promo) => {
-              const maxClaims = promo.maxClaims || null;
-              const claimed = promo.claimed?.length || 0;
-              const remaining = maxClaims
-                ? Math.max(0, maxClaims - claimed)
+              // ── Cálculos de disponibilidad ────────────────────────────────
+              const hasCap =
+                typeof promo.maxClaims === "number" &&
+                !Number.isNaN(promo.maxClaims);
+              const claimedCount =
+                typeof promo.claimedCount === "number"
+                  ? promo.claimedCount
+                  : Array.isArray(promo.claimed)
+                  ? promo.claimed.length
+                  : 0;
+
+              const remaining = hasCap
+                ? Math.max(0, promo.maxClaims - claimedCount)
                 : null;
+
+              const label = hasCap
+                ? remaining === 0
+                  ? "0 disponibles"
+                  : `${remaining} disponibles`
+                : "No te la pierdas";
+
+              const businessId =
+                typeof promo.business === "object" && promo.business
+                  ? promo.business._id
+                  : promo.business; // soporta id directo o populate
 
               return (
                 <div
@@ -91,21 +109,15 @@ export default function Promociones() {
                   className="cursor-pointer flex-shrink-0 snap-start w-[220px] sm:w-[320px] md:w-[300px] lg:w-[260px] transform transition duration-300"
                 >
                   <CardPromoHome
-                    maxClaims={promo.maxClaims}
                     title={promo.name}
                     image={promo.featuredImage}
-                    isNew={promo.type === "promo_fin_de_semana"}
-                    hasDiscount={promo.type === "descuentos_imperdibles"}
-                    descuento={
-                      promo.maxClaims === 0
-                        ? "0 disponibles"
-                        : typeof promo.maxClaims === "number"
-                        ? `Quedan ${promo.maxClaims} cupones`
-                        : "No te la pierdas"
-                    }
-                    isVerified={true}
-                    businessId={promo.business?._id}
                     isPremium={promo.isPremium}
+                    businessId={businessId}
+                    // 🧮 datos para conteo
+                    maxClaims={hasCap ? promo.maxClaims : null}
+                    claimedCount={claimedCount}
+                    // Fallback/label mostrado en el badge
+                    descuento={label}
                   />
                 </div>
               );

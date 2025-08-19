@@ -5,37 +5,49 @@ import { BsGem } from "react-icons/bs";
 export default function CardPromoHome({
   title,
   image,
-  descuento,
-  maxClaims,
-  businessId, // 🆕 solo pasás el ID del negocio
+  descuento, // fallback label (ej: "5 disponibles")
+  maxClaims, // número total permitido (puede ser null/undefined => ilimitado)
+  claimedCount = 0, // 🆕 cuántos ya reclamaron (default 0)
+  businessId, // id del negocio para tomar logo desde Redux
   isPremium = false,
 }) {
   const [isMobile, setIsMobile] = useState(false);
 
-  // 🔍 Obtener logo del negocio desde Redux por ID
+  // Logo del negocio por ID
   const negocio = useSelector((state) =>
     state.negocios.lista?.find((n) => n._id === businessId)
   );
   const businessLogo = negocio?.profileImage;
 
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  const isAgotado =
-    maxClaims === 0 ||
-    descuento === "0 disponibles" ||
-    descuento?.includes("0 disponibles");
+  // 🧮 Cálculo de “restantes”
+  const hasCap = typeof maxClaims === "number" && !Number.isNaN(maxClaims);
+  const remaining = hasCap
+    ? Math.max(0, maxClaims - (claimedCount || 0))
+    : null;
+
+  const isAgotado = hasCap
+    ? remaining === 0
+    : // si no hay tope, intenta deducir del label existente
+      descuento === "0 disponibles" || descuento?.includes("0 disponibles");
+
+  // Texto del badge
+  const badgeText = hasCap
+    ? isAgotado
+      ? "Cupones agotados"
+      : `${remaining} disponibles`
+    : descuento || "Disponible";
 
   const clasesBase = `
     relative group z-0 overflow-hidden transition my-4
     aspect-[9/16] rounded-[1.5rem] w-[220px] sm:w-[280px] md:w-[300px] lg:w-[245px] xl:w-[225px]
-     hover:shadow-lg bg-gray-100
+    hover:shadow-lg bg-gray-100
     ${
       isPremium
         ? "border-1 border-yellow-200 shadow-[0_0_10px_3px_rgba(234,179,8,0.4)]"
@@ -60,26 +72,31 @@ export default function CardPromoHome({
         }`}
       />
 
-      {/* Icono Premium */}
+      {/* Icono Premium (opcional) */}
+      {isPremium && (
+        <div className="absolute top-3 left-3 z-30 flex items-center gap-1 bg-black/70 text-yellow-300 px-2 py-1 rounded-full text-xs">
+          <BsGem className="w-4 h-4" />
+        </div>
+      )}
 
       {/* Badge de cupón */}
       <div
-        className={`m-4 transform  transition-all duration-900 text-xs md:  text-xs font-semibold text-center rounded-full py-1.5 px-4 self-center 
-        ${
-          isMobile
-            ? "scale-105"
-            : "group-hover:-translate-y-1 group-hover:scale-105"
-        }
-        ${
-          isAgotado
-            ? "text-red-700"
-            : isPremium
-            ? " bg-black shadow-[0_0_30px_20px_rgba(234,179,8,0.4)] text-green-300 "
-            : " bg-white shadow-md text-green-700"
-        }
-      `}
+        className={`m-4 transform transition-all duration-900 text-xs font-semibold text-center rounded-full py-1.5 px-4 self-center 
+          ${
+            isMobile
+              ? "scale-105"
+              : "group-hover:-translate-y-1 group-hover:scale-105"
+          }
+          ${
+            isAgotado
+              ? "bg-white text-red-700"
+              : isPremium
+              ? "bg-black shadow-[0_0_30px_20px_rgba(234,179,8,0.4)] text-green-300"
+              : "bg-white shadow-md text-green-700"
+          }
+        `}
       >
-        {isAgotado ? "Cupones agotados" : descuento}
+        {badgeText}
       </div>
 
       {/* Logo del negocio abajo a la derecha */}
