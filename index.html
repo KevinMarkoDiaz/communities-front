@@ -28,8 +28,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet" />
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="/src/assets/icono.svg" />
+    <!-- ✅ Nuevo favicon (desde /public/) -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Opcional: otros tamaños recomendados -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
     <!-- ✅ Google Consent Mode v2 + GA4 -->
     <script>
@@ -59,7 +64,7 @@
       "name": "Communidades",
       "url": "https://communidades.com/",
       "description": "Directorio de negocios, eventos y comunidades latinas.",
-      "logo": "https://communidades.com/images/logo.png",
+      "logo": "https://communidades.com/favicon.svg",
       "sameAs": [
         "https://www.facebook.com/communidades",
         "https://www.instagram.com/communidades"
@@ -79,7 +84,6 @@
 
     <!-- ✅ Actualización Consent Mode al aceptar cookies -->
     <script>
-      // Llamar cuando el usuario acepte en tu banner de cookies
       function aceptarCookies(){
         gtag('consent', 'update', {
           ad_storage: 'granted',
