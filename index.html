@@ -3,10 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>Communidades - Conectando negocios y comunidades latinas</title>
     <meta name="description" content="Descubre negocios, eventos y comunidades latinas en tu ciudad.">
-    <meta name="robots" content="noindex, nofollow">
+
+    <!-- ✅ Permitir indexación -->
+    <meta name="robots" content="index, follow">
+
+    <!-- Canonical -->
     <link rel="canonical" href="https://communidades.com/" />
+
+    <!-- (Opcional) Verificación Search Console -->
+    <!-- <meta name="google-site-verification" content="TU_TOKEN_DE_VERIFICACION" /> -->
 
     <!-- Open Graph -->
     <meta property="og:title" content="Communidades - Conectando negocios y comunidades latinas" />
@@ -15,37 +23,71 @@
     <meta property="og:url" content="https://communidades.com/" />
     <meta name="twitter:card" content="summary_large_image" />
 
-    <!-- Fonts -->
+    <!-- Fuentes -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet" />
 
-
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="./src/assets/icono.svg" />
+    <link rel="icon" type="image/svg+xml" href="/src/assets/icono.svg" />
 
-    <!-- ✅ Google Consent Mode v2 + Analytics -->
+    <!-- ✅ Google Consent Mode v2 + GA4 -->
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag() { dataLayer.push(arguments); }
+      function gtag(){ dataLayer.push(arguments); }
 
-      // Modo por defecto: no se activa tracking hasta que el usuario consienta
-      gtag("consent", "default", {
-        ad_storage: "denied",
-        analytics_storage: "denied",
-        wait_for_update: 500 // Espera 500ms para que React actualice preferencias
+      // Estado por defecto (sin consentimiento)
+      gtag('consent', 'default', {
+        ad_storage: 'denied',
+        analytics_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        wait_for_update: 500
       });
     </script>
-
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-5T52CG1MVT"></script>
     <script>
-      gtag("js", new Date());
-      gtag("config", "G-5T52CG1MVT");
+      gtag('js', new Date());
+      gtag('config', 'G-5T52CG1MVT');
+    </script>
+
+    <!-- ✅ Datos estructurados básicos -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": ["Organization","WebSite"],
+      "name": "Communidades",
+      "url": "https://communidades.com/",
+      "description": "Directorio de negocios, eventos y comunidades latinas.",
+      "logo": "https://communidades.com/images/logo.png",
+      "sameAs": [
+        "https://www.facebook.com/communidades",
+        "https://www.instagram.com/communidades"
+      ],
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://communidades.com/buscar?q={search_term}",
+        "query-input": "required name=search_term"
+      }
+    }
     </script>
   </head>
 
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+
+    <!-- ✅ Actualización Consent Mode al aceptar cookies -->
+    <script>
+      // Llamar cuando el usuario acepte en tu banner de cookies
+      function aceptarCookies(){
+        gtag('consent', 'update', {
+          ad_storage: 'granted',
+          analytics_storage: 'granted',
+          ad_user_data: 'granted',
+          ad_personalization: 'granted'
+        });
+      }
+    </script>
   </body>
 </html>
