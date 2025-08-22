@@ -10,6 +10,7 @@ import ilusta from "../../assets/ilusta.svg";
 import DetalleCategoria from "./detalle/DetalleCategoria";
 import { fetchCategorias } from "../../store/categoriasSlice";
 import { mostrarFeedback } from "../../store/feedbackSlice";
+import ilust1 from "../../assets/ilust1.svg";
 
 export default function Categorias() {
   const [selectedCategoria, setSelectedCategoria] = useState(null);
@@ -127,7 +128,7 @@ export default function Categorias() {
           Lista de categorías
         </h3>
         <Link
-          to="crear"
+          to="/dashboard-admin/mis-categorias/crear"
           className="flex items-center gap-2 bg-black text-white px-3 py-2 rounded hover:bg-[#f4c753] hover:text-black transition  text-xs font-semibold"
         >
           <MdCategory className="text-lg" />
@@ -136,17 +137,19 @@ export default function Categorias() {
       </div>
 
       {categorias.length === 0 ? (
-        <div className="flex flex-col items-center text-center gap-4 py-12">
-          <img
-            src="/empty-state.svg"
-            alt="Sin categorías"
-            className="w-32 opacity-80"
-          />
-          <p className="text-gray-500">
+        <div className="flex flex-col items-center text-center gap-5 py-16">
+          <img src={ilust1} alt="Sin comunidades" className="w-40 opacity-90" />
+          <p className="text-gray-600  text-xs md:text-base max-w-xs">
             Aún no has creado ninguna categoría.
             <br />
-            ¡Comienza a organizarlas ahora!
+            Comparte tu cultura, conecta personas y haz crecer tu red.
           </p>
+          <Link
+            to="/dashboard-admin/mis-categorias/crear"
+            className="inline-block bg-orange-500 hover:bg-orange-600 text-white  text-xs font-medium px-4 py-2 rounded transition"
+          >
+            Crear mi primera categoría
+          </Link>
         </div>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-y-5 gap-x-3 md:gap-6 xl:gap-8">

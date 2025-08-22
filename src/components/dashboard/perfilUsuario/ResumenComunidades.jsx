@@ -17,7 +17,7 @@ export default function ResumenComunidades({ comunidades = [], onDelete }) {
   const [comunidadSeleccionada, setComunidadSeleccionada] = useState(null);
 
   const handleEditar = (id) => {
-    navigate(`/dashboard/mis-comunidades/${id}/editar`);
+    navigate(`/dashboard-admin/mis-comunidades/${id}/editar`);
   };
 
   const handleEliminarClick = (comunidad) => {

@@ -143,7 +143,7 @@ export default function CrearEditarComunidadForm({
         );
       }
 
-      navigate("/dashboard/mis-comunidades");
+      navigate("/dashboard-admin/mis-comunidades");
     } catch (err) {
       dispatch(
         mostrarFeedback({

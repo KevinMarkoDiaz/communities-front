@@ -7,9 +7,11 @@ import {
   MdCategory,
   MdLogout,
   MdArrowRight,
+  MdOutlineAdsClick,
 } from "react-icons/md";
 import { NavLink } from "react-router-dom";
 import { FaRocket } from "react-icons/fa";
+import { RiAdvertisementLine, RiCoupon3Line } from "react-icons/ri";
 
 const SidebarDashboard = ({ usuario, handleLogout }) => {
   const isAdmin = usuario?.role === "admin";
@@ -19,12 +21,12 @@ const SidebarDashboard = ({ usuario, handleLogout }) => {
     { to: "/dashboard/perfil", label: "Mi perfil", icon: <MdPerson /> },
     { to: "/dashboard/mis-negocios", label: "Mis negocios", icon: <MdStore /> },
     { to: "/dashboard/mis-eventos", label: "Mis eventos", icon: <MdEvent /> },
-    { to: "/dashboard/cupones", label: "Mis cupones", icon: <MdStore /> },
+    { to: "/dashboard/cupones", label: "Mis cupones", icon: <RiCoupon3Line /> },
     { to: "/dashboard/redimir", label: "Redimir Cupones", icon: <MdStore /> },
     {
       to: "/dashboard/mis-banners",
       label: "Mis banners",
-      icon: <MdLocalOffer />,
+      icon: <MdOutlineAdsClick />,
     },
 
     // En tu router existe "mis-comunidades" bajo /dashboard (listado y detalle)
@@ -51,7 +53,7 @@ const SidebarDashboard = ({ usuario, handleLogout }) => {
     {
       to: "/dashboard-admin/banners",
       label: "Banners / Ads",
-      icon: <MdLocalOffer />,
+      icon: <RiAdvertisementLine />,
     },
   ];
 

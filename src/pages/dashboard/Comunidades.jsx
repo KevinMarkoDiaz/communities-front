@@ -141,7 +141,7 @@ export default function Comunidades() {
             Comparte tu cultura, conecta personas y haz crecer tu red.
           </p>
           <Link
-            to="/dashboard/mis-comunidades/crear"
+            to="/dashboard-admin/mis-comunidades/crear"
             className="inline-block bg-orange-500 hover:bg-orange-600 text-white  text-xs font-medium px-4 py-2 rounded transition"
           >
             Crear mi primera comunidad
