@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { Helmet } from "react-helmet-async";
 import { useDispatch } from "react-redux";
 import { login } from "../store/authSlice";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { loginUser, getCurrentUser } from "../api/authApi";
+import { loginUser, getCurrentUser, resendVerification } from "../api/authApi";
 import icono from "../assets/logo_icono.svg";
 
 /* =========================
@@ -19,7 +19,7 @@ const esquemaValidacion = Yup.object().shape({
 });
 
 /* =========================
-   Helper de fondo responsive (sin imports)
+   Helper de fondo responsive
 ========================= */
 const pickBg = (w) => {
   if (w >= 1024) return "/images/3.png"; // desktop
@@ -34,7 +34,30 @@ export default function Login() {
   const redirectTo = location.state?.redirectTo || "/dashboard/perfil";
 
   /* =========================
-     Fondo responsive (solo descarga el actual)
+     Mensajes por verificación
+  ========================= */
+  const params = new URLSearchParams(location.search);
+  const verified = params.get("verified"); // "1" | "0" | null
+  const reason = params.get("reason"); // "expired" | "bad_link" | null
+
+  const [infoMsg, setInfoMsg] = useState("");
+
+  useEffect(() => {
+    if (verified === "1") {
+      setInfoMsg("¡Correo verificado! Ya puedes iniciar sesión.");
+    } else if (verified === "0") {
+      setInfoMsg(
+        reason === "expired"
+          ? "Tu enlace de verificación expiró. Podemos reenviártelo."
+          : "El enlace de verificación no es válido. Podemos reenviártelo."
+      );
+    } else {
+      setInfoMsg("");
+    }
+  }, [verified, reason]);
+
+  /* =========================
+     Fondo responsive
   ========================= */
   const [bgImage, setBgImage] = useState(() => {
     if (typeof window === "undefined") return "/images/3.png"; // SSR-safe fallback
@@ -42,14 +65,10 @@ export default function Login() {
   });
 
   useEffect(() => {
-    // Corrige en el primer render del cliente
     setBgImage(pickBg(window.innerWidth));
-
-    // Respeta ahorro de datos si está activo (opcional)
     const saveData = navigator.connection?.saveData;
     if (saveData) setBgImage("/images/1.png");
 
-    // Resize con rAF para evitar spam
     let ticking = false;
     const onResize = () => {
       if (!ticking) {
@@ -71,7 +90,11 @@ export default function Login() {
   ========================= */
   const handleSubmit = async (valores, { setSubmitting, setErrors }) => {
     try {
-      const usuario = await loginUser(valores);
+      const payload = {
+        email: valores.email.trim().toLowerCase(),
+        password: valores.password,
+      };
+      const usuario = await loginUser(payload);
       dispatch(login(usuario));
       navigate(redirectTo);
     } catch (error) {
@@ -95,11 +118,8 @@ export default function Login() {
     );
 
     const handleMessage = async (event) => {
-      if (!event.data) return;
-      if (event.data === "failure") {
-        console.error("Error al autenticar con Google.");
-        return;
-      }
+      // Tu backend hace: window.opener.postMessage({ type: "oauth:success" }, ORIGIN)
+      if (!event?.data || event.data?.type !== "oauth:success") return;
       try {
         const { usuario } = await getCurrentUser();
         dispatch(login(usuario));
@@ -117,6 +137,25 @@ export default function Login() {
     window.addEventListener("message", handleMessage);
   };
 
+  /* =========================
+     Reenviar verificación
+  ========================= */
+  const [resendEmail, setResendEmail] = useState("");
+  const [resendLoading, setResendLoading] = useState(false);
+  const handleResend = async () => {
+    if (!resendEmail) return;
+    try {
+      setResendLoading(true);
+      await resendVerification(resendEmail.trim().toLowerCase());
+      setInfoMsg("Listo, te reenviamos el correo de verificación.");
+    } catch (e) {
+      console.error(e);
+      setInfoMsg("No pudimos reenviar el correo. Intenta más tarde.");
+    } finally {
+      setResendLoading(false);
+    }
+  };
+
   return (
     <>
       <Helmet>
@@ -129,25 +168,56 @@ export default function Login() {
         style={{ backgroundImage: `url(${bgImage})` }}
       >
         <div className="relative w-full max-w-md mx-auto p-8 bg-white/40 backdrop-blur-md rounded-2xl shadow-2xl text-black">
-          <h2 className="text-md md: text-lg font-bold text-center mb-6 tracking-wide">
+          <h2 className="text-md md:text-lg font-bold text-center mb-6 tracking-wide">
             ¡Qué alegría tenerte de vuelta!
           </h2>
+
+          {infoMsg && (
+            <div className="mb-4 p-3 rounded-lg bg-black/10 text-black text-xs">
+              {infoMsg}
+              {verified === "0" && (
+                <div className="mt-2 space-y-2">
+                  <input
+                    type="email"
+                    value={resendEmail}
+                    onChange={(e) => setResendEmail(e.target.value)}
+                    placeholder="correo@ejemplo.com"
+                    className="w-full px-3 py-2 rounded-lg bg-black/10"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleResend}
+                    disabled={resendLoading}
+                    className="w-full bg-black/80 hover:bg-black disabled:opacity-60 disabled:cursor-not-allowed text-white py-2 rounded-lg font-semibold"
+                  >
+                    {resendLoading ? "Reenviando..." : "Reenviar verificación"}
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
 
           <Formik
             initialValues={{ email: "", password: "" }}
             validationSchema={esquemaValidacion}
             onSubmit={handleSubmit}
           >
-            {() => (
+            {({ isSubmitting }) => (
               <Form className="space-y-6">
                 <div>
-                  <label className="text-xs font-medium block mb-1">
+                  <label
+                    htmlFor="email"
+                    className="text-xs font-medium block mb-1"
+                  >
                     Correo electrónico
                   </label>
                   <Field
+                    id="email"
                     name="email"
                     type="email"
                     placeholder="correo@ejemplo.com"
+                    autoComplete="email"
+                    autoFocus
                     className="w-full px-4 py-1 border border-black/10 bg-black/30 rounded-lg placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500"
                   />
                   <ErrorMessage
@@ -158,13 +228,18 @@ export default function Login() {
                 </div>
 
                 <div>
-                  <label className="text-xs font-medium block mb-1">
+                  <label
+                    htmlFor="password"
+                    className="text-xs font-medium block mb-1"
+                  >
                     Contraseña
                   </label>
                   <Field
+                    id="password"
                     name="password"
                     type="password"
                     placeholder="••••••••"
+                    autoComplete="current-password"
                     className="w-full px-4 py-1 border border-black/10 bg-black/30 rounded-lg placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500"
                   />
                   <ErrorMessage
@@ -176,17 +251,17 @@ export default function Login() {
 
                 <button
                   type="submit"
-                  className="w-full text-xs md:text-sm bg-orange-600 hover:bg-orange-700 text-white py-2 rounded-lg font-semibold transition"
+                  disabled={isSubmitting}
+                  className="w-full text-xs md:text-sm bg-orange-600 hover:bg-orange-700 disabled:opacity-60 disabled:cursor-not-allowed text-white py-2 rounded-lg font-semibold transition"
                 >
-                  Entrar
+                  {isSubmitting ? "Entrando..." : "Entrar"}
                 </button>
 
                 <button
                   type="button"
                   onClick={handleGoogleLogin}
-                  className="w-full text-xs md:text-sm border border-black/10 bg-black/30  text-white py-2 rounded-lg font-semibold hover:bg-white/20 transition flex items-center justify-center gap-3"
+                  className="w-full text-xs md:text-sm border border-black/10 bg-black/30 text-white py-2 rounded-lg font-semibold hover:bg-white/20 transition flex items-center justify-center gap-3"
                 >
-                  {/* Ícono Google destacado */}
                   <span className="relative flex items-center justify-center w-6 h-6 bg-white rounded-full shadow-md">
                     <svg
                       className="w-5 h-5"
@@ -216,19 +291,19 @@ export default function Login() {
                   </span>
                 </button>
 
-                <div className="text-center text-gray-00 text-xs">
+                <div className="text-center text-gray-900 text-xs">
                   ¿No tienes cuenta?
                 </div>
-
                 <Link
                   to="/registro"
-                  className="block text-xs md:text-sm text-center border border-black/10 bg-black/30  border-white/20 text-white py-2 rounded-lg font-semibold hover:bg-white/20 transition"
+                  className="block text-xs md:text-sm text-center border border-black/10 bg-black/30 border-white/20 text-white py-2 rounded-lg font-semibold hover:bg-white/20 transition"
                 >
                   Regístrate
                 </Link>
               </Form>
             )}
           </Formik>
+
           <div className="flex justify-center mt-8 relative z-10">
             <div className="relative inline-block orbit-wrapper">
               <img
@@ -243,8 +318,6 @@ export default function Login() {
             </div>
           </div>
         </div>
-
-        {/* Icono + órbitas (mantén tu CSS actual) */}
       </div>
     </>
   );

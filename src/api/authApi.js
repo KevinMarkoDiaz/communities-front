@@ -56,3 +56,12 @@ export async function updateUserApi(userId, data) {
 
   return response.data.user;
 }
+
+export async function resendVerification(email) {
+  const { data } = await axiosInstance.post(
+    "/auth/verify-email/resend",
+    { email },
+    { withCredentials: true }
+  );
+  return data;
+}

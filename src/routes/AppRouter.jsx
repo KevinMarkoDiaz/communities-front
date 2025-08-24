@@ -62,6 +62,7 @@ import RedimirCodigo from "../pages/dashboard/RedimirCodigo";
 import Banners from "../pages/dashboard/banners/Banners";
 import CrearBannerView from "../pages/dashboard/banners/CrearBannerView";
 import MisBanners from "../pages/dashboard/banners/MisBanners";
+import VerificaTuCorreo from "../pages/VerificaTuCorreo";
 
 const router = createBrowserRouter([
   {
@@ -104,7 +105,7 @@ const router = createBrowserRouter([
   // Autenticación
   { path: "/login", element: <Login /> },
   { path: "/registro", element: <RegistroMultiStep /> },
-
+  { path: "/verifica-tu-correo", element: <VerificaTuCorreo /> },
   {
     path: "/dashboard-admin",
     element: <RutaPrivadaAdmin />,
