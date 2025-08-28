@@ -140,7 +140,7 @@ const SidebarDashboard = ({ usuario, handleLogout }) => {
         <NavLink
           to="/premium"
           className={({ isActive }) =>
-            `group relative flex items-center gap-3 mx-4 px-4 py-2 rounded-md border border-white text-white font-semibold transition-all overflow-hidden ${
+            `group hidden relative flex items-center gap-3 mx-4 px-4 py-2 rounded-md border border-white text-white font-semibold transition-all overflow-hidden ${
               isActive
                 ? "shadow-[0_0_12px_rgba(255,255,255,0.4)]"
                 : "hover:border-green-200 hover:text-white hover:shadow-[0_0_20px_rgba(34,197,94,0.5)]"

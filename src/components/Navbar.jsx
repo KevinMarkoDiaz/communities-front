@@ -332,18 +332,16 @@ export default function Header() {
                 <MdLocalOffer className="text-sm" />
                 Promociones
               </Link>
-
+              <Link
+                to="/comunidades"
+                onClick={() => dispatch(toggleMenu())}
+                className="flex items-center gap-3 text-base font-medium hover:text-yellow-300 transition relative z-10"
+              >
+                <MdGroups className="text-sm" />
+                Comunidades
+              </Link>
               {usuario?.role === "admin" && (
                 <>
-                  <Link
-                    to="/comunidades"
-                    onClick={() => dispatch(toggleMenu())}
-                    className="flex items-center gap-3 text-base font-medium hover:text-yellow-300 transition relative z-10"
-                  >
-                    <MdGroups className="text-sm" />
-                    Comunidades
-                  </Link>
-
                   <Link
                     to="/dashboard-admin/banners"
                     onClick={() => dispatch(toggleMenu())}
@@ -351,6 +349,17 @@ export default function Header() {
                   >
                     <RiAdvertisementLine className="text-sm" />
                     Ads / Banners
+                  </Link>
+                  <Link
+                    to="/premium"
+                    onClick={() => dispatch(toggleMenu())}
+                    className="relative w-fit flex items-center gap-2 text-xs font-semibold text-white rounded-lg pr-4 py-2 overflow-hidden transition"
+                  >
+                    <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer" />
+                    <FiChevronRight className="text-base relative z-10" />
+                    <span className="relative text-green-400 z-10">
+                      Suscripción Premium
+                    </span>
                   </Link>
                 </>
               )}
@@ -374,17 +383,6 @@ export default function Header() {
             >
               <FiChevronRight className="text-base" />
               Contáctanos
-            </Link>
-            <Link
-              to="/premium"
-              onClick={() => dispatch(toggleMenu())}
-              className="relative w-fit flex items-center gap-2 text-xs font-semibold text-white rounded-lg pr-4 py-2 overflow-hidden transition"
-            >
-              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer" />
-              <FiChevronRight className="text-base relative z-10" />
-              <span className="relative text-green-400 z-10">
-                Suscripción Premium
-              </span>
             </Link>
           </div>
 

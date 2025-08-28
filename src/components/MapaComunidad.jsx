@@ -373,13 +373,13 @@ export default function MapaComunidad({ negocios, coords }) {
 
 function getColorByCategory(nombre) {
   switch (nombre) {
-    case "Comida y Bebida":
+    case "Gastronomía":
       return "#fbbf24";
-    case "Salud y Bienestar":
+    case "Salud y Belleza":
       return "#10b981";
-    case "Deporte y Fitness":
+    case "Deporte":
       return "#3b82f6";
-    case "Belleza y Cuidado Personal":
+    case "Comercio":
       return "#f9a8d4";
     case "Educación":
       return "#8b5cf6";
@@ -387,10 +387,20 @@ function getColorByCategory(nombre) {
       return "#facc15";
     case "Mascotas":
       return "#d6a35c";
-    case "Finanzas y Legales":
+    case "Finanzas y Legal":
       return "#e5e7eb";
-    case "Arte y Cultura":
+    case "Cultura":
       return "#7c3aed";
+    case "Construcción":
+      return "#00a116ff";
+    case "Tecnología":
+      return "#00158fff";
+    case "Inmobiliario":
+      return "#ff1111ff";
+    case "Automotriz":
+      return "#00d9ffff";
+    case "Arte corporal":
+      return "#ff00ffff";
     default:
       return "#9ca3af";
   }

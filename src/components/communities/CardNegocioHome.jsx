@@ -10,15 +10,17 @@ import {
   FaDumbbell,
   FaMoneyCheckAlt,
   FaFilm,
+  FaCar,
+  FaBuilding,
+  FaStore,
+  FaPaintBrush,
   FaQuestion,
-  FaGem,
 } from "react-icons/fa";
 
 const iconosCategoria = {
-  "Comida y Bebida": <FaUtensils className="text-orange-500" />,
-  "Salud y Bienestar": <FaHeartbeat className="text-red-500" />,
-  "Ciencia y Tecnología": <FaFlask className="text-purple-500" />,
-  "Belleza y Cuidado Personal": <FaSpa className="text-pink-400" />,
+  Gastronomía: <FaUtensils className="text-orange-500" />,
+  "Salud y Belleza": <FaHeartbeat className="text-red-500" />,
+  Tecnología: <FaFlask className="text-purple-500" />,
   "Bienes Raíces": <FaHome className="text-gray-600" />,
   "Arte y Cultura": <FaPalette className="text-indigo-500" />,
   Mascotas: <FaPaw className="text-yellow-600" />,
@@ -26,6 +28,12 @@ const iconosCategoria = {
   "Deporte y Fitness": <FaDumbbell className="text-green-600" />,
   "Finanzas y Legales": <FaMoneyCheckAlt className="text-teal-600" />,
   Entretenimiento: <FaFilm className="text-amber-600" />,
+  Construcción: <FaBuilding className="text-gray-700" />,
+  Automotriz: <FaCar className="text-cyan-500" />,
+  Comercio: <FaStore className="text-pink-500" />,
+  Cultura: <FaPalette className="text-purple-700" />,
+  "Arte Corporal": <FaPaintBrush className="text-fuchsia-500" />,
+  Otro: <FaQuestion className="text-gray-400" />,
 };
 
 export default function CardNegocioHome({ negocio }) {
