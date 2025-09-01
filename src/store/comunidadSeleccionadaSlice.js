@@ -2,9 +2,10 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getBusinessesForMapByCommunity } from "../api/businessApi";
 import { mostrarFeedback } from "./feedbackSlice";
 
-// ✅ Estado inicial cargado desde localStorage
-const stored = JSON.parse(localStorage.getItem("comunidadSeleccionada"));
-const initialState = stored || {
+// Helper seguro para SSR/parseo
+
+// ✅ Estado inicial cargado desde localStorage (seguro)
+const initialState = {
   comunidad: null,
   negocios: [],
   loaded: false,
@@ -32,29 +33,36 @@ export const cargarNegociosDeComunidad = createAsyncThunk(
   }
 );
 
+const persist = (state) => {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem("comunidadSeleccionada", JSON.stringify(state));
+  } catch {
+    /* noop */
+  }
+};
+
 const comunidadSeleccionadaSlice = createSlice({
   name: "comunidadSeleccionada",
   initialState,
   reducers: {
     setComunidadSeleccionada: (state, action) => {
-      const comunidad = action.payload;
-      const payload = { comunidad, negocios: [], loaded: false };
-      localStorage.setItem("comunidadSeleccionada", JSON.stringify(payload));
-      return payload;
+      const comunidad = action.payload || null;
+      const next = { comunidad, negocios: [], loaded: false };
+      persist(next);
+      return next;
     },
     setNegociosDeComunidad: (state, action) => {
       const negocios = action.payload;
-      const nueva = { ...state, negocios, loaded: true };
-      localStorage.setItem("comunidadSeleccionada", JSON.stringify(nueva));
-      return nueva;
+      const next = { ...state, negocios, loaded: true };
+      persist(next);
+      return next;
     },
     limpiarComunidadSeleccionada: () => {
-      localStorage.removeItem("comunidadSeleccionada");
-      return {
-        comunidad: null,
-        negocios: [],
-        loaded: false,
-      };
+      if (typeof window !== "undefined") {
+        window.localStorage.removeItem("comunidadSeleccionada");
+      }
+      return { comunidad: null, negocios: [], loaded: false };
     },
   },
   extraReducers: (builder) => {
@@ -62,11 +70,10 @@ const comunidadSeleccionadaSlice = createSlice({
       .addCase(cargarNegociosDeComunidad.fulfilled, (state, action) => {
         state.negocios = action.payload;
         state.loaded = true;
-        const nueva = { ...state };
-        localStorage.setItem("comunidadSeleccionada", JSON.stringify(nueva));
+        persist(state);
       })
       .addCase(cargarNegociosDeComunidad.rejected, (state) => {
-        state.loaded = true; // ✅ evita retry loop
+        state.loaded = true; // evita retry loop
       });
   },
 });

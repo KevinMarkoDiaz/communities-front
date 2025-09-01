@@ -10,44 +10,69 @@ import { motion, AnimatePresence } from "framer-motion";
 export default function SidebarComunidadMobile() {
   const dispatch = useDispatch();
 
-  // Normalizar siempre a array para evitar `.find` sobre undefined
-  const comunidadesRaw = useSelector((state) => state.comunidades?.lista);
+  // Normalizar lista
+  const comunidadesRaw = useSelector((s) => s.comunidades?.lista);
   const comunidades = Array.isArray(comunidadesRaw) ? comunidadesRaw : [];
-
   const comunidadSeleccionada = useSelector(
-    (state) => state.comunidadSeleccionada?.comunidad || null
+    (s) => s.comunidadSeleccionada?.comunidad || null
   );
 
   const [mostrarDropdown, setMostrarDropdown] = useState(false);
   const dropdownRef = useRef(null);
 
-  // Opciones para el <Select>
-  const opciones = useMemo(() => {
-    return comunidades.map((com) => ({
-      label: com?.name ?? "Sin nombre",
-      value: com?._id ?? "",
-    }));
-  }, [comunidades]);
-
-  // Auto-selección: si hay lista y no hay selección, tomar la primera
+  // ---------- FLUJO SOLICITADO ----------
   useEffect(() => {
-    if (comunidades.length > 0 && !comunidadSeleccionada) {
+    if (comunidadSeleccionada) return; // ya hay selección
+
+    // 1) Revisar localStorage
+    let stored = null;
+    if (typeof window !== "undefined") {
+      try {
+        const raw = window.localStorage.getItem("comunidadSeleccionada");
+        stored = raw ? JSON.parse(raw) : null;
+      } catch {
+        stored = null;
+      }
+    }
+
+    const storedCom = stored?.comunidad || null;
+
+    if (storedCom) {
+      // 2) Si existe en storage:
+      if (comunidades.length > 0) {
+        // Intentar matchear con la lista actual
+        const match = comunidades.find((c) => c?._id === storedCom._id);
+        if (match) {
+          dispatch(setComunidadSeleccionada(match));
+          return;
+        }
+        // Si no está en la lista, tomar la primera disponible
+        dispatch(setComunidadSeleccionada(comunidades[0]));
+        return;
+      }
+      // Si aún no hay lista, usar la guardada
+      dispatch(setComunidadSeleccionada(storedCom));
+      return;
+    }
+
+    // 3) No hay storage: si ya hay lista, seleccionar la primera
+    if (comunidades.length > 0) {
       dispatch(setComunidadSeleccionada(comunidades[0]));
     }
   }, [comunidades, comunidadSeleccionada, dispatch]);
+  // --------------------------------------
 
-  // Si la comunidad seleccionada ya no existe en la lista, caer a la primera (o null)
-  useEffect(() => {
-    if (!comunidadSeleccionada && comunidades.length === 0) return;
-    if (
-      comunidadSeleccionada &&
-      !comunidades.some((c) => c?._id === comunidadSeleccionada._id)
-    ) {
-      dispatch(setComunidadSeleccionada(comunidades[0] || null));
-    }
-  }, [comunidades, comunidadSeleccionada, dispatch]);
+  // Opciones para el Select
+  const opciones = useMemo(
+    () =>
+      comunidades.map((com) => ({
+        label: com?.name ?? "Sin nombre",
+        value: com?._id ?? "",
+      })),
+    [comunidades]
+  );
 
-  // Opción actualmente seleccionada para el Select (defensivo)
+  // selectedOption defensivo
   const selectedOption = useMemo(() => {
     if (!comunidadSeleccionada || !Array.isArray(opciones)) return null;
     return (
@@ -55,34 +80,28 @@ export default function SidebarComunidadMobile() {
     );
   }, [comunidadSeleccionada, opciones]);
 
-  // Cambio desde el Select (con soporte a limpiar -> null)
+  // Cambio desde Select (con clear -> null)
   const handleSelectChange = (opcion) => {
-    if (!opcion) {
-      dispatch(setComunidadSeleccionada(null));
-      setMostrarDropdown(false);
-      return;
-    }
-    const comunidad = comunidades.find((c) => c?._id === opcion.value) || null;
+    const comunidad = opcion
+      ? comunidades.find((c) => c?._id === opcion.value) || null
+      : null;
     dispatch(setComunidadSeleccionada(comunidad));
     setMostrarDropdown(false);
   };
 
   const noComunidadSeleccionada = !comunidadSeleccionada;
 
-  // Detectar clic fuera del dropdown
+  // Cerrar dropdown al click afuera
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setMostrarDropdown(false);
       }
     };
-
     if (mostrarDropdown) {
       document.addEventListener("mousedown", handleClickOutside);
     }
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [mostrarDropdown]);
 
   return (
@@ -117,7 +136,7 @@ export default function SidebarComunidadMobile() {
         </div>
       </aside>
 
-      {/* Botón flotante Mobile con animación */}
+      {/* Botón flotante Mobile */}
       <div className="2xl:hidden">
         <AnimatePresence>
           {!mostrarDropdown && (
@@ -140,7 +159,7 @@ export default function SidebarComunidadMobile() {
           )}
         </AnimatePresence>
 
-        {/* Dropdown flotante con animación */}
+        {/* Dropdown flotante */}
         <AnimatePresence>
           {mostrarDropdown && (
             <motion.div
