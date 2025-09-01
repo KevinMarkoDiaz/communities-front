@@ -200,7 +200,7 @@ export default function NegocioDetalle() {
           {/* Compartir */}
           <Compartir
             url={window.location.href}
-            title={`Descubre ${negocio.name} en Communities`}
+            title={`Descubre ${negocio.name} en Communidades`}
             text={`Encontré este negocio latino que te puede interesar: ${negocio.name}`}
           />
         </div>
@@ -219,7 +219,9 @@ export default function NegocioDetalle() {
           imageUrl={negocio.profileImage}
           categoryName={negocio.categories?.[0]?.name}
           businessName={negocio.name}
-          highlightText={negocio.isVerified ? "Verificado por Communities" : ""}
+          highlightText={
+            negocio.isVerified ? "Verificado por Communidades" : ""
+          }
         />
 
         {negocio.categories?.length > 0 && (

@@ -31,7 +31,7 @@ export default function Home() {
   return (
     <div className="flex flex-col gap-12 md:gap-16 xl:gap-24 md:mt-12">
       <Helmet>
-        <title>Communities | Inicio</title>
+        <title>Communidades | Inicio</title>
         <meta
           name="description"
           content="Explora negocios, eventos y servicios útiles para comunidades migrantes en tu ciudad."

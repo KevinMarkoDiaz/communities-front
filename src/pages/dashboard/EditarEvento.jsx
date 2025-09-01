@@ -161,7 +161,7 @@ export default function EditarEvento() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen px-2 gap-8 lg:mt-16">
       <Helmet>
-        <title>Editar Evento | Communities</title>
+        <title>Editar Evento | Communidades</title>
       </Helmet>
 
       <section

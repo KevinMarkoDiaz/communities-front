@@ -8,7 +8,7 @@ export default function CrearNegocio() {
   return (
     <div className="flex-col flex items-center justify-center min-h-screen p-2 gap-8 lg:mt-16">
       <Helmet>
-        <title>Crear Negocio | Communities</title>
+        <title>Crear Negocio | Communidades</title>
       </Helmet>
 
       <section

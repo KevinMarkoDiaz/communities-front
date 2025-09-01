@@ -69,7 +69,7 @@ export default function Comunidades() {
       <ResetBusquedaOnMount />
 
       <Helmet>
-        <title>Communities | Comunidades</title>
+        <title>Communidades | Comunidades</title>
         <meta
           name="description"
           content="Explora comunidades migrantes con negocios, eventos y servicios propios."

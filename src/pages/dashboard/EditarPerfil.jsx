@@ -55,7 +55,7 @@ export default function EditarPerfil() {
   return (
     <>
       <Helmet>
-        <title>Editar Perfil | Communities</title>
+        <title>Editar Perfil | Communidades</title>
       </Helmet>
 
       <div className="flex flex-col items-center justify-center min-h-screen px-2 gap-8 lg:mt-16">

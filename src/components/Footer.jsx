@@ -128,12 +128,12 @@ export default function Footer() {
       <div className="flex flex-col md:flex-row items-center justify-center max-w-7xl mx-auto px-6 py-4 gap-3">
         <FadeInOnScroll direction="up" duration={600} delay={150}>
           <div className="bg-[#141414] hidden md:flex rounded-md p-1.5 items-center shadow-md">
-            <img src={logo3} alt="Communities logo" className="h-4 md:h-5" />
+            <img src={logo3} alt="Communidades logo" className="h-4 md:h-5" />
           </div>
         </FadeInOnScroll>
         <FadeInOnScroll direction="down" duration={600} delay={200}>
           <div className="bg-black md:hidden flex rounded-md p-1.5 items-center shadow-md transition-transform duration-300 hover:scale-105">
-            <img src={icono_logo2} alt="Communities logo" className="h-15" />
+            <img src={icono_logo2} alt="Communidades logo" className="h-15" />
           </div>
         </FadeInOnScroll>
         <div className="text-center text-xs font-light text-white/70 md:text-right">

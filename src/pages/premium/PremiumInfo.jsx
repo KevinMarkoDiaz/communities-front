@@ -63,7 +63,7 @@ export default function PremiumInfo() {
   return (
     <>
       <Helmet>
-        <title>Suscripción Premium – Communities</title>
+        <title>Suscripción Premium – Communidades</title>
       </Helmet>
 
       <section className="max-w-5xl mx-auto p-6 space-y-12 grid md:gap-8">
@@ -121,7 +121,7 @@ export default function PremiumInfo() {
 
             <div className="mt-4  text-xs text-gray-500">
               Ideal para comenzar a dar visibilidad a tu proyecto y explorar
-              todas las posibilidades de Communities.
+              todas las posibilidades de Communidades.
             </div>
           </div>
 

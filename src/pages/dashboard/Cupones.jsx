@@ -79,7 +79,7 @@ export default function Cupones() {
   return (
     <div className="max-w-[1200px] w-full mx-auto flex flex-col gap-8 md:gap-12 xl:gap-16 px-2">
       <Helmet>
-        <title>Mis Cupones | Communities</title>
+        <title>Mis Cupones | Communidades</title>
       </Helmet>
 
       <DashboardSectionHeader

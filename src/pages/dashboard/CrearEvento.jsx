@@ -9,7 +9,7 @@ export default function CrearEvento() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-2 gap-8">
       <Helmet>
-        <title>Crear Evento | Communities</title>
+        <title>Crear Evento | Communidades</title>
       </Helmet>
 
       <section

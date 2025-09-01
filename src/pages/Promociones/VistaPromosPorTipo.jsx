@@ -33,7 +33,7 @@ export default function VistaPromosPorTipo({
   return (
     <>
       <Helmet>
-        <title>{titulo} | Communities</title>
+        <title>{titulo} | Communidades</title>
         <meta name="description" content={descripcion} />
       </Helmet>
 

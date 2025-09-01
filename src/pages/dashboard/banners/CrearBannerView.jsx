@@ -7,7 +7,7 @@ export default function CrearBannerView() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-2 gap-8 md:mt-8 lg:mt-16">
       <Helmet>
-        <title>Crear Banner | Communities</title>
+        <title>Crear Banner | Communidades</title>
       </Helmet>
 
       <section

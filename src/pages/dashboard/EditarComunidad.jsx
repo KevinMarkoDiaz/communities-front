@@ -27,7 +27,7 @@ export default function EditarComunidad() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen gap-8 md:mt-8 lg:mt-16">
       <Helmet>
-        <title>Editar Comunidad | Communities</title>
+        <title>Editar Comunidad | Communidades</title>
       </Helmet>
 
       <section

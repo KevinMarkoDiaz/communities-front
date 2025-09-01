@@ -308,7 +308,7 @@ export default function Login() {
             <div className="relative inline-block orbit-wrapper">
               <img
                 src={icono}
-                alt="Logo Communities"
+                alt="Logo Communidades"
                 className="h-24 opacity-90 relative z-20 logo-pulse select-none pointer-events-none"
                 draggable="false"
               />

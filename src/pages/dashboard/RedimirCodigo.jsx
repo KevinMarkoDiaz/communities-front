@@ -31,7 +31,7 @@ export default function RedimirCodigo() {
   return (
     <div className="max-w-[1200px] w-full mx-auto flex flex-col gap-8 md:gap-12 xl:gap-16 px-2 pb-10">
       <Helmet>
-        <title>Redimir Código | Communities</title>
+        <title>Redimir Código | Communidades</title>
       </Helmet>
 
       {/* Header */}

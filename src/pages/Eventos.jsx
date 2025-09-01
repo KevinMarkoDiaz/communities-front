@@ -66,7 +66,7 @@ export default function Eventos() {
       <ResetBusquedaOnMount />
 
       <Helmet>
-        <title>Communities | Eventos</title>
+        <title>Communidades | Eventos</title>
         <meta
           name="description"
           content="Consulta eventos culturales y comunitarios relevantes para migrantes."

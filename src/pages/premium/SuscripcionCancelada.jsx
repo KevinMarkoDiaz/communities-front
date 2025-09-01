@@ -8,7 +8,7 @@ export default function SuscripcionCancelada() {
   return (
     <>
       <Helmet>
-        <title>Suscripción Cancelada – Communities</title>
+        <title>Suscripción Cancelada – Communidades</title>
       </Helmet>
 
       <section className="min-h-screen flex flex-col items-center justify-center text-center px-6 py-12 bg-white">

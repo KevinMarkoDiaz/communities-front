@@ -194,7 +194,7 @@ export default function EventoDetalle() {
 
           <Compartir
             url={window.location.href}
-            title={`Participá en \"${evento.title}\" en Communities`}
+            title={`Participá en \"${evento.title}\" en Communidades`}
             text={`Mirá este evento: ${
               evento.title
             } - ${evento.description?.slice(0, 100)}...`}

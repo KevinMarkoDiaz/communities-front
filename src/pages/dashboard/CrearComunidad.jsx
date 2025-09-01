@@ -17,7 +17,7 @@ export default function CrearComunidad() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen  md:px-4 gap-8">
       <Helmet>
-        <title>Crear Comunidad | Communities</title>
+        <title>Crear Comunidad | Communidades</title>
       </Helmet>
 
       <section

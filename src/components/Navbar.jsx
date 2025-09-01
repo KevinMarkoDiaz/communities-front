@@ -149,14 +149,14 @@ export default function Header() {
           <Link to="/">
             <img
               src={Icon}
-              alt="Communities logo"
+              alt="Communidades logo"
               className={`2xl:h-20 h-12 hidden md:block ${
                 mobileOpen ? "filter brightness-0 invert" : ""
               }`}
             />
             <img
               src={IconMobile}
-              alt="Communities logo"
+              alt="Communidades logo"
               className={`h-12 md:hidden py-1 ${
                 mobileOpen ? "filter brightness-0 invert" : ""
               }`}
@@ -391,7 +391,7 @@ export default function Header() {
             <div className="relative inline-block orbit-wrapper">
               <img
                 src={Icono}
-                alt="Logo Communities"
+                alt="Logo Communidades"
                 className="h-24 opacity-90 relative z-20 logo-pulse select-none pointer-events-none"
                 draggable="false"
               />

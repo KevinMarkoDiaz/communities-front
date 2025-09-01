@@ -53,7 +53,7 @@ export default function Registro() {
   return (
     <>
       <Helmet>
-        <title>Communities | Registro</title>
+        <title>Communidades | Registro</title>
       </Helmet>
 
       <div
@@ -174,7 +174,7 @@ export default function Registro() {
           <div className="flex justify-center mt-8">
             <img
               src={icono}
-              alt="Logo Communities"
+              alt="Logo Communidades"
               className="h-20 opacity-90 logo-pulse select-none pointer-events-none"
               draggable="false"
             />

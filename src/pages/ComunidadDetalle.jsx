@@ -96,7 +96,7 @@ export default function ComunidadDetalle() {
     return (
       <div className="p-4 text-center text-gray-600">
         <Helmet>
-          <title>Communities | Comunidad no encontrada</title>
+          <title>Communidades | Comunidad no encontrada</title>
         </Helmet>
         Comunidad no encontrada.
       </div>
@@ -139,7 +139,7 @@ export default function ComunidadDetalle() {
             )}
             <Compartir
               url={window.location.href}
-              title={`Descubrí la comunidad \"${comunidad.name}\" en Communities`}
+              title={`Descubrí la comunidad \"${comunidad.name}\" en Communidades`}
               text={`Mirá esta comunidad: ${comunidad.name || ""} - ${
                 comunidad.description?.slice(0, 100) || ""
               }...`}

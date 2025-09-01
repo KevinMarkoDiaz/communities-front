@@ -5,7 +5,7 @@ export default function BadgeIconVerified() {
       style={{
         clipPath: "polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)",
       }}
-      title="Verificado por Communities"
+      title="Verificado por Communidades"
     >
       <svg
         className="w-2.5 h-2.5 text-white"

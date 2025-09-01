@@ -136,7 +136,7 @@ export default function Promociones() {
   return (
     <div className="flex flex-col gap-12 md:gap-10 md:mt-8">
       <Helmet>
-        <title>Communities | Promociones</title>
+        <title>Communidades | Promociones</title>
         <meta
           name="description"
           content="Descubrí promociones destacadas para tu comunidad."

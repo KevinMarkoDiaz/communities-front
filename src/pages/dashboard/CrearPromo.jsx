@@ -59,7 +59,7 @@ export default function CrearPromo() {
     <div className="flex flex-col items-center justify-center min-h-screen gap-8 md:mt-8 lg:mt-16">
       <Helmet>
         <title>
-          {esEdicion ? "Editar Promoción" : "Crear Promoción"} | Communities
+          {esEdicion ? "Editar Promoción" : "Crear Promoción"} | Communidades
         </title>
       </Helmet>
 

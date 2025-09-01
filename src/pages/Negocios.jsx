@@ -71,7 +71,7 @@ export default function Negocios() {
       <ResetBusquedaOnMount />
 
       <Helmet>
-        <title>Communities | Negocios</title>
+        <title>Communidades | Negocios</title>
         <meta
           name="description"
           content="Explora negocios y servicios dentro de tu comunidad migrante."

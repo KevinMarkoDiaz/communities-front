@@ -9,7 +9,7 @@ import {
 
 export default function Compartir({
   url,
-  title = "Mirá esto en Communities",
+  title = "Mirá esto en Communidades",
   text = "",
 }) {
   const [copiado, setCopiado] = useState(false);
