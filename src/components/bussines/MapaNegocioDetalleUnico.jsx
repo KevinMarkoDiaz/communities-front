@@ -14,7 +14,10 @@ export default function MapaNegocioDetalleUnico({ lat, lng, logo = "" }) {
       (pos) => {
         setUserCoords([pos.coords.longitude, pos.coords.latitude]);
       },
-      () => console.log("Ubicación denegada")
+      (err) => {
+        setUserCoords([-96.797, 32.7767]);
+      },
+      { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
     );
   }, []);
 

@@ -2,17 +2,11 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const obtenerUbicacionUsuario = createAsyncThunk(
   "ubicacion/obtener",
-  async (_, { rejectWithValue }) => {
-    // 🌐 🌴 DEV: Ubicación fake de Miami
-    // return {
-    //   lat: 32.7767,
-    //   lng: -96.797,
-    // };
-
-    // 🌐 🌍 PROD: Descomentar para usar geolocalización real
-    return new Promise((resolve, reject) => {
+  async () => {
+    return new Promise((resolve) => {
       if (!navigator.geolocation) {
-        return reject(rejectWithValue("Geolocalización no disponible"));
+        console.warn("Geolocalización no disponible, usando Dallas");
+        return resolve({ lat: 32.7767, lng: -96.797 });
       }
 
       navigator.geolocation.getCurrentPosition(
@@ -22,7 +16,9 @@ export const obtenerUbicacionUsuario = createAsyncThunk(
           resolve({ lat, lng });
         },
         (err) => {
-          reject(rejectWithValue(err.message || "Error al obtener ubicación"));
+          console.warn("Error o permiso denegado:", err);
+          // fallback Dallas
+          resolve({ lat: 32.7767, lng: -96.797 });
         },
         { timeout: 10000 }
       );

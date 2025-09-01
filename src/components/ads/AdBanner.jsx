@@ -25,18 +25,9 @@ export default function AdBanner({
   sizes = "100vw",
   loading = "lazy",
   decoding = "async",
-  debug = false,
 }) {
   // Fallback final por si falta alguna variante
   const fallbackSrc = image || desktopImage || tabletImage || mobileImage || "";
-
-  // Loguea qué URL termina cargando el browser
-  const handleImgLoad = (e) => {
-    if (debug) {
-      // currentSrc = la URL realmente usada por el navegador
-      console.log("[AdBanner] loaded src:", e.currentTarget.currentSrc);
-    }
-  };
 
   const Picture = (
     <picture className="block w-full h-full">
@@ -61,7 +52,6 @@ export default function AdBanner({
         className={`max-h-full max-w-full object-contain w-full h-full ${imgClassName}`}
         loading={loading}
         decoding={decoding}
-        onLoad={handleImgLoad}
       />
     </picture>
   );

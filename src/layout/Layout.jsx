@@ -17,7 +17,6 @@ export default function Layout() {
   const selectedCommunityId = useSelector(
     (s) => s.comunidadSeleccionada?.comunidad?._id
   );
-  console.log(selectedCommunityId);
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });

@@ -12,7 +12,6 @@ export default function InboxButton({ className = "", onClick }) {
   const unreadCount = conversations.filter(
     (conv) => conv.lastMessageIsRead === false
   ).length;
-  console.log(conversations);
   return (
     <Link
       to="/dashboard/inbox"

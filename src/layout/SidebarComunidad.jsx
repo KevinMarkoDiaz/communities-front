@@ -17,6 +17,7 @@ export default function SidebarComunidadMobile() {
   const [mostrarDropdown, setMostrarDropdown] = useState(false);
   const dropdownRef = useRef(null);
 
+  // 1) Opciones para el <Select>
   const opciones = useMemo(
     () =>
       comunidades.map((com) => ({
@@ -26,6 +27,26 @@ export default function SidebarComunidadMobile() {
     [comunidades]
   );
 
+  // 2) Si hay comunidades pero NO hay selección, auto‑seleccionar la primera
+  useEffect(() => {
+    if (comunidades.length > 0 && !comunidadSeleccionada) {
+      dispatch(setComunidadSeleccionada(comunidades[0]));
+    }
+  }, [comunidades, comunidadSeleccionada, dispatch]);
+
+  // 3) Si la lista cambia y la comunidad seleccionada ya no existe, caer a la primera
+  useEffect(() => {
+    if (!comunidadSeleccionada && comunidades.length === 0) return; // nada que hacer
+
+    if (
+      comunidadSeleccionada &&
+      !comunidades.some((c) => c._id === comunidadSeleccionada._id)
+    ) {
+      dispatch(setComunidadSeleccionada(comunidades[0] || null));
+    }
+  }, [comunidades, comunidadSeleccionada, dispatch]);
+
+  // 4) Opción actualmente seleccionada para el Select
   const selectedOption = useMemo(() => {
     if (!comunidadSeleccionada) return null;
     return (

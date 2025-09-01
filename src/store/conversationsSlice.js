@@ -15,7 +15,6 @@ export const fetchConversations = createAsyncThunk(
   async (_, { rejectWithValue, dispatch }) => {
     try {
       const res = await axiosInstance.get("/conversations/me");
-      console.log(res.data);
       return res.data;
     } catch (err) {
       dispatch(

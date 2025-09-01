@@ -29,8 +29,8 @@ export async function logoutUser() {
  * Obtener perfil del usuario logueado (/auth/profile)
  */
 export async function getUserProfile() {
-  const response = await axiosInstance.get("/auth/profile");
-  return response.data.user;
+  const { data } = await axiosInstance.get("/auth/profile");
+  return data;
 }
 
 /**

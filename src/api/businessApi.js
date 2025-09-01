@@ -113,9 +113,20 @@ export const getBusinessesForMapByCommunity = async (
   communityId,
   params = {}
 ) => {
-  const query = new URLSearchParams(params).toString();
-  const res = await axiosInstance.get(
-    `/businesses/map/${communityId}?${query}`
+  const query = new URLSearchParams({
+    ...params,
+    _: Date.now(), // ← rompe caché de navegador/CDN
+  }).toString();
+
+  const { data } = await axiosInstance.get(
+    `/businesses/map/${communityId}?${query}`,
+    {
+      headers: {
+        "Cache-Control": "no-cache",
+        Pragma: "no-cache",
+      },
+    }
   );
-  return res.data.businesses;
+
+  return data.businesses;
 };

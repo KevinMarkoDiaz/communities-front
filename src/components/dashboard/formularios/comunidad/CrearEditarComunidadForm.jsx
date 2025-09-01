@@ -58,8 +58,6 @@ export default function CrearEditarComunidadForm({
   const dispatch = useDispatch();
 
   const handleSubmit = async (values, { setSubmitting }) => {
-    console.log("➡️ Submitting values:", values);
-
     try {
       const { flagImage, bannerImage, food, originCountryInfo, ...resto } =
         values;

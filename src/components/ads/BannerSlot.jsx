@@ -223,7 +223,6 @@ export default function BannerSlot({
   // Render vendido/fallback (BD)
   if (banner) {
     // ÚNICO log que dejamos en prod para verificar qué banner quedó
-    console.log(banner);
 
     // variantes normalizadas
     const desktopImage =

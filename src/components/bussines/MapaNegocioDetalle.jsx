@@ -34,10 +34,11 @@ export default function MapaComunidadConApi() {
       (pos) => {
         setUserCoords([pos.coords.longitude, pos.coords.latitude]);
       },
-      () => {
-        console.log("Ubicación denegada");
-        setUserCoords(null);
-      }
+      (err) => {
+        // fallback Dallas
+        setUserCoords([-96.797, 32.7767]);
+      },
+      { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
     );
   }, []);
 
