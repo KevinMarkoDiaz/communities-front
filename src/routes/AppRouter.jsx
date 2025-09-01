@@ -1,4 +1,8 @@
+// src/router/AppRouter.jsx
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import AuthGate from "../components/AuthGate";
+import PublicOnlyRoute from "../routes/PublicOnlyRoute";
+
 import Layout from "../layout/Layout";
 import Home from "../pages/Home";
 import Negocios from "../pages/Negocios";
@@ -13,6 +17,7 @@ import NotFound from "../pages/NotFound";
 
 import Login from "../pages/Login";
 import RegistroMultiStep from "../pages/Registro";
+import VerificaTuCorreo from "../pages/VerificaTuCorreo";
 
 import NegocioDetalle from "../pages/NegocioDetalle";
 import EventoDetalle from "../pages/EventoDetalle";
@@ -49,25 +54,28 @@ import EditarComunidad from "../pages/dashboard/EditarComunidad";
 import RutaPrivada from "../components/RutaPrivada";
 import RutaPrivadaAdmin from "../components/RutaPrivadaAdmin";
 
-// ✅ Mensajería
+// Mensajería
 import InboxList from "../components/mensajes/InboxList";
 import ChatView from "../components/mensajes/ChatView";
 
-// ✅ NUEVAS vistas detalle
-import DashboardBusinessDetail from "../../src/pages/dashboard/vista_detalle/DashboardBusinessDetail";
-import DashboardEventDetail from "../../src/pages/dashboard/vista_detalle/DashboardEventDetail";
-import DashboardCommunityDetail from "../../src/pages/dashboard/vista_detalle/DashboardCommunityDetail";
+// NUEVAS vistas detalle
+import DashboardBusinessDetail from "../pages/dashboard/vista_detalle/DashboardBusinessDetail";
+import DashboardEventDetail from "../pages/dashboard/vista_detalle/DashboardEventDetail";
+import DashboardCommunityDetail from "../pages/dashboard/vista_detalle/DashboardCommunityDetail";
 import Cupones from "../pages/dashboard/Cupones";
 import RedimirCodigo from "../pages/dashboard/RedimirCodigo";
 import Banners from "../pages/dashboard/banners/Banners";
 import CrearBannerView from "../pages/dashboard/banners/CrearBannerView";
 import MisBanners from "../pages/dashboard/banners/MisBanners";
-import VerificaTuCorreo from "../pages/VerificaTuCorreo";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Layout />,
+    element: (
+      <AuthGate>
+        <Layout />
+      </AuthGate>
+    ),
     children: [
       { path: "/", element: <Home /> },
 
@@ -102,10 +110,33 @@ const router = createBrowserRouter([
     ],
   },
 
-  // Autenticación
-  { path: "/login", element: <Login /> },
-  { path: "/registro", element: <RegistroMultiStep /> },
-  { path: "/verifica-tu-correo", element: <VerificaTuCorreo /> },
+  // Autenticación (público-exclusivo)
+  {
+    path: "/login",
+    element: (
+      <PublicOnlyRoute>
+        <Login />
+      </PublicOnlyRoute>
+    ),
+  },
+  {
+    path: "/registro",
+    element: (
+      <PublicOnlyRoute>
+        <RegistroMultiStep />
+      </PublicOnlyRoute>
+    ),
+  },
+  {
+    path: "/verifica-tu-correo",
+    element: (
+      <PublicOnlyRoute>
+        <VerificaTuCorreo />
+      </PublicOnlyRoute>
+    ),
+  },
+
+  // Admin
   {
     path: "/dashboard-admin",
     element: <RutaPrivadaAdmin />,
@@ -122,14 +153,13 @@ const router = createBrowserRouter([
               { path: ":id/editar", element: <EditarCategoriaView /> },
             ],
           },
-
           {
             path: "mis-comunidades",
             children: [
               { path: "", element: <Comunidades /> },
               { path: "crear", element: <CrearComunidad /> },
               { path: ":id/editar", element: <EditarComunidad /> },
-              { path: ":id", element: <DashboardCommunityDetail /> }, // 📌 NUEVO
+              { path: ":id", element: <DashboardCommunityDetail /> },
             ],
           },
           {
@@ -165,23 +195,23 @@ const router = createBrowserRouter([
           { path: "perfil", element: <Perfil /> },
           { path: "perfil/editar", element: <EditarPerfil /> },
           { path: "notificaciones", element: <Notificaciones /> },
-          {
-            path: "cupones",
-            element: <Cupones />,
-          },
+          { path: "cupones", element: <Cupones /> },
           { path: "redimir", element: <RedimirCodigo /> },
+
           // Negocios del usuario
           {
             path: "mis-negocios",
             children: [
               { path: "", element: <MisNegocios /> },
               { path: "crear", element: <CrearNegocio /> },
-              { path: ":id", element: <DashboardBusinessDetail /> }, // 📌 NUEVO
+              { path: ":id", element: <DashboardBusinessDetail /> },
               { path: ":id/editar", element: <CrearNegocio /> },
               { path: ":id/promos", element: <PromosPorNegocio /> },
               { path: ":negocioId/promos/nueva", element: <CrearPromo /> },
             ],
           },
+
+          // Banners
           {
             path: "mis-banners",
             children: [
@@ -189,13 +219,14 @@ const router = createBrowserRouter([
               { path: "crear", element: <CrearBannerView /> },
             ],
           },
+
           // Eventos del usuario
           {
             path: "mis-eventos",
             children: [
               { path: "", element: <MisEventos /> },
               { path: "crear", element: <CrearEvento /> },
-              { path: ":id", element: <DashboardEventDetail /> }, // 📌 NUEVO
+              { path: ":id", element: <DashboardEventDetail /> },
               { path: ":id/editar", element: <EditarEvento /> },
             ],
           },
@@ -225,7 +256,7 @@ const router = createBrowserRouter([
     ],
   },
 
-  // Página 404
+  // 404
   { path: "*", element: <NotFound /> },
 ]);
 

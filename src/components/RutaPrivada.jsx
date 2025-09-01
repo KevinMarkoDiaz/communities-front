@@ -1,14 +1,25 @@
+// src/components/RutaPrivada.jsx
+import { Outlet, Navigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Navigate, Outlet, useLocation } from "react-router-dom";
+import {
+  selectAuthLoading,
+  selectIsAuthenticated,
+} from "../store/authSelectors";
+import Loading from "./Loading";
 
 export default function RutaPrivada() {
-  const { usuario, loading } = useSelector((s) => s.auth);
+  const loading = useSelector(selectAuthLoading);
+  const isAuth = useSelector(selectIsAuthenticated);
   const location = useLocation();
 
-  // ✅ Cualquier autenticado puede entrar, incluyendo admin
-  if (!usuario) {
-    return <Navigate to="/login" replace state={{ from: location }} />;
+  if (loading) {
+    return (
+      <div className="w-full min-h-screen grid place-items-center">
+        <Loading />
+      </div>
+    );
   }
-
+  if (!isAuth)
+    return <Navigate to="/login" replace state={{ from: location }} />;
   return <Outlet />;
 }
