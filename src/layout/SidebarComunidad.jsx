@@ -9,54 +9,61 @@ import { motion, AnimatePresence } from "framer-motion";
 
 export default function SidebarComunidadMobile() {
   const dispatch = useDispatch();
-  const comunidades = useSelector((state) => state.comunidades.lista || []);
+
+  // Normalizar siempre a array para evitar `.find` sobre undefined
+  const comunidadesRaw = useSelector((state) => state.comunidades?.lista);
+  const comunidades = Array.isArray(comunidadesRaw) ? comunidadesRaw : [];
+
   const comunidadSeleccionada = useSelector(
-    (state) => state.comunidadSeleccionada.comunidad
+    (state) => state.comunidadSeleccionada?.comunidad || null
   );
 
   const [mostrarDropdown, setMostrarDropdown] = useState(false);
   const dropdownRef = useRef(null);
 
-  // 1) Opciones para el <Select>
-  const opciones = useMemo(
-    () =>
-      comunidades.map((com) => ({
-        label: com.name,
-        value: com._id,
-      })),
-    [comunidades]
-  );
+  // Opciones para el <Select>
+  const opciones = useMemo(() => {
+    return comunidades.map((com) => ({
+      label: com?.name ?? "Sin nombre",
+      value: com?._id ?? "",
+    }));
+  }, [comunidades]);
 
-  // 2) Si hay comunidades pero NO hay selección, auto‑seleccionar la primera
+  // Auto-selección: si hay lista y no hay selección, tomar la primera
   useEffect(() => {
     if (comunidades.length > 0 && !comunidadSeleccionada) {
       dispatch(setComunidadSeleccionada(comunidades[0]));
     }
   }, [comunidades, comunidadSeleccionada, dispatch]);
 
-  // 3) Si la lista cambia y la comunidad seleccionada ya no existe, caer a la primera
+  // Si la comunidad seleccionada ya no existe en la lista, caer a la primera (o null)
   useEffect(() => {
-    if (!comunidadSeleccionada && comunidades.length === 0) return; // nada que hacer
-
+    if (!comunidadSeleccionada && comunidades.length === 0) return;
     if (
       comunidadSeleccionada &&
-      !comunidades.some((c) => c._id === comunidadSeleccionada._id)
+      !comunidades.some((c) => c?._id === comunidadSeleccionada._id)
     ) {
       dispatch(setComunidadSeleccionada(comunidades[0] || null));
     }
   }, [comunidades, comunidadSeleccionada, dispatch]);
 
-  // 4) Opción actualmente seleccionada para el Select
+  // Opción actualmente seleccionada para el Select (defensivo)
   const selectedOption = useMemo(() => {
-    if (!comunidadSeleccionada) return null;
+    if (!comunidadSeleccionada || !Array.isArray(opciones)) return null;
     return (
       opciones.find((opt) => opt.value === comunidadSeleccionada._id) || null
     );
   }, [comunidadSeleccionada, opciones]);
 
+  // Cambio desde el Select (con soporte a limpiar -> null)
   const handleSelectChange = (opcion) => {
-    const comunidad = comunidades.find((c) => c._id === opcion?.value);
-    dispatch(setComunidadSeleccionada(comunidad || null));
+    if (!opcion) {
+      dispatch(setComunidadSeleccionada(null));
+      setMostrarDropdown(false);
+      return;
+    }
+    const comunidad = comunidades.find((c) => c?._id === opcion.value) || null;
+    dispatch(setComunidadSeleccionada(comunidad));
     setMostrarDropdown(false);
   };
 
@@ -73,7 +80,6 @@ export default function SidebarComunidadMobile() {
     if (mostrarDropdown) {
       document.addEventListener("mousedown", handleClickOutside);
     }
-
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -82,7 +88,7 @@ export default function SidebarComunidadMobile() {
   return (
     <>
       {/* Sidebar Desktop */}
-      <aside className="hidden 2xl:flex flex-col justify-between  2xl:w-[12vw] mt-20 p-2  shadow-lg h-[60vh] overflow-hidden relative bg-gradient-to-b from-[#fff7ec] to-[#f3e8ff]">
+      <aside className="hidden 2xl:flex flex-col justify-between  2xl:w-[12vw] mt-20 p-2 shadow-lg h-[60vh] overflow-hidden relative bg-gradient-to-b from-[#fff7ec] to-[#f3e8ff]">
         <div className="space-y-4">
           <div>
             <img
@@ -147,7 +153,7 @@ export default function SidebarComunidadMobile() {
               className="fixed bottom-5 2xl:bottom-20 right-4 z-50 w-[90vw] max-w-[360px] bg-gradient-to-b from-[#fff7ec] to-[#f3e8ff] p-4 rounded-2xl shadow-2xl border border-sky-300 h-[40vh] min-h-[350px] flex flex-col justify-between"
             >
               <div className="space-y-2">
-                <label className="block  text-xs font-medium text-gray-700">
+                <label className="block text-xs font-medium text-gray-700">
                   Comunidad
                 </label>
 
