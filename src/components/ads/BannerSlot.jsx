@@ -1,4 +1,3 @@
-// src/components/ads/BannerSlot.jsx
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import AdBanner from "./AdBanner";
@@ -16,7 +15,9 @@ const STATIC_FALLBACKS = {
   },
 };
 
-// Google Ads (respeta alto del contenedor)
+// Cache en memoria por combinación de filtros
+const bannerCache = new Map(); // key -> banner|null|"google"|"static"
+
 function GoogleAdSlot({ clientId, adUnit, style }) {
   const ref = useRef(null);
 
@@ -56,21 +57,13 @@ function GoogleAdSlot({ clientId, adUnit, style }) {
   );
 }
 
-// Acepta {banners: [...]}, {ads: [...]}, o {data: [...]}
 function getBannerListFromResponse(data) {
   return data?.banners ?? data?.ads ?? data?.data ?? [];
 }
 
-/**
- * Flujo:
- * 1) Busca vendidos (includeFallback=false)
- * 2) Si no hay → fallback de BD (includeFallback=true)
- * 3) Si tampoco → Google Ads (si está habilitado)
- * 4) Si nada → fallback estático
- */
 export default function BannerSlot({
   placement,
-  communityId, // ← opcional (prop). Si no viene, se usa Redux.
+  communityId, // opcional (prop). Si no, usamos Redux.
   categoryId,
   businessId,
   adUnit,
@@ -81,18 +74,41 @@ export default function BannerSlot({
   imgClassName = "",
   openInNewTabDefault = true,
   askDbFallbackIfNoAds = true,
-  fixedHeight = null, // ej: "250px" o 250
+  fixedHeight = null,
 }) {
   const [banner, setBanner] = useState(null);
   const [showAds, setShowAds] = useState(false);
 
-  // 🧠 Tomamos la comunidad seleccionada desde Redux
+  // ✅ Ruta correcta al slice:
   const reduxCommunityId = useSelector(
-    (s) => s.comunidades?.comunidadSeleccionada?.comunidad?._id
+    (s) => s.comunidadSeleccionada?.comunidad?._id
   );
 
   // Si pasaron communityId por prop, lo usamos; si no, usamos Redux
   const effectiveCommunityId = communityId ?? reduxCommunityId ?? null;
+
+  // Clave estable de consulta: cambia solo si cambian filtros relevantes
+  const stableKey = useMemo(() => {
+    return JSON.stringify({
+      placement,
+      communityId: effectiveCommunityId || null,
+      categoryId: categoryId || null,
+      businessId: businessId || null,
+      adUnit: adUnit || null,
+      askDbFallbackIfNoAds: !!askDbFallbackIfNoAds,
+      enableGoogleAds: !!enableGoogleAds,
+      adsenseClient: adsenseClient || null,
+    });
+  }, [
+    placement,
+    effectiveCommunityId,
+    categoryId,
+    businessId,
+    adUnit,
+    askDbFallbackIfNoAds,
+    enableGoogleAds,
+    adsenseClient,
+  ]);
 
   const domId = useMemo(
     () => `banner-${placement}-${Math.random().toString(36).slice(2)}`,
@@ -107,15 +123,52 @@ export default function BannerSlot({
       ? fixedHeight
       : null;
 
-  // estilo base del wrapper
   const baseStyle = clampHeight
     ? { height: clampHeight, maxHeight: clampHeight, ...containerStyle }
     : containerStyle;
 
-  // fetch vendido → fallback DB → google → estático
+  // request id para ignorar respuestas viejas
+  const reqIdRef = useRef(0);
+
   useEffect(() => {
     let mounted = true;
-    const base = {
+    const myReqId = ++reqIdRef.current;
+
+    // ⚠️ Si dependes de communityId y aún no está definido, no busques.
+    // (Si tu negocio requiere banner “sin comunidad”, quita este guard)
+    // if (!effectiveCommunityId) return; // <- descomenta si quieres bloquear sin comunidad
+
+    // Revisa cache primero (evita parpadeo y peticiones extra)
+    if (bannerCache.has(stableKey)) {
+      const cached = bannerCache.get(stableKey);
+      if (cached === "google") {
+        if (mounted && myReqId === reqIdRef.current) {
+          setShowAds(true);
+          // no limpies el banner anterior hasta que Google renderice, opcional
+        }
+        return;
+      }
+      if (cached === "static") {
+        if (mounted && myReqId === reqIdRef.current) {
+          setShowAds(false);
+          setBanner(STATIC_FALLBACKS[placement] || null);
+        }
+        return;
+      }
+      if (cached) {
+        if (mounted && myReqId === reqIdRef.current) {
+          setShowAds(false);
+          setBanner(cached);
+        }
+        return;
+      }
+      // cached null => sigue flujo normal
+    }
+
+    // NO limpiar el banner aquí: evitamos flicker.
+    // Solo lo reemplazamos cuando tengamos el nuevo.
+
+    const paramsBase = {
       placement,
       limit: 1,
       strategy: "weighted",
@@ -127,15 +180,16 @@ export default function BannerSlot({
     const trySold = async () => {
       try {
         const { data } = await axiosInstance.get("ads/active", {
-          params: { ...base, includeFallback: "false" },
+          params: { ...paramsBase, includeFallback: "false" },
           headers: { "Cache-Control": "no-cache" },
         });
-        if (!mounted) return false;
+        if (!mounted || myReqId !== reqIdRef.current) return false;
         const list = getBannerListFromResponse(data);
         const b = list[0];
         if (b) {
-          setBanner(b);
+          bannerCache.set(stableKey, b);
           setShowAds(false);
+          setBanner(b);
           return true;
         }
         return false;
@@ -148,15 +202,16 @@ export default function BannerSlot({
       if (!askDbFallbackIfNoAds) return false;
       try {
         const { data } = await axiosInstance.get("ads/active", {
-          params: { ...base, includeFallback: "true" },
+          params: { ...paramsBase, includeFallback: "true" },
           headers: { "Cache-Control": "no-cache" },
         });
-        if (!mounted) return false;
+        if (!mounted || myReqId !== reqIdRef.current) return false;
         const list = getBannerListFromResponse(data);
         const fb = list[0];
         if (fb) {
-          setBanner(fb);
+          bannerCache.set(stableKey, fb);
           setShowAds(false);
+          setBanner(fb);
           return true;
         }
         return false;
@@ -170,21 +225,29 @@ export default function BannerSlot({
       if (await tryDbFallback()) return;
 
       if (enableGoogleAds && adsenseClient && adUnit) {
-        setShowAds(true);
-        setBanner(null);
+        bannerCache.set(stableKey, "google");
+        if (mounted && myReqId === reqIdRef.current) {
+          setShowAds(true);
+          // no setBanner(null) para no provocar flicker visual
+        }
         return;
       }
 
-      setBanner(STATIC_FALLBACKS[placement] || null);
-      setShowAds(false);
+      // Fallback estático
+      bannerCache.set(stableKey, "static");
+      if (mounted && myReqId === reqIdRef.current) {
+        setShowAds(false);
+        setBanner(STATIC_FALLBACKS[placement] || null);
+      }
     })();
 
     return () => {
       mounted = false;
     };
   }, [
+    stableKey,
     placement,
-    effectiveCommunityId, // 👈 cambia cuando cambia la comunidad en Redux
+    effectiveCommunityId,
     categoryId,
     businessId,
     enableGoogleAds,
@@ -196,7 +259,6 @@ export default function BannerSlot({
   // Tracking impresión (solo banners vendidos/DB, no estáticos)
   useEffect(() => {
     if (!banner?._id || banner?.isFallback) return;
-
     const el = document.getElementById(domId);
     if (!el) return;
 
@@ -222,9 +284,6 @@ export default function BannerSlot({
 
   // Render vendido/fallback (BD)
   if (banner) {
-    // ÚNICO log que dejamos en prod para verificar qué banner quedó
-
-    // variantes normalizadas
     const desktopImage =
       banner.imageDesktopUrl ||
       banner.sources?.desktop ||
@@ -286,7 +345,6 @@ export default function BannerSlot({
     );
   }
 
-  // Render Google Ads (respetando altura)
   if (showAds) {
     return (
       <div id={domId} className={className} style={baseStyle}>
@@ -307,7 +365,6 @@ export default function BannerSlot({
     );
   }
 
-  // Fallback estático
   const fb = STATIC_FALLBACKS[placement];
   return fb ? (
     <div id={domId} className={className} style={baseStyle}>
