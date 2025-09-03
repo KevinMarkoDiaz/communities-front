@@ -44,23 +44,15 @@ export default function SearchBarGlobal({
           value={value}
           onChange={(e) => {
             onChange(e.target.value);
-            if (e.target.value.trim() === "") {
-              onLimpiar?.();
-            }
+            if (e.target.value.trim() === "") onLimpiar?.();
           }}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           className="
-          text-xs
-          md:text-sm
-            flex-1
-            bg-transparent
-            border-none
-            outline-none
-            text-base
-            text-black
-            placeholder:text-black
-          "
+    flex-1 bg-transparent border-none outline-none
+    text-[16px] md:text-sm lg:text-base
+    text-black placeholder:text-black
+  "
         />
       </div>
     </div>
