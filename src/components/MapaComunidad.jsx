@@ -26,6 +26,9 @@ export default function MapaComunidad({ negocios, coords }) {
   const [mostrarLeyenda, setMostrarLeyenda] = useState(false);
 
   const userCoords = useSelector((state) => state.ubicacion.coords);
+  const { name } = useSelector(
+    (state) => state.comunidadSeleccionada.comunidad
+  );
 
   const getDispositivoEscala = () => {
     const width = window.innerWidth;
@@ -225,8 +228,16 @@ export default function MapaComunidad({ negocios, coords }) {
           });
         }
       } else {
-        markerEl.style.backgroundColor = colorCategoria;
-        markerEl.style.border = "none";
+        const flagBg = getFlagBackgroundByCommunity(name);
+        if (flagBg) {
+          // Centro con bandera de la comunidad seleccionada
+          markerEl.style.background = flagBg;
+          markerEl.style.backgroundSize = "100% 100%";
+        } else {
+          // Fallback: color por categoría (comportamiento actual)
+          markerEl.style.backgroundColor = colorCategoria;
+          markerEl.style.border = "none";
+        }
       }
 
       wrapper.appendChild(markerEl);
@@ -404,4 +415,46 @@ function getColorByCategory(nombre) {
     default:
       return "#9ca3af";
   }
+}
+function getFlagBackgroundByCommunity(name = "") {
+  const n = String(name || "")
+    .toLowerCase()
+    .trim();
+
+  // 🇨🇴 Colombia (amarillo 50%, azul 25%, rojo 25%)
+  if (n.includes("colom")) {
+    return "linear-gradient(to bottom, #FCD116 0% 50%, #0038A8 50% 75%, #CE1126 75% 100%)";
+  }
+
+  // 🇻🇪 Venezuela (amarillo/azul/rojo a tercios; sin estrellas)
+  if (n.includes("vene")) {
+    return "linear-gradient(to bottom, #FCD116 0% 33.333%, #0033A0 33.333% 66.666%, #EF3340 66.666% 100%)";
+  }
+
+  // 🇵🇪 Perú (rojo, blanco, rojo vertical)
+  if (n.includes("peru") || n.includes("perú")) {
+    return "linear-gradient(to right, #D91023 0% 33.333%, #FFFFFF 33.333% 66.666%, #D91023 66.666% 100%)";
+  }
+
+  // 🇦🇷 Argentina (celeste/blanco/celeste)
+  if (n.includes("argen")) {
+    return "linear-gradient(to bottom, #74ACDF 0% 33.333%, #FFFFFF 33.333% 66.666%, #74ACDF 66.666% 100%)";
+  }
+
+  // 🇲🇽 México (verde/blanco/rojo vertical; sin escudo)
+  if (n.includes("mex") || n.includes("méx")) {
+    return "linear-gradient(to right, #006847 0% 33.333%, #FFFFFF 33.333% 66.666%, #CE1126 66.666% 100%)";
+  }
+
+  // 🇺🇸 USA (simplificado: rojo/blanco rayas)
+  if (
+    n.includes("usa") ||
+    n.includes("estados unidos") ||
+    n.includes("united states")
+  ) {
+    return "repeating-linear-gradient(to bottom, #B22234 0 10%, #FFFFFF 10% 20%)";
+  }
+
+  // Si no reconocemos la comunidad, devolvemos null para caer al color de categoría
+  return null;
 }
