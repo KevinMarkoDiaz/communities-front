@@ -1,6 +1,5 @@
-import { Field, ErrorMessage } from "formik";
+import { Field, ErrorMessage, useFormikContext } from "formik";
 import Select from "react-select";
-import { useFormikContext } from "formik";
 import { customSelectStylesForm } from "../../../../../src/styles/customSelectStylesForm";
 
 /**
@@ -9,12 +8,16 @@ import { customSelectStylesForm } from "../../../../../src/styles/customSelectSt
  */
 export default function Paso1General({ categorias = [], comunidades = [] }) {
   const { values, setFieldValue } = useFormikContext();
+  const selectedCount = Array.isArray(values?.categories)
+    ? values.categories.length
+    : 0;
+  const minRequired = 2;
 
   return (
     <div className="space-y-5">
       {/* Nombre */}
       <div>
-        <label className="block  text-xs font-medium text-white mb-1">
+        <label className="block text-xs font-medium text-white mb-1">
           Nombre
         </label>
         <Field
@@ -25,13 +28,13 @@ export default function Paso1General({ categorias = [], comunidades = [] }) {
         <ErrorMessage
           name="name"
           component="div"
-          className="text-red-500  text-xs mt-1"
+          className="text-red-500 text-xs mt-1"
         />
       </div>
 
       {/* Descripción */}
       <div>
-        <label className="block  text-xs font-medium text-white mb-1">
+        <label className="block text-xs font-medium text-white mb-1">
           Descripción
         </label>
         <Field
@@ -43,22 +46,19 @@ export default function Paso1General({ categorias = [], comunidades = [] }) {
         <ErrorMessage
           name="description"
           component="div"
-          className="text-red-500  text-xs mt-1"
+          className="text-red-500 text-xs mt-1"
         />
       </div>
 
       {/* Categorías (múltiples) */}
       <div>
-        <label className="block  text-xs font-medium text-white mb-1">
+        <label className="block text-xs font-medium text-white mb-1">
           Categorías
         </label>
         <Select
           isMulti
           menuPlacement="top"
-          options={categorias.map((c) => ({
-            value: c._id,
-            label: c.name,
-          }))}
+          options={categorias.map((c) => ({ value: c._id, label: c.name }))}
           placeholder="Selecciona una o más categorías..."
           styles={customSelectStylesForm}
           value={categorias
@@ -71,34 +71,46 @@ export default function Paso1General({ categorias = [], comunidades = [] }) {
             )
           }
         />
+
+        {/* Ayuda en vivo bajo el input */}
+        <div
+          className={`mt-1 text-xs ${
+            selectedCount < minRequired ? "text-yellow-300" : "text-green-400"
+          }`}
+          aria-live="polite"
+        >
+          {selectedCount < minRequired
+            ? `Selecciona al menos ${minRequired} categorías (te faltan ${
+                minRequired - selectedCount
+              }).`
+            : `Perfecto: ${selectedCount} categoría${
+                selectedCount > 1 ? "s" : ""
+              } seleccionada${selectedCount > 1 ? "s" : ""}.`}
+        </div>
+
+        {/* Mensaje de error de Formik/Yup si intenta avanzar sin cumplir */}
         <ErrorMessage
           name="categories"
           component="div"
-          className="text-red-500  text-xs mt-1"
+          className="text-red-500 text-xs mt-1"
         />
       </div>
 
       {/* Comunidad */}
       <div>
-        <label className="block  text-xs font-medium text-white mb-1">
+        <label className="block text-xs font-medium text-white mb-1">
           Comunidad
         </label>
         <Select
           menuPlacement="top"
-          options={comunidades.map((c) => ({
-            value: c._id,
-            label: c.name,
-          }))}
+          options={comunidades.map((c) => ({ value: c._id, label: c.name }))}
           placeholder="Selecciona una comunidad..."
           styles={customSelectStylesForm}
           value={
             Array.isArray(comunidades)
               ? comunidades
                   .filter((c) => c?._id === values?.community)
-                  .map((c) => ({
-                    value: c._id,
-                    label: c.name,
-                  }))[0] || null
+                  .map((c) => ({ value: c._id, label: c.name }))[0] || null
               : null
           }
           onChange={(selected) => setFieldValue("community", selected?.value)}
@@ -106,7 +118,7 @@ export default function Paso1General({ categorias = [], comunidades = [] }) {
         <ErrorMessage
           name="community"
           component="div"
-          className="text-red-500  text-xs mt-1"
+          className="text-red-500 text-xs mt-1"
         />
       </div>
     </div>

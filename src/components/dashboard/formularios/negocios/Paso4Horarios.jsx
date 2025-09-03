@@ -1,13 +1,13 @@
 import { Field, FieldArray, ErrorMessage, useFormikContext } from "formik";
 
 const diasSemana = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-  "Sunday",
+  "Lunes",
+  "Martes",
+  "Miércoles",
+  "Jueves",
+  "Viernes",
+  "Sábado",
+  "Domingo",
 ];
 
 export default function Paso4Horarios() {

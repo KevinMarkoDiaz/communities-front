@@ -26,6 +26,7 @@ export default function Paso2Contacto() {
           Email
         </label>
         <Field
+          required
           name="contact.email"
           type="email"
           placeholder="example@email.com"
