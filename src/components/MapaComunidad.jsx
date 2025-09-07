@@ -25,10 +25,12 @@ export default function MapaComunidad({ negocios, coords }) {
   const [categoriasUnicas, setCategoriasUnicas] = useState([]);
   const [mostrarLeyenda, setMostrarLeyenda] = useState(false);
 
-  const userCoords = useSelector((state) => state.ubicacion.coords);
-  const { name } = useSelector(
-    (state) => state.comunidadSeleccionada.comunidad
-  );
+  const userCoords = useSelector((state) => state?.ubicacion?.coords ?? null);
+
+  const comunidadSel =
+    useSelector((state) => state?.comunidadSeleccionada?.comunidad) ?? null;
+
+  const name = comunidadSel?.name ?? "";
 
   const getDispositivoEscala = () => {
     const width = window.innerWidth;
@@ -83,6 +85,7 @@ export default function MapaComunidad({ negocios, coords }) {
 
     initMap();
   }, []);
+  const listaNegocios = Array.isArray(negocios) ? negocios : [];
 
   useEffect(() => {
     const map = mapInstance.current;
@@ -96,7 +99,7 @@ export default function MapaComunidad({ negocios, coords }) {
 
     const categorias = new Set();
 
-    negocios.forEach((n) => {
+    listaNegocios.forEach((n) => {
       const coordsArray = n.location?.coordinates?.coordinates;
       if (!Array.isArray(coordsArray) || coordsArray.length !== 2) return;
 
