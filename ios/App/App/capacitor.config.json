@@ -1,0 +1,12 @@
+{
+	"appId": "com.communidades.app",
+	"appName": "Communidades",
+	"webDir": "dist",
+	"bundledWebRuntime": false,
+	"server": {
+		"androidScheme": "https"
+	},
+	"packageClassList": [
+		"CAPBrowserPlugin"
+	]
+}
