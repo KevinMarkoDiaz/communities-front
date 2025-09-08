@@ -3,34 +3,59 @@ import CardDestacado from "../Card";
 import ScrollCarousel from "../ScrollCarousel";
 import SugeridosSkeleton from "../Skeleton/SugeridosSkeleton";
 
+const PLACEHOLDER_IMG = "https://cdn.usegalileo.ai/sdxl10/placeholder.png";
+
 export default function NegociosSugeridos({ negocios = [], loading, imagen }) {
   if (loading) return <SugeridosSkeleton />;
 
-  const destacados = negocios.slice(0, 6); // Limita para un mejor scroll
+  const lista = Array.isArray(negocios) ? negocios : [];
+  const destacados = lista.slice(0, 6);
 
   if (destacados.length === 0) return null;
 
   return (
     <section className="space-y-4">
       <ScrollCarousel>
-        {destacados.map((n) => (
-          <Link
-            to={`/negocios/${n._id}`}
-            key={n._id}
-            className="flex-shrink-0 snap-start min-w-[280px] sm:min-w-[250px] md:min-w-[250px] lg:min-w-[320px]"
-          >
-            <CardDestacado
-              isPremium={n.isPremium}
-              title={n.name}
-              image={n.featuredImage}
-              isNew={false} // Lógica futura para marcar nuevos
-              hasDiscount={false} // Lógica futura para descuentos
-              isVerified={n.isVerified}
-              modo="vertical"
-              logo={n.profileImage}
-            />
-          </Link>
-        ))}
+        {destacados.map((raw, i) => {
+          const n = raw ?? {};
+          const id = n._id ?? n.id ?? null;
+          const to = id ? `/negocios/${id}` : null;
+
+          return (
+            <div
+              key={id ?? `neg-sug-${i}`}
+              className="flex-shrink-0 snap-start min-w-[280px] sm:min-w-[250px] md:min-w-[250px] lg:min-w-[320px]"
+            >
+              {to ? (
+                <Link to={to} className="block">
+                  <CardDestacado
+                    isPremium={n.isPremium === true}
+                    title={n.name ?? "Sin nombre"}
+                    image={n.featuredImage || imagen || PLACEHOLDER_IMG}
+                    isNew={false}
+                    hasDiscount={false}
+                    isVerified={n.isVerified === true}
+                    modo="vertical"
+                    logo={n.profileImage || PLACEHOLDER_IMG}
+                  />
+                </Link>
+              ) : (
+                <div className="block opacity-90">
+                  <CardDestacado
+                    isPremium={n.isPremium === true}
+                    title={n.name ?? "Sin nombre"}
+                    image={n.featuredImage || imagen || PLACEHOLDER_IMG}
+                    isNew={false}
+                    hasDiscount={false}
+                    isVerified={n.isVerified === true}
+                    modo="vertical"
+                    logo={n.profileImage || PLACEHOLDER_IMG}
+                  />
+                </div>
+              )}
+            </div>
+          );
+        })}
       </ScrollCarousel>
     </section>
   );

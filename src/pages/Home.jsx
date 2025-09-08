@@ -93,8 +93,8 @@ export default function Home() {
         <div className="w-full max-w-5xl mx-auto px-4 mt-6 text-center">
           <div className="bg-gradient-to-r from-purple-50 to-yellow-50 p-4 rounded-xl shadow  text-xs text-gray-800 font-semibold">
             👋 Estás explorando la comunidad{" "}
-            <span className="text-sky-600">{comunidad.name}</span>. ¡Todo lo que
-            ves ahora está pensado para vos!
+            <span className="text-sky-600">{comunidad?.name ?? "en USA"}</span>.
+            ¡Todo lo que ves ahora está pensado para vos!
           </div>
         </div>
       )}
@@ -126,18 +126,39 @@ export default function Home() {
       </div>
       {/* Secciones principales */}
       <div className="flex flex-col gap-12 md:gap-16 xl:gap-24 mt-12">
-        <NegociosSugeridos negocios={negocios} loading={negociosLoading} />
-        <EventosProximos eventos={eventos} loading={eventosLoading} />
-        <ComunidadesDestacadas
-          comunidades={comunidades}
-          loading={comunidadesLoading}
-        />
+        {/* Negocios */}
+        <div className="space-y-4">
+          <h3 className="text-lg  font-bold text-gray-800">
+            ✨ Negocios sugeridos
+          </h3>
+          <NegociosSugeridos negocios={negocios} loading={negociosLoading} />
+        </div>
 
+        {/* Eventos */}
+        <div className="space-y-4">
+          <h3 className="text-lg  font-bold text-gray-800">
+            📅 Eventos próximos
+          </h3>
+          <EventosProximos eventos={eventos} loading={eventosLoading} />
+        </div>
+
+        {/* Comunidades */}
+        <div className="space-y-4">
+          <h3 className="text-lg  font-bold text-gray-800">
+            🌍 Comunidades destacadas
+          </h3>
+          <ComunidadesDestacadas
+            comunidades={comunidades}
+            loading={comunidadesLoading}
+          />
+        </div>
+
+        {/* Banner */}
         <div className="w-full hidden sm:flex justify-center px-4 py-10">
           <img
             src={bannerBTN}
             alt="Banner negocios"
-            className=" inset-0 w-full h-full object-cover"
+            className="inset-0 w-full h-full object-cover"
           />
         </div>
       </div>

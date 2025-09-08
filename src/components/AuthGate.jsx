@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { fetchCurrentUser } from "../store/authSlice";
-import Loading from "./Loading";
+import LoaderGate from "./LoaderGate"; // ← el que maneja minDuration + fade
 
 export default function AuthGate({ children }) {
   const dispatch = useDispatch();
@@ -22,12 +22,12 @@ export default function AuthGate({ children }) {
     };
   }, [dispatch]);
 
-  if (booting) {
-    return (
-      <div className="w-full min-h-screen grid place-items-center bg-white">
-        <Loading />
-      </div>
-    );
-  }
-  return <>{children}</>;
+  return (
+    <LoaderGate
+      ready={!booting}
+      minDuration={800} // evita “flash”
+    >
+      {children}
+    </LoaderGate>
+  );
 }

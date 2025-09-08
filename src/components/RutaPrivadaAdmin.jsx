@@ -12,7 +12,11 @@ export default function RutaPrivadaAdmin() {
   if (loading) {
     return (
       <div className="w-full min-h-screen grid place-items-center">
-        <Loading />
+        <Loading
+          variant="splash"
+          bgColor="bg-orange-500"
+          message="Preparando tu experiencia…"
+        />
       </div>
     );
   }

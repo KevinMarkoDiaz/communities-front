@@ -1,6 +1,7 @@
 import { BsGem } from "react-icons/bs";
 
-export default function CardPromo({ promo, onSelect }) {
+export default function CardPromo({ promo = {}, onSelect }) {
+  // Desestructuración segura (promo puede venir null/undefined)
   const { _id, name, featuredImage, type, isPremium = false } = promo;
 
   const imagenUrl =
@@ -17,12 +18,12 @@ export default function CardPromo({ promo, onSelect }) {
   `;
 
   return (
-    <div onClick={() => onSelect(promo)} className={clasesBase}>
+    <div onClick={() => onSelect?.(promo)} className={clasesBase}>
       {/* Imagen */}
       <div className="w-full h-28 overflow-hidden bg-gray-50 relative">
         <img
           src={imagenUrl}
-          alt={name}
+          alt={name || "Promoción"}
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
 
@@ -41,8 +42,8 @@ export default function CardPromo({ promo, onSelect }) {
         }`}
       >
         {/* Nombre */}
-        <h3 className="  text-xs font-semibold line-clamp-2 leading-snug">
-          {name}
+        <h3 className="text-xs font-semibold line-clamp-2 leading-snug">
+          {name || "Sin nombre"}
         </h3>
 
         {/* Tipo */}
@@ -56,7 +57,7 @@ export default function CardPromo({ promo, onSelect }) {
               }
             `}
           >
-            {type.replace(/_/g, " ")}
+            {String(type).replace(/_/g, " ")}
           </span>
         )}
       </div>

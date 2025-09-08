@@ -299,7 +299,11 @@ export default function MapaComunidadConApi() {
     <div className="relative overflow-hidden rounded-xl shadow h-full">
       {loading || !mapLoaded ? (
         <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/70 backdrop-blur">
-          <Loading />
+          <Loading
+            variant="splash"
+            bgColor="bg-red-600"
+            message="Preparando tu experiencia…"
+          />
         </div>
       ) : null}
 

@@ -26,7 +26,14 @@ const InboxList = () => {
     dispatch(fetchConversations());
   }, [dispatch]);
 
-  if (loading) return <Loading className="min-h-[60svh]" />;
+  if (loading)
+    return (
+      <Loading
+        variant="splash"
+        bgColor="bg-gradient-to-r from-sky-300 via-blue-400 to-indigo-700"
+        message="Estamos cargando tus mensajes…"
+      />
+    );
   if (error) return <p className="text-center text-red-500 py-4">{error}</p>;
 
   if (!items || items.length === 0) {

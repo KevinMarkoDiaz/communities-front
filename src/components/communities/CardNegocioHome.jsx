@@ -16,6 +16,7 @@ import {
   FaPaintBrush,
   FaQuestion,
 } from "react-icons/fa";
+import { FaGem } from "react-icons/fa6";
 
 const iconosCategoria = {
   Gastronomía: <FaUtensils className="text-orange-500" />,

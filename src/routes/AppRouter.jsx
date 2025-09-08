@@ -71,11 +71,7 @@ import MisBanners from "../pages/dashboard/banners/MisBanners";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: (
-      <AuthGate>
-        <Layout />
-      </AuthGate>
-    ),
+    element: <Layout />,
     children: [
       { path: "/", element: <Home /> },
 
@@ -261,5 +257,9 @@ const router = createBrowserRouter([
 ]);
 
 export default function AppRouter() {
-  return <RouterProvider router={router} />;
+  return (
+    <AuthGate>
+      <RouterProvider router={router} />
+    </AuthGate>
+  );
 }

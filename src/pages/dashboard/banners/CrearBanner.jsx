@@ -13,10 +13,16 @@ import { submitAdBanner } from "../../../api/adsApi";
 
 // Placements (solo las 4 primeras visibles)
 const PLACEMENT_OPTIONS = [
-  { value: "home_top", label: "Home - Top (728x90 / 100% x 120px)" },
-  { value: "home_bottom", label: "Home - Bottom" },
-  { value: "sidebar_right_1", label: "Sidebar derecha #1 (300x250)" },
-  { value: "sidebar_right_2", label: "Sidebar derecha #2 (300x250)" },
+  { value: "home_top", label: "Inicio - Superior (celular, tablet y PC)" },
+  { value: "home_bottom", label: "Inicio - Inferior (celular, tablet y PC)" },
+  {
+    value: "sidebar_right_1",
+    label: "Barra lateral derecha superior (solo PC)",
+  },
+  {
+    value: "sidebar_right_2",
+    label: "Barra lateral derecha inferior (solo PC)",
+  },
 ];
 
 // Helpers
@@ -66,7 +72,6 @@ const esquemaBanner = Yup.object()
       .min(1, "Debes elegir al menos 1 comunidad")
       .required("Debes elegir al menos 1 comunidad"),
 
-    // presentes en values (sean visibles o no)
     categories: Yup.array()
       .of(
         Yup.object({
@@ -93,7 +98,7 @@ const esquemaBanner = Yup.object()
   })
   .test(
     "al-menos-una-imagen",
-    "Debes subir al menos una imagen (fallback, desktop, tablet o mobile)",
+    "Debes subir al menos una imagen (desktop, tablet o mobile)",
     (values) =>
       Boolean(
         values?.image ||
@@ -102,6 +107,77 @@ const esquemaBanner = Yup.object()
           values?.imageMobile
       )
   );
+
+// Sugerencias visuales según placement
+function BannerTips({ placement }) {
+  const isHome = placement === "home_top" || placement === "home_bottom";
+  const isSidebar =
+    placement === "sidebar_right_1" || placement === "sidebar_right_2";
+
+  if (isHome) {
+    return (
+      <div className="text-xs text-gray-300 leading-relaxed space-y-3">
+        <strong>Sugerencias (Inicio):</strong>
+        <div className="space-y-2">
+          {/* PC */}
+          <div className="inline-block">
+            <div className="bg-yellow-200 border border-yellow-500 w-[60vw] md:w-[300px] h-[50px] flex items-center justify-center text-[11px] text-yellow-900 font-bold">
+              1200×250 px (PC)
+            </div>
+            <p className="text-[11px] text-white mt-1">
+              Rectángulo muy ancho (mejor para logos + texto corto).
+            </p>
+          </div>
+          <br />
+          {/* Tablet */}
+          <div className="inline-block">
+            <div className="bg-orange-200 border border-orange-500 w-[50vw] md:w-[220px] h-[30px] flex items-center justify-center text-[11px] text-orange-900 font-bold">
+              768×120 px (Tablet)
+            </div>
+            <p className="text-[11px] text-white mt-1">
+              Versión más baja que PC (prioriza legibilidad).
+            </p>
+          </div>
+          <br />
+          {/* Mobile */}
+          <div className="inline-block">
+            <div className="bg-green-200 border border-green-500 w-[40vw] md:w-[160px] h-[20px] flex items-center justify-center text-[11px] text-green-900 font-bold">
+              320×70 px (Mobile)
+            </div>
+            <p className="text-[11px] text-white mt-1">
+              Texto mínimo; enfoca logo y CTA corto.
+            </p>
+          </div>
+        </div>
+        <div className="text-white">
+          Es el mismo banner en 3 versiones (PC, tablet y celular) para que tu
+          anuncio se vea bien en cualquier pantalla.
+        </div>
+      </div>
+    );
+  }
+
+  if (isSidebar) {
+    return (
+      <div className="text-xs text-gray-300 leading-relaxed space-y-3">
+        <strong>Sugerencias ( barra lateral ):</strong>
+        <div className="inline-block">
+          <div className="bg-blue-200 border border-blue-500 w-[120px] h-[100px] flex items-center justify-center text-[11px] text-blue-900 font-bold">
+            300×250 px (PC)
+          </div>
+          <p className="text-[11px] text-white mt-1">
+            Rectángulo más alto que ancho (solo PC).
+          </p>
+        </div>
+        <div className="text-white">
+          Para la barra lateral no se usan variantes por dispositivo (solo PC).
+        </div>
+      </div>
+    );
+  }
+
+  return null;
+}
 
 export default function CrearBanner() {
   const dispatch = useDispatch();
@@ -167,7 +243,6 @@ export default function CrearBanner() {
     try {
       const safeValues = { ...values };
       if (!isAdmin) {
-        // Reglas NO admin (no tocar estilos, sólo valores)
         safeValues.openInNewTab = true;
         safeValues.isFallback = false;
         safeValues.categories = [];
@@ -175,7 +250,6 @@ export default function CrearBanner() {
         safeValues.weight = 1;
         safeValues.maxImpressions = null;
         safeValues.maxClicks = null;
-        // endAt sigue en blanco para no-admin
       }
 
       // FormData
@@ -251,15 +325,18 @@ export default function CrearBanner() {
             validateOnChange={false}
           >
             {({ values, setFieldValue, isSubmitting }) => {
-              const showExtraImages =
+              const isHome =
                 values.placement === "home_top" ||
                 values.placement === "home_bottom";
+              const isSidebar =
+                values.placement === "sidebar_right_1" ||
+                values.placement === "sidebar_right_2";
 
               return (
                 <Form className="grid gap-6">
                   {/* Título */}
                   <div>
-                    <label className="block  text-xs font-medium text-white mb-1">
+                    <label className="block text-xs font-medium text-white mb-1">
                       Título
                     </label>
                     <Field
@@ -270,14 +347,14 @@ export default function CrearBanner() {
                     <ErrorMessage
                       name="title"
                       component="div"
-                      className="text-red-400  text-xs mt-1"
+                      className="text-red-400 text-xs mt-1"
                     />
                   </div>
 
-                  {/* Placement (react-select) → solo 4 primeras */}
+                  {/* Placement (react-select) */}
                   <div>
-                    <label className="block  text-xs font-medium text-white mb-1">
-                      Placement
+                    <label className="block text-xs font-medium text-white mb-1">
+                      Ubicación del banner
                     </label>
                     <Select
                       instanceId="placementSelect"
@@ -291,31 +368,39 @@ export default function CrearBanner() {
                         setFieldValue("placement", opt?.value || "")
                       }
                       styles={customSelectStylesForm}
-                      placeholder="Seleccioná un placement…"
+                      placeholder="Seleccioná una ubicación…"
                       isSearchable
                       menuPlacement="auto"
                     />
+                    <p className="text-xs text-gray-300 mt-2">
+                      Según la ubicación elegida, cambian los tamaños
+                      recomendados y las variantes disponibles.
+                    </p>
                     <ErrorMessage
                       name="placement"
                       component="div"
-                      className="text-red-400  text-xs mt-1"
+                      className="text-red-400 text-xs mt-1"
                     />
                   </div>
 
                   {/* URL destino */}
                   <div>
-                    <label className="block  text-xs font-medium text-white mb-1">
+                    <label className="block text-xs font-medium text-white mb-1">
                       URL de destino
+                      <span className="block text-[11px] text-gray-300 font-normal">
+                        ¿A dónde quieres dirigir a los usuarios? Puede ser tu
+                        red social, tu página web o una landing.
+                      </span>
                     </label>
                     <Field
                       name="redirectUrl"
-                      placeholder="https://tu-destino.com/promo"
+                      placeholder="https://tusitio.com  |  https://instagram.com/tu_marca"
                       className="w-full px-4 py-3 border border-white/30 bg-white/10 rounded-lg placeholder:text-gray-300 text-white focus:outline-none"
                     />
                     <ErrorMessage
                       name="redirectUrl"
                       component="div"
-                      className="text-red-400  text-xs mt-1"
+                      className="text-red-400 text-xs mt-1"
                     />
                   </div>
 
@@ -325,13 +410,13 @@ export default function CrearBanner() {
                       <>
                         <label className="inline-flex items-center gap-2 text-white">
                           <Field type="checkbox" name="openInNewTab" />
-                          <span className="  text-xs">
+                          <span className="text-xs">
                             Abrir en nueva pestaña
                           </span>
                         </label>
                         <label className="inline-flex items-center gap-2 text-white">
                           <Field type="checkbox" name="isFallback" />
-                          <span className="  text-xs">Usar como fallback</span>
+                          <span className="text-xs">Usar como fallback</span>
                         </label>
                       </>
                     ) : (
@@ -342,82 +427,94 @@ export default function CrearBanner() {
                     )}
                   </div>
 
-                  {/* Imágenes (general siempre; extras solo si top/bottom) */}
+                  {/* Imágenes */}
                   <div className="grid gap-5">
-                    <div>
-                      <DropzoneImagen
-                        value={values.image}
-                        onChange={(file) => setFieldValue("image", file)}
-                        label="Imagen general / fallback (recomendada siempre)"
-                      />
-                    </div>
+                    {/* Inicio: 3 variantes */}
+                    {isHome && (
+                      <>
+                        <div className="grid sm:grid-cols-3 gap-4">
+                          <div>
+                            <DropzoneImagen
+                              value={values.imageDesktop}
+                              onChange={(file) =>
+                                setFieldValue("imageDesktop", file)
+                              }
+                              label="Banner para computador: usa una imagen de 1200x250 px para que se vea bien."
+                            />
+                          </div>
+                          <div>
+                            <DropzoneImagen
+                              value={values.imageTablet}
+                              onChange={(file) =>
+                                setFieldValue("imageTablet", file)
+                              }
+                              label="Banner para tablet: usa una imagen de 768x120 px para que se vea bien."
+                            />
+                          </div>
+                          <div>
+                            <DropzoneImagen
+                              value={values.imageMobile}
+                              onChange={(file) =>
+                                setFieldValue("imageMobile", file)
+                              }
+                              label="Banner para celular: usa una imagen de 320x70 px para que se vea bien."
+                            />
+                          </div>
+                        </div>
+                        <div className="text-white">
+                          Es el mismo banner en 3 versiones (PC, tablet y
+                          celular) para que tu anuncio se vea bien en cualquier
+                          pantalla.
+                        </div>
+                      </>
+                    )}
 
-                    {showExtraImages && (
-                      <div className="grid sm:grid-cols-3 gap-4">
-                        <div>
+                    {/* Sidebar: solo desktop */}
+                    {isSidebar && (
+                      <div className="grid sm:grid-cols-2 gap-4">
+                        <div className="sm:col-span-2">
                           <DropzoneImagen
                             value={values.imageDesktop}
                             onChange={(file) =>
                               setFieldValue("imageDesktop", file)
                             }
-                            label="Imagen Desktop (opcional)"
-                          />
-                        </div>
-                        <div>
-                          <DropzoneImagen
-                            value={values.imageTablet}
-                            onChange={(file) =>
-                              setFieldValue("imageTablet", file)
-                            }
-                            label="Imagen Tablet (opcional)"
-                          />
-                        </div>
-                        <div>
-                          <DropzoneImagen
-                            value={values.imageMobile}
-                            onChange={(file) =>
-                              setFieldValue("imageMobile", file)
-                            }
-                            label="Imagen Mobile (opcional)"
+                            label="Banner de barra lateral (solo PC): usa una imagen de 300x250 px."
                           />
                         </div>
                       </div>
                     )}
 
+                    {/* Errores de imágenes */}
                     <ErrorMessage
                       name="image"
                       component="div"
-                      className="text-red-400  text-xs"
+                      className="text-red-400 text-xs"
                     />
                     <ErrorMessage
                       name="imageDesktop"
                       component="div"
-                      className="text-red-400  text-xs"
+                      className="text-red-400 text-xs"
                     />
                     <ErrorMessage
                       name="imageTablet"
                       component="div"
-                      className="text-red-400  text-xs"
+                      className="text-red-400 text-xs"
                     />
                     <ErrorMessage
                       name="imageMobile"
                       component="div"
-                      className="text-red-400  text-xs"
+                      className="text-red-400 text-xs"
                     />
 
-                    <p className="text-xs text-gray-300">
-                      Sugerencias: Home Top/Bottom ~ 120px alto; Sidebar ~ 250px
-                      alto. Formatos: JPG/PNG/WebP ≤ 5MB. Podés cargar solo la
-                      imagen general o subir variantes por dispositivo para
-                      mejor legibilidad.
-                    </p>
+                    {/* Sugerencias visuales dinámicas */}
+                    <BannerTips placement={values.placement} />
                   </div>
 
                   {/* SEGMENTACIÓN */}
                   <div className="grid sm:grid-cols-2 gap-4">
                     {/* Comunidades (MULTI, requerido) */}
                     <div className="sm:col-span-2">
-                      <label className="block  text-xs font-medium text-white mb-1">
+                      <label className="block text-xs font-medium text-white mb-1">
                         Comunidades (requerido)
                       </label>
                       <Select
@@ -440,7 +537,7 @@ export default function CrearBanner() {
                       <ErrorMessage
                         name="communities"
                         component="div"
-                        className="text-red-400  text-xs mt-1"
+                        className="text-red-400 text-xs mt-1"
                       />
                       <p className="text-xs text-gray-300 mt-2">
                         Se mostrará cuando el usuario pertenezca a cualquiera de
@@ -452,7 +549,7 @@ export default function CrearBanner() {
                     {isAdmin ? (
                       <>
                         <div className="sm:col-span-2">
-                          <label className="block  text-xs font-medium text-white mb-1">
+                          <label className="block text-xs font-medium text-white mb-1">
                             Categorías (opcional)
                           </label>
                           <Select
@@ -471,13 +568,13 @@ export default function CrearBanner() {
                         </div>
 
                         <div className="sm:col-span-2">
-                          <label className="block  text-xs font-medium text-white mb-1">
+                          <label className="block text-xs font-medium text-white mb-1">
                             Businesses (IDs) (opcional)
                           </label>
                           <Field
                             name="businessesCSV"
                             placeholder="id1,id2,id3"
-                            className="w-full px-3 py-2 border border-white/30 bg-white/10 rounded-lg text-white focus:outline-none  text-xs"
+                            className="w-full px-3 py-2 border border-white/30 bg-white/10 rounded-lg text-white focus:outline-none text-xs"
                           />
                           <p className="text-xs text-gray-300 mt-2">
                             IDs separados por coma. Si lo dejás vacío, no se
@@ -497,7 +594,7 @@ export default function CrearBanner() {
                   {isAdmin ? (
                     <div className="grid sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="block  text-xs font-medium text-white mb-1">
+                        <label className="block text-xs font-medium text-white mb-1">
                           Peso (rotación)
                         </label>
                         <Field
@@ -510,11 +607,11 @@ export default function CrearBanner() {
                         <ErrorMessage
                           name="weight"
                           component="div"
-                          className="text-red-400  text-xs mt-1"
+                          className="text-red-400 text-xs mt-1"
                         />
                       </div>
                       <div>
-                        <label className="block  text-xs font-medium text-white mb-1">
+                        <label className="block text-xs font-medium text-white mb-1">
                           Máx. impresiones
                         </label>
                         <Field
@@ -527,11 +624,11 @@ export default function CrearBanner() {
                         <ErrorMessage
                           name="maxImpressions"
                           component="div"
-                          className="text-red-400  text-xs mt-1"
+                          className="text-red-400 text-xs mt-1"
                         />
                       </div>
                       <div>
-                        <label className="block  text-xs font-medium text-white mb-1">
+                        <label className="block text-xs font-medium text-white mb-1">
                           Máx. clicks
                         </label>
                         <Field
@@ -544,7 +641,7 @@ export default function CrearBanner() {
                         <ErrorMessage
                           name="maxClicks"
                           component="div"
-                          className="text-red-400  text-xs mt-1"
+                          className="text-red-400 text-xs mt-1"
                         />
                       </div>
                     </div>
@@ -559,7 +656,7 @@ export default function CrearBanner() {
                   {/* Fechas: admin ve inicio y fin; no-admin solo inicio */}
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block  text-xs font-medium text-white mb-1">
+                      <label className="block text-xs font-medium text-white mb-1">
                         Inicio (UTC)
                       </label>
                       <Field
@@ -570,13 +667,13 @@ export default function CrearBanner() {
                       <ErrorMessage
                         name="startAt"
                         component="div"
-                        className="text-red-400  text-xs mt-1"
+                        className="text-red-400 text-xs mt-1"
                       />
                     </div>
 
                     {isAdmin ? (
                       <div>
-                        <label className="block  text-xs font-medium text-white mb-1">
+                        <label className="block text-xs font-medium text-white mb-1">
                           Fin (UTC)
                         </label>
                         <Field
@@ -587,7 +684,7 @@ export default function CrearBanner() {
                         <ErrorMessage
                           name="endAt"
                           component="div"
-                          className="text-red-400  text-xs mt-1"
+                          className="text-red-400 text-xs mt-1"
                         />
                       </div>
                     ) : (
