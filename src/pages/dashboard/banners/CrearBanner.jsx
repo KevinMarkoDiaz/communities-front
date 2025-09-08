@@ -122,7 +122,7 @@ function BannerTips({ placement }) {
           {/* PC */}
           <div className="inline-block">
             <div className="bg-yellow-200 border border-yellow-500 w-[60vw] md:w-[300px] h-[50px] flex items-center justify-center text-[11px] text-yellow-900 font-bold">
-              1200×250 px (PC)
+              1200×120 px (PC)
             </div>
             <p className="text-[11px] text-white mt-1">
               Rectángulo muy ancho (mejor para logos + texto corto).
@@ -439,7 +439,7 @@ export default function CrearBanner() {
                               onChange={(file) =>
                                 setFieldValue("imageDesktop", file)
                               }
-                              label="Banner para computador: usa una imagen de 1200x250 px para que se vea bien."
+                              label="Banner para computador: usa una imagen de 1200x120 px para que se vea bien."
                             />
                           </div>
                           <div>
