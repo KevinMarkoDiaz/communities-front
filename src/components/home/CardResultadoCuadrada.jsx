@@ -1,91 +1,70 @@
-import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import CardResultadoCuadrada from "./CardResultadoCuadrada";
+import { BsGem } from "react-icons/bs";
+import clsx from "clsx"; // opcional, para unir clases con seguridad
 
-// Helpers defensivos
-const getTitulo = (item = {}) =>
-  item.nombre || item.titulo || item.title || item.name || "Sin título";
-
-const PLACEHOLDER_IMG = "https://cdn.usegalileo.ai/sdxl10/placeholder.png";
-const getImagen = (item = {}) =>
-  item.imagen ||
-  item.imagenDestacada ||
-  item.featuredImage ||
-  item.bannerImage ||
-  PLACEHOLDER_IMG;
-
-const getTipo = (item = {}) => item.tipo || "desconocido";
-const esPremium = (item = {}) => item?.isPremium === true;
-
-const getRuta = (tipo, id) => {
-  if (!id) return null;
-  switch (tipo) {
-    case "negocio":
-      return `/negocios/${id}`;
-    case "evento":
-      return `/eventos/${id}`;
-    case "comunidad":
-      return `/comunidades/${id}`;
-    default:
-      return null; // tipo desconocido → sin ruta
-  }
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: (i) => ({
-    opacity: 1,
-    y: 0,
-    transition: { delay: i * 0.05, duration: 0.4, ease: "easeOut" },
-  }),
-};
-
-export default function GridResultadosGlobal({ resultados = [] }) {
-  if (!Array.isArray(resultados) || resultados.length === 0) return null;
+export default function CardResultadoCuadrada({
+  title = "Sin título",
+  image = "/placeholder.svg",
+  tipo = "General",
+  isPremium = false,
+  className = "",
+}) {
+  const clasesBase = clsx(
+    "rounded-2xl w-full overflow-hidden flex flex-col transition-all duration-200 bg-white group",
+    "border",
+    isPremium
+      ? "border-yellow-400 shadow-[0_0_10px_3px_rgba(234,179,8,0.4)] max-h-[180px] min-h-[182px]"
+      : "border-gray-200 shadow-sm hover:shadow-xl aspect-square",
+    className
+  );
 
   return (
-    <section className="w-full max-w-7xl mx-auto flex flex-col gap-4">
-      <h2 className="text-lg font-semibold text-gray-800">
-        🔍 Resultados de tu búsqueda
-      </h2>
+    <div className={clasesBase}>
+      {/* Imagen */}
+      <div
+        className={clsx(
+          "w-full bg-gray-100 relative",
+          isPremium ? "h-[65%]" : "h-2/3"
+        )}
+      >
+        <img
+          src={image}
+          alt={title || "imagen"}
+          className={clsx(
+            "object-cover w-full transition group-hover:scale-105",
+            isPremium ? "h-[120px]" : "h-full"
+          )}
+          onError={(e) => {
+            e.currentTarget.src = "/placeholder.svg";
+          }}
+        />
 
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(120px,1fr))] sm:grid-cols-[repeat(auto-fit,minmax(180px,180px))] md:grid-cols-[repeat(auto-fit,minmax(180px,180px))] gap-4">
-        {resultados.map((rawItem, index) => {
-          const item = rawItem ?? {};
-          const id = item.id ?? item._id ?? null;
-          const ruta = getRuta(getTipo(item), id);
-          const premium = esPremium(item);
-
-          const card = (
-            <CardResultadoCuadrada
-              title={getTitulo(item)}
-              image={getImagen(item)}
-              tipo={getTipo(item)}
-              isPremium={premium}
-            />
-          );
-
-          return (
-            <motion.div
-              key={id ?? `res-${index}`}
-              custom={index}
-              initial="hidden"
-              animate="visible"
-              variants={itemVariants}
-              className={premium ? "col-span-2" : undefined}
-            >
-              {ruta ? (
-                <Link to={ruta} className="block">
-                  {card}
-                </Link>
-              ) : (
-                // Sin ruta válida → render estático (no clickeable)
-                <div className="block opacity-90">{card}</div>
-              )}
-            </motion.div>
-          );
-        })}
+        {/* Diamante Premium */}
+        {isPremium && (
+          <div className="absolute top-2 left-2 text-yellow-400 drop-shadow">
+            <BsGem className="text-lg" />
+          </div>
+        )}
       </div>
-    </section>
+
+      {/* Contenido */}
+      <div
+        className={clsx(
+          "p-2 flex flex-col justify-between",
+          isPremium ? "h-[62px] bg-black text-white" : "h-1/3"
+        )}
+      >
+        <h3 className="text-xs font-medium truncate leading-tight">
+          {title || "Sin título"}
+        </h3>
+        <p
+          className={clsx(
+            "text-[8px] uppercase tracking-wide",
+            isPremium ? "text-yellow-400" : "text-gray-500"
+          )}
+        >
+          {tipo || "General"}
+        </p>
+      </div>
+    </div>
   );
 }
