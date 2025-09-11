@@ -1,3 +1,4 @@
+// src/components/MapaComunidadConApi.jsx
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -21,6 +22,11 @@ export default function MapaComunidadConApi() {
 
   const { id: communityId } = useParams();
   const coordsRedux = useSelector((state) => state.ubicacion.coords);
+  // 👇 NUEVO: tomo la comunidad seleccionada para saber su nombre
+  const comunidadSel = useSelector(
+    (state) => state?.comunidadSeleccionada?.comunidad ?? null
+  );
+  const communityName = comunidadSel?.name ?? "";
 
   const [negocios, setNegocios] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -34,7 +40,7 @@ export default function MapaComunidadConApi() {
       (pos) => {
         setUserCoords([pos.coords.longitude, pos.coords.latitude]);
       },
-      (err) => {
+      () => {
         // fallback Dallas
         setUserCoords([-96.797, 32.7767]);
       },
@@ -68,6 +74,7 @@ export default function MapaComunidadConApi() {
     };
 
     fetchNegocios();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [communityId]);
 
   useEffect(() => {
@@ -149,6 +156,47 @@ export default function MapaComunidadConApi() {
         markerEl.style.transition = "transform 0.2s ease";
         markerEl.style.pointerEvents = "auto";
 
+        // 👇 AQUÍ: bandera por comunidad para no-premium
+        if (n.isPremium) {
+          // Premium con logo
+          markerEl.style.backgroundColor = "white";
+          markerEl.style.border = `1px solid ${colorCategoria}`;
+          const img = document.createElement("img");
+          img.src = n.profileImage || "/placeholder.png";
+          img.alt = `Logo de ${n.name}`;
+          img.style.width = "100%";
+          img.style.height = "100%";
+          img.style.objectFit = "cover";
+          markerEl.appendChild(img);
+
+          const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
+          if (isDesktop) {
+            wrapper.addEventListener("mouseenter", () => {
+              if (!markerActivoRef.current) {
+                markerEl.style.transform = "scale(3)";
+                wrapper.style.zIndex = "20";
+              }
+            });
+            wrapper.addEventListener("mouseleave", () => {
+              if (!markerActivoRef.current) {
+                markerEl.style.transform = "scale(1)";
+                wrapper.style.zIndex = "1";
+              }
+            });
+          }
+        } else {
+          const flagBg = getFlagBackgroundByCommunity(communityName);
+          if (flagBg) {
+            markerEl.style.background = flagBg;
+            markerEl.style.backgroundSize = "100% 100%";
+            markerEl.style.border = "1px solid rgba(0,0,0,0.15)";
+            markerEl.style.boxShadow = "0 0 4px rgba(0,0,0,0.25)";
+          } else {
+            markerEl.style.backgroundColor = colorCategoria;
+          }
+        }
+
+        // Popup
         const popup = new mapboxgl.Popup({ offset: 35, closeButton: false })
           .setHTML(`
         <div class="w-[240px] rounded-xl shadow-2xl  border border-white/10 bg-black/70 backdrop-blur-xs p-3">
@@ -179,36 +227,6 @@ export default function MapaComunidadConApi() {
           </div>
         </div>
       `);
-
-        if (n.isPremium) {
-          markerEl.style.backgroundColor = "white";
-          markerEl.style.border = `1px solid ${colorCategoria}`;
-          const img = document.createElement("img");
-          img.src = n.profileImage || "/placeholder.png";
-          img.alt = `Logo de ${n.name}`;
-          img.style.width = "100%";
-          img.style.height = "100%";
-          img.style.objectFit = "cover";
-          markerEl.appendChild(img);
-
-          const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
-          if (isDesktop) {
-            wrapper.addEventListener("mouseenter", () => {
-              if (!markerActivoRef.current) {
-                markerEl.style.transform = "scale(3)";
-                wrapper.style.zIndex = "20";
-              }
-            });
-            wrapper.addEventListener("mouseleave", () => {
-              if (!markerActivoRef.current) {
-                markerEl.style.transform = "scale(1)";
-                wrapper.style.zIndex = "1";
-              }
-            });
-          }
-        } else {
-          markerEl.style.backgroundColor = colorCategoria;
-        }
 
         wrapper.appendChild(markerEl);
 
@@ -270,7 +288,8 @@ export default function MapaComunidadConApi() {
       map.remove();
       mapInstance.current = null;
     };
-  }, [negocios, userCoords]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [negocios, userCoords, communityName]);
 
   useEffect(() => {
     const handleGlobalClick = (e) => {
@@ -382,4 +401,43 @@ function getColorByCategory(nombre) {
     default:
       return "#9ca3af";
   }
+}
+
+// 👇 NUEVO: bandera por nombre de comunidad
+function getFlagBackgroundByCommunity(name = "") {
+  const n = String(name || "")
+    .toLowerCase()
+    .trim();
+
+  // 🇨🇴 Colombia (amarillo 50%, azul 25%, rojo 25%)
+  if (n.includes("colom")) {
+    return "linear-gradient(to bottom, #FCD116 0% 50%, #0038A8 50% 75%, #CE1126 75% 100%)";
+  }
+  // 🇻🇪 Venezuela (amarillo/azul/rojo a tercios; sin estrellas)
+  if (n.includes("vene")) {
+    return "linear-gradient(to bottom, #FCD116 0% 33.333%, #0033A0 33.333% 66.666%, #EF3340 66.666% 100%)";
+  }
+  // 🇵🇪 Perú (rojo, blanco, rojo vertical)
+  if (n.includes("peru") || n.includes("perú")) {
+    return "linear-gradient(to right, #D91023 0% 33.333%, #FFFFFF 33.333% 66.666%, #D91023 66.666% 100%)";
+  }
+  // 🇦🇷 Argentina (celeste/blanco/celeste)
+  if (n.includes("argen")) {
+    return "linear-gradient(to bottom, #74ACDF 0% 33.333%, #FFFFFF 33.333% 66.666%, #74ACDF 66.666% 100%)";
+  }
+  // 🇲🇽 México (verde/blanco/rojo vertical; sin escudo)
+  if (n.includes("mex") || n.includes("méx")) {
+    return "linear-gradient(to right, #006847 0% 33.333%, #FFFFFF 33.333% 66.666%, #CE1126 66.666% 100%)";
+  }
+  // 🇺🇸 USA (simplificado: rayas rojas/blancas)
+  if (
+    n.includes("usa") ||
+    n.includes("estados unidos") ||
+    n.includes("united states")
+  ) {
+    return "repeating-linear-gradient(to bottom, #B22234 0 10%, #FFFFFF 10% 20%)";
+  }
+
+  // Si no se reconoce, devuelve null para caer al color por categoría
+  return null;
 }

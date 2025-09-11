@@ -34,7 +34,9 @@ export default function ComunidadDetalle() {
   const { lista, loading } = useSelector((state) => state.comunidades);
   const eventos = useSelector((state) => state.eventos.lista);
   const eventosLoading = useSelector((state) => state.eventos.loading);
-  const negocios = useSelector((state) => state.negocios.lista);
+  const negociosDeLaComunidad = useSelector(
+    (state) => state.comunidadSeleccionada.negocios
+  );
   const negociosLoading = useSelector((state) => state.negocios.loading);
 
   const [yaSigue, setYaSigue] = useState(false);
@@ -60,16 +62,16 @@ export default function ComunidadDetalle() {
     fetchFollow();
   }, [comunidad?._id]);
 
-  const negociosDeLaComunidad = useMemo(() => {
-    if (!comunidad?._id) return [];
-    return negocios.filter((n) => {
-      if (!n.community) return false;
-      if (typeof n.community === "object" && n.community._id) {
-        return String(n.community._id) === String(comunidad._id);
-      }
-      return String(n.community) === String(comunidad._id);
-    });
-  }, [negocios, comunidad]);
+  // const negociosDeLaComunidad = useMemo(() => {
+  //   if (!comunidad?._id) return [];
+  //   return negocios.filter((n) => {
+  //     if (!n.community) return false;
+  //     if (typeof n.community === "object" && n.community._id) {
+  //       return String(n.community._id) === String(comunidad._id);
+  //     }
+  //     return String(n.community) === String(comunidad._id);
+  //   });
+  // }, [negocios, comunidad]);
 
   const eventosDeLaComunidad = useMemo(() => {
     if (!comunidad?._id) return [];
@@ -183,7 +185,7 @@ export default function ComunidadDetalle() {
                     Cargando negocios...
                   </p>
                 ) : negociosDeLaComunidad.length > 0 ? (
-                  <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-4">
+                  <div className="grid grid-cols-2 md:grid-cols-4 2xl:grid-cols-6 gap-4">
                     {negociosDeLaComunidad.map((neg) => (
                       <Link key={neg._id} to={`/negocios/${neg._id}`}>
                         <CardNegocioHome negocio={neg} />

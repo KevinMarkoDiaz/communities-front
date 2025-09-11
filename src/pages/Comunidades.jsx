@@ -65,7 +65,7 @@ export default function Comunidades() {
     return <div className="p-4 text-red-600">Error: {String(error)}</div>;
 
   return (
-    <div className="flex flex-col gap-12 md:gap-16 xl:gap-24 mt-12">
+    <div className="flex flex-col gap-12 md:gap-16 xl:gap-24 mt-12 h-full justify-between">
       <ResetBusquedaOnMount />
 
       <Helmet>
@@ -75,78 +75,78 @@ export default function Comunidades() {
           content="Explora comunidades migrantes con negocios, eventos y servicios propios."
         />
       </Helmet>
+      <div className="grid gap-12 md:gap-16 xl:gap-24">
+        {/* SECCIÓN DESTACADA + BUSCADOR */}
+        <div className="flex flex-col ">
+          <ComunidadesDestacadas />
 
-      {/* SECCIÓN DESTACADA + BUSCADOR */}
-      <div className="flex flex-col gap-12 md:gap-16 xl:gap-24">
-        <ComunidadesDestacadas />
-
-        <div>
-          <h4 className=" text-lg sm:text-2xl font-bold text-black tracking-tight leading-snug my-4">
-            Buscá tu comunidad de origen o afinidad
-          </h4>
-          <BusquedaGlobalWrapper
-            placeholder="Buscar tu comunidad..."
-            filtroTipo="comunidad"
-            onSelectResultado={(item) =>
-              navigate(`/comunidades/${item?._id || item?.id}`)
-            }
-          />
+          <div>
+            <h4 className=" text-lg sm:text-2xl font-bold text-black tracking-tight leading-snug my-4">
+              Buscá tu comunidad de origen o afinidad
+            </h4>
+            <BusquedaGlobalWrapper
+              placeholder="Buscar tu comunidad..."
+              filtroTipo="comunidad"
+              onSelectResultado={(item) =>
+                navigate(`/comunidades/${item?._id || item?.id}`)
+              }
+            />
+          </div>
         </div>
-      </div>
 
-      {/* GRID DE COMUNIDADES */}
-      <GridWrapper
-        ref={gridRef}
-        tipo="grid"
-        className="min-h-[30vh] md:min-h-[130vh] flex-grow"
-      >
-        {loadingLista ? (
-          Array.from({ length: 12 }).map((_, i) => (
-            <SkeletonNegocioCard key={i} />
-          ))
-        ) : comunidadesSeguras.length > 0 ? (
-          comunidadesSeguras.map((comunidad) => {
-            if (!comunidad) return null;
-            const id = comunidad.id || comunidad._id;
-            const title = comunidad.name || "Comunidad";
-            const description = comunidad.description || "";
-            const image = comunidad.bannerImage || comunidad.flagImage;
-            const logo = comunidad.flagImage;
-            const isVerified = Boolean(comunidad.isVerified);
+        {/* GRID DE COMUNIDADES */}
+        <GridWrapper
+          ref={gridRef}
+          tipo="grid"
+          className="min-h-[30vh] flex-grow"
+        >
+          {loadingLista ? (
+            Array.from({ length: 12 }).map((_, i) => (
+              <SkeletonNegocioCard key={i} />
+            ))
+          ) : comunidadesSeguras.length > 0 ? (
+            comunidadesSeguras.map((comunidad) => {
+              if (!comunidad) return null;
+              const id = comunidad.id || comunidad._id;
+              const title = comunidad.name || "Comunidad";
+              const description = comunidad.description || "";
+              const image = comunidad.bannerImage || comunidad.flagImage;
+              const logo = comunidad.flagImage;
+              const isVerified = Boolean(comunidad.isVerified);
 
-            return (
-              <Link
-                key={id}
-                to={`/comunidades/${id}`}
-                className="flex-shrink-0"
-              >
-                <CardLista
-                  title={title}
-                  description={description}
-                  image={image}
-                  isVerified={isVerified}
-                  logo={logo}
-                />
-              </Link>
-            );
-          })
-        ) : (
-          <p className="text-gray-500 w-full text-center">
-            No se encontraron comunidades.
-          </p>
+              return (
+                <Link
+                  key={id}
+                  to={`/comunidades/${id}`}
+                  className="flex-shrink-0"
+                >
+                  <CardLista
+                    title={title}
+                    description={description}
+                    image={image}
+                    isVerified={isVerified}
+                    logo={logo}
+                  />
+                </Link>
+              );
+            })
+          ) : (
+            <p className="text-gray-500 w-full text-center">
+              No se encontraron comunidades.
+            </p>
+          )}
+        </GridWrapper>
+
+        {/* Paginación */}
+        {!loadingLista && comunidadesSeguras.length > 0 && (
+          <Pagination
+            totalPages={totalPages || 1}
+            currentPage={currentPage || 1}
+            onPageChange={handlePageChange}
+            gridRef={gridRef}
+          />
         )}
-      </GridWrapper>
-
-      {/* Paginación */}
-      {!loadingLista && comunidadesSeguras.length > 0 && (
-        <Pagination
-          totalPages={totalPages || 1}
-          currentPage={currentPage || 1}
-          onPageChange={handlePageChange}
-          gridRef={gridRef}
-        />
-      )}
-
+      </div>
       {/* Banner final */}
       <BannerComunidades scrollToRef={gridRef} />
     </div>
