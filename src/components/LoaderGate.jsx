@@ -52,7 +52,7 @@ export default function LoaderGate({
           <Loading
             main
             variant="splash"
-            bgColor="bg-orange-500"
+            bgColor="bg-gradient-to-r from-sky-300 via-blue-400 to-indigo-700"
             message="Preparando tu experiencia…"
           />
         </div>
