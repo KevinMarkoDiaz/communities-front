@@ -1,18 +1,19 @@
 // src/components/MapaComunidadConApi.jsx
 import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { motion, AnimatePresence } from "framer-motion";
 import { PiChartPieSliceFill } from "react-icons/pi";
-import { getBusinessesForMapByCommunity } from "../../api/businessApi";
+// ❌ Ya no importamos getBusinessesForMapByCommunity ni useParams
 import { estaAbiertoAhora } from "../../utils/estaAbiertoAhora";
 import Loading from "../Loading";
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
-export default function MapaComunidadConApi() {
+export default function MapaComunidadConApi({
+  negocios = [], // ✅ ahora llegan por props
+  communityName = "", // ✅ opcional (para las banderas)
+}) {
   const mapRef = useRef(null);
   const mapInstance = useRef(null);
   const markerActivoRef = useRef(null);
@@ -20,21 +21,13 @@ export default function MapaComunidadConApi() {
   const botonDropdownRef = useRef(null);
   const usuarioTocoDropdown = useRef(false);
 
-  const { id: communityId } = useParams();
-  const coordsRedux = useSelector((state) => state.ubicacion.coords);
-  // 👇 NUEVO: tomo la comunidad seleccionada para saber su nombre
-  const comunidadSel = useSelector(
-    (state) => state?.comunidadSeleccionada?.comunidad ?? null
-  );
-  const communityName = comunidadSel?.name ?? "";
-
-  const [negocios, setNegocios] = useState([]);
   const [loading, setLoading] = useState(true);
   const [mapLoaded, setMapLoaded] = useState(false);
   const [userCoords, setUserCoords] = useState(null);
   const [mostrarLeyenda, setMostrarLeyenda] = useState(false);
   const [categoriasUnicas, setCategoriasUnicas] = useState([]);
 
+  // ⛳ Geolocalización del usuario
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
@@ -48,35 +41,7 @@ export default function MapaComunidadConApi() {
     );
   }, []);
 
-  const primerNegocio = negocios.find(
-    (n) => n.ubicacion?.coordenadas?.lat && n.ubicacion?.coordenadas?.lng
-  );
-  const coords = primerNegocio
-    ? {
-        lat: primerNegocio.ubicacion.coordenadas.lat,
-        lng: primerNegocio.ubicacion.coordenadas.lng,
-      }
-    : coordsRedux;
-
-  useEffect(() => {
-    if (!communityId) return;
-
-    const fetchNegocios = async () => {
-      try {
-        setLoading(true);
-        const data = await getBusinessesForMapByCommunity(communityId, coords);
-        setNegocios(data || []);
-      } catch (err) {
-        console.error("Error al cargar negocios del mapa:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchNegocios();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [communityId]);
-
+  // ✅ Mostrar/ocultar leyenda auto
   useEffect(() => {
     const timeoutOpen = setTimeout(() => {
       setMostrarLeyenda(true);
@@ -90,21 +55,29 @@ export default function MapaComunidadConApi() {
     return () => clearTimeout(timeoutOpen);
   }, []);
 
+  // ✅ Render del mapa basado en `negocios` por props
+  useEffect(() => {
+    // loading visual mientras monta mapa en base a props
+    setLoading(true);
+  }, [negocios]);
+
   useEffect(() => {
     if (!mapRef.current) return;
 
+    // reset si ya existe
     if (mapInstance.current) {
       mapInstance.current.remove();
       mapInstance.current = null;
     }
 
-    const primerNegocio =
+    // centro por primer negocio válido o fallback NYC
+    const firstCoords =
       Array.isArray(negocios) && negocios[0]?.location?.coordinates?.coordinates
-        ? negocios[0]?.location.coordinates.coordinates
+        ? negocios[0].location.coordinates.coordinates
         : null;
     const defaultCenter =
-      primerNegocio?.length === 2
-        ? primerNegocio
+      firstCoords?.length === 2
+        ? firstCoords
         : userCoords || [-74.006, 40.7128];
 
     const map = new mapboxgl.Map({
@@ -119,7 +92,11 @@ export default function MapaComunidadConApi() {
 
     map.on("load", () => {
       setMapLoaded(true);
+      setLoading(false);
+
       const bounds = new mapboxgl.LngLatBounds();
+
+      // limpiar markers previos del DOM
       document
         .querySelectorAll(".emoji-pin, .marker-usuario")
         .forEach((el) => el.remove());
@@ -138,7 +115,9 @@ export default function MapaComunidadConApi() {
         const colorCategoria = getColorByCategory(categoria);
         categorias.add(categoria);
 
-        const size = n.isPremium ? 40 : 25;
+        // tamaños adaptados premium/no-premium
+        const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
+        const size = n.isPremium ? (isDesktop ? 40 : 34) : isDesktop ? 25 : 20;
 
         const wrapper = document.createElement("div");
         wrapper.className = "emoji-pin";
@@ -156,7 +135,6 @@ export default function MapaComunidadConApi() {
         markerEl.style.transition = "transform 0.2s ease";
         markerEl.style.pointerEvents = "auto";
 
-        // 👇 AQUÍ: bandera por comunidad para no-premium
         if (n.isPremium) {
           // Premium con logo
           markerEl.style.backgroundColor = "white";
@@ -169,7 +147,6 @@ export default function MapaComunidadConApi() {
           img.style.objectFit = "cover";
           markerEl.appendChild(img);
 
-          const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
           if (isDesktop) {
             wrapper.addEventListener("mouseenter", () => {
               if (!markerActivoRef.current) {
@@ -196,37 +173,36 @@ export default function MapaComunidadConApi() {
           }
         }
 
-        // Popup
         const popup = new mapboxgl.Popup({ offset: 35, closeButton: false })
           .setHTML(`
-        <div class="w-[240px] rounded-xl shadow-2xl  border border-white/10 bg-black/70 backdrop-blur-xs p-3">
-          <div class="flex items-center gap-3">
-            <img 
-              src="${n.profileImage || "/placeholder.png"}" 
-              alt="Logo de ${n.name}" 
-              class="w-10 h-10 rounded-full object-cover border border-white/10"
-            />
-            <div class="flex flex-col">
-              <h3 class="  text-xs font-semibold text-gray-100">${n.name}</h3>
-              <p class="text-[11px] text-gray-100 leading-tight">${categoria}</p>
+          <div class="w-[240px] rounded-xl shadow-2xl border border-white/10 bg-black/70 backdrop-blur-xs p-3">
+            <div class="flex items-center gap-3">
+              <img 
+                src="${n.profileImage || "/placeholder.png"}" 
+                alt="Logo de ${n.name}" 
+                class="w-10 h-10 rounded-full object-cover border border-white/10"
+              />
+              <div class="flex flex-col">
+                <h3 class="text-xs font-semibold text-gray-100">${n.name}</h3>
+                <p class="text-[11px] text-gray-100 leading-tight">${categoria}</p>
+              </div>
+            </div>
+            <div class="flex justify-between items-center mt-3">
+              <a href="/negocios/${
+                n._id
+              }" class="text-xs text-white bg-orange-500 hover:bg-orange-600 font-medium px-2 py-1 rounded transition">
+                Ver más
+              </a>
+              <div class="flex items-center gap-2 ml-2">
+                ${
+                  estaAbiertoAhora(n.openingHours)
+                    ? `<span class="pulsing-dot"></span><span class="text-[11px] text-green-400">Abierto ahora</span>`
+                    : `<span class="text-[11px] text-red-400">Cerrado</span>`
+                }
+              </div>
             </div>
           </div>
-          <div class="flex justify-between items-center mt-3">
-            <a href="/negocios/${
-              n._id
-            }" class="text-xs text-white bg-orange-500 hover:bg-orange-600 font-medium px-2 py-1 rounded transition">
-              Ver más
-            </a>
-            <div class="flex items-center gap-2 ml-2">
-              ${
-                estaAbiertoAhora(n.openingHours)
-                  ? `<span class="pulsing-dot"></span><span class="text-[11px] text-green-400">Abierto ahora</span>`
-                  : `<span class="text-[11px] text-red-400">Cerrado</span>`
-              }
-            </div>
-          </div>
-        </div>
-      `);
+        `);
 
         wrapper.appendChild(markerEl);
 
@@ -288,7 +264,7 @@ export default function MapaComunidadConApi() {
       map.remove();
       mapInstance.current = null;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // negocios o communityName cambian => re-monta el mapa con nueva data
   }, [negocios, userCoords, communityName]);
 
   useEffect(() => {
@@ -334,7 +310,7 @@ export default function MapaComunidadConApi() {
             usuarioTocoDropdown.current = true;
             setMostrarLeyenda((prev) => !prev);
           }}
-          className="flex items-center gap-1 bg-white text-gray-700 px-3 py-2 rounded shadow  text-xs hover:bg-gray-100"
+          className="flex items-center gap-1 bg-white text-gray-700 px-3 py-2 rounded shadow text-xs hover:bg-gray-100"
         >
           <PiChartPieSliceFill className="text-lg text-orange-500" />
           <p className="text-xs">Categorías</p>
@@ -403,33 +379,25 @@ function getColorByCategory(nombre) {
   }
 }
 
-// 👇 NUEVO: bandera por nombre de comunidad
 function getFlagBackgroundByCommunity(name = "") {
   const n = String(name || "")
     .toLowerCase()
     .trim();
-
-  // 🇨🇴 Colombia (amarillo 50%, azul 25%, rojo 25%)
   if (n.includes("colom")) {
     return "linear-gradient(to bottom, #FCD116 0% 50%, #0038A8 50% 75%, #CE1126 75% 100%)";
   }
-  // 🇻🇪 Venezuela (amarillo/azul/rojo a tercios; sin estrellas)
   if (n.includes("vene")) {
     return "linear-gradient(to bottom, #FCD116 0% 33.333%, #0033A0 33.333% 66.666%, #EF3340 66.666% 100%)";
   }
-  // 🇵🇪 Perú (rojo, blanco, rojo vertical)
   if (n.includes("peru") || n.includes("perú")) {
     return "linear-gradient(to right, #D91023 0% 33.333%, #FFFFFF 33.333% 66.666%, #D91023 66.666% 100%)";
   }
-  // 🇦🇷 Argentina (celeste/blanco/celeste)
   if (n.includes("argen")) {
     return "linear-gradient(to bottom, #74ACDF 0% 33.333%, #FFFFFF 33.333% 66.666%, #74ACDF 66.666% 100%)";
   }
-  // 🇲🇽 México (verde/blanco/rojo vertical; sin escudo)
   if (n.includes("mex") || n.includes("méx")) {
     return "linear-gradient(to right, #006847 0% 33.333%, #FFFFFF 33.333% 66.666%, #CE1126 66.666% 100%)";
   }
-  // 🇺🇸 USA (simplificado: rayas rojas/blancas)
   if (
     n.includes("usa") ||
     n.includes("estados unidos") ||
@@ -437,7 +405,5 @@ function getFlagBackgroundByCommunity(name = "") {
   ) {
     return "repeating-linear-gradient(to bottom, #B22234 0 10%, #FFFFFF 10% 20%)";
   }
-
-  // Si no se reconoce, devuelve null para caer al color por categoría
   return null;
 }

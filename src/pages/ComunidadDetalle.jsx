@@ -19,6 +19,7 @@ import {
   FaGlobe,
   FaYoutube,
 } from "react-icons/fa";
+import { getBusinessesForMapByCommunity } from "../api/businessApi";
 
 const socialIcons = {
   facebook: <FaFacebook />,
@@ -34,10 +35,10 @@ export default function ComunidadDetalle() {
   const { lista, loading } = useSelector((state) => state.comunidades);
   const eventos = useSelector((state) => state.eventos.lista);
   const eventosLoading = useSelector((state) => state.eventos.loading);
-  const negociosDeLaComunidad = useSelector(
-    (state) => state.comunidadSeleccionada.negocios
-  );
-  const negociosLoading = useSelector((state) => state.negocios.loading);
+  const coordsRedux = useSelector((state) => state.ubicacion.coords);
+
+  const [negociosDeLaComunidad, setNegociosDeLaComunidad] = useState([]);
+  const [negociosLoadingLocal, setNegociosLoadingLocal] = useState(true);
 
   const [yaSigue, setYaSigue] = useState(false);
   const [tab, setTab] = useState("negocios");
@@ -62,16 +63,26 @@ export default function ComunidadDetalle() {
     fetchFollow();
   }, [comunidad?._id]);
 
-  // const negociosDeLaComunidad = useMemo(() => {
-  //   if (!comunidad?._id) return [];
-  //   return negocios.filter((n) => {
-  //     if (!n.community) return false;
-  //     if (typeof n.community === "object" && n.community._id) {
-  //       return String(n.community._id) === String(comunidad._id);
-  //     }
-  //     return String(n.community) === String(comunidad._id);
-  //   });
-  // }, [negocios, comunidad]);
+  // ✅ NUEVO: traer negocios por comunidad via endpoint (mismo del mapa)
+  useEffect(() => {
+    const cargarNegocios = async () => {
+      if (!comunidad?._id) return;
+      try {
+        setNegociosLoadingLocal(true);
+        const data = await getBusinessesForMapByCommunity(
+          comunidad._id,
+          coordsRedux
+        );
+        setNegociosDeLaComunidad(Array.isArray(data) ? data : []);
+      } catch (err) {
+        console.error("Error al cargar negocios por comunidad:", err);
+        setNegociosDeLaComunidad([]);
+      } finally {
+        setNegociosLoadingLocal(false);
+      }
+    };
+    cargarNegocios();
+  }, [comunidad?._id, coordsRedux]);
 
   const eventosDeLaComunidad = useMemo(() => {
     if (!comunidad?._id) return [];
@@ -180,10 +191,8 @@ export default function ComunidadDetalle() {
                 <h2 className="text-lg font-semibold text-gray-800">
                   Negocios de la comunidad
                 </h2>
-                {negociosLoading ? (
-                  <p className="  text-xs text-gray-500">
-                    Cargando negocios...
-                  </p>
+                {negociosLoadingLocal ? (
+                  <p className="text-xs text-gray-500">Cargando negocios...</p>
                 ) : negociosDeLaComunidad.length > 0 ? (
                   <div className="grid grid-cols-2 md:grid-cols-4 2xl:grid-cols-6 gap-4">
                     {negociosDeLaComunidad.map((neg) => (
@@ -193,7 +202,7 @@ export default function ComunidadDetalle() {
                     ))}
                   </div>
                 ) : (
-                  <p className="  text-xs text-gray-500">
+                  <p className="text-xs text-gray-500">
                     No hay negocios registrados todavía.
                   </p>
                 )}
@@ -333,7 +342,11 @@ export default function ComunidadDetalle() {
             Conectá con los negocios que mueven tu comunidad.
           </p>
           <div className="overflow-hidden z-0 mt-8">
-            <MapaNegocioDetalle logo="" />
+            <MapaNegocioDetalle
+              logo=""
+              negocios={negociosDeLaComunidad}
+              communityName={comunidad?.name || ""}
+            />
           </div>
         </div>
       </div>
