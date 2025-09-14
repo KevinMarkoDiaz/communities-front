@@ -436,7 +436,7 @@ export default function NegocioForm() {
           // }
 
           if (id) {
-            await dispatch(updateBusinessThunk({ id, formData })).unwrap();
+            dispatch(updateBusinessThunk({ idOrSlug: id, formData }));
             dispatch(
               mostrarFeedback({
                 message: "Negocio actualizado con éxito",

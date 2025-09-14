@@ -225,7 +225,10 @@ export default function ComunidadDetalle() {
                 ) : negociosDeLaComunidad.length > 0 ? (
                   <div className="grid grid-cols-2 md:grid-cols-4 2xl:grid-cols-6 gap-4">
                     {negociosDeLaComunidad.map((neg) => (
-                      <Link key={neg._id} to={`/negocios/${neg._id}`}>
+                      <Link
+                        key={neg._id}
+                        to={`/negocios/${neg.slug || neg._id}`} // ✅ usa slug si existe
+                      >
                         <CardNegocioHome negocio={neg} />
                       </Link>
                     ))}

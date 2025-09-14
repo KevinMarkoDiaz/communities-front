@@ -2,12 +2,12 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   getAllBusinesses,
   getMyBusinesses,
-  deleteBusiness,
-  updateBusiness,
+  deleteBusiness, // sigue funcionando con id o slug (delegamos en la API)
+  updateBusiness, // idem: delega internamente a idOrSlug
   createBusiness,
   getAllBusinessesByCommunity,
   getAllBusinessesForMap,
-  getBusinessesForMapByCommunity, // ✅ nuevo
+  getBusinessesForMapByCommunity,
 } from "../api/businessApi";
 import { mostrarFeedback } from "./feedbackSlice";
 import { resetApp } from "./appActions";
@@ -139,18 +139,21 @@ export const fetchMisNegocios = createAsyncThunk(
   }
 );
 
+/* ────────────────────────────────────────────────────────────
+   DELETE por id o slug (backward compatible)
+   ──────────────────────────────────────────────────────────── */
 export const deleteNegocio = createAsyncThunk(
   "negocios/delete",
-  async (id, { rejectWithValue, dispatch }) => {
+  async (idOrSlug, { rejectWithValue, dispatch }) => {
     try {
-      await deleteBusiness(id);
+      await deleteBusiness(idOrSlug); // la API acepta id o slug
       dispatch(
         mostrarFeedback({
           message: "Negocio eliminado con éxito",
           type: "success",
         })
       );
-      return id;
+      return { idOrSlug };
     } catch (error) {
       dispatch(
         mostrarFeedback({
@@ -175,7 +178,7 @@ export const createBusinessThunk = createAsyncThunk(
           type: "success",
         })
       );
-      return res;
+      return res; // { msg, business }
     } catch (error) {
       dispatch(
         mostrarFeedback({
@@ -188,19 +191,24 @@ export const createBusinessThunk = createAsyncThunk(
   }
 );
 
+/* ────────────────────────────────────────────────────────────
+   UPDATE por id o slug (backward compatible)
+   Acepta { idOrSlug, formData } o { id, formData }
+   ──────────────────────────────────────────────────────────── */
 export const updateBusinessThunk = createAsyncThunk(
   "negocios/update",
-  async ({ id, formData }, { rejectWithValue, dispatch }) => {
+  async ({ idOrSlug, id, formData }, { rejectWithValue, dispatch }) => {
     dispatch(mostrarFeedback({ message: "Procesando...", type: "loading" }));
     try {
-      const res = await updateBusiness(id, formData);
+      const key = idOrSlug ?? id; // compat
+      const res = await updateBusiness(key, formData); // API acepta id o slug
       dispatch(
         mostrarFeedback({
           message: "Negocio actualizado con éxito",
           type: "success",
         })
       );
-      return res;
+      return res; // { msg, business }
     } catch (error) {
       dispatch(
         mostrarFeedback({
@@ -309,9 +317,35 @@ const negociosSlice = createSlice({
         state.misLoaded = true;
       })
 
+      // Crear: si viene el negocio, sincroniza listas
+      .addCase(createBusinessThunk.fulfilled, (state, action) => {
+        const b = action.payload?.business;
+        if (!b) return;
+        // Opcional: insertar al principio si estás en "mis negocios"
+        state.misNegocios.unshift(b);
+        // También puedes pushear en lista general si aplica tu UX:
+        // state.lista.unshift(b);
+      })
+
+      // Update: sincroniza en lista y misNegocios por _id
+      .addCase(updateBusinessThunk.fulfilled, (state, action) => {
+        const b = action.payload?.business;
+        if (!b) return;
+        state.lista = state.lista.map((x) => (x._id === b._id ? b : x));
+        state.misNegocios = state.misNegocios.map((x) =>
+          x._id === b._id ? b : x
+        );
+      })
+
+      // Delete: ahora payload trae { idOrSlug }
       .addCase(deleteNegocio.fulfilled, (state, action) => {
+        const key = action.payload?.idOrSlug;
+        if (!key) return;
         state.misNegocios = state.misNegocios.filter(
-          (n) => n._id !== action.payload
+          (n) => n._id !== key && n.slug !== key
+        );
+        state.lista = state.lista.filter(
+          (n) => n._id !== key && n.slug !== key
         );
       })
 

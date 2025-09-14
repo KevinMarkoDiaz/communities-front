@@ -36,7 +36,7 @@ export default function ResumenNegocios({ negocios = [], onDelete }) {
         await onDelete(id);
       } else {
         // Autogestionado con Redux
-        await dispatch(deleteNegocio(id)).unwrap();
+        await dispatch(deleteNegocio(negocioSeleccionado.slug)).unwrap();
       }
 
       dispatch(

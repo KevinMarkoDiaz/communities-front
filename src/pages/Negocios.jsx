@@ -108,7 +108,7 @@ export default function Negocios() {
               negociosFiltrados.map((negocio) => (
                 <Link
                   key={negocio._id}
-                  to={`/negocios/${negocio._id}`}
+                  to={`/negocios/${negocio.slug || negocio._id}`} // ✅ slug preferido
                   className={`flex-shrink-0 ${
                     negocio.isPremium ? "col-span-2" : ""
                   }`}
@@ -122,8 +122,8 @@ export default function Negocios() {
                     hasDiscount={false}
                     descuento=""
                     logo={negocio.profileImage}
-                    category={negocio.categories[0]?.name}
-                    location={`${negocio.location.city}, ${
+                    category={negocio.categories?.[0]?.name}
+                    location={`${negocio.location?.city || ""}, ${
                       negocio.country || ""
                     }`}
                   />

@@ -283,39 +283,40 @@ export default function MapaComunidad({ negocios, coords }) {
       const safeImg = n?.profileImage || PLACEHOLDER_IMG;
       const safeCategoria = categoria || "Sin categoría";
       const safeId = n?._id || n?.id || "";
+      const safeSlug = n?.slug || ""; // ✅ nuevo
       const abierto = estaAbiertoAhora(n?.openingHours);
 
       const html = `
-        <div class="w-[240px] rounded-xl shadow-2xl border border-white/10 bg-black/70 backdrop-blur-xs p-3">
-          <div class="flex items-center gap-3">
-            <img 
-              src="${safeImg}" 
-              alt="Logo de ${safeName}" 
-              class="w-10 h-10 rounded-full object-cover border border-white/10"
-            />
-            <div class="flex flex-col">
-              <h3 class="text-xs font-semibold text-gray-100">${safeName}</h3>
-              <p class="text-[11px] text-gray-100 leading-tight">${safeCategoria}</p>
-            </div>
-          </div>
-          <div class="flex justify-between items-center mt-3">
-            <a 
-              href="/negocios/${safeId}" 
-              data-navigate="/negocios/${safeId}"
-              class="text-xs text-white bg-orange-500 hover:bg-orange-600 font-medium px-2 py-1 rounded transition"
-            >
-              Ver más
-            </a>
-            <div class="flex items-center gap-2 ml-2">
-              ${
-                abierto
-                  ? `<span class="pulsing-dot"></span><span class="text-[11px] text-green-400">Abierto ahora</span>`
-                  : `<span class="text-[11px] text-red-400">Cerrado</span>`
-              }
-            </div>
-          </div>
-        </div>
-      `;
+  <div class="w-[240px] rounded-xl shadow-2xl border border-white/10 bg-black/70 backdrop-blur-xs p-3">
+    <div class="flex items-center gap-3">
+      <img 
+        src="${safeImg}" 
+        alt="Logo de ${safeName}" 
+        class="w-10 h-10 rounded-full object-cover border border-white/10"
+      />
+      <div class="flex flex-col">
+        <h3 class="text-xs font-semibold text-gray-100">${safeName}</h3>
+        <p class="text-[11px] text-gray-100 leading-tight">${safeCategoria}</p>
+      </div>
+    </div>
+    <div class="flex justify-between items-center mt-3">
+      <a 
+        href="/negocios/${safeSlug || safeId}" 
+        data-navigate="/negocios/${safeSlug || safeId}"
+        class="text-xs text-white bg-orange-500 hover:bg-orange-600 font-medium px-2 py-1 rounded transition"
+      >
+        Ver más
+      </a>
+      <div class="flex items-center gap-2 ml-2">
+        ${
+          abierto
+            ? `<span class="pulsing-dot"></span><span class="text-[11px] text-green-400">Abierto ahora</span>`
+            : `<span class="text-[11px] text-red-400">Cerrado</span>`
+        }
+      </div>
+    </div>
+  </div>
+`;
 
       const popup = new mapboxgl.Popup({
         offset: 35,
