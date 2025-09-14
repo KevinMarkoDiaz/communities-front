@@ -16,14 +16,18 @@ const getImagen = (item) =>
 const getTipo = (item) => item.tipo || "Sin tipo";
 const esPremium = (item) => item.isPremium === true;
 
-const getRuta = (tipo, id) => {
-  switch (tipo) {
+// ✅ ahora recibe el objeto completo para poder leer slug por tipo
+const getRuta = (item) => {
+  const id = item.id || item._id;
+  const slug = item.slug;
+  switch (item.tipo) {
     case "negocio":
-      return `/negocios/${id}`;
+      return `/negocios/${slug || id}`;
     case "evento":
+      // si en el futuro eventos tienen slug, puedes usar (item.slug || id)
       return `/eventos/${id}`;
     case "comunidad":
-      return `/comunidades/${id}`;
+      return `/comunidades/${slug || id}`;
     default:
       return "#";
   }
@@ -52,25 +56,33 @@ export default function GridResultadosGlobal({ resultados = [] }) {
       </h2>
 
       <div className="grid grid-cols-[repeat(auto-fit,minmax(120px,1fr))] sm:grid-cols-[repeat(auto-fit,minmax(180px,180px))] md:grid-cols-[repeat(auto-fit,minmax(180px,180px))]  gap-4">
-        {resultados.map((item, index) => (
-          <motion.div
-            key={item.id || item._id}
-            custom={index}
-            initial="hidden"
-            animate="visible"
-            variants={itemVariants}
-            className={item.isPremium ? "col-span-2 " : ""}
-          >
-            <Link to={getRuta(item.tipo, item.id || item._id)} className="">
-              <CardResultadoCuadrada
-                title={getTitulo(item)}
-                image={getImagen(item)}
-                tipo={getTipo(item)}
-                isPremium={item.isPremium}
-              />
-            </Link>
-          </motion.div>
-        ))}
+        {resultados.map((item, index) => {
+          const id = item.id || item._id;
+          const slugOrId =
+            item.tipo === "negocio" || item.tipo === "comunidad"
+              ? item.slug || id
+              : id;
+
+          return (
+            <motion.div
+              key={slugOrId} // ✅ key estable con slug/id
+              custom={index}
+              initial="hidden"
+              animate="visible"
+              variants={itemVariants}
+              className={esPremium(item) ? "col-span-2 " : ""}
+            >
+              <Link to={getRuta(item)} className="">
+                <CardResultadoCuadrada
+                  title={getTitulo(item)}
+                  image={getImagen(item)}
+                  tipo={getTipo(item)}
+                  isPremium={item.isPremium}
+                />
+              </Link>
+            </motion.div>
+          );
+        })}
       </div>
     </section>
   );

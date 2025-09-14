@@ -19,11 +19,12 @@ export default function NegociosSugeridos({ negocios = [], loading, imagen }) {
         {destacados.map((raw, i) => {
           const n = raw ?? {};
           const id = n._id ?? n.id ?? null;
-          const to = id ? `/negocios/${id}` : null;
+          const slugOrId = n.slug || id; // ✅ preferir slug
+          const to = slugOrId ? `/negocios/${slugOrId}` : null;
 
           return (
             <div
-              key={id ?? `neg-sug-${i}`}
+              key={slugOrId ?? `neg-sug-${i}`} // ✅ key estable con slug/id
               className="flex-shrink-0 snap-start min-w-[280px] sm:min-w-[250px] md:min-w-[250px] lg:min-w-[320px]"
             >
               {to ? (

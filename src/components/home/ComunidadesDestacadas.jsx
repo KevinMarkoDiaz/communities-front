@@ -19,7 +19,8 @@ export default function ComunidadesDestacadas({ comunidades = [], loading }) {
         {destacadas.map((raw, i) => {
           const comunidad = raw ?? {};
           const id = comunidad._id ?? comunidad.id ?? null;
-          const to = id ? `/comunidades/${id}` : null;
+          const slugOrId = comunidad.slug || id; // ✅ preferir slug
+          const to = slugOrId ? `/comunidades/${slugOrId}` : null;
 
           const title = comunidad.name ?? "Comunidad";
           const image =
@@ -37,7 +38,7 @@ export default function ComunidadesDestacadas({ comunidades = [], loading }) {
 
           return (
             <div
-              key={id ?? `comunidad-${i}`}
+              key={slugOrId ?? `comunidad-${i}`} // ✅ key estable con slug/id
               className="flex-shrink-0 snap-start min-w-[280px] sm:min-w-[250px] md:min-w-[250px] lg:min-w-[320px]"
             >
               {to ? (
