@@ -43,14 +43,14 @@ export default function Comunidades() {
     return [];
   }, [comunidades]);
 
-  // Carga inicial y cuando cambie la búsqueda/paginación
+  // Carga inicial segun coordenadas
   useEffect(() => {
     if (!coords) return;
     dispatch(fetchComunidades({ lat: coords.lat, lng: coords.lng, page: 1 }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, coords]);
 
-  // Si quisieras refetch por cambios en busqueda (según tu slice)
+  // Refetch si cambia la búsqueda (según tu slice)
   useEffect(() => {
     if (!coords) return;
     dispatch(fetchComunidades({ lat: coords.lat, lng: coords.lng, page: 1 }));
@@ -75,6 +75,7 @@ export default function Comunidades() {
           content="Explora comunidades migrantes con negocios, eventos y servicios propios."
         />
       </Helmet>
+
       <div className="grid gap-12 md:gap-16 xl:gap-24">
         {/* SECCIÓN DESTACADA + BUSCADOR */}
         <div className="flex flex-col ">
@@ -88,7 +89,7 @@ export default function Comunidades() {
               placeholder="Buscar tu comunidad..."
               filtroTipo="comunidad"
               onSelectResultado={(item) =>
-                navigate(`/comunidades/${item?._id || item?.id}`)
+                navigate(`/comunidades/${item?.slug || item?._id || item?.id}`)
               }
             />
           </div>
@@ -98,7 +99,7 @@ export default function Comunidades() {
         <GridWrapper
           ref={gridRef}
           tipo="grid"
-          className="min-h-[30vh] flex-grow"
+          className="min-h[30vh] flex-grow"
         >
           {loadingLista ? (
             Array.from({ length: 12 }).map((_, i) => (
@@ -108,16 +109,19 @@ export default function Comunidades() {
             comunidadesSeguras.map((comunidad) => {
               if (!comunidad) return null;
               const id = comunidad.id || comunidad._id;
+              const slug = comunidad.slug;
               const title = comunidad.name || "Comunidad";
               const description = comunidad.description || "";
               const image = comunidad.bannerImage || comunidad.flagImage;
               const logo = comunidad.flagImage;
-              const isVerified = Boolean(comunidad.isVerified);
+              const isVerified = Boolean(
+                comunidad.verified ?? comunidad.isVerified
+              );
 
               return (
                 <Link
-                  key={id}
-                  to={`/comunidades/${id}`}
+                  key={slug || id}
+                  to={`/comunidades/${slug || id}`}
                   className="flex-shrink-0"
                 >
                   <CardLista
@@ -147,6 +151,7 @@ export default function Comunidades() {
           />
         )}
       </div>
+
       {/* Banner final */}
       <BannerComunidades scrollToRef={gridRef} />
     </div>

@@ -43,10 +43,10 @@ export async function createCommunity(formData) {
 /**
  * Actualizar una comunidad
  */
-export async function updateCommunity(id, data) {
-  const res = await axiosInstance.put(`/communities/${id}`, data);
-  return res.data;
-}
+// export async function updateCommunity(id, data) {
+//   const res = await axiosInstance.put(`/communities/${id}`, data);
+//   return res.data;
+// }
 
 /**
  * Eliminar una comunidad
@@ -73,9 +73,22 @@ export async function contarComunidades() {
 }
 
 /**
- * Obtener una comunidad por su slug
+ * (LEGACY) Obtener por slug explícito — opcional si mantienes redirect en backend
+ * Mejor usa getCommunityByIdOrSlug(slug)
  */
 export async function getCommunityBySlug(slug) {
-  const res = await axiosInstance.get(`/communities/slug/${slug}`);
+  const res = await axiosInstance.get(`/communities/${slug}`);
+  return res.data;
+}
+
+/**
+ * Obtener comunidad por id o slug (ruta unificada)
+ */
+export async function getCommunityByIdOrSlug(idOrSlug) {
+  const res = await axiosInstance.get(`/communities/${idOrSlug}`);
+  return res.data;
+}
+export async function updateCommunity(idOrSlug, data) {
+  const res = await axiosInstance.put(`/communities/${idOrSlug}`, data);
   return res.data;
 }

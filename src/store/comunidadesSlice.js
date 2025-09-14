@@ -1,25 +1,34 @@
+// src/store/comunidadesSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   getAllCommunities,
   getMyCommunities,
   createCommunity,
   updateCommunity,
-  getCommunityById,
-  deleteCommunity, // 👈 NUEVO
+  getCommunityByIdOrSlug, // ✅ nuevo para aceptar slug o id
+  deleteCommunity,
 } from "../api/communityApi";
 import { mostrarFeedback } from "./feedbackSlice";
 import { resetApp } from "./appActions";
 
+/* ────────────────────────────────────────────────────────────
+   Thunks
+   ──────────────────────────────────────────────────────────── */
+
 // 🌀 Obtener todas las comunidades
 export const fetchComunidades = createAsyncThunk(
   "comunidades/fetchAll",
-  async ({ lat, lng, page = 1 } = {}, { rejectWithValue, dispatch }) => {
+  async (
+    { lat, lng, page = 1, limit = 15 } = {},
+    { rejectWithValue, dispatch }
+  ) => {
     try {
-      const data = await getAllCommunities({ lat, lng, page });
+      const data = await getAllCommunities({ lat, lng, page, limit });
       return {
-        comunidades: data.communities,
-        totalPages: Math.ceil(data.total / data.perPage),
-        currentPage: data.page,
+        comunidades: data.communities || [],
+        totalPages: data.totalPages || 1,
+        currentPage: data.currentPage || page,
+        totalResults: data.totalResults ?? 0,
       };
     } catch (error) {
       dispatch(
@@ -42,7 +51,7 @@ export const fetchMisComunidades = createAsyncThunk(
   async (_, { rejectWithValue, dispatch }) => {
     try {
       const data = await getMyCommunities();
-      return data.communities;
+      return data.communities || [];
     } catch (error) {
       dispatch(
         mostrarFeedback({
@@ -58,12 +67,12 @@ export const fetchMisComunidades = createAsyncThunk(
   }
 );
 
-// 🔍 Obtener comunidad por ID
-export const fetchCommunityById = createAsyncThunk(
-  "comunidades/fetchById",
-  async (id, { rejectWithValue, dispatch }) => {
+// 🔍 Obtener comunidad por id o slug
+export const fetchCommunityByIdOrSlug = createAsyncThunk(
+  "comunidades/fetchByIdOrSlug",
+  async (idOrSlug, { rejectWithValue, dispatch }) => {
     try {
-      const data = await getCommunityById(id);
+      const data = await getCommunityByIdOrSlug(idOrSlug);
       return data.community;
     } catch (error) {
       dispatch(
@@ -90,7 +99,7 @@ export const createCommunityThunk = createAsyncThunk(
           type: "success",
         })
       );
-      return response;
+      return response; // { msg, community }
     } catch (err) {
       dispatch(
         mostrarFeedback({
@@ -103,20 +112,20 @@ export const createCommunityThunk = createAsyncThunk(
   }
 );
 
-// 🟡 Actualizar comunidad
+// 🟡 Actualizar comunidad (id o slug)
 export const updateCommunityThunk = createAsyncThunk(
   "comunidades/update",
-  async ({ id, formData }, { rejectWithValue, dispatch }) => {
+  async ({ idOrSlug, formData }, { rejectWithValue, dispatch }) => {
     dispatch(mostrarFeedback({ message: "Procesando...", type: "loading" }));
     try {
-      const response = await updateCommunity(id, formData);
+      const response = await updateCommunity(idOrSlug, formData);
       dispatch(
         mostrarFeedback({
           message: "Comunidad actualizada exitosamente",
           type: "success",
         })
       );
-      return response;
+      return response; // { msg, community }
     } catch (err) {
       dispatch(
         mostrarFeedback({
@@ -130,20 +139,20 @@ export const updateCommunityThunk = createAsyncThunk(
   }
 );
 
-// 🔴 Eliminar comunidad (NUEVO)
+// 🔴 Eliminar comunidad (id o slug)
 export const deleteComunidad = createAsyncThunk(
   "comunidades/delete",
-  async (id, { rejectWithValue, dispatch }) => {
+  async (idOrSlug, { rejectWithValue, dispatch }) => {
     dispatch(mostrarFeedback({ message: "Eliminando...", type: "loading" }));
     try {
-      const resp = await deleteCommunity(id);
+      const resp = await deleteCommunity(idOrSlug);
       dispatch(
         mostrarFeedback({
           message: resp?.msg || "Comunidad eliminada",
           type: "success",
         })
       );
-      return { id };
+      return { idOrSlug };
     } catch (err) {
       dispatch(
         mostrarFeedback({
@@ -157,7 +166,10 @@ export const deleteComunidad = createAsyncThunk(
   }
 );
 
-// 🔧 Estado inicial
+/* ────────────────────────────────────────────────────────────
+   Slice
+   ──────────────────────────────────────────────────────────── */
+
 const initialState = {
   lista: [],
   misComunidades: [],
@@ -171,6 +183,7 @@ const initialState = {
   misLoaded: false,
   totalPages: 1,
   currentPage: 1,
+  totalResults: 0,
 };
 
 const comunidadesSlice = createSlice({
@@ -199,6 +212,7 @@ const comunidadesSlice = createSlice({
         state.lista = action.payload.comunidades;
         state.totalPages = action.payload.totalPages;
         state.currentPage = action.payload.currentPage;
+        state.totalResults = action.payload.totalResults;
         state.loaded = true;
       })
       .addCase(fetchComunidades.rejected, (state, action) => {
@@ -221,28 +235,60 @@ const comunidadesSlice = createSlice({
         state.error = action.payload;
       })
 
-      // Por ID
-      .addCase(fetchCommunityById.pending, (state) => {
+      // Detalle
+      .addCase(fetchCommunityByIdOrSlug.pending, (state) => {
         state.loadingDetalle = true;
         state.error = null;
         state.comunidadActual = null;
       })
-      .addCase(fetchCommunityById.fulfilled, (state, action) => {
+      .addCase(fetchCommunityByIdOrSlug.fulfilled, (state, action) => {
         state.loadingDetalle = false;
         state.comunidadActual = action.payload;
       })
-      .addCase(fetchCommunityById.rejected, (state, action) => {
+      .addCase(fetchCommunityByIdOrSlug.rejected, (state, action) => {
         state.loadingDetalle = false;
         state.error = action.payload;
         state.comunidadActual = null;
       })
 
-      // 🔴 Delete comunidad
+      // Crear
+      .addCase(createCommunityThunk.fulfilled, (state, action) => {
+        const c = action.payload?.community;
+        if (c) {
+          state.lista.unshift(c);
+          state.misComunidades.unshift(c);
+        }
+      })
+
+      // Update
+      .addCase(updateCommunityThunk.fulfilled, (state, action) => {
+        const c = action.payload?.community;
+        if (!c) return;
+        state.lista = state.lista.map((x) => (x._id === c._id ? c : x));
+        state.misComunidades = state.misComunidades.map((x) =>
+          x._id === c._id ? c : x
+        );
+        if (state.comunidadActual?._id === c._id) {
+          state.comunidadActual = c;
+        }
+      })
+
+      // Delete
       .addCase(deleteComunidad.fulfilled, (state, action) => {
-        const id = action.payload.id;
-        state.lista = state.lista.filter((c) => c._id !== id);
-        state.misComunidades = state.misComunidades.filter((c) => c._id !== id);
-        if (state.comunidadActual?._id === id) state.comunidadActual = null;
+        const idOrSlug = action.payload.idOrSlug;
+        state.lista = state.lista.filter(
+          (c) => c._id !== idOrSlug && c.slug !== idOrSlug
+        );
+        state.misComunidades = state.misComunidades.filter(
+          (c) => c._id !== idOrSlug && c.slug !== idOrSlug
+        );
+        if (
+          state.comunidadActual &&
+          (state.comunidadActual._id === idOrSlug ||
+            state.comunidadActual.slug === idOrSlug)
+        ) {
+          state.comunidadActual = null;
+        }
       });
   },
 });

@@ -380,8 +380,10 @@ export default function NegocioDetalle() {
                 Comunidad relacionada
               </h2>
               <Link
-                to={`/comunidades/${negocio.community._id}`}
-                className="w-fit flex items-center gap-2 p-2 rounded-full bg-gray-200  text-xs text-gray-700 hover:bg-gray-200"
+                to={`/comunidades/${
+                  negocio.community.slug || negocio.community._id
+                }`}
+                className="w-fit flex items-center gap-2 p-2 rounded-full bg-gray-200 text-xs text-gray-700 hover:bg-gray-200"
               >
                 <img
                   src={negocio.community.flagImage || "/placeholder-flag.png"}

@@ -1,5 +1,6 @@
+// src/pages/ComunidadDetalle.jsx
 import { useParams, Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
 import { useEffect, useMemo, useState } from "react";
 
@@ -10,6 +11,7 @@ import CardEventoGrid from "../components/communities/CardEventoGrid";
 import DetalleSkeleton from "../components/Skeleton/DetalleSkeleton";
 import UniversalFollowButton from "../components/badges/UniversalFollowButton";
 import axiosInstance from "../api/axiosInstance";
+import { getBusinessesForMapByCommunity } from "../api/businessApi";
 
 import {
   FaFacebook,
@@ -19,7 +21,8 @@ import {
   FaGlobe,
   FaYoutube,
 } from "react-icons/fa";
-import { getBusinessesForMapByCommunity } from "../api/businessApi";
+
+import { fetchCommunityByIdOrSlug } from "../store/comunidadesSlice";
 
 const socialIcons = {
   facebook: <FaFacebook />,
@@ -31,22 +34,44 @@ const socialIcons = {
 };
 
 export default function ComunidadDetalle() {
-  const { id } = useParams();
-  const { lista, loading } = useSelector((state) => state.comunidades);
+  // Acepta slug o id de forma transparente
+  const params = useParams();
+  const param = params.idOrSlug ?? params.id ?? params.slug; // compat rutas viejas
+
+  const dispatch = useDispatch();
+
+  const { lista, comunidadActual, loadingDetalle } = useSelector(
+    (state) => state.comunidades
+  );
   const eventos = useSelector((state) => state.eventos.lista);
   const eventosLoading = useSelector((state) => state.eventos.loading);
   const coordsRedux = useSelector((state) => state.ubicacion.coords);
 
   const [negociosDeLaComunidad, setNegociosDeLaComunidad] = useState([]);
   const [negociosLoadingLocal, setNegociosLoadingLocal] = useState(true);
-
   const [yaSigue, setYaSigue] = useState(false);
   const [tab, setTab] = useState("negocios");
 
+  // 1) Preferimos el detalle cargado; si no, buscamos en lista por _id o slug
   const comunidad = useMemo(() => {
-    return lista.find((c) => String(c.id) === id || String(c._id) === id);
-  }, [lista, id]);
+    if (comunidadActual) return comunidadActual;
+    return lista.find(
+      (c) =>
+        String(c._id) === String(param) ||
+        String(c.id) === String(param) ||
+        String(c.slug) === String(param)
+    );
+  }, [lista, comunidadActual, param]);
 
+  // 2) Si no tenemos la comunidad (o llegó por slug y no está en lista), la pedimos al backend
+  useEffect(() => {
+    if (!param) return;
+    if (!comunidad || (!comunidad._id && comunidad.slug)) {
+      dispatch(fetchCommunityByIdOrSlug(param));
+    }
+  }, [dispatch, param, comunidad]);
+
+  // 3) Estado de seguimiento
   useEffect(() => {
     const fetchFollow = async () => {
       if (!comunidad?._id) return;
@@ -63,7 +88,7 @@ export default function ComunidadDetalle() {
     fetchFollow();
   }, [comunidad?._id]);
 
-  // ✅ NUEVO: traer negocios por comunidad via endpoint (mismo del mapa)
+  // 4) Negocios por comunidad (usa _id una vez disponible)
   useEffect(() => {
     const cargarNegocios = async () => {
       if (!comunidad?._id) return;
@@ -73,7 +98,9 @@ export default function ComunidadDetalle() {
           comunidad._id,
           coordsRedux
         );
-        setNegociosDeLaComunidad(Array.isArray(data) ? data : []);
+        setNegociosDeLaComunidad(
+          Array.isArray(data) ? data : data?.businesses || []
+        );
       } catch (err) {
         console.error("Error al cargar negocios por comunidad:", err);
         setNegociosDeLaComunidad([]);
@@ -84,6 +111,7 @@ export default function ComunidadDetalle() {
     cargarNegocios();
   }, [comunidad?._id, coordsRedux]);
 
+  // 5) Eventos vinculados
   const eventosDeLaComunidad = useMemo(() => {
     if (!comunidad?._id) return [];
     return eventos.filter((e) => {
@@ -95,7 +123,8 @@ export default function ComunidadDetalle() {
     });
   }, [eventos, comunidad]);
 
-  if (loading) {
+  // Loading: usa loadingDetalle del slice de comunidades
+  if (loadingDetalle && !comunidad) {
     return (
       <div className="px-4 sm:px-8 lg:px-8 xl:px-40 py-5 flex justify-center">
         <div className="w-full max-w-[1400px]">
@@ -124,7 +153,7 @@ export default function ComunidadDetalle() {
         </title>
         <meta
           name="description"
-          content={comunidad.metaDescription || comunidad.description}
+          content={comunidad.metaDescription || comunidad.description || ""}
         />
       </Helmet>
 
@@ -151,8 +180,8 @@ export default function ComunidadDetalle() {
               />
             )}
             <Compartir
-              url={window.location.href}
-              title={`Descubrí la comunidad \"${comunidad.name}\" en Communidades`}
+              url={typeof window !== "undefined" ? window.location.href : ""}
+              title={`Descubrí la comunidad "${comunidad.name}" en Communidades`}
               text={`Mirá esta comunidad: ${comunidad.name || ""} - ${
                 comunidad.description?.slice(0, 100) || ""
               }...`}
@@ -170,7 +199,7 @@ export default function ComunidadDetalle() {
               <button
                 key={tabId}
                 onClick={() => setTab(tabId)}
-                className={`  text-xs px-3 py-2 rounded-t font-medium transition ${
+                className={`text-xs px-3 py-2 rounded-t font-medium transition ${
                   tab === tabId
                     ? "bg-white border border-b-0 border-gray-200 text-gray-800"
                     : "text-gray-600 hover:text-gray-800"
@@ -215,7 +244,7 @@ export default function ComunidadDetalle() {
                   Eventos de la comunidad
                 </h2>
                 {eventosLoading ? (
-                  <p className="  text-xs text-gray-500">Cargando eventos...</p>
+                  <p className="text-xs text-gray-500">Cargando eventos...</p>
                 ) : eventosDeLaComunidad.length > 0 ? (
                   <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4">
                     {eventosDeLaComunidad.map((ev) => (
@@ -234,7 +263,7 @@ export default function ComunidadDetalle() {
                     ))}
                   </div>
                 ) : (
-                  <p className="  text-xs text-gray-500">
+                  <p className="text-xs text-gray-500">
                     No hay eventos registrados todavía.
                   </p>
                 )}
@@ -249,11 +278,9 @@ export default function ComunidadDetalle() {
 
                 {comunidad.externalLinks?.length > 0 ? (
                   <>
-                    {/* FUNCIONES AUXILIARES */}
                     {["facebook", "instagram", "whatsapp", "otros"].map(
                       (tipo) => {
                         let grupo = [];
-
                         if (tipo === "otros") {
                           grupo = comunidad.externalLinks.filter(
                             (l) =>
@@ -292,7 +319,7 @@ export default function ComunidadDetalle() {
                         return (
                           <div key={tipo} className="mb-8">
                             <div className="flex items-center gap-2 mb-2">
-                              <span className=" text-lg">{icono}</span>
+                              <span className="text-lg">{icono}</span>
                               <h3 className="text-md font-semibold text-gray-500">
                                 {titulo}
                               </h3>
@@ -307,11 +334,11 @@ export default function ComunidadDetalle() {
                                   rel="noopener noreferrer"
                                   className="flex items-center gap-3 p-4 rounded-xl bg-gray-50 hover:bg-gray-100 border border-gray-200 shadow-sm"
                                 >
-                                  <div className=" text-lg text-back-600">
+                                  <div className="text-lg">
                                     {socialIcons[link.type] || <FaGlobe />}
                                   </div>
                                   <div>
-                                    <h3 className="font-semibold text-gray-800  text-xs">
+                                    <h3 className="font-semibold text-gray-800 text-xs">
                                       {link.title}
                                     </h3>
                                     {link.description && (
@@ -329,18 +356,18 @@ export default function ComunidadDetalle() {
                     )}
                   </>
                 ) : (
-                  <p className="  text-xs text-gray-500">
+                  <p className="text-xs text-gray-500">
                     No hay enlaces registrados para esta comunidad.
                   </p>
                 )}
-
-                {/* Redes sociales tipo chips */}
               </>
             )}
           </div>
+
           <p className="text-lg text-gray-900 font-bold">
             Conectá con los negocios que mueven tu comunidad.
           </p>
+
           <div className="overflow-hidden z-0 mt-8">
             <MapaNegocioDetalle
               logo=""
