@@ -46,8 +46,8 @@ export default function CategoryCarousel({ tipo = "negocios" }) {
   };
 
   return (
-    <div className="mt-4">
-      <h3 className="text-[#181411] text-lg font-bold px-4 pb-2 pt-4">
+    <div className="md:mt-4">
+      <h3 className="text-[#181411] text-lg font-bold px-4 pb-2 md:pt-4">
         Categorías
       </h3>
 

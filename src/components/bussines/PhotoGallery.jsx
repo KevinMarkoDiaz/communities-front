@@ -9,19 +9,15 @@ export function PhotoGallery({ galleryImages = [] }) {
 
   return (
     <div className="w-full">
-      <h2 className="text-[#181411] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">
-        Galeria
-      </h2>
-
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-4 p-2">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(130px,1fr))] md:grid-cols-[repeat(auto-fit,minmax(230px,1fr))] xl:grid-cols-[repeat(auto-fit,minmax(250px,1fr))]">
         {visibleImages.map((url, idx) => (
           <button
             key={idx}
             onClick={() => setSelectedImage(url)}
-            className="group relative w-full rounded-xl overflow-hidden"
+            className="group relative w-full overflow-hidden max-w-[350px] border border-1 border-gray-100"
           >
             <div
-              className="w-full bg-center bg-no-repeat aspect-[4/3] bg-cover rounded-xl shadow-sm group-hover:scale-[1.02] transition"
+              className="w-full bg-center bg-no-repeat aspect-[4/6] bg-cover  shadow-sm group-hover:scale-[1.02] transition"
               style={{ backgroundImage: `url("${url}")` }}
             ></div>
           </button>

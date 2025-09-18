@@ -8,7 +8,7 @@ export default function DropzoneGaleria({
   values = [],
   onChange,
   label = "Galería de imágenes",
-  maxImages = 5,
+  maxImages = 20,
   className = "", // para el dropzone
   infoTextClassName = "text-xs text-gray-200", // para el texto de formatos
 }) {

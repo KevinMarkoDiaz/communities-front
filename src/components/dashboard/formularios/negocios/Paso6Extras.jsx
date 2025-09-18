@@ -125,7 +125,7 @@ export default function Paso6Extras() {
         values={values.images || []}
         onChange={(files) => setFieldValue("images", files)}
         label="Galería de imágenes del negocio"
-        maxImages={5}
+        maxImages={20}
         className="text-white"
       />
       <ErrorMessage

@@ -1,6 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getBusinessById } from "../api/businessApi";
+import { Helmet } from "react-helmet-async";
 import {
   FaFacebook,
   FaInstagram,
@@ -33,7 +34,7 @@ import MapaNegocioDetalleUnico from "../components/bussines/MapaNegocioDetalleUn
 function DeliveryBadge({ zip }) {
   return (
     <span
-      className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold
+      className="flex items-center w-fit gap-2 px-3 py-1.5 rounded-full text-xs font-semibold
                  bg-blue-100 text-blue-800 border border-blue-200"
       title={zip ? `Centro del ZIP ${zip}` : "Delivery disponible"}
     >
@@ -78,6 +79,12 @@ function RenderLocation({ negocio }) {
   );
 }
 
+function getCityFromCommunity(communityName = "") {
+  // Busca "en XYZ"
+  const parts = communityName.split(" en ");
+  return parts.length > 1 ? parts[1] : communityName;
+}
+
 function BadgeEstadoNegocio({ openingHours }) {
   const abierto = estaAbiertoAhora(openingHours);
 
@@ -89,12 +96,12 @@ function BadgeEstadoNegocio({ openingHours }) {
     >
       {abierto ? (
         <>
-          <MdCheckCircle className="text-green-600 text-lg" />
+          <MdCheckCircle className="text-green-600  size-8" />
           <span className="text-gray-600 ">¡Abierto ahora!</span>
         </>
       ) : (
         <>
-          <MdAccessTime className="text-red-600 text-lg" />
+          <MdAccessTime className="text-red-600  size-8" />
           <span className="text-red-600 ">
             Estamos cerrados — consultá nuestros horarios para visitarnos
           </span>
@@ -149,8 +156,8 @@ export default function NegocioDetalle() {
 
   if (loading) {
     return (
-      <div className="px-4 sm:px-8 lg:px-8 xl:px-40 py-5 flex justify-center">
-        <div className="w-full max-w-[960px]">
+      <div className="px-4 sm:px-8 lg:px-8 w-[1240px] m-auto py-5 flex justify-center">
+        <div className="w-full max-w-[1240px]">
           <DetalleSkeleton />
         </div>
       </div>
@@ -162,262 +169,206 @@ export default function NegocioDetalle() {
       <div className="p-4 text-center text-red-600">Negocio no encontrado.</div>
     );
   }
+  const city = getCityFromCommunity(negocio.community?.name);
+  const title = `${negocio.name} en ${city} | Communidades`;
+  const url = `https://communidades.com/negocios/${negocio.slug}`;
+  const description =
+    negocio.description?.slice(0, 155) ||
+    `Descubre ${negocio.name} en ${negocio.city}.`;
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": negocio.schemaType || "LocalBusiness",
+    name: negocio.name,
+    url: `https://communidades.com/negocios/${negocio.slug}`,
+    image: negocio.featuredImage,
+    telephone: negocio.phone,
+    priceRange: negocio.priceRange || "$$",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: negocio.location?.address,
+      addressLocality: negocio.location?.city,
+      addressRegion: negocio.location?.state || "TX",
+      postalCode: negocio.location?.zip,
+      addressCountry: "US",
+    },
+    geo: negocio.location?.coordinates?.coordinates
+      ? {
+          "@type": "GeoCoordinates",
+          latitude: negocio.location.coordinates.coordinates[1],
+          longitude: negocio.location.coordinates.coordinates[0],
+        }
+      : undefined,
+    openingHours: negocio.openingHours || [],
+    sameAs: Object.values(negocio.contact?.socialMedia || {}).filter(Boolean),
+  };
 
   return (
-    <div className="px-4 sm:px-8 lg:px-8 py-5 flex justify-center">
-      <div className="w-full max-w-[960px] flex flex-col gap-8">
-        {/* Hero */}
-        <BusinessHero
-          businessName={negocio.name}
-          backgroundImageUrl={negocio.featuredImage}
-        />
-
-        {/* Encabezado */}
-        <div className="space-y-8">
-          <div className="flex justify-between items-center flex-wrap gap-2">
-            <h1 className="hidden md:block text-2xl font-bold text-gray-900">
-              {negocio.name}
-            </h1>
-            {negocio.openingHours && (
-              <BadgeEstadoNegocio openingHours={negocio.openingHours} />
-            )}
-          </div>
-
-          {/* Dirección o Badge de delivery */}
-          <RenderLocation negocio={negocio} />
-
-          {/* Botones principales */}
-          <div className="mt-4 flex flex-col gap-3 md:flex-row md:flex-wrap">
-            <div className="flex flex-wrap gap-2 md:w-full md:justify-start">
-              <UniversalFollowButton
-                entityType="business"
-                entityId={id}
-                initialFollowed={yaSigue}
-              />
-              <StartConversationButton entityType="business" entityId={id} />
-            </div>
-          </div>
-          {/* Compartir */}
-          <Compartir
-            url={window.location.href}
-            title={`Descubre ${negocio.name} en Communidades`}
-            text={`Encontré este negocio latino que te puede interesar: ${negocio.name}`}
+    <>
+      <Helmet>
+        <title>{title}</title>
+        <link rel="canonical" href={url} />
+        <meta name="description" content={description} />
+        {/* Opcional: OG/Twitter para compartir */}
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={url} />
+        <meta property="og:image" content={negocio.featuredImage} />
+        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+      </Helmet>
+      <div className="md:px-4 sm:px-8 lg:px-8 lg:py-5 flex justify-center">
+        <div className="w-full max-w-[1240px] m-auto flex flex-col gap-8">
+          {/* Hero */}
+          <BusinessHero
+            businessName={negocio.name}
+            backgroundImageUrl={negocio.featuredImage}
           />
-        </div>
+          {/* Card visual */}
+          <BusinessCard
+            sm={negocio?.contact?.socialMedia}
+            imageUrl={negocio.profileImage}
+            categoryName={negocio.categories?.[0]?.name}
+            businessName={negocio.name}
+            highlightText={
+              negocio.isVerified ? "Verificado por Communidades" : ""
+            }
+          />
+          {/* Encabezado */}
+          <div className="lg:space-y-8">
+            <div className="flex justify-between items-center flex-wrap ">
+              <h1 className="hidden md:block text-2xl font-bold text-gray-900">
+                {negocio.name}
+              </h1>
 
-        <hr className="border-t border-gray-200" />
-
-        {/* Descripción */}
-        <div className="border-l-4 border-gray-200 pl-4">
-          <p className="text-[15px] text-gray-800 leading-relaxed whitespace-pre-line">
-            {negocio.description}
-          </p>
-        </div>
-
-        {/* Card visual */}
-        <BusinessCard
-          imageUrl={negocio.profileImage}
-          categoryName={negocio.categories?.[0]?.name}
-          businessName={negocio.name}
-          highlightText={
-            negocio.isVerified ? "Verificado por Communidades" : ""
-          }
-        />
-
-        {negocio.categories?.length > 0 && (
-          <p className="  text-xs text-gray-500 italic">
-            {negocio.categories
-              .map((cat) => cat.description)
-              .filter(Boolean)
-              .join(" • ")}
-          </p>
-        )}
-
-        {/* Tabs */}
-        <div className="flex flex-wrap gap-2 border-b border-gray-200 pt-4">
-          {[
-            { id: "horarios", label: "Horarios" },
-            { id: "galeria", label: "Galería" },
-            { id: "redes", label: "Redes Sociales" },
-            { id: "contacto", label: "Contacto" },
-          ].map((t) => (
-            <button
-              key={t.id}
-              onClick={() => setTab(t.id)}
-              className={`  text-xs px-3 py-2 rounded-t font-medium transition ${
-                tab === t.id
-                  ? "bg-white border border-b-0 border-gray-200 text-gray-800"
-                  : "text-gray-600 hover:text-gray-800"
-              }`}
-            >
-              {t.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Contenido dinámico */}
-        <div className="pt-4 flex flex-col gap-4">
-          {tab === "horarios" && negocio.openingHours?.length > 0 && (
-            <OpeningHoursList hours={negocio.openingHours} />
-          )}
-          {tab === "galeria" && negocio.images?.length > 0 && (
-            <PhotoGallery galleryImages={negocio.images} />
-          )}
-          {tab === "redes" && negocio.contact?.socialMedia && (
-            <div className="bg-white rounded-xl shadow-sm">
-              <h2 className="text-gray-900 text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">
-                Redes sociales
-              </h2>
-              <div className="flex flex-col">
-                {negocio.contact.socialMedia.instagram && (
-                  <div className="flex items-center gap-4 bg-white px-4 min-h-[72px] py-2">
-                    <div className="flex items-center justify-center rounded-lg bg-gray-100 shrink-0 size-12">
-                      <FaInstagram size={20} className="text-pink-600" />
-                    </div>
-                    <div className="flex flex-col justify-center">
-                      <a
-                        href={negocio.contact.socialMedia.instagram}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-gray-900 text-base font-medium leading-normal hover:underline line-clamp-1 break-all"
-                      >
-                        {negocio.contact.socialMedia.instagram}
-                      </a>
-                      <p className="text-gray-500  text-xs">Instagram</p>
-                    </div>
-                  </div>
-                )}
-                {negocio.contact.socialMedia.facebook && (
-                  <div className="flex items-center gap-4 bg-white px-4 min-h-[72px] py-2">
-                    <div className="flex items-center justify-center rounded-lg bg-gray-100 shrink-0 size-12">
-                      <FaFacebook size={20} className="text-blue-600" />
-                    </div>
-                    <div className="flex flex-col justify-center">
-                      <a
-                        href={negocio.contact.socialMedia.facebook}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-gray-900 text-base font-medium hover:underline line-clamp-1 break-all"
-                      >
-                        {negocio.contact.socialMedia.facebook}
-                      </a>
-                      <p className="text-gray-500  text-xs">Facebook</p>
-                    </div>
-                  </div>
-                )}
-                {negocio.contact.socialMedia.twitter && (
-                  <div className="flex items-center gap-4 bg-white px-4 min-h-[72px] py-2">
-                    <div className="flex items-center justify-center rounded-lg bg-gray-100 shrink-0 size-12">
-                      <FaTwitter size={20} className="text-sky-500" />
-                    </div>
-                    <div className="flex flex-col justify-center">
-                      <a
-                        href={negocio.contact.socialMedia.twitter}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-gray-900 text-base font-medium hover:underline line-clamp-1 break-all"
-                      >
-                        {negocio.contact.socialMedia.twitter}
-                      </a>
-                      <p className="text-gray-500  text-xs">Twitter</p>
-                    </div>
-                  </div>
-                )}
-                {negocio.contact.socialMedia.youtube && (
-                  <div className="flex items-center gap-4 bg-white px-4 min-h-[72px] py-2">
-                    <div className="flex items-center justify-center rounded-lg bg-gray-100 shrink-0 size-12">
-                      <FaYoutube size={20} className="text-red-600" />
-                    </div>
-                    <div className="flex flex-col justify-center">
-                      <a
-                        href={negocio.contact.socialMedia.youtube}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-gray-900 text-base font-medium hover:underline line-clamp-1 break-all"
-                      >
-                        {negocio.contact.socialMedia.youtube}
-                      </a>
-                      <p className="text-gray-500  text-xs">YouTube</p>
-                    </div>
-                  </div>
-                )}
-                {negocio.contact.socialMedia.whatsapp && (
-                  <div className="flex items-center gap-4 bg-white px-4 min-h-[72px] py-2">
-                    <div className="flex items-center justify-center rounded-lg bg-gray-100 shrink-0 size-12">
-                      <FaWhatsapp size={20} className="text-green-500" />
-                    </div>
-                    <div className="flex flex-col justify-center">
-                      <a
-                        href={`https://wa.me/${negocio.contact.socialMedia.whatsapp.replace(
-                          /[^\d]/g,
-                          ""
-                        )}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-gray-900 text-base font-medium hover:underline line-clamp-1 break-all"
-                      >
-                        {negocio.contact.socialMedia.whatsapp}
-                      </a>
-                      <p className="text-gray-500  text-xs">WhatsApp</p>
-                    </div>
-                  </div>
-                )}
+              {/* Botones principales */}
+              <div className="md:flex gap-2 hidden">
+                <UniversalFollowButton
+                  entityType="business"
+                  entityId={id}
+                  initialFollowed={yaSigue}
+                />
+                <StartConversationButton entityType="business" entityId={id} />
               </div>
             </div>
-          )}
 
-          {tab === "contacto" && negocio.contact && (
-            <ContactCard contact={negocio.contact} />
-          )}
-        </div>
-        <PromocionesRelacionadas businessId={negocio._id} />
+            {/* Dirección o Badge de delivery */}
 
-        {/* Mapa y comunidad */}
-        <div className="pt-6 flex flex-col gap-4">
-          {negocio.community && (
-            <div>
-              <h2 className="text-lg font-semibold text-gray-800 mb-2">
-                Comunidad relacionada
-              </h2>
-              <Link
-                to={`/comunidades/${
-                  negocio.community.slug || negocio.community._id
-                }`}
-                className="w-fit flex items-center gap-2 p-2 rounded-full bg-gray-200 text-xs text-gray-700 hover:bg-gray-200"
-              >
-                <img
-                  src={negocio.community.flagImage || "/placeholder-flag.png"}
-                  alt="bandera"
-                  className="h-8 w-8 rounded-full object-cover"
-                />
-                {negocio.community.name}
-              </Link>
+            {/* Tabs */}
+            <div className="flex flex-wrap gap-2 border-b border-gray-100 lg:pt-4">
+              {[
+                { id: "horarios", label: "Horarios" },
+                { id: "galeria", label: "Galería" },
+              ].map((t) => (
+                <button
+                  key={t.id}
+                  onClick={() => setTab(t.id)}
+                  className={`  text-xs px-3 py-2 rounded-t font-medium transition ${
+                    tab === t.id
+                      ? "bg-gradient-to-r from-sky-400 via-blue-400 to-indigo-600 border border-b-0 border-gray-100 text-gray-100"
+                      : "text-gray-600 hover:text-gray-800"
+                  }`}
+                >
+                  {t.label}
+                </button>
+              ))}
             </div>
-          )}
-          {Array.isArray(negocio.location?.coordinates.coordinates) &&
-            negocio.location.coordinates.coordinates.length === 2 && (
-              <MapaNegocioDetalleUnico
-                lat={negocio?.location?.coordinates?.coordinates?.[1] ?? 0}
-                lng={negocio?.location?.coordinates?.coordinates?.[0] ?? 0}
-                name={negocio?.name ?? "Sin nombre"}
-                logo={negocio?.profileImage ?? ""}
+
+            {/* Contenido dinámico */}
+            <div className="pt-4 flex flex-col gap-4">
+              {tab === "horarios" && negocio.openingHours?.length > 0 && (
+                <>
+                  {negocio.openingHours && (
+                    <BadgeEstadoNegocio openingHours={negocio.openingHours} />
+                  )}
+                  <OpeningHoursList hours={negocio.openingHours} />
+                </>
+              )}
+              {tab === "galeria" && negocio.images?.length > 0 && (
+                <PhotoGallery galleryImages={negocio.images} />
+              )}
+            </div>
+            <div className=" grid gap-4 md:gap-12 p-4">
+              <RenderLocation negocio={negocio} />
+              <Compartir
+                url={window.location.href}
+                title={`Descubre ${negocio.name} en Communidades`}
+                text={`Encontré este negocio latino que te puede interesar: ${negocio.name}`}
               />
-            )}
-        </div>
-        {/* Botones principales */}
-        <div className="mt-4 flex flex-col gap-3 md:flex-row md:flex-wrap">
-          <div className="flex flex-wrap gap-2 md:w-full md:justify-between">
-            <LikeButton
-              targetType="business"
-              targetId={id}
-              initialLikes={negocio.likes}
-            />
-            <StarRating targetType="business" targetId={id} />
+              <hr className="border-t border-gray-200" />
+
+              {/* Descripción */}
+              <div className="border-l-4 border-gray-200 pl-4">
+                <p className="text-[15px] text-gray-800 leading-relaxed whitespace-pre-line">
+                  {negocio.description}
+                </p>
+              </div>
+
+              <PromocionesRelacionadas businessId={negocio._id} />
+
+              {/* Mapa y comunidad */}
+              <div className="pt-6 flex flex-col gap-4">
+                {negocio.community && (
+                  <div>
+                    <h2 className="text-lg font-semibold text-gray-800 mb-2">
+                      Comunidad relacionada
+                    </h2>
+                    <Link
+                      to={`/comunidades/${
+                        negocio.community.slug || negocio.community._id
+                      }`}
+                      className="w-fit flex items-center gap-2 p-2 rounded-full bg-gray-200 text-xs text-gray-700 hover:bg-gray-200"
+                    >
+                      <img
+                        src={
+                          negocio.community.flagImage || "/placeholder-flag.png"
+                        }
+                        alt="bandera"
+                        className="h-8 w-8 rounded-full object-cover"
+                      />
+                      {negocio.community.name}
+                    </Link>
+                  </div>
+                )}
+                {Array.isArray(negocio.location?.coordinates.coordinates) &&
+                  negocio.location.coordinates.coordinates.length === 2 && (
+                    <MapaNegocioDetalleUnico
+                      lat={
+                        negocio?.location?.coordinates?.coordinates?.[1] ?? 0
+                      }
+                      lng={
+                        negocio?.location?.coordinates?.coordinates?.[0] ?? 0
+                      }
+                      name={negocio?.name ?? "Sin nombre"}
+                      logo={negocio?.profileImage ?? ""}
+                    />
+                  )}
+              </div>
+
+              {negocio.categories?.length > 0 && (
+                <p className="  text-xs text-gray-500 italic">
+                  {negocio.categories
+                    .map((cat) => cat.description)
+                    .filter(Boolean)
+                    .join(" • ")}
+                </p>
+              )}
+              {/* Botones principales */}
+              <div className="mt-4 flex flex-col gap-3 md:flex-row md:flex-wrap">
+                <div className="flex flex-wrap gap-2 md:w-full md:justify-between">
+                  <LikeButton
+                    targetType="business"
+                    targetId={id}
+                    initialLikes={negocio.likes}
+                  />
+                  <StarRating targetType="business" targetId={id} />
+                </div>
+              </div>
+              {/* Comentarios */}
+              <CommentsSection targetType="business" targetId={id} />
+            </div>
           </div>
         </div>
-        {/* Comentarios */}
-        <CommentsSection targetType="business" targetId={id} />
       </div>
-    </div>
+    </>
   );
 }

@@ -126,7 +126,7 @@ export default function ComunidadDetalle() {
   // Loading: usa loadingDetalle del slice de comunidades
   if (loadingDetalle && !comunidad) {
     return (
-      <div className="px-4 sm:px-8 lg:px-8 xl:px-40 py-5 flex justify-center">
+      <div className="px-4 sm:px-8 lg:px-8 max-w-[1240px] m-auto py-5 flex justify-center">
         <div className="w-full max-w-[1400px]">
           <DetalleSkeleton />
         </div>
@@ -157,10 +157,10 @@ export default function ComunidadDetalle() {
         />
       </Helmet>
 
-      <div className=" sm:px-8 lg:px-8 xl:px-40 py-5 flex justify-center">
+      <div className=" sm:px-8 lg:px-8 max-w-[1240px] m-auto py-5 flex justify-center">
         <div className="w-full max-w-[1400px] flex flex-col gap-10">
           <div
-            className="w-full h-56 sm:h-72 md:rounded-xl bg-cover bg-center shadow-md"
+            className="w-full h-56 sm:h-72 md:rounded-xs bg-cover bg-center shadow-md"
             style={{
               backgroundImage: `url(${
                 comunidad.bannerImage || "/placeholder.jpg"
@@ -223,7 +223,7 @@ export default function ComunidadDetalle() {
                 {negociosLoadingLocal ? (
                   <p className="text-xs text-gray-500">Cargando negocios...</p>
                 ) : negociosDeLaComunidad.length > 0 ? (
-                  <div className="grid grid-cols-2 md:grid-cols-4 2xl:grid-cols-6 gap-4">
+                  <div className="grid grid-cols-2 md:grid-cols-4 2xl:grid-cols-5 gap-4">
                     {negociosDeLaComunidad.map((neg) => (
                       <Link
                         key={neg._id}

@@ -30,7 +30,7 @@ export default function ScrollCarousel({ children, className = "" }) {
   }, [children]);
 
   return (
-    <div className="relative w-full z-0 px-4">
+    <div className="relative w-full z-0 ">
       {/* Flechitas decorativas mobile */}
       <div className="absolute left-1 top-1/2 -translate-y-1/2 z-20 md:hidden pointer-events-none">
         <FiChevronLeft
@@ -64,10 +64,10 @@ export default function ScrollCarousel({ children, className = "" }) {
       )}
 
       {/* Contenedor scrollable */}
-      <div className="w-full overflow-x-hidden px-2">
+      <div className="w-full overflow-x-hidden ">
         <div
           ref={scrollRef}
-          className={`z-10 flex gap-4 px-4 overflow-x-auto scroll-smooth touch-pan-x whitespace-nowrap
+          className={`z-10 flex gap-4  overflow-x-auto scroll-smooth touch-pan-x whitespace-nowrap
             snap-x snap-mandatory
             [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${className}`}
         >

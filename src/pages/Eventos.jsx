@@ -62,7 +62,7 @@ export default function Eventos() {
         );
 
   return (
-    <div className="flex flex-col gap-12 md:gap-16 xl:gap-24 mt-12">
+    <div className="flex flex-col gap-12 md:gap-16 xl:gap-24 mt-12 p-4">
       <ResetBusquedaOnMount />
 
       <Helmet>

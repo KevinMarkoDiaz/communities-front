@@ -123,7 +123,7 @@ export default function EventoDetalle() {
   if (loading)
     return (
       <div className="px-4 py-5 flex justify-center">
-        <div className="w-full max-w-[960px]">
+        <div className="w-full max-w-[1240px]">
           <DetalleSkeleton />
         </div>
       </div>
@@ -137,15 +137,15 @@ export default function EventoDetalle() {
     );
 
   return (
-    <div className="md:px-8 xl:px-40 py-5 flex justify-center">
-      <div className="w-full max-w-[960px] flex flex-col gap-12">
-        <div className="w-full max-w-[960px] flex flex-col gap-12">
+    <div className="md:px-8 max-w-[1240px] m-auto  py-5 flex justify-center">
+      <div className="w-full flex flex-col gap-4 md:gap-12">
+        <div className="w-full  flex flex-col gap-12">
           <div
             className="
       relative w-screen left-1/2 right-1/2 -translate-x-1/2
       sm:relative sm:w-full sm:left-0 sm:right-0 sm:translate-x-0
       bg-cover bg-center min-h-[220px] sm:min-h-[300px] lg:min-h-[400px]
-      flex flex-col justify-end md:rounded-xl overflow-hidden shadow-sm
+      flex flex-col justify-end md:rounded-xs overflow-hidden shadow-sm
     "
             style={{
               backgroundImage: `linear-gradient(0deg, rgba(0,0,0,0.4), rgba(0,0,0,0)), url(${
@@ -178,27 +178,6 @@ export default function EventoDetalle() {
           <p className="text-xs text-gray-400">
             Publicado el {new Date(evento.createdAt).toLocaleDateString()}
           </p>
-        </div>
-
-        <div className="flex flex-col gap-3 p-2">
-          <div className="flex gap-4 items-start">
-            <div className="flex flex-col md:flex-row gap-4">
-              <UniversalFollowButton
-                entityType="event"
-                entityId={evento._id}
-                initialFollowed={yaSigue}
-              />
-              <StartConversationButton entityType="event" entityId={id} />
-            </div>
-          </div>
-
-          <Compartir
-            url={window.location.href}
-            title={`Participá en \"${evento.title}\" en Communidades`}
-            text={`Mirá este evento: ${
-              evento.title
-            } - ${evento.description?.slice(0, 100)}...`}
-          />
         </div>
 
         <div className="flex gap-4">
@@ -319,7 +298,26 @@ export default function EventoDetalle() {
                 logo=""
               />
             )}
+          <div className="flex flex-col gap-3 p-2">
+            <div className="flex gap-4 items-start">
+              <div className="flex flex-col md:flex-row gap-4">
+                <UniversalFollowButton
+                  entityType="event"
+                  entityId={evento._id}
+                  initialFollowed={yaSigue}
+                />
+                <StartConversationButton entityType="event" entityId={id} />
+              </div>
+            </div>
 
+            <Compartir
+              url={window.location.href}
+              title={`Participá en \"${evento.title}\" en Communidades`}
+              text={`Mirá este evento: ${
+                evento.title
+              } - ${evento.description?.slice(0, 100)}...`}
+            />
+          </div>
           <CommentsSection targetType="event" targetId={id} />
         </div>
       </div>

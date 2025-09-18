@@ -2,7 +2,7 @@ export default function DetalleSkeleton() {
   return (
     <div className="w-full animate-pulse flex flex-col gap-16">
       {/* Imagen destacada */}
-      <div className="w-full h-56 sm:h-72 bg-gray-200 rounded-xl" />
+      <div className="w-full h-56 sm:h-72 bg-gray-200 rounded-xs" />
 
       {/* Encabezado */}
       <div className="space-y-1">

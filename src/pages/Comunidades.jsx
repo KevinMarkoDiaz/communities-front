@@ -65,7 +65,7 @@ export default function Comunidades() {
     return <div className="p-4 text-red-600">Error: {String(error)}</div>;
 
   return (
-    <div className="flex flex-col gap-12 md:gap-16 xl:gap-24 mt-12 h-full justify-between">
+    <div className="flex flex-col gap-12 md:gap-16 xl:gap-24 mt-12 h-full justify-between p-4">
       <ResetBusquedaOnMount />
 
       <Helmet>
@@ -76,7 +76,7 @@ export default function Comunidades() {
         />
       </Helmet>
 
-      <div className="grid gap-12 md:gap-16 xl:gap-24">
+      <div className="grid gap-4 md:gap-16 xl:gap-24">
         {/* SECCIÓN DESTACADA + BUSCADOR */}
         <div className="flex flex-col ">
           <ComunidadesDestacadas />

@@ -10,7 +10,7 @@ export default function BannerEvento({ scrollToRef }) {
 
   return (
     <div className="flex justify-center">
-      <div className="w-full rounded-xl overflow-hidden relative h-[300px]  md:h-[300px]">
+      <div className="w-full rounded-xs overflow-hidden relative h-[180px]  md:h-[300px]">
         {/* 🖼 Imagen de fondo */}
         <img
           src={bannerEVV}

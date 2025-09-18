@@ -67,7 +67,7 @@ export default function Negocios() {
         );
 
   return (
-    <div className="flex flex-col gap-12 md:gap-16 xl:gap-24 mt-12">
+    <div className="flex flex-col gap-4 md:gap-16 xl:gap-24 xl:mt-12 p-4">
       <ResetBusquedaOnMount />
 
       <Helmet>
@@ -78,12 +78,12 @@ export default function Negocios() {
         />
       </Helmet>
 
-      <div className="w-full max-w-full overflow-hidden flex flex-col gap-12 md:gap-16 xl:gap-24">
+      <div className="w-full max-w-full overflow-hidden flex flex-col gap-4 md:gap-16 xl:gap-24">
         <div className="flex flex-col gap-12 md:gap-16 xl:gap-24">
           <NegociosSugeridos />
 
           <div>
-            <h4 className=" text-lg md: text-lg font-bold text-black tracking-tight leading-snug my-4">
+            <h4 className=" text-lg md:text-lg font-bold text-black tracking-tight leading-snug md:my-4">
               Busca los negocios que te conectan con tu comunidad
             </h4>
             <BusquedaGlobalWrapper
